@@ -185,6 +185,7 @@ class JobsControllerTest extends TestCase
 
         $data = [
             'title' => $this->faker->text(60),
+            'plan'  => 'standard',
             'tags'  => [
                 ['name' => 'php'],
             ],
