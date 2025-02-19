@@ -1,9 +1,11 @@
 <?php
 namespace Coyote\Services;
 
+use Coyote\Events\JobWasSaved;
 use Coyote\Feature;
 use Coyote\Job;
 use Coyote\Payment;
+use Coyote\Repositories\Eloquent\CouponRepository;
 use Coyote\Repositories\Eloquent\FirmRepository;
 use Coyote\Repositories\Eloquent\JobRepository;
 use Coyote\Services\Stream\Activities\Create as Stream_Create;
@@ -11,14 +13,34 @@ use Coyote\Services\Stream\Activities\Update as Stream_Update;
 use Coyote\Services\Stream\Objects\Job as Stream_Job;
 use Coyote\Tag;
 use Coyote\User;
+use Illuminate\Database\Connection;
 use Illuminate\Http\Request;
 
 readonly class SubmitJobService
 {
     public function __construct(
-        private JobRepository  $job,
-        private FirmRepository $firm,
-        private Request        $request) {}
+        private JobRepository    $job,
+        private FirmRepository   $firm,
+        private Request          $request,
+        private Connection       $connection,
+        private CouponRepository $coupons,
+    ) {}
+
+    public function submitJobOffer(User $user, Job $job): void
+    {
+        $this->connection->transaction(function () use ($user, $job) {
+            $this->saveRelations($job, $user);
+            if ($job->wasRecentlyCreated || !$job->is_publish) {
+                $coupon = $this->coupons->findCoupon($user->id, $job->plan->price);
+                $job->payments()->create([
+                    'plan_id'   => $job->plan_id,
+                    'days'      => $job->plan->length,
+                    'coupon_id' => $coupon->id ?? null,
+                ]);
+            }
+            event(new JobWasSaved($job)); // we don't queue listeners for this event
+        });
+    }
 
     public function getUnpaidPayment(Job $job): ?Payment
     {
