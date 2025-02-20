@@ -4,7 +4,6 @@ const glob = require('glob-all');
 const path = require('path');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const PurgeCssPlugin = require('purgecss-webpack-plugin');
-const SentryPlugin = require("@sentry/webpack-plugin");
 const webpack = require('webpack');
 
 const plugins = [
@@ -89,17 +88,6 @@ const plugins = [
     'RELEASE': null,
   }),
 ];
-
-// if (process.env.RELEASE) {
-//   plugins.push(new SentryPlugin({
-//     include: "./public",
-//     authToken: process.env.SENTRY_API_KEY,
-//     release: process.env.RELEASE,
-//     ignore: ["node_modules"],
-//     org: "coyote",
-//     project: "frontend",
-//   }));
-// }
 
 module.exports = merge(common, {
   mode: "production",
