@@ -45,11 +45,9 @@
           {{ request().get('error') }}
         </div>
       {% endif %}
-
       <h1 class="my-4 d-block text-center" style="font-size:1.25em;">
-        Zaloguj się na swoje konto
+        Zaloguj się na konto
       </h1>
-
       {{ form_start(form) }}
       {{ form_row(form.name) }}
       <div class="form-group">
@@ -64,7 +62,6 @@
         {{ form_widget(form.submit) }}
       </div>
       {{ form_end() }}
-
       <div class="text-center mt-4 mb-4">
         Nie masz konta?
         <a href="{{ route('register') }}" class="neon-color-link">
