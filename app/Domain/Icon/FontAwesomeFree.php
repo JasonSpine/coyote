@@ -374,7 +374,7 @@ readonly class FontAwesomeFree
             "jobOfferCompanyEmployees"                  => "fas fa-users",
             "jobOfferCompanyEstablishmentYear"          => "far fa-calendar",
             "jobOfferCompanyWebsite"                    => "fas fa-link",
-            'jobOfferLocationAdd'                       => 'fas fa-circle-plus',
+            'jobOfferLocationAdd'                       => 'fas fa-plus',
             'jobOfferLocationRemove'                    => 'fa-circle-minus',
             'jobOfferBenefitPresent'                    => $faTick,
             'jobOfferBenefitMissing'                    => $faCross,

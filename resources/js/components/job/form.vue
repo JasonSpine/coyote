@@ -28,21 +28,23 @@
     </div>
 
     <div class="form-group border-bottom">
-      <label class="col-form-label">Lokalizacja</label>
-
+      <label class="col-form-label">
+        Lokalizacja
+      </label>
       <div v-for="(location, index) in job.locations" class="row mb-2">
         <div class="col-sm-12">
           <div class="input-group">
-            <a title="Dodaj więcej lokalizacji" class="input-group-text text-decoration-none" href="javascript:" @click="ADD_LOCATION">
-              <vue-icon name="jobOfferLocationAdd"/>
-            </a>
-            <a title="Usuń lokalizację" class="input-group-text text-decoration-none text-danger" href="javascript:" @click="REMOVE_LOCATION(location)" v-if="job.locations.length > 1">
+            <span title="Usuń lokalizację" class="input-group-text text-decoration-none text-danger cursor-pointer" @click="REMOVE_LOCATION(location)" v-if="job.locations.length > 1">
               <vue-icon name="jobOfferLocationRemove"/>
-            </a>
+            </span>
             <vue-google-place @change="location => setLocation(index, location)" :label="location.label"></vue-google-place>
           </div>
         </div>
       </div>
+      <span title="Dodaj więcej lokalizacji" class="btn btn-secondary" @click="ADD_LOCATION">
+        <vue-icon name="jobOfferLocationAdd"/>
+        Dodaj lokalizację
+      </span>
       <div class="row">
         <div class="col-12">
           <div class="mt-2 mb-3 d-flex align-items-center">
