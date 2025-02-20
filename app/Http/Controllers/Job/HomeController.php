@@ -117,48 +117,31 @@ class HomeController extends BaseController
             LengthAwarePaginator::resolveCurrentPage(),
             ['path' => LengthAwarePaginator::resolveCurrentPath()],
         );
-
         $pagination->appends($this->request->except('page'));
-
         $this->job->resetCriteria();
-
         $this->job->pushCriteria($eagerCriteria);
         $this->job->pushCriteria(new PriorDeadline());
-
-        // get only tags belong to specific category
         $this->tag->pushCriteria(new ForCategory(Tag\Category::LANGUAGE));
 
-        // only tags with logo
-        $tags = $this->tag->all();
-
-        $input = array_merge(
-            $this->request->all('q', 'city', 'sort', 'salary', 'currency', 'remote_range', 'page'),
-            [
+        return $this->view('job.home', [
+            'input'      => [
+                ...$this->request->all('q', 'city', 'sort', 'salary', 'currency', 'remote_range', 'page'),
                 'tags'      => $this->builder->tag->getTags(),
                 'locations' => $this->builder->city->getCities(),
                 'remote'    => $this->request->filled('remote') || $this->request->route()->getName() === 'job.remote' ? true : null,
             ],
-        );
-
-        $data = [
-            'input' => $input,
-            'url'   => $this->fullUrl($this->request->except('timestamp')),
-
-            'defaults' => [
+            'url'        => $this->fullUrl($this->request->except('timestamp')),
+            'defaults'   => [
                 'sort'     => $defaultSort,
                 'currency' => Currency::PLN,
             ],
-
             'locations'  => $result->getAggregationCount("global.locations.locations_city_original")->slice(0, 10)->filter(),
-            'tags'       => TagResource::collection($tags)->toArray($this->request),
+            'tags'       => TagResource::collection($this->tag->all())->toArray($this->request),
             'jobs'       => JobResource::collection($pagination)->toResponse($this->request)->getData(true),
             'subscribed' => $this->getSubscribed(),
-        ];
-
-        return $this->view('job.home', $data + [
-                'currencies' => (object)Currency::all('name', 'id', 'symbol')->keyBy('id'),
-                'firm'       => $this->firmName,
-            ]);
+            'currencies' => (object)Currency::all('name', 'id', 'symbol')->keyBy('id'),
+            'firm'       => $this->firmName,
+        ]);
     }
 
     private function getSubscribed(): array
