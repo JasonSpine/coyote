@@ -26,15 +26,15 @@
         </nav>
       </div>
       <div class="col-md-3 d-none d-sm-block">
-        <section id="post-offer">
-          <span class="edge">
-            <a class="btn btn-primary jobboard-add-offer-list" href="{{ route('job.business') }}">
-              Dodaj ofertę pracy
-            </a>
-          </span>
-          <p>
-            <a href="{{ route('job.business') }}">Już od 39 zł / 40 dni!</a>
-          </p>
+        <section class="box">
+          <h4>Dla Pracodawców</h4>
+          <div class="neon-tile neon-rounded p-3">
+            <span class="edge">
+              <a class="btn btn-primary jobboard-add-offer-list" href="{{ route('job.business') }}">
+                Oferty pracy od 39zł
+              </a>
+            </span>
+          </div>
         </section>
       </div>
       {{ render_block('job_ads') }}
