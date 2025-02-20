@@ -185,26 +185,32 @@
           </div>
         </form>
       </div>
-
-      {% include 'job.partials.business' %}
+      <div class="col-md-3 d-none d-sm-block">
+        <section id="post-offer">
+          <span class="edge">
+            <a class="btn btn-primary jobboard-add-offer-list" href="{{ route('job.business') }}">
+              Dodaj ofertę pracy
+            </a>
+          </span>
+          <p>
+            <a href="{{ route('job.business') }}">Już od 39 zł / 40 dni!</a>
+          </p>
+        </section>
+      </div>
     </div>
-
     <div class="row">
       <div class="col-md-9 col-12">
         {% include 'job.partials.skeletons' %}
-
         <div v-cloak v-if="jobs.data.length === 0" class="card card-body card-job-missing p-2">
           <p class="text-center lead mt-4">
             Nie znaleźliśmy ofert, które spełniają Twoje kryteria.<br>
             <a href="{{ route('job.home') }}">Zobacz wszystkie oferty</a>, a być może znajdziesz coś dla siebie!
           </p>
         </div>
-
         <nav class="mb-2">
           <vue-pagination :current-page="jobs.meta.current_page" :total-pages="jobs.meta.last_page" @change="changePage"></vue-pagination>
         </nav>
       </div>
-
       <div class="col-md-3 col-12" style="margin-top: -35px">
         <section v-cloak v-show="subscribed.length" class="box">
           <h4>
