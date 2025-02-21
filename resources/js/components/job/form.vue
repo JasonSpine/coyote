@@ -41,7 +41,7 @@
           </div>
         </div>
       </div>
-      <span title="Dodaj więcej lokalizacji" class="btn btn-secondary" @click="ADD_LOCATION">
+      <span title="Dodaj więcej lokalizacji" class="btn btn-secondary" @click="addLocation" v-if="canAddLocation">
         <vue-icon name="jobOfferLocationAdd"/>
         Dodaj lokalizację
       </span>
@@ -222,7 +222,12 @@ export default {
     };
   },
   methods: {
-    ...mapMutations('jobs', ['ADD_LOCATION', 'REMOVE_LOCATION', 'SET_LABEL', 'ADD_TAG', 'REMOVE_TAG', 'TOGGLE_FEATURE']),
+    ...mapMutations('jobs', ['REMOVE_LOCATION', 'SET_LABEL', 'ADD_TAG', 'REMOVE_TAG', 'TOGGLE_FEATURE']),
+    addLocation(): void {
+      if (this.canAddLocation) {
+        this.$store.commit('jobs/ADD_LOCATION');
+      }
+    },
     setLocation(index, location) {
       store.commit('jobs/SET_LOCATION', {index, location});
     },
@@ -237,6 +242,10 @@ export default {
     },
   },
   computed: {
+    canAddLocation(): boolean {
+      const locations = this.$store.getters['jobs/locationsCount'];
+      return locations < 10;
+    },
     jobTitleCharactersRemaining(): number {
       return this.titleMaxLength - String(this.job.title ?? '').length;
     },

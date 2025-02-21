@@ -11,6 +11,9 @@ const state = {
 
 const getters = {
   isSubscribed: state => (job: Job) => state.subscriptions.findIndex(item => item.id === job.id) > -1,
+  locationsCount(state): number {
+    return state.form.locations.length;
+  },
 };
 
 const mutations = {
