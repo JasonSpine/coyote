@@ -96,9 +96,6 @@ export default {
     'vue-salary': VueSalary,
     'vue-location': VueLocation,
   },
-  created() {
-    console.log(this.$props.job.firm);
-  },
   methods: {
     subscribe() {
       store.dispatch('jobs/subscribe', this.job);
