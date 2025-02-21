@@ -20,6 +20,7 @@
             v-show="currentTab === 0"
             :job="job"
             :plan="jobPlan"
+            :user-plan-bundle="userPlanBundle"
             :errors="errors"
             :currencies="currencies"
         ></vue-job-form>
@@ -73,6 +74,7 @@
     var defaultBenefits = {{ default_benefits|json_encode|raw }};
     var employees = {{ employees|json_encode|raw }};
     var firms = {{ firms|json_encode|raw }};
+    var userPlanBundle = {{ userPlanBundle|json_encode|raw }};
   </script>
 {% endblock %}
 

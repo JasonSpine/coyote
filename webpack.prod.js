@@ -60,6 +60,9 @@ const plugins = [
         'vue-notification-group',
         'vue-notification-wrapper',
         'neon-tab-active',
+        'width-xl-1/5',
+        'width-xl-3/5',
+        'width-xl-1/3',
       ],
       deep: [
         /^logo/,

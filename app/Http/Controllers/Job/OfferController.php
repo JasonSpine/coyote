@@ -4,6 +4,7 @@ namespace Coyote\Http\Controllers\Job;
 use Coyote\Comment;
 use Coyote\Firm;
 use Coyote\Http\Controllers\Controller;
+use Coyote\Http\Presenter\UserPlanBundlePresenter;
 use Coyote\Http\Resources\AssetsResource;
 use Coyote\Http\Resources\CommentCollection;
 use Coyote\Http\Resources\FlagResource;
@@ -23,7 +24,7 @@ class OfferController extends Controller
         parent::__construct();
     }
 
-    public function index(Job $job): View
+    public function index(Job $job, UserPlanBundlePresenter $presenter): View
     {
         $this->breadcrumb->push('Praca', route('job.home'));
         $this->breadcrumb->push($job->title, UrlBuilder::job($job, true));
@@ -58,6 +59,7 @@ class OfferController extends Controller
             'emojis'            => Emoji::all(),
             'job'               => $job,
             'is_author'         => $job->enable_apply && $job->user_id === auth()->user()?->id,
+            'userPlanBundle'    => $presenter->userPlanBundle(),
         ]);
     }
 

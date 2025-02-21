@@ -172,6 +172,10 @@ $icon-admin-table-sort-desc:       $fa-var-sort-up;
   content: "\e632";
 }
 
-.fa-share-nodes {
+.fa-share-nodes:before {
   content: "\f1e0";
+}
+
+.fa-cart-circle-arrow-down:before {
+  content: "\e3ef";
 }

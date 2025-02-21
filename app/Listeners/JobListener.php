@@ -44,5 +44,6 @@ class JobListener
         $events->listen(JobDeleting::class, 'Coyote\Listeners\JobListener@onJobDeleting');
         $events->listen(PaymentPaid::class, ChangePaymentStatus::class);
         $events->listen(PaymentPaid::class, BoostJobOffer::class);
+        $events->listen(PaymentPaid::class, GrantUserPlanBundle::class);
     }
 }

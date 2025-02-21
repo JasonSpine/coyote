@@ -1,8 +1,18 @@
 <template>
   <div class="neon-tile neon-rounded px-4 py-2">
-    <div class="form-row border-bottom">
-      <label class="col-form-label">Twój plan</label>
-      <div class="col-12 mb-2">
+    <div class="border-bottom" v-if="hasBundle">
+      <label class="col-form-label">
+        Opłacony pakiet
+      </label>
+      <div class="mb-2">
+        <p class="mb-0">
+          Pakiet: Plan {{ userPlanBundle.planName }}
+        </p>
+        Wykorzystujesz: <strong>{{ userPlanBundle.remaining }}</strong> z <strong>{{ userPlanBundle.bundleSize }}</strong> ofert pracy.
+      </div>
+    </div>
+    <div class="border-bottom" v-else>
+      <div class="mb-2">
         {{ plan.name }} ({{ plan.price }}zł)
         <a href="/Praca/Oferta" class="neon-color-link-light">
           <u>Zmień</u>
@@ -14,19 +24,15 @@
         <template v-slot:label>
           <label class="col-form-label">Tytuł oferty <em>*</em></label>
         </template>
-
         <vue-text name="title" v-model="job.title" placeholder="Np. Senior Java Developer" :maxlength="titleMaxLength" :is-invalid="'title' in errors"></vue-text>
-
         <span class="form-text text-muted">
           Pozostało <strong>{{ jobTitleCharactersRemaining }}</strong> znaków
         </span>
       </vue-form-group>
-
       <vue-form-group class="col-sm-3" label="Staż pracy">
         <vue-select name="seniority" v-model="job.seniority" :options="seniorities" placeholder="--"></vue-select>
       </vue-form-group>
     </div>
-
     <div class="form-group border-bottom">
       <label class="col-form-label">
         Lokalizacja
@@ -86,7 +92,6 @@
         <vue-error :message="errors.salary_to"/>
       </div>
     </div>
-
     <div class="form-group">
       <label class="col-form-label">Kluczowe technologie (konieczne lub mile widziane)</label>
       <vue-tags-inline @change="addTag" placeholder="Np. java, python, kotlin, aws, docker, typescript, sql, nginx" class="form-control"></vue-tags-inline>
@@ -94,12 +99,10 @@
       <span class="form-text text-muted" v-else-if="suggestions.length === 0">Wybierz z listy lub wpisz nazwę języka/technologii i naciśnij Enter, aby dodać wymaganie.</span>
       <span class="form-text text-muted" v-else-if="suggestions.length > 0">
         Podpowiedź:
-
         <template v-for="(suggestion, index) in suggestions">
           <a href="javascript:" class="tag-suggestion" @click="addTag({ name: suggestion })">{{ suggestion }}</a>{{ index < suggestions.length - 1 ? ', ' : '' }}
         </template>
       </span>
-
       <vue-tags :tags="job.tags" :editable="true" @delete="REMOVE_TAG" :tooltips="['mile widziane', 'średnio zaawansowany', 'zaawansowany']" class="tag-clouds-md mt-3"/>
     </div>
 
@@ -128,7 +131,6 @@
         </li>
       </ol>
     </div>
-
     <div class="form-group">
       <div class="form-group">
         <div class="custom-control custom-radio">
@@ -144,7 +146,6 @@
           </label>
         </div>
       </div>
-
       <div class="row">
         <div class="col-sm-6">
           <vue-text name="email" v-model="job.email" :disabled="job.enable_apply === false" :is-invalid="'email' in errors"/>
@@ -153,18 +154,15 @@
         </div>
       </div>
     </div>
-
     <div class="form-group">
       <div class="form-group">
         <div class="custom-control custom-radio">
           <input type="radio" id="enable_apply_0" v-model="job.enable_apply" :value="false" class="custom-control-input">
-
           <label for="enable_apply_0" class="custom-control-label">
             ...lub podaj informacje w jaki sposób kandydaci mogą aplikować na to stanowisko
           </label>
         </div>
       </div>
-
       <div v-show="job.enable_apply === false">
         <vue-rich-editor v-model="job.recruitment"/>
         <input type="hidden" name="recruitment" v-model="job.recruitment">
@@ -214,6 +212,7 @@ export default {
     currencies: {type: Array, required: true},
     errors: {type: Object, required: false},
     plan: {type: Object},
+    userPlanBundle: {type: Object, required: true},
   },
   data() {
     return {
@@ -242,9 +241,12 @@ export default {
     },
   },
   computed: {
+    hasBundle(): boolean {
+      return this.$props.userPlanBundle !== null;
+    },
     canAddLocation(): boolean {
       const locations = this.$store.getters['jobs/locationsCount'];
-      return locations < 10;
+      return locations < this.$props.plan.max_locations;
     },
     jobTitleCharactersRemaining(): number {
       return this.titleMaxLength - String(this.job.title ?? '').length;

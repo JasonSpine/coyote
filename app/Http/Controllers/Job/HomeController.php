@@ -5,6 +5,7 @@ namespace Coyote\Http\Controllers\Job;
 use Carbon\Carbon;
 use Coyote\Currency;
 use Coyote\Domain\RouteVisits;
+use Coyote\Http\Presenter\UserPlanBundlePresenter;
 use Coyote\Http\Resources\JobResource;
 use Coyote\Http\Resources\TagResource;
 use Coyote\Repositories\Criteria\EagerLoading;
@@ -123,24 +124,27 @@ class HomeController extends BaseController
         $this->job->pushCriteria(new PriorDeadline());
         $this->tag->pushCriteria(new ForCategory(Tag\Category::LANGUAGE));
 
+        /** @var UserPlanBundlePresenter $presenter */
+        $presenter = app(UserPlanBundlePresenter::class);
         return $this->view('job.home', [
-            'input'      => [
+            'input'          => [
                 ...$this->request->all('q', 'city', 'sort', 'salary', 'currency', 'remote_range', 'page'),
                 'tags'      => $this->builder->tag->getTags(),
                 'locations' => $this->builder->city->getCities(),
                 'remote'    => $this->request->filled('remote') || $this->request->route()->getName() === 'job.remote' ? true : null,
             ],
-            'url'        => $this->fullUrl($this->request->except('timestamp')),
-            'defaults'   => [
+            'url'            => $this->fullUrl($this->request->except('timestamp')),
+            'defaults'       => [
                 'sort'     => $defaultSort,
                 'currency' => Currency::PLN,
             ],
-            'locations'  => $result->getAggregationCount("global.locations.locations_city_original")->slice(0, 10)->filter(),
-            'tags'       => TagResource::collection($this->tag->all())->toArray($this->request),
-            'jobs'       => JobResource::collection($pagination)->toResponse($this->request)->getData(true),
-            'subscribed' => $this->getSubscribed(),
-            'currencies' => (object)Currency::all('name', 'id', 'symbol')->keyBy('id'),
-            'firm'       => $this->firmName,
+            'locations'      => $result->getAggregationCount("global.locations.locations_city_original")->slice(0, 10)->filter(),
+            'tags'           => TagResource::collection($this->tag->all())->toArray($this->request),
+            'jobs'           => JobResource::collection($pagination)->toResponse($this->request)->getData(true),
+            'subscribed'     => $this->getSubscribed(),
+            'currencies'     => (object)Currency::all('name', 'id', 'symbol')->keyBy('id'),
+            'firm'           => $this->firmName,
+            'userPlanBundle' => $presenter->userPlanBundle(),
         ]);
     }
 

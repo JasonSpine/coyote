@@ -466,8 +466,33 @@
       <aside class="col-lg-2">
         <div class="neon-tile neon-rounded p-3 pb-1 mt-4 mb-3">
           <ul class="list-unstyled">
+            {% if userPlanBundle %}
+              <li class="mb-4">
+                <small class="text-muted">
+                  Opłacony pakiet
+                </small>
+                <p class="mb-0">
+                  <a href="{{ route('job.submit', {'copy': job.id}) }}">
+                    {{ icon('jobOfferBundlePlan') }}
+                    Pakiet: Plan {{ userPlanBundle.planName }}
+                  </a>
+                </p>
+                <p class="mb-0">
+                  <a href="{{ route('job.submit', {'copy': job.id}) }}">
+                    {{ icon('jobOfferBundleRemaining') }}
+                    Pozostało: <strong>{{ userPlanBundle.remaining }}</strong> z <strong>{{ userPlanBundle.bundleSize }}</strong>
+                  </a>
+                </p>
+                <p class="mb-0">
+                  <a href="{{ route('job.submit', {'copy': job.id}) }}">
+                    {{ icon('jobOfferBundleContinue') }}
+                    Dodaj podobną ofertę
+                  </a>
+                </p>
+              </li>
+            {% endif %}
             <li class="mb-4">
-              <span class="text-muted">Zarządzanie ofertą</span>
+              <small class="text-muted">Zarządzanie ofertą</small>
               {% if not job.is_expired and can('update', job) %}
                 <p class="mb-0">
                   <a href="{{ route('job.submit', [job.id]) }}">
@@ -484,12 +509,14 @@
                   </a>
                 </p>
               {% endif %}
-              <p class="mb-0">
-                <a href="{{ route('job.submit', {'copy': job.id}) }}">
-                  {{ icon('jobOfferNew') }}
-                  Dodaj podobną ofertę
-                </a>
-              </p>
+              {% if not userPlanBundle %}
+                <p class="mb-0">
+                  <a href="{{ route('job.submit', {'copy': job.id}) }}">
+                    {{ icon('jobOfferNew') }}
+                    Dodaj podobną ofertę
+                  </a>
+                </p>
+              {% endif %}
             </li>
             <li>
               <small class="text-muted">Statystyki oferty</small>
@@ -508,9 +535,7 @@
             </li>
             {% if not job.is_expired %}
               <li title="Oferta traci ważność z dniem {{ job.deadline_at|format_date(false) }}">
-                <span class="text-muted">
-                  Ważność oferty
-                </span>
+                <small class="text-muted">Ważność oferty</small>
                 <p>
                   {{ icon('jobOfferExpiresInDays') }}
                   {{ job.deadline }} dni do końca

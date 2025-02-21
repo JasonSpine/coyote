@@ -147,15 +147,25 @@
         </div>
 
         <div class="card-body">
-          <div class="mt-1 mb-1 clearfix">
-            <div class="float-start">
-              Publikacja ogłoszenia ({{ payment.days }} dni)
+          {% if payment.plan.bundle_size %}
+            <div class="my-1 d-flex justify-content-between">
+              <div>
+                Pakiet {{ payment.plan.bundle_size }} ogłoszeń ({{ payment.days }} dni)
+              </div>
+              <div class="text-end">
+                ${ money(netPrice) } zł
+              </div>
             </div>
-            <div class="float-end text-end">
-              ${ money(netPrice) } zł
+          {% else %}
+            <div class="mt-1 mb-1 clearfix">
+              <div class="float-start">
+                Publikacja ogłoszenia ({{ payment.days }} dni)
+              </div>
+              <div class="float-end text-end">
+                ${ money(netPrice) } zł
+              </div>
             </div>
-          </div>
-
+          {% endif %}
           <div class="mt-1 mb-1 clearfix" v-if="coupon.amount > 0">
             <div class="float-start">
               Rabat

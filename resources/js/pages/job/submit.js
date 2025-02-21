@@ -14,6 +14,7 @@ createVueAppNotifications('Job submit', '#js-submit-form', {
     currencies,
     job,
     defaultBenefits,
+    userPlanBundle,
     employees,
     firms,
     errors: {},

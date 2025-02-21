@@ -7,6 +7,7 @@ use Coyote\Domain\RouteVisits;
 use Coyote\Firm;
 use Coyote\Firm\Benefit;
 use Coyote\Http\Controllers\Controller;
+use Coyote\Http\Presenter\UserPlanBundlePresenter;
 use Coyote\Http\Requests\Job\JobRequest;
 use Coyote\Http\Resources\FirmFormResource;
 use Coyote\Http\Resources\JobFormResource;
@@ -72,7 +73,8 @@ class SubmitController extends Controller
             // always one empty location
             $job->locations->add(new Job\Location());
         }
-
+        /** @var UserPlanBundlePresenter $presenter */
+        $presenter = app(UserPlanBundlePresenter::class);
         $this->authorize('update', $job);
         $this->breadcrumb($job);
         $this->firm->pushCriteria(new EagerLoading(['benefits', 'assets']));
@@ -84,6 +86,7 @@ class SubmitController extends Controller
             'currencies'       => Currency::all(),
             'default_benefits' => Benefit::getBenefitsList(),
             'employees'        => Firm::getEmployeesList(),
+            'userPlanBundle'   => $presenter->userPlanBundle(),
         ]);
     }
 

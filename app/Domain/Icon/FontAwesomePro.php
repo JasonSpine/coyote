@@ -400,6 +400,11 @@ readonly class FontAwesomePro
             'jobOfferFirmNameAdd'                       => 'fa-light fa-circle-plus',
             'jobOfferMissingLogo'                       => 'fa-light fa-laptop-code',
 
+            // job offer bundle
+            'jobOfferBundlePlan'                        => 'fa-light fa-share-nodes',
+            'jobOfferBundleRemaining'                   => 'fa-light fa-cart-circle-arrow-down',
+            'jobOfferBundleContinue'                    => 'fa-light fa-copy',
+
             // job board filters
             'jobBoardFilterOpen'                        => 'fa-light fa-angle-down',
             'jobBoardFilterClosed'                      => 'fa-light fa-angle-up',

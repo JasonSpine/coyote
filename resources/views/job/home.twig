@@ -186,18 +186,33 @@
         </form>
       </div>
       <div class="col-md-3 d-none d-sm-block">
-        <section class="box">
+        <section class="box mb-4">
           <h4>Dla Pracodawców</h4>
           <div class="neon-tile neon-rounded p-3">
             <span class="edge">
               <a class="btn btn-primary jobboard-add-offer-list" href="{{ route('job.business') }}">
-                Oferty pracy od 39zł
+                Oferty pracy od 0zł
               </a>
             </span>
           </div>
         </section>
+        {% if userPlanBundle %}
+          <section class="box">
+            <h4>Opłacony pakiet</h4>
+            <div class="neon-tile neon-rounded p-4">
+              <p class="mb-2">
+                Masz do wykorzystania <strong>{{ userPlanBundle.remaining }}</strong> z <strong>{{ userPlanBundle.bundleSize }}</strong>
+                publikacji ogłoszeń zakupionego w Planie <strong>{{ userPlanBundle.planName }}</strong>.
+              </p>
+              <a class="btn btn-primary jobboard-add-offer-list" href="{{ userPlanBundle.useUrl }}">
+                Dodaj ogłoszenie
+              </a>
+            </div>
+          </section>
+        {% endif %}
       </div>
     </div>
+
     <div class="row">
       <div class="col-md-9 col-12">
         {% include 'job.partials.skeletons' %}
@@ -211,7 +226,7 @@
           <vue-pagination :current-page="jobs.meta.current_page" :total-pages="jobs.meta.last_page" @change="changePage"></vue-pagination>
         </nav>
       </div>
-      <div class="col-md-3 col-12" style="margin-top: -35px">
+      <div class="col-md-3 col-12">
         <section v-cloak v-show="subscribed.length" class="box">
           <h4>
             {{ icon('jobBoardSubscribedOffers') }}
@@ -223,8 +238,9 @@
             </div>
           </div>
         </section>
-
-        {{ render_block('job_ads') }}
+        <div class="mt-4">
+          {{ render_block('job_ads') }}
+        </div>
       </div>
     </div>
     <vue-notifications></vue-notifications>
