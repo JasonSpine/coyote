@@ -50,10 +50,10 @@ readonly class MaterialList
     private function adminUrl(Material $material): ?string
     {
         if ($material->type === 'post') {
-            return route('adm.flag.show.post', [$material->id]);
+            return null;
         }
         if ($material->type === 'comment') {
-            return route('adm.flag.show.comment', [$material->id]);
+            return null;
         }
         if ($material->type === 'microblog') {
             return $this->microblogUrl($material);

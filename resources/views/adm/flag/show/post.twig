@@ -51,34 +51,6 @@
     </a>
   </div>
 
-  {% if post.history|length > 1 %}
-    <h4 class="mt-4 my-2">
-      Zebrane aktywności
-    </h4>
-    <div class="mb-4">
-      {% for item in post.history %}
-        <div class="d-flex mb-2">
-          <span class="mt-1 me-2">
-            {{ icon(item.icon) }}
-          </span>
-          <div>
-            {{ item.userMention }}
-            {{ item.actionVerbPastTense }}
-            <span class="badge badge-secondary">{{ item.badge }}</span>
-
-            {% if item.note %}
-              z dopiskiem <code>{{ item.note }}</code>.
-            {% endif %}
-
-            <small class="d-block text-muted">
-              {{ item.createdAt.format }}, {{ item.createdAt.ago }}
-            </small>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-
   <a href="{{ backUrl }}" class="btn btn-secondary">
     {{ icon('adminMaterialPostBack') }}
     Powrót

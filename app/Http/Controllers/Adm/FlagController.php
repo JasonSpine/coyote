@@ -8,13 +8,8 @@ use Coyote\Domain\Administrator\UserMaterial\List\Store\MaterialStore;
 use Coyote\Domain\Administrator\UserMaterial\List\View\MarkdownRender;
 use Coyote\Domain\Administrator\UserMaterial\List\View\MaterialList;
 use Coyote\Domain\Administrator\UserMaterial\List\View\Time;
-use Coyote\Domain\Administrator\UserMaterial\Show\PostMaterialPresenter;
-use Coyote\Domain\Administrator\UserMaterial\Show\View\CommentMaterial;
-use Coyote\Domain\Administrator\View\Mention;
 use Coyote\Domain\View\Filter\Filter;
 use Coyote\Domain\View\Pagination\BootstrapPagination;
-use Coyote\Post;
-use Coyote\Services\UrlBuilder;
 use Illuminate\View\View;
 
 class FlagController extends BaseController
@@ -50,34 +45,6 @@ class FlagController extends BaseController
                 'is:reported', 'not:reported', 'is:open', 'not:open',
                 'author:{id}',
             ],
-        ]);
-    }
-
-    public function showPost(Post $post, PostMaterialPresenter $presenter): View
-    {
-        $this->breadcrumb->push('Dodane treści', route('adm.flag'));
-        $this->breadcrumb->push('Post #' . $post->id, route('adm.flag.show.post', [$post->id]));
-
-        return $this->view('adm.flag.show.post')->with([
-            'post'    => $presenter->post($post->id),
-            'backUrl' => route('adm.flag'),
-        ]);
-    }
-
-    public function showComment(Post\Comment $comment, Time $time): View
-    {
-        $this->breadcrumb->push('Dodane treści', route('adm.flag'));
-        $this->breadcrumb->push('Komentarz #' . $comment->id, route('adm.flag.show.comment', [$comment->id]));
-
-        return $this->view('adm.flag.show.comment')->with([
-            'comment' => new CommentMaterial(
-                $comment->text,
-                $comment->user_id,
-                new Mention($comment->user_id, $comment->user->name),
-                $time->date($comment->created_at),
-                UrlBuilder::postComment($comment),
-            ),
-            'backUrl' => route('adm.flag'),
         ]);
     }
 
