@@ -22,13 +22,11 @@ class FlagController extends BaseController
     public function index(MaterialStore $store, MarkdownRender $render): View
     {
         $this->breadcrumb->push('Dodane treści', route('adm.flag'));
-
         $paramFilterString = $this->queryOrNull('filter');
-
-        $filterParams = (new Filter($paramFilterString ?? ''))->toArray();
+        $filterParams = new Filter($paramFilterString ?? '')->toArray();
         $request = new MaterialRequest(
             \max(1, (int)$this->request->query('page', 1)),
-            10,
+            20,
             $filterParams['type'] ?? 'post',
             $filterParams['deleted'] ?? null,
             $filterParams['reported'] ?? null,
