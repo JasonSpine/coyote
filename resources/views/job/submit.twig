@@ -1,17 +1,19 @@
 {% extends 'job.base' %}
 
-{% block title %}Wystaw ofertę pracy{{ parent() }}{% endblock %}
+{% block title %}
+  Wystaw ofertę pracy{{ parent() }}
+{% endblock %}
 
 {% block container %}
   <div class="row">
-    <main class="col-12">
+    <div class="col-xl-1 col-xxl-2"></div>
+    <main class="col-12 col-xl-10 col-xxl-8">
       <div class="card card-body bg-light p-2 border-0 text-center" v-loader>
         <span class="lead justify-content-center ms-1">
           {{ icon('jobBoardLoading', {spin}) }}
           Ładowanie...
         </span>
       </div>
-
       <div id="js-submit-form" class="job-form" v-cloak>
         <vue-tabs @change="switchTab" :items="tabs" :current-tab="currentTab" id="js-tabs" class="mt-2 mb-2"></vue-tabs>
         <vue-job-form
@@ -21,7 +23,6 @@
             :errors="errors"
             :currencies="currencies"
         ></vue-job-form>
-
         <vue-firm-form
             v-show="currentTab === 1"
             :firm="job.firm"
@@ -30,7 +31,6 @@
             :employees="employees"
             :firms="firms"
         ></vue-firm-form>
-
         <div id="form-fixed">
           <div class="container-3xl">
             <div class="row">
@@ -39,7 +39,6 @@
                   {{ icon('jobOfferDraftTabPrev') }}
                   ${ tabs[currentTab - 1] }
                 </vue-button>
-
                 <vue-button
                     v-if="currentTab < 1"
                     @click="switchTab(currentTab + 1,'next')"
@@ -48,7 +47,6 @@
                   ${ tabs[currentTab + 1] }
                   {{ icon('jobOfferDraftTabNext') }}
                 </vue-button>
-
                 <vue-button
                     v-if="job.firm.name || currentTab === 1"
                     :disabled="isSubmitting"
@@ -67,7 +65,6 @@
       </div>
     </main>
   </div>
-
   <script src="//maps.googleapis.com/maps/api/js?key={{ config('services.google-maps.key') }}&sensor=false&libraries=places"></script>
   <script>
     var job = {{ job|json_encode|raw }};
@@ -81,8 +78,5 @@
 
 {% block body %}
   {{ parent() }}
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.9.11/tinymce.min.js"
-          integrity="sha512-3tlegnpoIDTv9JHc9yJO8wnkrIkq7WO7QJLi5YfaeTmZHvfrb1twMwqT4C0K8BLBbaiR6MOo77pLXO1/PztcLg==" crossorigin="anonymous"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.9.11/tinymce.min.js" integrity="sha512-3tlegnpoIDTv9JHc9yJO8wnkrIkq7WO7QJLi5YfaeTmZHvfrb1twMwqT4C0K8BLBbaiR6MOo77pLXO1/PztcLg==" crossorigin="anonymous"></script>
 {% endblock %}
