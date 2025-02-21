@@ -23,6 +23,6 @@ class MaterialItem
         public ?string     $adminUrl,
     )
     {
-        $this->preview = new SubstringHtml(new InlineHtml($content), 100);
+        $this->preview = new SubstringHtml(new InlineHtml($content), 200);
     }
 }

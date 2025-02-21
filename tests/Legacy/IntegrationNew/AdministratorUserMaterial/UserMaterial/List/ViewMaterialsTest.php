@@ -70,8 +70,8 @@ class ViewMaterialsTest extends TestCase
      */
     public function previewHtmlTrimmed(): void
     {
-        $vo = $this->item($this->material(markdown:\str_repeat('a', 150)));
-        $this->assertHtml(\str_repeat('a', 100) . '...', $vo->preview);
+        $vo = $this->item($this->material(markdown:\str_repeat('a', 250)));
+        $this->assertHtml(\str_repeat('a', 200) . '...', $vo->preview);
     }
 
     /**
