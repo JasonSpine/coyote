@@ -482,9 +482,6 @@ export default {
     },
   },
   methods: {
-    publishDraft(): void {
-      console.log('publish');
-    },
     resetGalleryImages(): void {
       const postContent = this.$refs['postContent'];
       const images = postContent.querySelectorAll('img:not(.img-smile)');
