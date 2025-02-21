@@ -50,7 +50,7 @@
     {% endif %}
     <div class="col-lg-10">
       {% if payment and not session_has('success') %}
-        <div class="alert alert-warning">
+        <div class="neon-tile neon-rounded p-3 mb-4">
           <h4>
             {{ icon('jobOfferPaymentRequired') }}
             Oczekiwanie na płatność.
@@ -58,7 +58,7 @@
           <p>
             Ogłoszenie jest już w naszej bazie. Nie możemy jednak rozpocząć wyświetlania oferty, dopóki nie uregulujesz płatności.
           </p>
-          <a href="{{ route('job.payment', [payment.id]) }}" class="mt-2">
+          <a href="{{ route('job.payment', [payment.id]) }}" class="btn btn-secondary">
             Przejdź do płatności
           </a>
         </div>
