@@ -1,6 +1,7 @@
 <?php
 namespace Coyote\Http\Controllers\Job;
 
+use Carbon\Carbon;
 use Coyote\Comment;
 use Coyote\Firm;
 use Coyote\Http\Controllers\Controller;
@@ -58,9 +59,15 @@ class OfferController extends Controller
             'subscriptions'     => $this->subscriptions(),
             'emojis'            => Emoji::all(),
             'job'               => $job,
+            'jobValidForDays'   => $this->validForDays($job),
             'is_author'         => $job->enable_apply && $job->user_id === auth()->user()?->id,
             'userPlanBundle'    => $presenter->userPlanBundle(),
         ]);
+    }
+
+    private function validForDays(Job $job): int
+    {
+        return Carbon::now()->diffInDays($job->deadline_at) + 1;
     }
 
     private function applications(Job $job): Support\Collection
