@@ -150,6 +150,14 @@
           </vue-searchbar>
         </div>
 
+        {% if not auth_check() %}
+          <div class="order-2 d-flex align-items-center me-2">
+            <a class="btn btn-sm btn-primary" href="{{ route('job.business') }}">
+              Dodaj ofertę pracy
+            </a>
+          </div>
+        {% endif %}
+
         <div class="order-2" id="non-alert-controls">
         </div>
 
@@ -231,13 +239,24 @@
             </div>
           </div>
         {% else %}
-          <div class="form-inline order-2 ms-auto">
-            <a class="me-1 neon-small me-3 ms-3" href="{{ route('login') }}">
-              Zaloguj się
-            </a>
-            <a class="btn btn-sm btn-primary btn-register" href="{{ route('register') }}">
-              Utwórz konto
-            </a>
+          <div class="dropdown order-2 d-flex align-items-center">
+            <div class="dropdown-toggle" data-bs-toggle="dropdown" style="cursor:pointer;">
+              {{ icon('userProfile') }}
+            </div>
+            <div class="dropdown-menu dropdown-menu-end" style="min-width:220px;">
+              <div class="px-3">
+                <a class="btn btn-sm btn-primary d-block" href="{{ route('register') }}">
+                  Zarejestruj się
+                </a>
+              </div>
+              <hr class="my-2">
+              <div class="d-flex justify-content-between align-items-center px-3">
+                <span class="flex-shrink-0 text-muted">Masz już konto?</span>
+                <a class="btn btn-sm btn-secondary flex-shrink-0" href="{{ route('login') }}">
+                  Zaloguj się
+                </a>
+              </div>
+            </div>
           </div>
         {% endif %}
         <button class="navbar-toggler shadow-none order-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobile-menu">
