@@ -170,12 +170,11 @@
     <div class="col-md-4 position-relative mt-4">
       <aside class="sticky-aside">
         {{ render_block('homepage_banner_side') }}
-
         <div class="box mb-4">
           <h4>Użytkownicy online</h4>
           {{ globalViewers|raw }}
         </div>
-
+        {{ render_block('job_ads') }}
         <section class="box my-4">
           <h4>Reputacja użytkowników</h4>
           <div class="tab-content neon-tile neon-rounded variable-names card-reputation">
@@ -235,7 +234,6 @@
             {% endfor %}
           </div>
         </section>
-        {{ render_block('job_ads') }}
       </aside>
     </div>
   </div>
