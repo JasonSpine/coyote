@@ -59,6 +59,7 @@ use Illuminate\Notifications\RoutesNotifications;
  * @property integer|null $ad_views
  * @property string|null $apply_type
  * @property string|null $application_url
+ * @property integer|null application_redirects
  */
 class Job extends Model
 {

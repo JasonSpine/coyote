@@ -359,6 +359,7 @@ export interface Job {
   firm?: Firm;
   apply_type: string;
   application_url?: string;
+  application_redirects?: number;
 }
 
 export interface Application {

@@ -13,16 +13,21 @@ use Coyote\Services\Stream\Objects\Job as Stream_Job;
 use Coyote\Services\UrlBuilder;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ApplicationController extends Controller
 {
-    public function submit(Job $job): View
+    public function submit(Job $job): View|RedirectResponse
     {
+        if ($job->apply_type === 'external') {
+            $job->application_redirects = ($job->application_redirects ?? 0) + 1;
+            $job->save();
+            return response()->redirectTo($job->application_url);
+        }
         abort_if(!$job->enable_apply, 404);
-
         $this->breadcrumb->pushMany([
             'Praca'                          => route('job.home'),
             $job->title                      => UrlBuilder::job($job, true),

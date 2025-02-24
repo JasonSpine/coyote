@@ -120,7 +120,7 @@
                     {% endif %}
                     {% if job.apply_type == 'external' %}
                       <div class="mt-4">
-                        <a class="btn btn-primary" rel="nofollow" href="{{ job.application_url }}" target="_blank">
+                        <a class="btn btn-primary" rel="nofollow" href="{{ route('job.application', [job.id]) }}" target="_blank">
                           Aplikuj
                           {{ icon('jobOfferApplicationExternal') }}
                         </a>
@@ -284,7 +284,7 @@
                     {% endif %}
                     {% if job.apply_type == 'external' %}
                       <div class="mt-4">
-                        <a class="btn btn-primary" rel="nofollow" href="{{ job.application_url }}" target="_blank">
+                        <a class="btn btn-primary" rel="nofollow" href="{{ route('job.application', [job.id]) }}" target="_blank">
                           Aplikuj na to stanowisko
                           {{ icon('jobOfferApplicationExternal') }}
                         </a>
@@ -335,7 +335,7 @@
                           </div>
                         {% endif %}
                         {% if job.apply_type == 'external' %}
-                          <a class="btn btn-primary d-block" rel="nofollow" href="{{ job.application_url }}" target="_blank">
+                          <a class="btn btn-primary d-block" rel="nofollow" href="{{ route('job.application', [job.id]) }}" target="_blank">
                             Aplikuj
                             {{ icon('jobOfferApplicationExternal') }}
                           </a>
@@ -558,7 +558,14 @@
               </p>
               <p>
                 {{ icon('jobOfferApplications') }}
-                {{ applicationsCount }} aplikacji na stanowisko
+                {% if job.apply_type == 'service' %}
+                  {{ applicationsCount }} aplikacji na stanowisko
+                {% elseif job.apply_type == 'external' %}
+                  {{ declination(job.application_redirects|default('0'), [
+                    'przekierowanie','przekierowania','przekierowań'
+                  ]) }}
+                  do aplikacji
+                {% endif %}
               </p>
             </li>
             {% if not job.is_expired %}
