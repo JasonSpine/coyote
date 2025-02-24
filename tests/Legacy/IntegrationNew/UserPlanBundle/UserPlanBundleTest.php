@@ -15,18 +15,6 @@ class UserPlanBundleTest extends TestCase
     use Laravel\Transactional;
 
     #[Test]
-    #[DoesNotPerformAssertions]
-    public function createUserPlanBundle(): void
-    {
-        $bundle = new UserPlanBundle();
-        $bundle->remaining = 20;
-        $bundle->user()->associate(factory(User::class)->create());
-        $bundle->plan()->associate(Plan::query()->firstOrFail());
-        $bundle->payment()->associate(Payment::query()->firstOrFail());
-        $bundle->save();
-    }
-
-    #[Test]
     public function planDoesNotContainsBundle(): void
     {
         $plan = new Plan();

@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call(WikiTableSeeder::class);
         $this->call(BlocksTableSeeder::class);
         $this->call(FeaturesTableSeeder::class);
+        $this->call(ModernPlansTableSeeder::class);
         $this->call(TagCategoriesTableSeeder::class);
         $this->call(TopicsTableSeeder::class);
         $this->call(ActivityTableSeeder::class);

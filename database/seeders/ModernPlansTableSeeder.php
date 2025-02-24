@@ -8,8 +8,7 @@ class ModernPlansTableSeeder extends Seeder
 {
     public function run(): void
     {
-        \Coyote\Plan::query()->where('length', 40)->update(['is_active' => false]);
-
+        $this->createLegacyPlans();
         $this->createPlan('Free', price:0, length:14, boost:false, locations:1);
         $this->createPlan('Premium', price:159);
         $this->createPlan('Strategic', price:357, bundle:3);
@@ -39,6 +38,40 @@ class ModernPlansTableSeeder extends Seeder
             'is_active'     => true,
             'bundle_size'   => $bundle,
             'max_locations' => $locations ?? 10,
+        ]);
+    }
+
+    private function createLegacyPlans(): void
+    {
+        \Coyote\Plan::query()->forceCreate([
+            'name'      => 'Standard',
+            'price'     => 0,
+            'vat_rate'  => 1.23,
+            'discount'  => 0,
+            'length'    => 40,
+            'benefits'  => ['is_publish'],
+            'is_active' => false,
+        ]);
+        \Coyote\Plan::query()->forceCreate([
+            'name'       => 'Plus',
+            'price'      => 65,
+            'vat_rate'   => 1.23,
+            'discount'   => 0,
+            'length'     => 40,
+            'benefits'   => ['is_publish', 'is_social', 'is_boost', 'is_ads'],
+            'is_default' => 1,
+            'boost'      => 1,
+            'is_active'  => false,
+        ]);
+        \Coyote\Plan::query()->forceCreate([
+            'name'      => 'Premium',
+            'price'     => 159,
+            'vat_rate'  => 1.23,
+            'discount'  => 0,
+            'length'    => 40,
+            'benefits'  => ['is_publish', 'is_social', 'is_boost', 'is_ads', 'is_highlight', 'is_on_top'],
+            'boost'     => 3,
+            'is_active' => false,
         ]);
     }
 }
