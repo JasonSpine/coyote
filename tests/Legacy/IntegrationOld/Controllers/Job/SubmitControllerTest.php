@@ -35,41 +35,43 @@ class SubmitControllerTest extends TestCase
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['currency_id', 'plan_id', 'title']);
         $response->assertJsonFragment([
-            'title' => ['Tytuł jest wymagany.'],
+            'title'       => ['Tytuł jest wymagany.'],
             'currency_id' => ['Pole currency id jest wymagane.'],
-            'plan_id' => ['Pole plan id jest wymagane.']
+            'plan_id'     => ['Pole plan id jest wymagane.'],
         ]);
     }
 
     public function testSubmitFailsNoEmailWasProvided()
     {
         $response = $this->actingAs($this->user)->json('POST', '/Praca/Submit', [
-            'title' => $this->faker->text(60),
-            'plan_id' => Plan::active()->first()->id,
-            'currency_id' => Currency::first()->id,
-            'email' => '',
-            'enable_apply' => true
+            'title'        => $this->faker->text(60),
+            'plan_id'      => Plan::active()->first()->id,
+            'currency_id'  => Currency::first()->id,
+            'email'        => '',
+            'enable_apply' => true,
+            'apply_type'   => 'service',
         ]);
 
         $response->assertJsonValidationErrors(['email']);
         $response->assertJsonFragment([
-            'email' => ['Pole email jest wymagane.']
+            'email' => ['Pole email jest wymagane.'],
         ]);
     }
 
     public function testSubmitFailsNoRecruitmentWasProvided()
     {
         $response = $this->actingAs($this->user)->json('POST', '/Praca/Submit', [
-            'title' => $this->faker->text(60),
-            'plan_id' => Plan::active()->first()->id,
-            'currency_id' => Currency::first()->id,
-            'email' => '',
-            'enable_apply' => false
+            'title'        => $this->faker->text(60),
+            'plan_id'      => Plan::query()->active()->first()->id,
+            'currency_id'  => Currency::query()->first()->id,
+            'email'        => '',
+            'enable_apply' => false,
+            'apply_type'   => 'description',
         ]);
 
         $response->assertJsonValidationErrors(['recruitment']);
         $response->assertJsonFragment([
-            'recruitment' => ['Proszę podać informacje w jaki sposób można składać aplikacje na to stanowisko.']
+            'recruitment' => ['Proszę podać informacje w jaki sposób można składać aplikacje na to stanowisko.'],
         ]);
     }
 
@@ -78,52 +80,53 @@ class SubmitControllerTest extends TestCase
         $firm = factory(Firm::class)->create(['user_id' => $this->user->id]);
 
         $response = $this->actingAs($this->user)->json('POST', '/Praca/Submit', [
-            'title' => $this->faker->text(60),
-            'plan_id' => Plan::active()->first()->id,
-            'currency_id' => Currency::first()->id,
-            'email' => $this->faker->email,
+            'title'        => $this->faker->text(60),
+            'plan_id'      => Plan::active()->first()->id,
+            'currency_id'  => Currency::first()->id,
+            'email'        => $this->faker->email,
             'enable_apply' => true,
-            'firm' => [
-                'id' => $firm->id,
-                'name' => ''
-            ]
+            'firm'         => [
+                'id'   => $firm->id,
+                'name' => '',
+            ],
         ]);
 
         $response->assertJsonValidationErrors(['firm.name']);
         $response->assertJsonFragment([
-            'firm.name' => ['Pole nazwa firmy jest wymagane.']
+            'firm.name' => ['Pole nazwa firmy jest wymagane.'],
         ]);
     }
 
     public function testSubmitValidFormWithoutFirm()
     {
         $response = $this->actingAs($this->user)->json('POST', '/Praca/Submit', [
-            'title' => $title = $this->faker->text(60),
-            'plan_id' => Plan::active()->first()->id,
-            'currency_id' => $currency = Currency::first()->id,
+            'title'        => $title = $this->faker->text(60),
+            'plan_id'      => Plan::active()->first()->id,
+            'currency_id'  => $currency = Currency::first()->id,
             'enable_apply' => true,
-            'email' => $this->user->email,
-            'description' => $description = $this->faker->realText(),
-            'rate' => 'weekly',
-            'employment' => 'b2b',
-            'seniority' => 'lead',
-            'is_gross' => true,
-            'salary_from' => 10000,
-            'salary_to' => 20000,
-            'locations' => [
+            'apply_type'   => 'service',
+            'email'        => $this->user->email,
+            'description'  => $description = $this->faker->realText(),
+            'rate'         => 'weekly',
+            'employment'   => 'b2b',
+            'seniority'    => 'lead',
+            'is_gross'     => true,
+            'salary_from'  => 10000,
+            'salary_to'    => 20000,
+            'locations'    => [
                 [
-                    'city' => 'Wrocław',
-                    'street' => 'Rynek',
-                    'latitude' => 51,
-                    'longitude' => 17
-                ]
+                    'city'      => 'Wrocław',
+                    'street'    => 'Rynek',
+                    'latitude'  => 51,
+                    'longitude' => 17,
+                ],
             ],
-            'tags' => [
+            'tags'         => [
                 [
-                    'name' => 'c#',
-                    'priority' => 2
-                ]
-            ]
+                    'name'     => 'c#',
+                    'priority' => 2,
+                ],
+            ],
         ]);
 
         $response->assertStatus(200);
@@ -157,17 +160,18 @@ class SubmitControllerTest extends TestCase
         $asset = factory(Asset::class)->create(['name' => 'a.png']);
 
         $response = $this->actingAs($this->user)->json('POST', '/Praca/Submit', [
-            'title' => $title = $this->faker->text(60),
-            'plan_id' => Plan::active()->first()->id,
-            'currency_id' => $currency = Currency::first()->id,
+            'title'        => $title = $this->faker->text(60),
+            'plan_id'      => Plan::active()->first()->id,
+            'currency_id'  => $currency = Currency::first()->id,
             'enable_apply' => true,
-            'email' => $this->user->email,
-            'firm' => $firm->toArray() + [
-                    'logo' => $logo = url('/uploads/logo/b.png'),
+            'apply_type'   => 'service',
+            'email'        => $this->user->email,
+            'firm'         => $firm->toArray() + [
+                    'logo'   => $logo = url('/uploads/logo/b.png'),
                     'assets' => [
-                        $asset
-                    ]
-                ]
+                        $asset,
+                    ],
+                ],
         ]);
 
         $response->assertStatus(200);
@@ -195,12 +199,13 @@ class SubmitControllerTest extends TestCase
         $firm = factory(Firm::class)->create(['user_id' => $this->user->id]);
 
         $response = $this->actingAs($this->user)->json('POST', '/Praca/Submit', [
-            'title' => $this->faker->text(60),
-            'plan_id' => Plan::active()->first()->id,
-            'currency_id' => Currency::first()->id,
+            'title'        => $this->faker->text(60),
+            'plan_id'      => Plan::active()->first()->id,
+            'currency_id'  => Currency::first()->id,
             'enable_apply' => true,
-            'email' => $this->user->email,
-            'firm' => $firm->toArray()
+            'apply_type'   => 'service',
+            'email'        => $this->user->email,
+            'firm'         => $firm->toArray(),
         ]);
 
         $response->assertStatus(200);
@@ -227,12 +232,13 @@ class SubmitControllerTest extends TestCase
         $job = factory(Job::class)->create(['user_id' => $this->user->id, 'firm_id' => $firm->id]);
 
         $response = $this->actingAs($this->user)->json('POST', '/Praca/Submit/' . $job->id, [
-            'title' => $title = $this->faker->text(60),
-            'plan_id' => $plan = Plan::active()->first()->id,
-            'currency_id' => $currency = Currency::first()->id,
+            'title'        => $title = $this->faker->text(60),
+            'plan_id'      => $plan = Plan::active()->first()->id,
+            'currency_id'  => $currency = Currency::first()->id,
             'enable_apply' => true,
-            'email' => $email = $this->user->email,
-            'firm' => $firm->toArray()
+            'apply_type'   => 'service',
+            'email'        => $email = $this->user->email,
+            'firm'         => $firm->toArray(),
         ]);
 
         $response->assertStatus(200);
@@ -255,12 +261,13 @@ class SubmitControllerTest extends TestCase
         $newFirm = factory(Firm::class)->make();
 
         $response = $this->actingAs($this->user)->json('POST', '/Praca/Submit/' . $job->id, [
-            'title' => $title = $this->faker->text(60),
-            'plan_id' => Plan::active()->first()->id,
-            'currency_id' => $currency = Currency::first()->id,
+            'title'        => $title = $this->faker->text(60),
+            'plan_id'      => Plan::active()->first()->id,
+            'currency_id'  => Currency::first()->id,
             'enable_apply' => true,
-            'email' => $this->user->email,
-            'firm' => $newFirm->toArray()
+            'apply_type'   => 'service',
+            'email'        => $this->user->email,
+            'firm'         => $newFirm->toArray(),
         ]);
 
         $response->assertStatus(200);

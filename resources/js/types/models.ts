@@ -67,7 +67,7 @@ export interface Asset {
 }
 
 export interface Microblog {
-  id: number | null;
+  id: number|null;
   parent_id?: number;
   votes: number;
   is_voted: boolean;
@@ -75,14 +75,14 @@ export interface Microblog {
   is_sponsored: boolean;
   is_editing?: boolean;
   is_read?: boolean;
-  created_at: Date | null;
-  updated_at: Date | null;
-  deleted_at: Date | null;
+  created_at: Date|null;
+  updated_at: Date|null;
+  deleted_at: Date|null;
   html: string;
   text: string;
   url: string;
   comments: Microblog[];
-  user: User | null;
+  user: User|null;
   assets: Asset[];
   permissions: MicroblogPermission;
   comments_count?: number;
@@ -97,7 +97,7 @@ export interface MicroblogVoters {
   users: string[];
 }
 
-export type PostVoters = Pick<MicroblogVoters, "id" | "users">
+export type PostVoters = Pick<MicroblogVoters, "id"|"users">
 
 export interface Forum {
   id: number;
@@ -150,8 +150,8 @@ interface PostModeratorPermission {
 export interface PostComment {
   id: number;
   post_id: number;
-  created_at: Date | null;
-  updated_at: Date | null;
+  created_at: Date|null;
+  updated_at: Date|null;
   text: string;
   html: string;
   user: User;
@@ -165,14 +165,14 @@ export interface PostComment {
 export interface Post {
   id: number;
   user?: User;
-  user_id: number | null;
+  user_id: number|null;
   user_name?: string;
   editor?: User;
   deleter_name?: string;
   delete_reason?: string;
   created_at: Date;
-  updated_at: Date | null;
-  deleted_at: Date | null;
+  updated_at: Date|null;
+  deleted_at: Date|null;
   text: string;
   html: string;
   score: number;
@@ -192,9 +192,9 @@ export interface Post {
   edit_count?: number;
   metadata?: string;
   voters?: string[];
-  parentPostId: number | null;
+  parentPostId: number|null;
   childrenFolded: boolean;
-  type: 'regular' | 'obscured';
+  type: 'regular'|'obscured';
   highlighted: boolean;
 }
 
@@ -256,8 +256,8 @@ export interface Topic {
   is_subscribed?: boolean;
   tags?: Tag[];
   subscribers?: number;
-  owner_id?: number | null;
-  discuss_mode: 'tree' | 'linear';
+  owner_id?: number|null;
+  discuss_mode: 'tree'|'linear';
   treeSelectedSubtree: boolean;
   treeSelectedSubtreePostId: number;
 }
@@ -275,7 +275,7 @@ export interface Message {
 }
 
 export interface Paginator {
-  data: Microblog[] | Post[] | Guide[];
+  data: Microblog[]|Post[]|Guide[];
   current_page: number;
   from: number;
   last_page: number;
@@ -357,6 +357,8 @@ export interface Job {
   employment: Employment;
   seniority: Seniority;
   firm?: Firm;
+  apply_type: string;
+  application_url?: string;
 }
 
 export interface Application {
@@ -368,7 +370,7 @@ export interface Application {
   remember: boolean;
   salary: string;
   dismissal_period: string;
-  cv: string | null;
+  cv: string|null;
 }
 
 export interface Firm {
@@ -385,7 +387,7 @@ export interface Firm {
   employees: number;
   founded: number;
   youtube_url: string;
-  logo: string | null;
+  logo: string|null;
   assets: Asset[];
   benefits: string[];
   website: string;

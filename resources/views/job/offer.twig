@@ -112,13 +112,19 @@
                     </span>
                   {% endif %}
                   {% if not job.is_expired %}
-                    {% if job.enable_apply %}
-                      <a class="btn btn-primary px-4"
-                         rel="nofollow"
-                         href="{{ not preview ? route('job.application', [job.id]) : 'javascript:' }}"
+                    {% if job.apply_type == 'service' %}
+                      <a class="btn btn-primary px-4" href="{{ not preview ? route('job.application', [job.id]) : 'javascript:' }}"
                           {{ is_applied ? 'title="Już aplikowałeś na tę ofertę pracy" disabled' }}>
                         Aplikuj
                       </a>
+                    {% endif %}
+                    {% if job.apply_type == 'external' %}
+                      <div class="mt-4">
+                        <a class="btn btn-primary" rel="nofollow" href="{{ job.application_url }}" target="_blank">
+                          Aplikuj
+                          {{ icon('jobOfferApplicationExternal') }}
+                        </a>
+                      </div>
                     {% endif %}
                   {% endif %}
                 </div>
@@ -264,22 +270,34 @@
                       </vue-map>
                     </div>
                   {% endif %}
-
                   {% if not job.is_expired %}
-                    {% if not job.enable_apply %}
+                    {% if job.apply_type == 'service' %}
+                      <div id="apply" class="mt-4">
+                        <a
+                            class="btn btn-primary"
+                            rel="nofollow"
+                            href="{{ not preview ? route('job.application', [job.id]) : 'javascript:' }}"
+                            {{ is_applied ? 'title="Już aplikowałeś na tę ofertę pracy" disabled' }}>
+                          Aplikuj na to stanowisko
+                        </a>
+                      </div>
+                    {% endif %}
+                    {% if job.apply_type == 'external' %}
+                      <div class="mt-4">
+                        <a class="btn btn-primary" rel="nofollow" href="{{ job.application_url }}" target="_blank">
+                          Aplikuj na to stanowisko
+                          {{ icon('jobOfferApplicationExternal') }}
+                        </a>
+                      </div>
+                    {% endif %}
+                    {% if job.apply_type == 'description' %}
                       <div class="pt-4">
                         <h3 id="apply" class="mt-4">
-                          Informacje o rekrutacji
+                          Aplikuj na to stanowisko
                         </h3>
                       </div>
                       <div class="text">
                         {{ job.recruitment|raw }}
-                      </div>
-                    {% else %}
-                      <div id="apply" class="mt-4">
-                        <a class="btn btn-primary" rel="nofollow" href="{{ not preview ? route('job.application', [job.id]) : 'javascript:' }}" {{ is_applied ? 'title="Już aplikowałeś na tę ofertę pracy" disabled' }}>
-                          Aplikuj na to stanowisko
-                        </a>
                       </div>
                     {% endif %}
                   {% endif %}
@@ -311,22 +329,32 @@
                         </p>
                       </li>
                       {% if not job.is_expired %}
-                        <div>
-                          {% set attr = {} %}
-                          {% if job.enable_apply %}
-                            {% set url = route('job.application', [job.id]) %}
-                          {% elseif is_url(job.getOriginal('recruitment')) %}
-                            {% set url = job.getOriginal('recruitment') %}
-                            {% set attr = attr|merge({'target': '_blank'}) %}
-                          {% else %}
-                            {% set url = "#apply" %}
-                          {% endif %}
-                          {{ link_to(url, 'Aplikuj', attr|merge({class: 'btn d-block btn-primary w-full'})) }}
-                        </div>
+                        {% if job.apply_type == 'service' %}
+                          <div>
+                            {{ link_to(route('job.application', [job.id]), 'Aplikuj', {class: 'btn d-block btn-primary w-full'}) }}
+                          </div>
+                        {% endif %}
+                        {% if job.apply_type == 'external' %}
+                          <a class="btn btn-primary d-block" rel="nofollow" href="{{ job.application_url }}" target="_blank">
+                            Aplikuj
+                            {{ icon('jobOfferApplicationExternal') }}
+                          </a>
+                        {% endif %}
+                        {% if job.apply_type == 'description' %}
+                          <div>
+                            {% if is_url(job.getOriginal('recruitment')) %}
+                              <a class="btn btn-primary d-block" rel="nofollow" href="{{ job.getOriginal('recruitment') }}" target="_blank">
+                                Aplikuj
+                                {{ icon('jobOfferApplicationExternal') }}
+                              </a>
+                            {% else %}
+                              {{ link_to("#apply", 'Aplikuj', {class: 'btn d-block btn-primary w-full'}) }}
+                            {% endif %}
+                          </div>
+                        {% endif %}
                       {% endif %}
                     </ul>
                   </div>
-
                   {% if tags|length > 0 %}
                     <div class="neon-tile neon-rounded p-4 mb-3 neon-box">
                       {% for category, tags in tags %}

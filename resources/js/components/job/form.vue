@@ -132,38 +132,46 @@
       </ol>
     </div>
     <div class="form-group">
-      <div class="form-group">
-        <div class="custom-control custom-radio">
-          <input
-            type="radio"
-            id="enable_apply_1"
-            name="enable_apply"
-            v-model="job.enable_apply"
-            :value="true"
-            class="custom-control-input">
-          <label for="enable_apply_1" class="custom-control-label ms-1">
-            Zezwól na wysyłanie CV poprzez serwis 4programmers.net
-          </label>
-        </div>
+      <div class="custom-control custom-radio">
+        <input
+          type="radio"
+          id="applyTypeService"
+          v-model="job.apply_type"
+          value="service"
+          class="custom-control-input"
+          @change="changeApplicationCriteria">
+        <label for="applyTypeService" class="custom-control-label ms-1">
+          Zezwól na wysyłanie CV przez serwis 4programmers.net
+        </label>
       </div>
-      <div class="row">
+      <div class="row mt-2" v-if="job.apply_type === 'service'">
         <div class="col-sm-6">
-          <vue-text name="email" v-model="job.email" :disabled="job.enable_apply === false" :is-invalid="'email' in errors"/>
+          <vue-text name="email" v-model="job.email" :is-invalid="'email' in errors"/>
           <span class="form-text text-muted">Adres e-mail nie będzie widoczny dla osób postronnych.</span>
           <vue-error :message="errors.email"/>
         </div>
       </div>
     </div>
     <div class="form-group">
-      <div class="form-group">
-        <div class="custom-control custom-radio">
-          <input type="radio" id="enable_apply_0" v-model="job.enable_apply" :value="false" class="custom-control-input">
-          <label for="enable_apply_0" class="custom-control-label ms-1">
-            Podaj informacje w jaki sposób kandydaci mogą aplikować na to stanowisko
-          </label>
-        </div>
+      <div class="custom-control custom-radio">
+        <input type="radio" id="applyTypeExternal" v-model="job.apply_type" value="external" class="custom-control-input" @change="changeApplicationCriteria">
+        <label for="applyTypeExternal" class="custom-control-label ms-1">
+          Podaj odnośnik do zewnętrznego systemu aplikacji
+        </label>
       </div>
-      <div v-show="job.enable_apply === false">
+      <div class="mt-2" v-if="job.apply_type === 'external'">
+        <vue-text placeholder="https://your-application-system.com/" v-model="job.application_url"/>
+        <span class="form-text text-muted">Podaj adres URL do Twojego systemu zarządzania aplikacjami.</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="custom-control custom-radio">
+        <input type="radio" id="applyTypeDescription" v-model="job.apply_type" value="description" class="custom-control-input" @change="changeApplicationCriteria">
+        <label for="applyTypeDescription" class="custom-control-label ms-1">
+          Podaj informacje w jaki sposób kandydaci mogą aplikować na to stanowisko
+        </label>
+      </div>
+      <div v-if="job.apply_type === 'description'" class="mt-2">
         <vue-rich-editor v-model="job.recruitment"/>
         <input type="hidden" name="recruitment" v-model="job.recruitment">
         <vue-error :message="errors.recruitment"/>
@@ -212,13 +220,18 @@ export default {
     currencies: {type: Array, required: true},
     errors: {type: Object, required: false},
     plan: {type: Object},
-    userPlanBundle: {type: Object, required: true},
+    userPlanBundle: {type: Object, required: false},
   },
   data() {
     return {
       suggestions: {},
       titleMaxLength: 60,
     };
+  },
+  created(): void {
+    if (!this.$props.job.apply_type) {
+      this.$props.job.apply_type = 'service';
+    }
   },
   methods: {
     ...mapMutations('jobs', ['REMOVE_LOCATION', 'SET_LABEL', 'ADD_TAG', 'REMOVE_TAG', 'TOGGLE_FEATURE']),
@@ -234,10 +247,12 @@ export default {
       store.commit('jobs/ADD_TAG', tag.name);
       // fetch only tag name
       let pluck = this.job.tags.map(item => item.name);
-
       // request suggestions
       axios.get<any>('/Praca/Tag/Suggestions', {params: {t: pluck}})
         .then((response: AxiosResponse<any>) => this.suggestions = response.data);
+    },
+    changeApplicationCriteria(): void {
+      this.$props.job.enable_apply = this.$props.job.apply_type === 'service';
     },
   },
   computed: {

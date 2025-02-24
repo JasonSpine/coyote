@@ -1,5 +1,4 @@
 <?php
-
 namespace Coyote\Http\Requests\Job;
 
 use Coyote\Job;
@@ -71,85 +70,82 @@ class JobRequest extends FormRequest
         return ['nullable', 'string', Rule::in([Job::MANDATORY, Job::EMPLOYMENT, Job::B2B, Job::CONTRACT])];
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
         $job = $this->route('job');
 
         return [
-            'title' => self::TITLE,
-            'seniority' => $this->seniorityRule(),
-            'is_remote' => self::IS_REMOTE,
-            'remote_range' => self::REMOTE_RANGE,
-            'salary_from' => self::SALARY_FROM,
-            'salary_to' => self::SALARY_TO,
-            'is_gross' => self::IS_GROSS,
-            'currency_id' => ['required', 'int', 'exists:currencies,id'],
-            'rate' => $this->rateRule(),
-            'employment' => $this->employmentRule(),
-            'recruitment' => [
-                Rule::requiredIf(function () use ($job) {
-                    return $this->input('enable_apply') === false;
-                }),
+            'title'                     => self::TITLE,
+            'seniority'                 => $this->seniorityRule(),
+            'is_remote'                 => self::IS_REMOTE,
+            'remote_range'              => self::REMOTE_RANGE,
+            'salary_from'               => self::SALARY_FROM,
+            'salary_to'                 => self::SALARY_TO,
+            'is_gross'                  => self::IS_GROSS,
+            'currency_id'               => ['required', 'int', 'exists:currencies,id'],
+            'rate'                      => $this->rateRule(),
+            'employment'                => $this->employmentRule(),
+            'recruitment'               => [
                 'nullable',
-                'string'
+                'string',
+                Rule::requiredIf(fn() => $this->input('apply_type') === 'description'),
             ],
-            'email' => [
+            'apply_type'                => ['required', 'string', Rule::in(['service', 'description', 'external'])],
+            'email'                     => [
                 'bail',
-                Rule::requiredIf($this->input('enable_apply') === true),
+                Rule::requiredIf($this->input('apply_type') === 'service'),
                 'nullable',
-                'email'
+                'email',
             ],
-            'plan_id' => [
+            'application_url'           => [
+                'nullable',
+                Rule::requiredIf($this->input('apply_type') === 'external'),
+                'string',
+                'url',
+            ],
+            'plan_id'                   => [
                 'bail',
-                Rule::requiredIf(function () use ($job) {
-                    return !$job->exists;
-                }),
+                Rule::requiredIf(fn() => !$job->exists),
                 'int',
                 Rule::exists('plans', 'id')->where('is_active', 1),
             ],
-            'features.*.id' => 'required|int',
-            'features.*.name' => 'string|max:100',
-            'features.*.value' => 'nullable|string|max:100',
-            'features.*.is_checked' => 'bool',
-            'tags.*.name' => self::TAG_NAME,
-            'tags.*.priority' => self::TAG_PRIORITY,
-            'locations.*.city' => self::LOCATION_CITY,
-            'locations.*.street' => self::LOCATION_STREET,
+            'features.*.id'             => 'required|int',
+            'features.*.name'           => 'string|max:100',
+            'features.*.value'          => 'nullable|string|max:100',
+            'features.*.is_checked'     => 'bool',
+            'tags.*.name'               => self::TAG_NAME,
+            'tags.*.priority'           => self::TAG_PRIORITY,
+            'locations.*.city'          => self::LOCATION_CITY,
+            'locations.*.street'        => self::LOCATION_STREET,
             'locations.*.street_number' => self::LOCATION_STREET_NUMBER,
-            'locations.*.country' => self::LOCATION_COUNTRY,
-            'locations.*.latitude' => self::LOCATION_LATITUDE,
-            'locations.*.longitude' => self::LOCATION_LONGITUDE,
-
-            'firm.id' => [
+            'locations.*.country'       => self::LOCATION_COUNTRY,
+            'locations.*.latitude'      => self::LOCATION_LATITUDE,
+            'locations.*.longitude'     => self::LOCATION_LONGITUDE,
+            'firm.id'                   => [
                 'nullable',
                 'integer',
-                Rule::exists('firms', 'id')->whereNull('deleted_at')
+                Rule::exists('firms', 'id')->whereNull('deleted_at'),
             ],
-            'firm.name' => [
+            'firm.name'                 => [
                 'nullable',
                 Rule::requiredIf($this->input('firm.id') !== null),
                 'string',
                 'min:2',
-                'max:60'
+                'max:60',
             ],
-            'firm.is_agency' => self::IS_AGENCY,
-            'firm.website' => self::WEBSITE,
-            'firm.logo' => 'nullable|string|url',
-            'firm.description' => self::DESCRIPTION,
-            'firm.employees' => 'nullable|integer',
-            'firm.founded' => 'nullable|integer',
-            'firm.youtube_url' => self::YOUTUBE_URL,
-            'firm.latitude' => self::LOCATION_LATITUDE,
-            'firm.longitude' => self::LOCATION_LONGITUDE,
-            'firm.street' => self::LOCATION_STREET,
-            'firm.city' => self::LOCATION_CITY,
-            'firm.postcode' => 'nullable|string|max:50',
-            'firm.street_number' => self::LOCATION_STREET_NUMBER,
+            'firm.is_agency'            => self::IS_AGENCY,
+            'firm.website'              => self::WEBSITE,
+            'firm.logo'                 => 'nullable|string|url',
+            'firm.description'          => self::DESCRIPTION,
+            'firm.employees'            => 'nullable|integer',
+            'firm.founded'              => 'nullable|integer',
+            'firm.youtube_url'          => self::YOUTUBE_URL,
+            'firm.latitude'             => self::LOCATION_LATITUDE,
+            'firm.longitude'            => self::LOCATION_LONGITUDE,
+            'firm.street'               => self::LOCATION_STREET,
+            'firm.city'                 => self::LOCATION_CITY,
+            'firm.postcode'             => 'nullable|string|max:50',
+            'firm.street_number'        => self::LOCATION_STREET_NUMBER,
         ];
     }
 

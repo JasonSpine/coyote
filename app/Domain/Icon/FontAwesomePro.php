@@ -420,6 +420,9 @@ readonly class FontAwesomePro
             'pricingBenefitMissing'                     => $faCross,
             'pricingHelpExample'                        => 'fa-light fa-circle-question',
 
+            // application
+            'jobOfferApplicationExternal'               => 'fa-light fa-arrow-up-right-from-square',
+
             // vcard
             'vCardLastVisitDate'                        => 'fa-light fa-right-to-bracket',
             'vCardPosts'                                => 'fa-light fa-comments',

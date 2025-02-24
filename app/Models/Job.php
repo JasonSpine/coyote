@@ -57,6 +57,8 @@ use Illuminate\Notifications\RoutesNotifications;
  * @property Comment[] $comments
  * @property Comment[] $commentsWithChildren
  * @property integer|null $ad_views
+ * @property string|null $apply_type
+ * @property string|null $application_url
  */
 class Job extends Model
 {
@@ -111,6 +113,8 @@ class Job extends Model
         'email',
         'phone',
         'enable_apply',
+        'apply_type',
+        'application_url',
         'seniority',
         'plan_id',
         'locations',
