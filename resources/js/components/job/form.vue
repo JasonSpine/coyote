@@ -141,7 +141,7 @@
             v-model="job.enable_apply"
             :value="true"
             class="custom-control-input">
-          <label for="enable_apply_1" class="custom-control-label">
+          <label for="enable_apply_1" class="custom-control-label ms-1">
             Zezwól na wysyłanie CV poprzez serwis 4programmers.net
           </label>
         </div>
@@ -158,8 +158,8 @@
       <div class="form-group">
         <div class="custom-control custom-radio">
           <input type="radio" id="enable_apply_0" v-model="job.enable_apply" :value="false" class="custom-control-input">
-          <label for="enable_apply_0" class="custom-control-label">
-            ...lub podaj informacje w jaki sposób kandydaci mogą aplikować na to stanowisko
+          <label for="enable_apply_0" class="custom-control-label ms-1">
+            Podaj informacje w jaki sposób kandydaci mogą aplikować na to stanowisko
           </label>
         </div>
       </div>
