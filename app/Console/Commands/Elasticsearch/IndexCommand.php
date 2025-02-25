@@ -75,48 +75,38 @@ class IndexCommand extends Command
         $this->index($className);
     }
 
-    private function all()
+    private function all(): void
     {
         foreach ($this->getSuitableModels() as $className) {
             $this->index($className);
         }
     }
 
-    /**
-     * @param string $className
-     */
-    private function index($className)
+    private function index(string $className): void
     {
         $model = $this->app->make($className);
         $this->line("Indexing $className ...");
-
-        $offset = (int) $this->option('offset');
-
+        $offset = (int)$this->option('offset');
         $builder = $model->select()->orderBy('id', 'desc');
         $objectName = get_class($model);
-
         // ugly hack for job offers...
         if ($objectName === 'Coyote\Job') {
-            $builder = $builder->where('deadline_at', '>=', new Expression('NOW()'))->where('is_publish', 1)->with('firm');
-        } elseif ($objectName === 'Coyote\Microblog') {
+            $builder = $builder
+                ->where('deadline_at', '>=', new Expression('NOW()'))
+                ->where('is_publish', 1)
+                ->with('firm');
+        } else if ($objectName === 'Coyote\Microblog') {
             $builder = $builder->whereNull('parent_id');
         }
-
         $bar = $this->output->createProgressBar($builder->count() - $offset);
-
         $builder->skip($offset)->chunk(20000, function ($rowset) use ($bar) {
             $crawler = new Crawler();
-
             foreach ($rowset as $row) {
                 $crawler->index($row);
-
                 $bar->advance();
             }
-
-            unset($crawler);
         });
-
         $bar->finish();
-        $this->info("\n" . $className . '... Done.');
+        $this->info("\n$className... Done.");
     }
 }

@@ -5,6 +5,7 @@ use Coyote\Job;
 use Coyote\Repositories\Eloquent\JobRepository;
 use Coyote\Services\Elasticsearch\Builders\Job\AdBuilder;
 use Coyote\Services\Elasticsearch\Raw;
+use Coyote\Services\Elasticsearch\ResultSet;
 use Coyote\Services\Skills\Predictions;
 use Coyote\Tag;
 use Illuminate\Database\Eloquent;
@@ -29,6 +30,7 @@ class AdController extends Controller
             $builder->boostTags(Raw::escape($majorTag->name));
         }
 
+        /** @var ResultSet $result */
         $result = $this->job->search($builder);
         if (!$result->total()) {
             return false;

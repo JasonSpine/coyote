@@ -1,10 +1,9 @@
 <?php
-
 namespace Coyote\Repositories\Eloquent;
 
 use Coyote\Feature;
-use Coyote\Repositories\Contracts\JobRepositoryInterface;
 use Coyote\Job;
+use Coyote\Repositories\Contracts\JobRepositoryInterface;
 use Coyote\Tag;
 use Illuminate\Database\Query\JoinClause;
 
@@ -14,12 +13,9 @@ use Illuminate\Database\Query\JoinClause;
  */
 class JobRepository extends Repository implements JobRepositoryInterface
 {
-    /**
-     * @return string
-     */
-    public function model()
+    public function model(): string
     {
-        return 'Coyote\Job';
+        return Job::class;
     }
 
     /**
@@ -92,14 +88,14 @@ class JobRepository extends Repository implements JobRepositoryInterface
     public function getDefaultFeatures($userId)
     {
         $sub = $this->toSql(
-            $this->model->select('id')->where('user_id', $userId)->orderBy('id', 'DESC')->limit(1)
+            $this->model->select('id')->where('user_id', $userId)->orderBy('id', 'DESC')->limit(1),
         );
 
         return $this
             ->app
             ->make(Feature::class)
             ->selectRaw(
-                'features.*, COALESCE(job_features.checked, 0) AS checked, COALESCE(job_features.value, \'\') AS value'
+                'features.*, COALESCE(job_features.checked, 0) AS checked, COALESCE(job_features.value, \'\') AS value',
             )
             ->leftJoin('job_features', function (JoinClause $join) use ($sub) {
                 return $join->on('job_id', '=', $this->raw("($sub)"))->on('feature_id', '=', 'features.id');
