@@ -556,17 +556,20 @@
                 {{ icon('jobOfferViews') }}
                 {{ declination(job.ad_views|default('0'), ['wyświetlenie', 'wyświetlenia', 'wyświetleń']) }} wizytówki
               </p>
-              <p>
-                {{ icon('jobOfferApplications') }}
-                {% if job.apply_type == 'service' %}
-                  {{ applicationsCount }} aplikacji na stanowisko
-                {% elseif job.apply_type == 'external' %}
-                  {{ declination(job.application_redirects|default('0'), [
-                    'przekierowanie','przekierowania','przekierowań'
-                  ]) }}
-                  do aplikacji
-                {% endif %}
-              </p>
+              {% if job.apply_type in ['service', 'external'] %}
+                <p class="mb-0">
+                  {{ icon('jobOfferApplications') }}
+                  {% if job.apply_type == 'service' %}
+                    {{ applicationsCount }} aplikacji na stanowisko
+                  {% elseif job.apply_type == 'external' %}
+                    {{ declination(job.application_redirects|default('0'), [
+                      'przekierowanie','przekierowania','przekierowań'
+                    ]) }}
+                    do aplikacji
+                  {% endif %}
+                </p>
+              {% endif %}
+              <div class="mb-4"></div>
             </li>
             {% if not job.is_expired %}
               <li title="Oferta traci ważność z dniem {{ job.deadline_at|format_date(false) }}">
