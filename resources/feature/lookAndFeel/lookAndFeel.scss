@@ -165,7 +165,7 @@ $modern-tile-background-dark:  style.$neutral-800;
 }
 
 .neon-firmlogo-border {
-  background: white;
+  @include theme.property(background, white, style.$neutral-800);
 }
 
 @include feel.legacy {
