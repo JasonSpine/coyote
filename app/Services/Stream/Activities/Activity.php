@@ -1,8 +1,8 @@
 <?php
 namespace Coyote\Services\Stream\Activities;
 
-use Coyote\Services\Arrayable\ToArray;
 use Coyote\Services\Stream\Objects\ObjectInterface;
+use Coyote\Services\ToArray;
 
 abstract class Activity implements ObjectInterface
 {

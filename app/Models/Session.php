@@ -1,8 +1,7 @@
 <?php
-
 namespace Coyote;
 
-use Coyote\Services\Arrayable\ToArray;
+use Coyote\Services\ToArray;
 use Illuminate\Contracts\Support\Arrayable;
 
 class Session implements \ArrayAccess, Arrayable

@@ -1,7 +1,7 @@
 <?php
 namespace Coyote\Services\Elasticsearch;
 
-use Coyote\Services\Arrayable\ToArray;
+use Coyote\Services\ToArray;
 use Illuminate\Http\Request;
 
 class SearchOptions

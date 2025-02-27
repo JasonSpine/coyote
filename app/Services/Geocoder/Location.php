@@ -2,7 +2,7 @@
 
 namespace Coyote\Services\Geocoder;
 
-use Coyote\Services\Arrayable\ToArray;
+use Coyote\Services\ToArray;
 use Illuminate\Contracts\Support\Arrayable;
 
 class Location implements Arrayable

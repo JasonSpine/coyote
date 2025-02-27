@@ -2,7 +2,7 @@
 
 namespace Coyote\Services\Stream\Objects;
 
-use Coyote\Services\Arrayable\ToArray;
+use Coyote\Services\ToArray;
 
 abstract class ObjectAbstract implements ObjectInterface
 {
