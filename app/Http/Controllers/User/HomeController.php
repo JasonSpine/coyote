@@ -1,9 +1,7 @@
 <?php
-
 namespace Coyote\Http\Controllers\User;
 
 use Coyote\Events\UserSaved;
-use Coyote\Http\Factories\MediaFactory;
 use Coyote\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,8 +9,6 @@ use Illuminate\View\View;
 
 class HomeController extends BaseController
 {
-    use MediaFactory;
-
     public function index(UserRepositoryInterface $user): View
     {
         return $this->view('user.home', [

@@ -5,15 +5,13 @@ use Coyote\Domain\Html;
 use Coyote\Domain\Initials;
 use Coyote\Domain\InitialsSvg;
 use Coyote\Domain\StringHtml;
-use Coyote\Http\Factories\MediaFactory;
+use Coyote\Services\Media\Factory;
 use Coyote\Services\Media\File;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class Media extends AbstractExtension
 {
-    use MediaFactory;
-
     public function getFunctions(): array
     {
         return [
@@ -59,5 +57,10 @@ class Media extends AbstractExtension
     private function photo(string $filename): string
     {
         return $this->getMediaFactory()->make('photo', ['file_name' => $filename])->url();
+    }
+
+    private function getMediaFactory(): Factory
+    {
+        return app(\Coyote\Services\Media\Factory::class);
     }
 }

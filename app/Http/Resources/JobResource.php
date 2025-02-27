@@ -4,7 +4,6 @@ namespace Coyote\Http\Resources;
 use Carbon\Carbon;
 use Coyote\Currency;
 use Coyote\Firm;
-use Coyote\Http\Factories\MediaFactory;
 use Coyote\Job;
 use Coyote\Job\Feature;
 use Coyote\Services\UrlBuilder;
@@ -35,8 +34,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class JobResource extends JsonResource
 {
-    use MediaFactory;
-
     public function toArray(Request $request): array
     {
         $only = $this->resource->only('id', 'title', 'is_remote', 'remote_range', 'score', 'subscribe_on', 'comments_count', 'is_highlight', 'is_on_top', 'is_publish', 'is_gross');

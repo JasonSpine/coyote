@@ -2,14 +2,12 @@
 namespace Coyote\Http\Controllers\Firm;
 
 use Coyote\Http\Controllers\Controller;
-use Coyote\Http\Factories\MediaFactory;
+use Coyote\Services\Media\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SubmitController extends Controller
 {
-    use MediaFactory;
-
     public function logo(Request $request): JsonResponse
     {
         $this->validate($request, [
@@ -19,5 +17,10 @@ class SubmitController extends Controller
         return response()->json([
             'url' => url((string)$media->url()),
         ]);
+    }
+
+    private function getMediaFactory(): Factory
+    {
+        return app(\Coyote\Services\Media\Factory::class);
     }
 }

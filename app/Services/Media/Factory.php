@@ -5,6 +5,9 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemManager;
 
+/**
+ * @deprecated
+ */
 class Factory
 {
     private ImageWizard $imageWizard;

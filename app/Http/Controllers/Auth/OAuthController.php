@@ -4,8 +4,8 @@ namespace Coyote\Http\Controllers\Auth;
 use Coyote\Domain\OAuth\OAuth;
 use Coyote\Events\UserSaved;
 use Coyote\Http\Controllers\Controller;
-use Coyote\Http\Factories\MediaFactory;
 use Coyote\Repositories\Eloquent\UserRepository;
+use Coyote\Services\Media\Factory;
 use Coyote\Services\Stream\Activities\Create as Stream_Create;
 use Coyote\Services\Stream\Activities\Login as Stream_Login;
 use Coyote\Services\Stream\Objects\Person as Stream_Person;
@@ -14,8 +14,6 @@ use Illuminate\Http\RedirectResponse;
 
 class OAuthController extends Controller
 {
-    use MediaFactory;
-
     public function __construct(private UserRepository $users, private OAuth $oAuth)
     {
         parent::__construct();
@@ -83,5 +81,10 @@ class OAuthController extends Controller
         }
         stream(Stream_Login::class);
         return redirect()->intended(route('home'));
+    }
+
+    private function getMediaFactory(): Factory
+    {
+        return app(\Coyote\Services\Media\Factory::class);
     }
 }

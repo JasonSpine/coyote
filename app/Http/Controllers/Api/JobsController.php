@@ -3,7 +3,6 @@ namespace Coyote\Http\Controllers\Api;
 
 use Coyote\Events\PaymentPaid;
 use Coyote\Firm;
-use Coyote\Http\Factories\MediaFactory;
 use Coyote\Http\Requests\Job\ApiRequest;
 use Coyote\Http\Resources\Api\JobApiResource;
 use Coyote\Job;
@@ -15,6 +14,7 @@ use Coyote\Repositories\Criteria\Sort;
 use Coyote\Repositories\Eloquent\FirmRepository;
 use Coyote\Repositories\Eloquent\JobRepository;
 use Coyote\Repositories\Eloquent\PlanRepository;
+use Coyote\Services\Media\Factory;
 use Coyote\Services\SubmitJobService;
 use Coyote\User;
 use Illuminate\Contracts\Auth\Factory as Auth;
@@ -25,7 +25,7 @@ use Illuminate\Routing\Controller;
 
 class JobsController extends Controller
 {
-    use AuthorizesRequests, MediaFactory;
+    use AuthorizesRequests;
 
     public function __construct(
         private JobRepository  $job,
@@ -84,5 +84,10 @@ class JobsController extends Controller
             event(new PaymentPaid($payment));
         }
         return response(new JobApiResource($job), $job->wasRecentlyCreated ? 201 : 200);
+    }
+
+    private function getMediaFactory(): Factory
+    {
+        return app(\Coyote\Services\Media\Factory::class);
     }
 }

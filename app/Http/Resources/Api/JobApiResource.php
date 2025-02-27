@@ -4,7 +4,6 @@ namespace Coyote\Http\Resources\Api;
 
 use Carbon\Carbon;
 use Coyote\Currency;
-use Coyote\Http\Factories\MediaFactory;
 use Coyote\Http\Resources\FeatureResource;
 use Coyote\Http\Resources\FirmResource;
 use Coyote\Http\Resources\LocationResource;
@@ -37,8 +36,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class JobApiResource extends JsonResource
 {
-    use MediaFactory;
-
     /**
      * @var \Coyote\Services\Parser\Factories\JobFactory
      */
@@ -47,7 +44,7 @@ class JobApiResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
@@ -62,9 +59,8 @@ class JobApiResource extends JsonResource
             'is_gross',
             'rate',
             'employment',
-            'seniority'
-        )
-        ;
+            'seniority',
+        );
 
         return array_merge($only, [
             'url'         => UrlBuilder::job($this->resource, true),
@@ -74,14 +70,14 @@ class JobApiResource extends JsonResource
             'locations'   => LocationResource::collection($this->locations),
             'tags'        => TagResource::collection($this->tags->sortByDesc('pivot.priority')),
             'currency'    => $this->currency->name,
-            'description' => $this->parse((string) $this->description), // argument must be a string
-            'recruitment' => $this->parse((string) $this->recruitment),
+            'description' => $this->parse((string)$this->description), // argument must be a string
+            'recruitment' => $this->parse((string)$this->recruitment),
 
-            'firm'        => $this->when($this->firm && $this->firm->exists, new FirmResource($this->firm)),
+            'firm' => $this->when($this->firm && $this->firm->exists, new FirmResource($this->firm)),
 
-            'features'    => $this->whenLoaded('features', function () {
+            'features' => $this->whenLoaded('features', function () {
                 return FeatureResource::collection($this->features);
-            })
+            }),
         ]);
     }
 

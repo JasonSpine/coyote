@@ -6,14 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateAssetsTable extends Migration
 {
-    use \Coyote\Http\Factories\MediaFactory, SchemaBuilder;
+    use SchemaBuilder;
 
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('assets', function (Blueprint $table) {
             $table->increments('id');
@@ -36,15 +31,15 @@ class CreateAssetsTable extends Migration
             $path .= $attachment->getAttributeValue('file');
 
             \Coyote\Models\Asset::forceCreate([
-                'id' => $attachment->id,
-                'created_at' => $attachment->created_at,
-                'path' => $path,
-                'name' => $attachment->name,
-                'size' => $attachment->size,
-                'mime' => $attachment->mime,
-                'count' => $attachment->count,
-                'content_id' => $attachment->post_id,
-                'content_type' => \Coyote\Post::class
+                'id'           => $attachment->id,
+                'created_at'   => $attachment->created_at,
+                'path'         => $path,
+                'name'         => $attachment->name,
+                'size'         => $attachment->size,
+                'mime'         => $attachment->mime,
+                'count'        => $attachment->count,
+                'content_id'   => $attachment->post_id,
+                'content_type' => \Coyote\Post::class,
             ]);
         }
 
@@ -66,12 +61,12 @@ class CreateAssetsTable extends Migration
             }
 
             \Coyote\Models\Asset::forceCreate([
-                'created_at' => $photo->created_at,
-                'path' => $path,
-                'name' => basename($path),
-                'size' => $size,
-                'content_id' => $photo->firm_id,
-                'content_type' => \Coyote\Firm::class
+                'created_at'   => $photo->created_at,
+                'path'         => $path,
+                'name'         => basename($path),
+                'size'         => $size,
+                'content_id'   => $photo->firm_id,
+                'content_type' => \Coyote\Firm::class,
             ]);
         }
 
@@ -89,7 +84,7 @@ class CreateAssetsTable extends Migration
 
             foreach ($json['image'] as $image) {
                 $media = $factory->make('attachment', [
-                    'file_name' => $image
+                    'file_name' => $image,
                 ]);
 
                 $path = $this->getPath('attachment/', $media->getFilename());
@@ -102,12 +97,12 @@ class CreateAssetsTable extends Migration
                 }
 
                 \Coyote\Models\Asset::forceCreate([
-                    'created_at' => $microblog->created_at,
-                    'path' => $path,
-                    'name' => basename($path),
-                    'size' => $size,
-                    'content_id' => $microblog->id,
-                    'content_type' => \Coyote\Microblog::class
+                    'created_at'   => $microblog->created_at,
+                    'path'         => $path,
+                    'name'         => basename($path),
+                    'size'         => $size,
+                    'content_id'   => $microblog->id,
+                    'content_type' => \Coyote\Microblog::class,
                 ]);
             }
         }
@@ -135,6 +130,11 @@ class CreateAssetsTable extends Migration
             $firm->logo = $path;
             $firm->save();
         }
+    }
+
+    private function getMediaFactory(): \Coyote\Services\Media\Factory
+    {
+        return app(\Coyote\Services\Media\Factory::class);
     }
 
     private function getPath($path, $file)

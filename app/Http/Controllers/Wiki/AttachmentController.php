@@ -1,29 +1,20 @@
 <?php
-
 namespace Coyote\Http\Controllers\Wiki;
 
 use Coyote\Http\Controllers\Controller;
-use Coyote\Http\Factories\MediaFactory;
 use Coyote\Http\Forms\AttachmentForm;
+use Coyote\Services\Media\Factory;
 use Coyote\Wiki\Attachment;
 use Illuminate\Http\Request;
 
 class AttachmentController extends Controller
 {
-    use MediaFactory;
-
-    /**
-     * Upload file to server
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|string
-     */
     public function upload(Request $request)
     {
         $this->validate($request, ['attachment' => sprintf(
             'required|max:%s|mimes:%s',
             config('filesystems.upload_max_size') * 1024,
-            config('filesystems.upload_mimes')
+            config('filesystems.upload_mimes'),
         )]);
 
         $media = $this->getMediaFactory()->make('attachment')->upload($request->file('attachment'));
@@ -32,10 +23,15 @@ class AttachmentController extends Controller
             'size' => $media->size(),
             'file' => $media->getFilename(),
             'name' => $media->getName(),
-            'mime' => $media->getMime()
+            'mime' => $media->getMime(),
         ]);
 
         return $this->render($attachment);
+    }
+
+    private function getMediaFactory(): Factory
+    {
+        return app(\Coyote\Services\Media\Factory::class);
     }
 
     /**
@@ -68,7 +64,7 @@ class AttachmentController extends Controller
         // we're changing field name because front end expect this field to be an array
         $form->get('id')->setName('attachments[][id]');
 
-        return (string) $form->render();
+        return (string)$form->render();
     }
 
     /**
@@ -81,13 +77,13 @@ class AttachmentController extends Controller
     protected function getHeaders(string $name, string $mime, bool $image, int $size)
     {
         return [
-            'Content-Type' => $mime,
-            'Content-Disposition' => (!$image ? 'attachment' : 'inline') . '; filename="' . $name . '"',
+            'Content-Type'              => $mime,
+            'Content-Disposition'       => (!$image ? 'attachment' : 'inline') . '; filename="' . $name . '"',
             'Content-Transfer-Encoding' => 'binary',
-            'Content-Length' => $size,
-            'Cache-control' => 'private',
-            'Pragma' => 'private',
-            'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT'
+            'Content-Length'            => $size,
+            'Cache-control'             => 'private',
+            'Pragma'                    => 'private',
+            'Expires'                   => 'Mon, 26 Jul 1997 05:00:00 GMT',
         ];
     }
 }
