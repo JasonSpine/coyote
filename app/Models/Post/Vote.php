@@ -1,10 +1,10 @@
 <?php
-
 namespace Coyote\Post;
 
 use Coyote\Models\Scopes\ForUser;
 use Coyote\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $post_id
@@ -17,31 +17,12 @@ class Vote extends Model
 {
     use ForUser;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = ['post_id', 'user_id', 'forum_id', 'ip'];
-
-    /**
-     * @var string
-     */
     protected $dateFormat = 'Y-m-d H:i:se';
-
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
     protected $table = 'post_votes';
-
-    /**
-     * @var array
-     */
     public $timestamps = false;
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class)->withTrashed();
     }
