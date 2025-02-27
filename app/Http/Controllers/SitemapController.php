@@ -18,7 +18,7 @@ class SitemapController extends Controller
     }
 
     /**
-     * @return \Coyote\Services\Sitemap\Sitemap
+     * @return \Coyote\Services\Sitemap
      */
     private function getSitemap()
     {

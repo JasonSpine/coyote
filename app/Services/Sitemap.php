@@ -1,9 +1,8 @@
 <?php
+namespace Coyote\Services;
 
-namespace Coyote\Services\Sitemap;
-
-use Illuminate\Contracts\Filesystem\Filesystem;
 use Carbon\Carbon;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -82,7 +81,7 @@ class Sitemap
         $filename = 'sitemapindex.xml';
 
         if (strpos($request->path(), '/') !== false) {
-            list(, $filename) = explode('/', $request->path());
+            [, $filename] = explode('/', $request->path());
         }
 
         $path = self::ROOT . '/' . $filename;
@@ -102,8 +101,8 @@ class Sitemap
     public function add(string $url, string $dateTime)
     {
         $this->sites[] = [
-            'loc' => $url,
-            'lastmod' => $dateTime
+            'loc'     => $url,
+            'lastmod' => $dateTime,
         ];
 
         return $this;

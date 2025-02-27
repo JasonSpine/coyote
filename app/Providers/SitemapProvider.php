@@ -2,7 +2,7 @@
 
 namespace Coyote\Providers;
 
-use Coyote\Services\Sitemap\Sitemap;
+use Coyote\Services\Sitemap;
 use Illuminate\Support\ServiceProvider;
 
 class SitemapProvider extends ServiceProvider

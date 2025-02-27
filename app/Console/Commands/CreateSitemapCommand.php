@@ -2,8 +2,8 @@
 
 namespace Coyote\Console\Commands;
 
-use Illuminate\Console\Command;
 use Coyote\Repositories\Contracts\PageRepositoryInterface as PageRepository;
+use Illuminate\Console\Command;
 
 class CreateSitemapCommand extends Command
 {
@@ -67,7 +67,7 @@ class CreateSitemapCommand extends Command
     }
 
     /**
-     * @return \Coyote\Services\Sitemap\Sitemap
+     * @return \Coyote\Services\Sitemap
      */
     private function getSitemap()
     {
