@@ -75,4 +75,9 @@ class BaseController extends Controller
     {
         $this->getCacheFactory()->tags('permissions')->flush();
     }
+
+    protected function getCacheFactory(): \Illuminate\Contracts\Cache\Repository
+    {
+        return app(\Illuminate\Contracts\Cache\Repository::class);
+    }
 }

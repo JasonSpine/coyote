@@ -5,7 +5,6 @@ use Coyote\Domain\Seo;
 use Coyote\Domain\Seo\Schema\DiscussionForumPosting;
 use Coyote\Forum;
 use Coyote\Forum\Reason;
-use Coyote\Http\Factories\CacheFactory;
 use Coyote\Http\Resources\FlagResource;
 use Coyote\Http\Resources\PollResource;
 use Coyote\Http\Resources\PostCollection;
@@ -29,8 +28,6 @@ use Illuminate\View\View;
 
 class TopicController extends BaseController
 {
-    use CacheFactory;
-
     public function index(Request $request, Forum $forum, Topic $topic): Collection|View|array
     {
         $this->breadcrumb->push($topic->title, route('forum.topic', [$forum->slug, $topic->id, $topic->slug]),

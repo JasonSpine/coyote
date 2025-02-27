@@ -2,7 +2,6 @@
 namespace Coyote\Http\Controllers;
 
 use Boduch\Grid\GridBuilder;
-use Coyote\Http\Factories\CacheFactory;
 use Coyote\Services\Breadcrumbs;
 use Coyote\Services\FormBuilder\Form;
 use Coyote\Services\FormBuilder\FormBuilder;
@@ -17,7 +16,7 @@ use Illuminate\View\View;
 
 abstract class Controller extends \Illuminate\Routing\Controller
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, CacheFactory;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected Breadcrumbs $breadcrumb;
     protected ?int $userId;

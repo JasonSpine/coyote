@@ -1,10 +1,8 @@
 <?php
-
 namespace Coyote\Http\Controllers\Adm;
 
 use Boduch\Grid\Source\EloquentSource;
 use Coyote\Block;
-use Coyote\Http\Factories\CacheFactory;
 use Coyote\Http\Forms\BlockForm;
 use Coyote\Http\Grids\Adm\BlockGrid;
 use Coyote\Repositories\Eloquent\BlockRepository;
@@ -18,8 +16,6 @@ use Illuminate\View\View;
 
 class BlocksController extends BaseController
 {
-    use CacheFactory;
-
     public function __construct(private BlockRepository $block)
     {
         parent::__construct();
@@ -51,7 +47,7 @@ class BlocksController extends BaseController
 
             stream(
                 $block->wasRecentlyCreated ? Stream_Create::class : Stream_Update::class,
-                (new Stream_Block())->map($block)
+                (new Stream_Block())->map($block),
             );
             $this->flushCache();
         });
@@ -80,5 +76,10 @@ class BlocksController extends BaseController
     protected function flushCache()
     {
         $this->getCacheFactory()->forget('blocks');
+    }
+
+    protected function getCacheFactory(): \Illuminate\Contracts\Cache\Repository
+    {
+        return app(\Illuminate\Contracts\Cache\Repository::class);
     }
 }

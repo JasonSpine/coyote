@@ -2,7 +2,6 @@
 namespace Coyote\Http\Controllers\Microblog;
 
 use Coyote\Http\Controllers\RenderParams;
-use Coyote\Http\Factories\CacheFactory;
 use Coyote\Http\Resources\MicroblogCollection;
 use Coyote\Http\Resources\MicroblogResource;
 use Coyote\Http\Resources\UserResource;
@@ -15,8 +14,6 @@ use Illuminate\View\View;
 
 class HomeController extends BaseController
 {
-    use CacheFactory;
-
     public function __construct(
         private MicroblogRepository $microblog,
         private Microblogs\Builder  $builder)
@@ -93,6 +90,11 @@ class HomeController extends BaseController
             'tech'   => $tech,
             'others' => $others->splice(0, 10),
         ];
+    }
+
+    protected function getCacheFactory(): \Illuminate\Contracts\Cache\Repository
+    {
+        return app(\Illuminate\Contracts\Cache\Repository::class);
     }
 
     private function microblogNewUrl(): ?string

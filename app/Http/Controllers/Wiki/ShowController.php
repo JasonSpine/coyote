@@ -1,8 +1,6 @@
 <?php
-
 namespace Coyote\Http\Controllers\Wiki;
 
-use Coyote\Http\Factories\CacheFactory;
 use Coyote\Http\Forms\Wiki\CommentForm;
 use Coyote\Repositories\Criteria\Wiki\DirectAncestor;
 use Coyote\Repositories\Criteria\Wiki\OnlyWithChildren;
@@ -12,8 +10,6 @@ use Illuminate\Http\Request;
 
 class ShowController extends BaseController
 {
-    use CacheFactory;
-
     /**
      * @param Request $request
      * @return \Illuminate\View\View
@@ -25,11 +21,11 @@ class ShowController extends BaseController
         $request->attributes->remove('wiki');
 
         $author = $wiki->logs()->exists() ? $wiki->logs()->orderBy('id')->first()->user : null;
-        $wiki->text = $this->getParser()->parse((string) $wiki->text);
+        $wiki->text = $this->getParser()->parse((string)$wiki->text);
 
         $parser = app('parser.wiki');
         $wiki->load(['comments' => function ($query) {
-            return $query->orderByDesc('updated_at')->with(['user' => fn ($query) => $query->withTrashed()]);
+            return $query->orderByDesc('updated_at')->with(['user' => fn($query) => $query->withTrashed()]);
         }]);
 
         foreach ($wiki->comments as &$comment) {
@@ -38,16 +34,16 @@ class ShowController extends BaseController
         }
 
         $view = $this->view('wiki.' . $wiki->template, [
-            'wiki' => $wiki,
-            'author' => $author,
-            'authors' => $wiki->authors()->get(),
+            'wiki'       => $wiki,
+            'author'     => $author,
+            'authors'    => $wiki->authors()->get(),
             'categories' => $this->wiki->getAllCategories($wiki->wiki_id),
-            'parents' => $this->parents->slice(1)->reverse(), // we skip current page
+            'parents'    => $this->parents->slice(1)->reverse(), // we skip current page
             'subscribed' => $wiki->subscribers()->forUser($this->userId)->exists(),
-            'form' => $this->createForm(CommentForm::class, [], [
-                'url' => route('wiki.comment.save', [$wiki->id])
+            'form'       => $this->createForm(CommentForm::class, [], [
+                'url' => route('wiki.comment.save', [$wiki->id]),
             ]),
-            'children' => $this->getCatalog($wiki->id)
+            'children'   => $this->getCatalog($wiki->id),
         ]);
 
         if (method_exists($this, $wiki->template)) {
@@ -64,8 +60,8 @@ class ShowController extends BaseController
     public function show(Wiki $wiki)
     {
         return [
-            'mlt' => $this->getMoreLikeThis($wiki),
-            'related' => $this->getRelated($wiki->id)
+            'mlt'     => $this->getMoreLikeThis($wiki),
+            'related' => $this->getRelated($wiki->id),
         ];
     }
 
@@ -76,7 +72,7 @@ class ShowController extends BaseController
     public function category(Wiki $wiki)
     {
         return [
-            'folders' => $this->getFolders($wiki->id)
+            'folders' => $this->getFolders($wiki->id),
         ];
     }
 
@@ -113,6 +109,11 @@ class ShowController extends BaseController
         return $this->getCacheFactory()->remember('wiki:mlt', now()->addDay(), function () use ($wiki) {
             return $this->wiki->search(new MoreLikeThisBuilder($wiki))->getSource();
         });
+    }
+
+    protected function getCacheFactory(): \Illuminate\Contracts\Cache\Repository
+    {
+        return app(\Illuminate\Contracts\Cache\Repository::class);
     }
 
     /**

@@ -1,17 +1,13 @@
 <?php
-
 namespace Coyote\Http\Controllers\Wiki;
 
 use Boduch\Grid\Source\EloquentSource;
-use Coyote\Http\Factories\CacheFactory;
 use Coyote\Http\Grids\Wiki\LogGrid;
 use Coyote\Repositories\Criteria\Wiki\BelowDepth;
 use Illuminate\Http\Request;
 
 class HomeController extends BaseController
 {
-    use CacheFactory;
-
     /**
      * @param Request $request
      * @return \Illuminate\View\View
@@ -41,6 +37,11 @@ class HomeController extends BaseController
             'grid'       => $grid,
             'categories' => $categories,
         ]);
+    }
+
+    protected function getCacheFactory(): \Illuminate\Contracts\Cache\Repository
+    {
+        return app(\Illuminate\Contracts\Cache\Repository::class);
     }
 
     /**

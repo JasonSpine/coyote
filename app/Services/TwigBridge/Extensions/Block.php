@@ -1,10 +1,8 @@
 <?php
-
 namespace Coyote\Services\TwigBridge\Extensions;
 
 use Coyote\Banner;
 use Coyote\Campaign as CampaignModel;
-use Coyote\Http\Factories\CacheFactory;
 use Coyote\Repositories\Contracts\BlockRepositoryInterface as BlockRepository;
 use Coyote\Repositories\Contracts\CampaignRepositoryInterface as CampaignRepository;
 use Coyote\Repositories\Contracts\WikiRepositoryInterface as WikiRepository;
@@ -15,8 +13,6 @@ use Twig\TwigFunction;
 
 class Block extends AbstractExtension
 {
-    use CacheFactory;
-
     private Filesystem $filesystem;
     private CampaignRepository $campaignRepository;
     private BlockRepository $blockRepository;
@@ -176,5 +172,10 @@ class Block extends AbstractExtension
         return $this->getCacheFactory()->remember('campaigns', now()->hour, function () {
             return $this->campaignRepository->campaigns();
         });
+    }
+
+    protected function getCacheFactory(): \Illuminate\Contracts\Cache\Repository
+    {
+        return app(\Illuminate\Contracts\Cache\Repository::class);
     }
 }

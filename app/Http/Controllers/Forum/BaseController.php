@@ -105,6 +105,11 @@ abstract class BaseController extends Controller
         });
     }
 
+    protected function getCacheFactory(): \Illuminate\Contracts\Cache\Repository
+    {
+        return app(\Illuminate\Contracts\Cache\Repository::class);
+    }
+
     /**
      * @return array
      */
