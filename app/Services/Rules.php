@@ -1,62 +1,32 @@
 <?php
+namespace Coyote\Services;
 
-
-namespace Coyote\Services\Firewall;
-
-use Coyote\Fingerprint; // <-- nie usuwac tej linii
+use Coyote\Firewall;
 use Coyote\Repositories\Contracts\FirewallRepositoryInterface;
 use Illuminate\Cache\Repository as Cache;
-use Coyote\Firewall;
 use Illuminate\Http\Request;
-use TRegx\CleanRegex\Pattern;
 
 class Rules
 {
     const CACHE_KEY = 'firewall';
 
     /**
-     * @var Cache
-     */
-    private $cache;
-
-    /**
-     * @var FirewallRepositoryInterface
-     */
-    private $repository;
-
-    /**
      * @var Request
      */
     private $request;
 
-    /**
-     * @param Cache $cache
-     * @param FirewallRepositoryInterface $repository
-     */
-    public function __construct(Cache $cache, FirewallRepositoryInterface $repository)
-    {
-        $this->cache = $cache;
-        $this->repository = $repository;
-    }
+    public function __construct(private Cache $cache, private FirewallRepositoryInterface $repository) {}
 
-    /**
-     * Find firewall rule based on user id and/or IP.
-     *
-     * @param Request $request
-     * @return \Coyote\Firewall|null
-     */
-    public function find(Request $request)
+    public function find(Request $request): ?Firewall
     {
         $this->request = $request;
-
         foreach ($this->getRules() as $rule) {
             if ($this->checkIpRule($rule['ip'])
                 || $this->checkUserRule($rule['user_id'])
-                    || $this->checkFingerprintRule($rule['fingerprint'] ?? null)) {
+                || $this->checkFingerprintRule($rule['fingerprint'] ?? null)) {
                 return $this->make($rule);
             }
         }
-
         return null;
     }
 
@@ -69,10 +39,8 @@ class Rules
         if (empty($ip)) {
             return false;
         }
-
-        return Pattern::template('^@$')
-            ->mask($ip, ['*' => '[a-z0-9\:\.]+'])
-            ->test($this->request->ip());
+        $pattern = \str_replace('\*', '[a-z0-9\:\.]+', \preg_quote($ip));
+        return preg_match("/^$pattern\$/", $this->request->ip());
     }
 
     /**
@@ -84,38 +52,27 @@ class Rules
         if (empty($userId) || empty($this->request->user())) {
             return false;
         }
-
         return $this->request->user()->id == $userId;
     }
 
-    /**
-     * @param $fingerprint
-     * @return bool
-     */
-    private function checkFingerprintRule($fingerprint)
+    private function checkFingerprintRule($fingerprint): bool
     {
         if (empty($fingerprint)) {
             return false;
         }
-
         return $fingerprint === $this->getClientFingerprint();
     }
 
-    /**
-     * @return mixed
-     */
     private function getClientFingerprint()
     {
         static $fingerprint;
-
         if (!empty($fingerprint)) {
             return $fingerprint;
         }
-
-        if (class_exists(Fingerprint::class)) {
-            $fingerprint = Fingerprint::get();
+        $className = 'Coyote\Fingerprint';
+        if (class_exists($className)) {
+            $fingerprint = $className::get();
         }
-
         return $fingerprint;
     }
 
@@ -127,17 +84,11 @@ class Rules
         return unserialize(
             $this->cache->rememberForever(self::CACHE_KEY, function () {
                 return serialize($this->repository->all(['id', 'user_id', 'ip', 'fingerprint'])->toArray());
-            })
+            }),
         );
     }
 
-    /**
-     * Make model from array.
-     *
-     * @param array $firewall
-     * @return Firewall
-     */
-    private function make(array $firewall): Firewall
+    private function make(array $firewall): ?Firewall
     {
         return $this->repository->find($firewall['id']);
     }

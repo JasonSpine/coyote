@@ -2,7 +2,7 @@
 
 namespace Coyote\Listeners;
 
-use Coyote\Services\Firewall\Rules;
+use Coyote\Services\Rules;
 use Illuminate\Contracts\Cache\Repository as Cache;
 
 class FlushFirewallCache

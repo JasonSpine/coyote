@@ -3,9 +3,9 @@
 namespace Coyote\Console\Commands;
 
 use Coyote\Repositories\Contracts\FirewallRepositoryInterface as FirewallRepository;
-use Coyote\Services\Firewall\Rules;
-use Illuminate\Console\Command;
+use Coyote\Services\Rules;
 use Illuminate\Cache\Repository as Cache;
+use Illuminate\Console\Command;
 
 class PurgeFirewallCommand extends Command
 {

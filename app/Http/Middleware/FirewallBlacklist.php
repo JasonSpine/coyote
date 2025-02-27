@@ -4,7 +4,7 @@ namespace Coyote\Http\Middleware;
 
 use Closure;
 use Coyote\Exceptions\ForbiddenException;
-use Coyote\Services\Firewall\Rules;
+use Coyote\Services\Rules;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 

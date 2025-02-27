@@ -2,14 +2,15 @@
 
 namespace Tests\Legacy\IntegrationOld\Services;
 
+use Coyote\Fingerprint;
 use Coyote\Firewall;
 use Coyote\Repositories\Contracts\FirewallRepositoryInterface;
-use Coyote\Services\Firewall\Rules;
+use Coyote\Services\Rules;
 use Illuminate\Cache\Repository;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Request;
-use Tests\Legacy\IntegrationOld\TestCase;
 use Mockery\MockInterface;
+use Tests\Legacy\IntegrationOld\TestCase;
 
 class RulesTest extends TestCase
 {
@@ -29,7 +30,7 @@ class RulesTest extends TestCase
         });
 
         $firewallRepository = $this->mock(FirewallRepositoryInterface::class, function (MockInterface $mock) use ($model) {
-            return $mock->shouldReceive('find')->andReturn((new Firewall())->forceFill($model));
+            return $mock->shouldReceive('find')->andReturn(new Firewall()->forceFill($model));
         });
 
         $rules = new Rules($cache, $firewallRepository);
@@ -51,7 +52,7 @@ class RulesTest extends TestCase
         });
 
         $firewallRepository = $this->mock(FirewallRepositoryInterface::class, function (MockInterface $mock) use ($model) {
-            return $mock->shouldReceive('find')->andReturn((new Firewall())->forceFill($model));
+            return $mock->shouldReceive('find')->andReturn(new Firewall()->forceFill($model));
         });
 
         $rules = new Rules($cache, $firewallRepository);
