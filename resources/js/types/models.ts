@@ -312,7 +312,7 @@ export enum Employment {
   employment = 'Umowa o pracę',
   mandatory = 'Umowa zlecenie',
   contract = 'Umowa o dzieło',
-  b2b = 'Kontrakt'
+  b2b = 'Kontrakt B2B'
 }
 
 export enum Seniority {
