@@ -7,19 +7,28 @@
   @return '%23' + unquote(str-slice(ie-hex-str($color), 4));
 }
 
-@function gradient($from, $to) {
-  @return linear-gradient(45deg, $from, $from, $to)
+@function gradient($from, $to, $direction) {
+  @if $direction == 'right' {
+    @return linear-gradient(45deg, $from, $from, $to);
+  } @else {
+    @return linear-gradient(90deg, $to, $from, $from);
+  }
 }
-
-$gradientLight: gradient(lookAndFeel.$modern-tile-background-light, #bbe7ca);
-$gradientDark:  gradient(lookAndFeel.$modern-tile-background-dark, #0d5c28);
 
 @mixin highlightedText {
   @include theme.color(#005b12, #bdd5c3);
 }
 
 .title-banner {
-  @include theme.property(background-image, $gradientLight, $gradientDark);
+  @include theme.property(background-image,
+    gradient(lookAndFeel.$modern-tile-background-light, #bbe7ca, 'right'),
+    gradient(lookAndFeel.$modern-tile-background-dark, #0d5c28, 'right'));
+
+  &--gradient-left {
+    @include theme.property(background-image,
+      gradient(lookAndFeel.$modern-tile-background-light, #bbe7ca, 'left'),
+      gradient(lookAndFeel.$modern-tile-background-dark, #0d5c28, 'left'));
+  }
 
   &__subtitle {
     @include banners.bannerTextTopLight;

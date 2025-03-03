@@ -186,16 +186,20 @@
         </form>
       </div>
       <div class="col-md-3 d-none d-sm-block">
-        <section class="box mb-4">
-          <h4>Dla Pracodawców</h4>
-          <div class="neon-tile neon-rounded p-3">
-            <span class="edge">
-              <a class="btn btn-primary jobboard-add-offer-list" href="{{ route('job.business') }}">
-                Oferty pracy od 0zł
+        <div class="neon-modern">
+          <div class="title-banner title-banner--gradient-left neon-rounded p-4">
+            <ul class="title-banner__crumbs">
+              <li class="title-banner__crumbs-item">
+                Dla Pracodawców
+              </li>
+            </ul>
+            <div class="title-banner__title">
+              <a class="btn btn-primary jobboard-add-offer-list" href="{{ route('job.business') }}" style="width:100%;">
+                Stwórz ofertę pracy od 0zł
               </a>
-            </span>
+            </div>
           </div>
-        </section>
+        </div>
         {% if userPlanBundle %}
           <section class="box">
             <h4>Opłacony pakiet</h4>

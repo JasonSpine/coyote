@@ -5,10 +5,15 @@
   {{ parent() }}
 {%- endblock -%}
 
+{% from 'titleBanner.titleBanner' import titleBanner %}
+
 {% block container %}
   <div id="js-job">
     <div class="row">
       <div class="col-md-9 col-12">
+        <div class="neon-modern mb-3">
+          {{ titleBanner(title:'Oferty Pracy w IT - Odwiedza nas ponad 150 tys. programistów miesięcznie', crumbs:breadcrumbs) }}
+        </div>
         <vue-tabs :items="tabs" current-tab="/Praca/Moje" class="mt-4 mb-4"></vue-tabs>
         {% include 'job.partials.skeletons' %}
         <div v-cloak v-if="jobs.data.length === 0" class="card card-body p-2">
@@ -22,17 +27,20 @@
         </nav>
       </div>
       <div class="col-md-3 d-none d-sm-block">
-        <section class="box">
-          <h4>Dla Pracodawców</h4>
-          <div class="neon-tile neon-rounded p-3">
-            <span class="edge">
-              <a class="btn btn-primary jobboard-add-offer-list" href="{{ route('job.business') }}">
-                Oferty pracy od 0zł
+        <div class="neon-modern">
+          <div class="title-banner title-banner--gradient-left neon-rounded p-4">
+            <ul class="title-banner__crumbs">
+              <li class="title-banner__crumbs-item">
+                Dla Pracodawców
+              </li>
+            </ul>
+            <div class="title-banner__title">
+              <a class="btn btn-primary jobboard-add-offer-list" href="{{ route('job.business') }}" style="width:100%;">
+                Stwórz ofertę pracy od 0zł
               </a>
-            </span>
+            </div>
           </div>
-        </section>
-      </div>
+        </div>
       {{ render_block('job_ads') }}
     </div>
     <vue-notifications></vue-notifications>
