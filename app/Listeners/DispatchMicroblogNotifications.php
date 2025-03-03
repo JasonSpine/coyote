@@ -1,5 +1,4 @@
 <?php
-
 namespace Coyote\Listeners;
 
 use Coyote\Events\MicroblogSaved;
@@ -7,7 +6,7 @@ use Coyote\Microblog;
 use Coyote\Notifications\Microblog\CommentedNotification;
 use Coyote\Notifications\Microblog\SubmittedNotification;
 use Coyote\Notifications\Microblog\UserMentionedNotification;
-use Coyote\Repositories\Contracts\UserRepositoryInterface as UserRepository;
+use Coyote\Repositories\Eloquent\UserRepository;
 use Coyote\Reputation;
 use Coyote\Services\Helper\Login as LoginHelper;
 use Illuminate\Contracts\Notifications\Dispatcher;
@@ -15,25 +14,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class DispatchMicroblogNotifications implements ShouldQueue
 {
-    /**
-     * @var Dispatcher
-     */
-    private Dispatcher $dispatcher;
-
-    /**
-     * @var UserRepository
-     */
-    private UserRepository $user;
-
-    /**
-     * @param Dispatcher $dispatcher
-     * @param UserRepository $user
-     */
-    public function __construct(Dispatcher $dispatcher, UserRepository $user)
-    {
-        $this->dispatcher = $dispatcher;
-        $this->user = $user;
-    }
+    public function __construct(private Dispatcher $dispatcher, private UserRepository $user) {}
 
     public function handle(MicroblogSaved $event)
     {
@@ -43,7 +24,7 @@ class DispatchMicroblogNotifications implements ShouldQueue
         }
 
         $microblog = $event->microblog;
-        /** @var \Coyote\User[]|\Illuminate\Support\Collection  $subscribers */
+        /** @var \Coyote\User[]|\Illuminate\Support\Collection $subscribers */
         $subscribers = [];
 
         if ($event->wasRecentlyCreated) {
@@ -64,7 +45,7 @@ class DispatchMicroblogNotifications implements ShouldQueue
             if (count($subscribers->filter())) {
                 $this->dispatcher->send(
                     $subscribers,
-                    $microblog->parent_id ? new CommentedNotification($microblog) : new SubmittedNotification($microblog)
+                    $microblog->parent_id ? new CommentedNotification($microblog) : new SubmittedNotification($microblog),
                 );
             }
         }
@@ -94,7 +75,7 @@ class DispatchMicroblogNotifications implements ShouldQueue
         if (!empty($usersId)) {
             $this->dispatcher->send(
                 $this->user->excludeBlocked($microblog->user->id)->findMany($usersId)->exceptUsers($subscribers),
-                new UserMentionedNotification($microblog)
+                new UserMentionedNotification($microblog),
             );
         }
     }
