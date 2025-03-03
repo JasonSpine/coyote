@@ -164,19 +164,6 @@
         <span class="form-text text-muted">Podaj adres URL do Twojego systemu zarządzania aplikacjami.</span>
       </div>
     </div>
-    <div class="form-group">
-      <div class="custom-control custom-radio">
-        <input type="radio" id="applyTypeDescription" v-model="job.apply_type" value="description" class="custom-control-input" @change="changeApplicationCriteria">
-        <label for="applyTypeDescription" class="custom-control-label ms-1">
-          Podaj informacje w jaki sposób kandydaci mogą aplikować na to stanowisko
-        </label>
-      </div>
-      <div v-if="job.apply_type === 'description'" class="mt-2">
-        <vue-rich-editor v-model="job.recruitment"/>
-        <input type="hidden" name="recruitment" v-model="job.recruitment">
-        <vue-error :message="errors.recruitment"/>
-      </div>
-    </div>
   </div>
 </template>
 
