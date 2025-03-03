@@ -1,5 +1,4 @@
 <?php
-
 namespace Coyote\Http\Controllers\Job;
 
 use Carbon\Carbon;
@@ -17,28 +16,27 @@ use Coyote\Repositories\Eloquent\JobRepository;
 use Coyote\Repositories\Eloquent\TagRepository;
 use Coyote\Services\Elasticsearch\Builders\Job\SearchBuilder;
 use Coyote\Tag;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Jenssegers\Agent\Agent;
 
-class HomeController extends BaseController
+class HomeController extends \Coyote\Http\Controllers\Controller
 {
     /**
      * @var string
      */
     private $firmName;
 
-    public function __construct(JobRepository $job, private TagRepository $tag)
+    public function __construct(
+        private JobRepository $job,
+        private TagRepository $tag,
+        private SearchBuilder $builder,
+    )
     {
-        parent::__construct($job);
+        parent::__construct();
         $this->breadcrumb->push('Praca', route('job.home'));
-        $this->middleware(function (Request $request, $next) {
-            $this->builder = new SearchBuilder($request);
-            return $next($request);
-        });
     }
 
     public function index(): View
