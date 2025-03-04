@@ -88,34 +88,26 @@ class HomeController extends \Coyote\Http\Controllers\Controller
         // we want to pass collection to the twig (not raw php array)
         /** @var Collection $source */
         $source = $result->getSource();
-
         $eagerCriteria = new EagerLoading(['firm', 'locations', 'tags', 'currency']);
-
         $this->job->pushCriteria($eagerCriteria);
         $this->job->pushCriteria(new EagerLoadingWithCount(['comments']));
         $this->job->pushCriteria(new IncludeSubscribers($this->userId));
-
         $jobs = [];
-
         if (count($source)) {
             $premium = $result->getAggregationHits('premium_listing', true);
             $premium = array_first($premium); // only one premium at the top
-
             if ($premium) {
                 $source->prepend($premium);
             }
-
             $ids = $source->pluck('id')->unique()->toArray();
             $jobs = $this->job->findManyWithOrder($ids);
         }
-
         $pagination = new LengthAwarePaginator(
             $jobs,
             $result->total(),
             SearchBuilder::PER_PAGE,
             LengthAwarePaginator::resolveCurrentPage(),
-            ['path' => LengthAwarePaginator::resolveCurrentPath()],
-        );
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]);
         $pagination->appends($this->request->except('page'));
         $this->job->resetCriteria();
         $this->job->pushCriteria($eagerCriteria);
