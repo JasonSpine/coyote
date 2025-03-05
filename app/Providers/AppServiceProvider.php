@@ -1,11 +1,9 @@
 <?php
-
 namespace Coyote\Providers;
 
 use Carbon\Carbon;
 use Coyote\Domain\OAuth\OAuth;
 use Coyote\Forum;
-use Coyote\Laravel\SocialiteOAuth;
 use Coyote\Models\Asset;
 use Coyote\Services\Elasticsearch\Api as EsApi;
 use Coyote\Services\FormBuilder\FormBuilder;
@@ -14,7 +12,7 @@ use Coyote\Services\FormBuilder\ValidatesWhenSubmitted;
 use Coyote\Services\Forum\Tracker;
 use Coyote\Services\Guest;
 use Coyote\Services\Invoice;
-use Coyote\Services\MimeTypeGuesser;
+use Coyote\SocialiteOAuth;
 use Coyote\User;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -29,12 +27,7 @@ use Symfony\Component\Mime\MimeTypes;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
+    public function boot(): void
     {
         // force HTTPS according to cloudflare HTTP_X_FORWARDED_PROTO header
         $this->app['request']->server->set(

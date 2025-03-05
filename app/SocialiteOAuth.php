@@ -1,5 +1,5 @@
 <?php
-namespace Coyote\Laravel;
+namespace Coyote;
 
 use Coyote\Domain\OAuth\OAuth;
 use Coyote\Domain\OAuth\User;
