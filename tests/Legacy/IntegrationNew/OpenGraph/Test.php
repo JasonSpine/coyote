@@ -45,6 +45,6 @@ class Test extends TestCase
     {
         $this->assertThat(
             $this->metaProperty('og:title', uri:'/'),
-            $this->identicalTo('Programowanie: serwis dla programistów'));
+            $this->identicalTo('4programmers.net – Największa Społeczność Programistyczna w Polsce + Job Board'));
     }
 }
