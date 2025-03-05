@@ -1,17 +1,17 @@
 <?php
-
 namespace Coyote\Jobs;
 
-use Coyote\Repositories\Contracts\FirmRepositoryInterface as FirmRepository;
-use Coyote\Repositories\Contracts\JobRepositoryInterface as JobRepository;
 use Coyote\Repositories\Criteria\Job\PriorDeadline;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
+use Coyote\Repositories\Eloquent\FirmRepository;
+use Coyote\Repositories\Eloquent\JobRepository;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
-class UpdateJobOffers extends Job implements ShouldQueue
+class UpdateJobOffers implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
+    use InteractsWithQueue, SerializesModels, Queueable;
 
     /**
      * @var int
@@ -26,41 +26,32 @@ class UpdateJobOffers extends Job implements ShouldQueue
         $this->firmId = $firmId;
     }
 
-    /**
-     * @param JobRepository $job
-     * @param FirmRepository $firm
-     */
-    public function handle(JobRepository $job, FirmRepository $firm)
+    public function handle(JobRepository $job, FirmRepository $firm): void
     {
         $client = app('elasticsearch');
         $firm = $firm->find($this->firmId, ['name', 'logo']);
-
         $params = [
             'index' => config('elasticsearch.default_index'),
-            'type' => '_doc'
+            'type'  => '_doc',
         ];
-
         $job->pushCriteria(new PriorDeadline());
         $result = $job->findWhere(['firm_id' => $this->firmId, 'is_publish' => 1], ['id']);
-
         if (!$result) {
             return;
         }
-
         foreach ($result as $row) {
             $client->update(array_merge($params, [
-                'id' => "job_$row[id]",
+                'id'   => "job_$row[id]",
                 'body' => [
                     'doc' => [
                         'firm' => [
                             'name' => $firm['name'],
-                            'logo' => (string) $firm['logo'] // cast to string returns filename
-                        ]
-                    ]
-                ]
+                            'logo' => (string)$firm['logo'], // cast to string returns filename
+                        ],
+                    ],
+                ],
             ]));
         }
-
         $job->resetCriteria();
     }
 }
