@@ -1,16 +1,6 @@
 {% extends 'layout' %}
 
-{% set search_url = route('job.home') %}
-{% set search_placeholder = 'Szukaj w ofertach pracy...' %}
-
-{% set declinationOffers = ['oferta', 'oferty', 'ofert'] %}
-
 {% block body %}
-    {% import 'legacyComponents.modals' as modals %}
-
-    {{ parent() }}
-
-    <script src="{{ cdn('js/job.js') }}"></script>
-
-    {{ modals.alert('Należy się zalogować, aby dodać ogłoszenie do ulubionych', 'Logowanie', 'modal-unauthorized') }}
+  {{ parent() }}
+  <script src="{{ cdn('js/job.js') }}"></script>
 {% endblock %}
