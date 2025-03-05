@@ -9,7 +9,7 @@ const lookAndFeelSwitcher = {
     lookAndFeelSwitchLegacy(): void {
       this.changeLookAndFeel('legacy');
     },
-    changeLookAndFeel(lookAndFeel: 'modern' | 'legacy'): void {
+    changeLookAndFeel(lookAndFeel: 'modern'|'legacy'): void {
       axios.post('/LookAndFeel', {lookAndFeel})
         .then(() => window.location.reload());
     },
@@ -17,5 +17,7 @@ const lookAndFeelSwitcher = {
 };
 
 window.addEventListener('load', () => {
-  createVueApp('LookAndFeelSwitcher', '#lookAndFeelSwitcher', lookAndFeelSwitcher);
+  if (document.querySelector('#lookAndFeelSwitcher')) {
+    createVueApp('LookAndFeelSwitcher', '#lookAndFeelSwitcher', lookAndFeelSwitcher);
+  }
 });
