@@ -8,9 +8,9 @@ import VueJob from '../../components/job/job.vue';
 import VuePagination from '../../components/pagination.vue';
 import VueTabs from '../../components/tabs.vue';
 import store from '../../store/index';
-import {createVueApp} from '../../vue';
+import {createVueAppNotifications} from '../../vue';
 
-createVueApp('Job', '#js-job', {
+createVueAppNotifications('Job', '#js-job', {
   delimiters: ['${', '}'],
   components: {
     'vue-job': VueJob,
