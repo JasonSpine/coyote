@@ -6,6 +6,9 @@ namespace Coyote\Services;
  */
 trait ToArray
 {
+    /**
+     * @deprecated
+     */
     public function toArray()
     {
         $reflect = new \ReflectionObject($this);
