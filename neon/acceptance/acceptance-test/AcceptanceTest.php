@@ -79,6 +79,17 @@ class AcceptanceTest extends TestCase
         Assert::assertNotContains('Python Developer', $this->driver->fetchJobOffers());
     }
 
+    #[Test]
+    public function jobOfferIsFilteredByWorkModeRemote(): void
+    {
+        $this->driver->addJobOffer('Java Developer', workMode:'stationary');
+        $this->driver->addJobOffer('Kotlin Developer', workMode:'remote');
+        $this->driver->visitJobOffers();
+        $this->driver->filterJobOffersByWorkMode('remote');
+        Assert::assertContains('Kotlin Developer', $this->driver->fetchJobOffers());
+        Assert::assertNotContains('Java Developer', $this->driver->fetchJobOffers());
+    }
+
     private function assertJobOffersOrder(string $higher, string $lower): void
     {
         Assert::assertEquals(

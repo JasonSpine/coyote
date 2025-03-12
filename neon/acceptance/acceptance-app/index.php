@@ -21,7 +21,8 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                 $repo->add(
                     $request->query->get('jobOfferTitle'),
                     $request->query->get('jobOfferPublishDate'),
-                    $request->query->get('jobOfferSalaryTo'));
+                    $request->query->get('jobOfferSalaryTo'),
+                    $request->query->get('jobOfferWorkMode'));
                 return \response(status:201);
             });
             Route::get('/', function (SessionRepository $repo): View {

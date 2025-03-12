@@ -2,6 +2,7 @@ export interface JobOffer {
   title: string;
   publishDate: string;
   salaryTo: number;
+  workMode: 'stationary'|'remote';
 }
 
 type JobOffersListener = (jobOffers: JobOffer[]) => void;
@@ -13,6 +14,7 @@ export class Filters {
   private orderBy: OrderBy = 'most-recent';
   private searchPhrase: string = '';
   private minimumSalary: number = 0;
+  private workModeRemote: boolean = false;
 
   onUpdate(listener: JobOffersListener): void {
     this.updateListener = listener;
@@ -30,6 +32,11 @@ export class Filters {
 
   filterBySalary(minimumSalary: number): void {
     this.minimumSalary = minimumSalary;
+    this.update();
+  }
+
+  filterByWorkModeRemote(workModeRemote: boolean): void {
+    this.workModeRemote = workModeRemote;
     this.update();
   }
 
@@ -56,6 +63,12 @@ export class Filters {
     const offers = this.jobOffers
       .filter(offer => offer.title.includes(this.searchPhrase))
       .filter(offer => offer.salaryTo >= this.minimumSalary)
+      .filter(offer => {
+        if (this.workModeRemote) {
+          return offer.workMode === 'remote';
+        }
+        return true;
+      })
     ;
     this.sortInPlace(offers);
     return offers;

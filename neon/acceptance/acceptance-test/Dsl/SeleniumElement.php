@@ -28,4 +28,9 @@ readonly class SeleniumElement
     {
         $this->element->clear()->sendKeys($text);
     }
+
+    public function check(bool $checked): void
+    {
+        $this->element->click();
+    }
 }

@@ -5,6 +5,7 @@ interface BackendJobOffer {
   title: string;
   salaryTo: number;
   publishDate: string;
+  workMode: 'remote'|'stationary';
 }
 
 interface VueJobOffer {
@@ -19,6 +20,8 @@ const app = createApp({
     </select>
     <input data-testid="jobOfferSearchPhrase" v-model="state.searchPhrase">
     <input data-testid="jobOfferMinimumSalary" v-model="state.minimumSalary">
+    <input type="checkbox" data-testid="jobOfferWorkMode" v-model="state.workModeRemote">
+    Praca zdalna
     <button data-testid="jobOfferSearch" @click="search">
       Szukaj
     </button>
@@ -48,6 +51,7 @@ const app = createApp({
       jobOffers: [] as VueJobOffer[],
       searchPhrase: '',
       minimumSalary: 0,
+      workModeRemote: false,
       sort: 'most-recent' as OrderBy,
     });
 
@@ -64,6 +68,7 @@ const app = createApp({
         title: jobOffer.title,
         salaryTo: jobOffer.salaryTo,
         publishDate: jobOffer.publishDate,
+        workMode: jobOffer.workMode,
       });
     });
 
@@ -79,6 +84,7 @@ const app = createApp({
     function search(): void {
       filters.filter(state.searchPhrase);
       filters.filterBySalary(state.minimumSalary);
+      filters.filterByWorkModeRemote(state.workModeRemote);
       filters.sort(state.sort);
     }
 

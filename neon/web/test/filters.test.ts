@@ -1,11 +1,22 @@
 import {Filters, JobOffer} from "../src/filters";
 import {assertEquals, assertTrue, test} from "./assertion";
 
-function addJobOffer(filters: Filters, {title, publishDate, salaryTo}: { title: string, publishDate?: string, salaryTo?: number }): void {
+interface JobOfferTemplate {
+  title: string;
+  publishDate?: string;
+  salaryTo?: number;
+  workMode?: 'stationary'|'remote';
+}
+
+function addJobOffer(
+  filters: Filters,
+  {title, publishDate, salaryTo, workMode}: JobOfferTemplate,
+): void {
   filters.addJobOffer({
     title,
     publishDate: publishDate || '2000-01-01',
     salaryTo: salaryTo || 1000,
+    workMode: workMode || 'stationary',
   });
 }
 
@@ -107,4 +118,14 @@ test('filtering job offer by exact salary does not filter it out', () => {
     assertEquals(['Java Developer'], titles(jobOffers));
   });
   filters.filterBySalary(1200);
+});
+
+test('job offers are filtered by work mode remote', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {title: 'Python Developer', workMode: 'stationary'});
+  addJobOffer(filters, {title: 'Java Developer', workMode: 'remote'});
+  filters.onUpdate(jobOffers => {
+    assertEquals(['Java Developer'], titles(jobOffers));
+  });
+  filters.filterByWorkModeRemote(true);
 });
