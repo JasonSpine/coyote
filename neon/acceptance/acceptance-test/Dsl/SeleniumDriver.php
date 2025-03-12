@@ -47,24 +47,37 @@ readonly class SeleniumDriver
         return $this->driver->findElement(WebDriverBy::tagName('body'))->getText();
     }
 
+    public function element(string $testId): SeleniumElement
+    {
+        return new SeleniumElement($this->driver->findElement($this->byTestId($testId)));
+    }
+
     /**
      * @return SeleniumElement[]
      */
     public function elements(string $testId): array
     {
-        return \array_map($this->seleniumElement(...), $this->byCss("[data-testid='$testId']"));
+        return \array_map($this->seleniumElement(...),
+            $this->driver->findElements($this->byTestId($testId)));
     }
 
-    /**
-     * @return RemoteWebElement[]
-     */
-    private function byCss(string $cssSelector): array
+    private function byTestId(string $testId): WebDriverBy
     {
-        return $this->driver->findElements(WebDriverBy::cssSelector($cssSelector));
+        return $this->byCss("[data-testid='$testId']");
+    }
+
+    private function byCss(string $cssSelector): WebDriverBy
+    {
+        return WebDriverBy::cssSelector($cssSelector);
     }
 
     private function seleniumElement(RemoteWebElement $element): SeleniumElement
     {
         return new SeleniumElement($element);
+    }
+
+    public function saveScreenshot(string $path): void
+    {
+        $this->driver->takeScreenshot($path);
     }
 }

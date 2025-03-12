@@ -17,16 +17,26 @@ readonly class Driver
         $this->selenium->close();
     }
 
-    public function addJobOffer(string $title): void
+    public function addJobOffer(
+        string  $title,
+        ?string $publishDate = null,
+        ?int    $salaryTo = null,
+    ): void
     {
         $this->acceptanceIntegration($this->url('/integration/job-offers'), [
-            'jobOfferTitle' => $title,
+            'jobOfferTitle'       => $title,
+            'jobOfferPublishDate' => $publishDate ?? '2000-01-01',
+            'jobOfferSalaryTo'    => $salaryTo ?? 1000,
         ]);
+    }
+
+    public function visitJobOffers(): void
+    {
+        $this->selenium->navigate($this->url('/'));
     }
 
     public function fetchJobOffers(): array
     {
-        $this->selenium->navigate($this->url('/'));
         return array_map(
             fn(SeleniumElement $element) => $element->text(),
             $this->selenium->elements('jobOfferTitle'));
@@ -40,5 +50,67 @@ readonly class Driver
     private function url(string $url): string
     {
         return \rTrim($this->baseUrl, '/') . $url;
+    }
+
+    public function sortJobOffersByDate(): void
+    {
+        $this->selenium->element('jobOfferSort')->select('Najnowsze');
+        $this->selenium->element('jobOfferSearch')->click();
+    }
+
+    public function sortJobOffersByHighestSalary(): void
+    {
+        $this->selenium->element('jobOfferSort')->select('Najwyższe wynagrodzenie');
+        $this->selenium->element('jobOfferSearch')->click();
+    }
+
+    public function filterJobOffers(string $searchPhrase): void
+    {
+        $this->selenium->element('jobOfferSearchPhrase')->fill($searchPhrase);
+        $this->selenium->element('jobOfferSearch')->click();
+    }
+
+    public function filterJobOffersBySalary(int $minimumSalary): void
+    {
+        $this->selenium->element('jobOfferMinimumSalary')->fill("$minimumSalary");
+        $this->selenium->element('jobOfferSearch')->click();
+    }
+
+    public function jobOffersOrder(string $offer1, string $offer2): int
+    {
+        $actual = $this->fetchJobOffersOnly([$offer1, $offer2]);
+        if ($actual === [$offer1, $offer2]) {
+            return 1;
+        }
+        if ($actual === [$offer2, $offer1]) {
+            return -1;
+        }
+        throw new \Exception('Failed to assert order of job offers, job offers not found in list.');
+    }
+
+    public function includeDiagnosticArtifact(string $name): void
+    {
+        $this->saveScreenshot("$name.screenshot.png");
+    }
+
+    private function saveScreenshot(string $filename): void
+    {
+        $this->selenium->saveScreenshot($this->parentPath($filename));
+    }
+
+    private function parentPath(string $filename): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $filename;
+    }
+
+    private function fetchJobOffersOnly(array $offers): array
+    {
+        $order = [];
+        foreach ($this->fetchJobOffers() as $offer) {
+            if (\in_array($offer, $offers)) {
+                $order[] = $offer;
+            }
+        }
+        return $order;
     }
 }

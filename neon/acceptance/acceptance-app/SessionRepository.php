@@ -8,8 +8,12 @@ class SessionRepository
         return json_decode(session()->get('values', '[]'), true, \JSON_THROW_ON_ERROR);
     }
 
-    public function add(string $jobOfferTitle): void
+    public function add(string $jobOfferTitle, string $publishDate, int $salaryTo): void
     {
-        session()->put('values', \json_encode([...$this->all(), $jobOfferTitle]));
+        session()->put('values', \json_encode([...$this->all(), [
+            'title'       => $jobOfferTitle,
+            'publishDate' => $publishDate,
+            'salaryTo'    => $salaryTo,
+        ]]));
     }
 }

@@ -17,12 +17,15 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
             StartSession::class,
         ])->group(function () {
             Route::get('/integration/job-offers', function (Request $request, SessionRepository $repo) {
-                $repo->add($request->query->get('jobOfferTitle'));
+                $repo->add(
+                    $request->query->get('jobOfferTitle'),
+                    $request->query->get('jobOfferPublishDate'),
+                    $request->query->get('jobOfferSalaryTo'));
                 return \response(status:201);
             });
             Route::get('/', function (SessionRepository $repo): View {
                 return view('application', [
-                    'jobOfferTitles' => $repo->all(),
+                    'jobOffers' => $repo->all(),
                 ]);
             });
         });
