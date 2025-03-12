@@ -34,7 +34,17 @@ class NeonApplication
 
     private function scriptUrl(): string
     {
-        return \rTrim($this->basePath, '/') . '/' . $this->viteManifest()['src/main.ts']['file'];
+        return $this->url($this->viteManifest()['src/main.ts']['file']);
+    }
+
+    public function styleUrl(): string
+    {
+        return $this->url($this->viteManifest()['src/main.ts']['css'][0]);
+    }
+
+    private function url(string $path): string
+    {
+        return \rTrim($this->basePath, '/') . '/' . $path;
     }
 
     private function viteManifest(): array

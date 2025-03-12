@@ -29,7 +29,7 @@ class ServiceProvider extends RouteServiceProvider
                         $jobOffer->is_remote ? 'remote' : 'stationary');
                 }
                 return view('job.home_modern', [
-                    'head'     => '',
+                    'styleUrl' => $neon->styleUrl(),
                     'jobBoard' => new StringHtml($neon->htmlMarkup()),
                 ]);
             });

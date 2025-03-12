@@ -32,7 +32,13 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                 foreach (sessionJobOffers() as [$title, $publish, $salaryTo, $workMode]) {
                     $neon->addJobOffer($title, $publish, $salaryTo, $workMode);
                 }
-                return response($neon->htmlMarkup());
+                return response(<<<EOF
+                    <html>
+                    <head><link rel="stylesheet" href="{$neon->styleUrl()}"></head>
+                    <body>{$neon->htmlMarkup()}</body>
+                    </html>
+                    EOF,
+                );
             });
             Route::get('/assets/{filename}', function (string $filename): Response {
                 $neon = new \Neon\NeonApplication('/');
