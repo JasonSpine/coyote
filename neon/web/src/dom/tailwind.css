@@ -2,6 +2,13 @@
 
 @theme {
   --color-*: initial;
+  --color-white: white;
+  --color-navy-050: #f0f2f5;
+  --color-navy-100: #dde4ea;
+  --color-green-050: #e7f7e6;
+  --color-green-500: #00a538;
+  --color-green-800: #014718;
+  --color-body: var(--color-navy-050);
 
   --text-xs: 0.625rem;
   --text-sm: 0.75rem;

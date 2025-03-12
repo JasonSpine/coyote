@@ -25,7 +25,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                 return \response(status:201);
             });
             Route::get('/', function (): Response {
-                $neon = new \Neon\NeonApplication('/');
+                $neon = new \Neon\NeonApplication('/neon');
                 $neon->addJobOffer('Swift Developer', '2023-03-03', 1400, 'remote');
                 $neon->addJobOffer('Rust Developer', '2000-01-01', 1500, 'stationary');
                 $neon->addJobOffer('Go Developer', '2012-02-02', 1000, 'stationary');
@@ -34,14 +34,17 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                 }
                 return response(<<<EOF
                     <html>
-                    <head><link rel="stylesheet" href="{$neon->styleUrl()}"></head>
-                    <body>{$neon->htmlMarkup()}</body>
+                    <head>
+                        <link href="//fonts.googleapis.com/css?family=Inter:500,700" rel="stylesheet" type="text/css">
+                        <link rel="stylesheet" href="{$neon->styleUrl()}">
+                    </head>
+                    <body class="bg-body">{$neon->htmlMarkup()}</body>
                     </html>
                     EOF,
                 );
             });
-            Route::get('/assets/{filename}', function (string $filename): Response {
-                $neon = new \Neon\NeonApplication('/');
+            Route::get('/neon/assets/{filename}', function (string $filename): Response {
+                $neon = new \Neon\NeonApplication('/neon');
                 return response($neon->viteFile("/assets/$filename"));
             });
         });

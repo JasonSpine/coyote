@@ -11,7 +11,9 @@ class NeonApplication
     {
         $jobOffers = json_encode($this->jobOffers());
         return <<<html
-            <div id="vueApplication"></div>
+            <div id="neon-application">
+                <div id="vueApplication"></div>
+            </div>
             <script>var jobOffers = {$jobOffers};</script>
             <script src="{$this->scriptUrl()}"></script>        
             html;
