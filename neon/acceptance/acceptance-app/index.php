@@ -8,8 +8,6 @@ use Illuminate\Http\Response;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades;
 use Illuminate\Support\Facades\Route;
-use Illuminate\View\View;
-use Neon\Acceptance\SessionRepository;
 
 Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
     ->withRouting(function (): void {
@@ -17,22 +15,28 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
             AddQueuedCookiesToResponse::class,
             StartSession::class,
         ])->group(function () {
-            Route::get('/integration/job-offers', function (Request $request, SessionRepository $repo) {
-                $repo->add(
+            Route::get('/integration/job-offers', function (Request $request) {
+                session()->put('values', \json_encode([...sessionJobOffers(), [
                     $request->query->get('jobOfferTitle'),
                     $request->query->get('jobOfferPublishDate'),
                     $request->query->get('jobOfferSalaryTo'),
-                    $request->query->get('jobOfferWorkMode'));
+                    $request->query->get('jobOfferWorkMode'),
+                ]]));
                 return \response(status:201);
             });
-            Route::get('/', function (SessionRepository $repo): View {
-                return view('application', [
-                    'jobOffers' => $repo->all(),
-                    'scriptUrl' => scriptUrl(),
-                ]);
+            Route::get('/', function (): Response {
+                $neon = new \Neon\NeonApplication('/');
+                $neon->addJobOffer('Swift Developer', '2023-03-03', 1400, 'remote');
+                $neon->addJobOffer('Rust Developer', '2000-01-01', 1500, 'stationary');
+                $neon->addJobOffer('Go Developer', '2012-02-02', 1000, 'stationary');
+                foreach (sessionJobOffers() as [$title, $publish, $salaryTo, $workMode]) {
+                    $neon->addJobOffer($title, $publish, $salaryTo, $workMode);
+                }
+                return response($neon->htmlMarkup());
             });
             Route::get('/assets/{filename}', function (string $filename): Response {
-                return response(viteDist("/assets/$filename"));
+                $neon = new \Neon\NeonApplication('/');
+                return response($neon->viteFile("/assets/$filename"));
             });
         });
     })
@@ -65,17 +69,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
     ->create()
     ->handleRequest(Request::capture());
 
-function scriptUrl(): string
+function sessionJobOffers(): array
 {
-    return '/' . viteManifest()['src/main.ts']['file'];
-}
-
-function viteManifest(): array
-{
-    return json_decode(viteDist('manifest.json'), true);
-}
-
-function viteDist(string $file): string
-{
-    return \file_get_contents(__DIR__ . "/../../web/dist/$file");
+    return json_decode(session()->get('values', '[]'), true);
 }

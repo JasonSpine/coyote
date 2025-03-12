@@ -4,6 +4,7 @@ import {defineConfig} from 'vite';
 export default defineConfig(function ({mode}) {
   const isProduction = mode === 'production';
   return {
+    base: '/neon/',
     plugins: [
       vue({isProduction}),
     ],
