@@ -4,6 +4,7 @@ require __DIR__ . '/../../../vendor/autoload.php';
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +27,11 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
             Route::get('/', function (SessionRepository $repo): View {
                 return view('application', [
                     'jobOffers' => $repo->all(),
+                    'scriptUrl' => scriptUrl(),
                 ]);
+            });
+            Route::get('/assets/{filename}', function (string $filename): Response {
+                return response(viteDist("/assets/$filename"));
             });
         });
     })
@@ -58,3 +63,18 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
     ->withExceptions()
     ->create()
     ->handleRequest(Request::capture());
+
+function scriptUrl(): string
+{
+    return '/' . viteManifest()['src/main.ts']['file'];
+}
+
+function viteManifest(): array
+{
+    return json_decode(viteDist('manifest.json'), true);
+}
+
+function viteDist(string $file): string
+{
+    return \file_get_contents(__DIR__ . "/../../web/dist/$file");
+}
