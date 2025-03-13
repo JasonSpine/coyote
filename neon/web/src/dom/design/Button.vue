@@ -20,6 +20,7 @@ interface Props {
   icon?: IconName;
   primary?: boolean;
   primaryOutline?: boolean;
+  outline?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -34,6 +35,9 @@ const variantClass = computed(() => {
   }
   if (props.primaryOutline) {
     return 'text-primary bg-tile border border-primary';
+  }
+  if (props.outline) {
+    return 'text-neutral-600 dark:text-neutral-050 border border-current';
   }
   return '';
 });

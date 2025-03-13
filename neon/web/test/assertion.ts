@@ -1,6 +1,6 @@
 import {expect} from "vitest";
 
-export {test} from "vitest";
+export {test, describe} from "vitest";
 
 export function assertTrue(condition: any): void {
   expect(condition).toStrictEqual(true);

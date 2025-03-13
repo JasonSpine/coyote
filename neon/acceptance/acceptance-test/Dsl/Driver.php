@@ -96,6 +96,11 @@ readonly class Driver
         $this->selenium->element('jobOfferSearch')->click();
     }
 
+    public function clearFilters(): void
+    {
+        $this->selenium->element('jobOfferClearFilters')->click();
+    }
+
     public function jobOffersOrder(string $offer1, string $offer2): int
     {
         $actual = $this->fetchJobOffersOnly([$offer1, $offer2]);

@@ -1,8 +1,8 @@
 import {Filters, JobOffer} from "../src/filters";
-import {assertEquals, assertTrue, test} from "./assertion";
+import {assertEquals, assertTrue, describe, test} from "./assertion";
 
 interface JobOfferTemplate {
-  title: string;
+  title?: string;
   publishDate?: string;
   salaryTo?: number;
   workMode?: 'stationary'|'remote';
@@ -14,7 +14,7 @@ function addJobOffer(
   {title, publishDate, salaryTo, workMode, locations}: JobOfferTemplate,
 ): void {
   filters.addJobOffer({
-    title,
+    title: title || 'Job offer',
     publishDate: publishDate || '2000-01-01',
     salaryTo: salaryTo || 1000,
     workMode: workMode || 'stationary',
@@ -186,4 +186,67 @@ test('list available locations, without duplicates', () => {
 test('filters available salaries are specified', () => {
   const filters = new Filters();
   assertEquals([5000, 10000, 15000, 20000, 25000, 30000], filters.availableSalaries());
+});
+
+describe('clear filters', () => {
+  test('clearing filters calls listener', () => {
+    const filters = new Filters();
+    let wasCalled = false;
+    filters.onUpdate(jobOffer => {
+      wasCalled = true;
+    });
+    filters.clearFilters();
+    assertTrue(wasCalled);
+  });
+
+  test('clears search phrase', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {});
+    filters.filter('Not matching');
+    filters.onUpdate(jobOffers => assertEquals(1, jobOffers.length));
+    filters.clearFilters();
+  });
+
+  test('clears locations', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {locations: ['London']});
+    filters.filterByLocation(['New York']);
+    filters.onUpdate(jobOffers => assertEquals(1, jobOffers.length));
+    filters.clearFilters();
+  });
+
+  test('clears minimum salary', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {salaryTo: 1000});
+    filters.filterBySalary(1100);
+    filters.onUpdate(jobOffers => assertEquals(1, jobOffers.length));
+    filters.clearFilters();
+  });
+
+  test('clears work mode remote', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {workMode: 'stationary'});
+    filters.filterByWorkModeRemote(true);
+    filters.onUpdate(jobOffers => assertEquals(1, jobOffers.length));
+    filters.clearFilters();
+  });
+
+  test('resets sort', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {title: 'Python', salaryTo: 1000});
+    addJobOffer(filters, {title: 'Ruby', salaryTo: 1200});
+    filters.sortByHighestSalary();
+    filters.onUpdate(jobOffers => {
+      assertEquals(['Python', 'Ruby'], titles(jobOffers));
+    });
+    filters.clearFilters();
+  });
+});
+
+describe('inspect filters', () => {
+  test('read search phrase', () => {
+    const filters = new Filters();
+    filters.filter('foo');
+    assertEquals('foo', filters.searchPhrase());
+  });
 });

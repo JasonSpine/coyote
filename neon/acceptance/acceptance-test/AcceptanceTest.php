@@ -101,6 +101,16 @@ class AcceptanceTest extends TestCase
         Assert::assertNotContains('PHP Developer', $this->driver->fetchJobOffers());
     }
 
+    #[Test]
+    public function jobOffersCanBeCleared(): void
+    {
+        $this->driver->addJobOffer('Job Offer');
+        $this->driver->visitJobOffers();
+        $this->driver->filterJobOffers('Missing');
+        $this->driver->clearFilters();
+        Assert::assertContains('Job Offer', $this->driver->fetchJobOffers());
+    }
+
     private function assertJobOffersOrder(string $higher, string $lower): void
     {
         Assert::assertEquals(

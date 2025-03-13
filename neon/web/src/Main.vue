@@ -53,7 +53,7 @@
         <Design.JobOfferListItem :job-offer="jobOffer"/>
       </li>
     </ul>
-    <Design.Tile>
+    <Design.Tile space>
       <Design.Drawer
         :test-id="workModeField.testId"
         :title="workModeField.title"
@@ -76,9 +76,14 @@
         :icon="sortField.icon"
         :options="sortField.options"
         v-model="state.sort"/>
-      <Design.Button @click="search" test-id="jobOfferSearch" primary>
-        Pokaż oferty
-      </Design.Button>
+      <Design.Row space>
+        <Design.Button @click="clearFilters" test-id="jobOfferClearFilters" outline>
+          Wyczyść filtry
+        </Design.Button>
+        <Design.Button @click="search" test-id="jobOfferSearch" primary class="flex-grow-1">
+          Pokaż oferty
+        </Design.Button>
+      </Design.Row>
     </Design.Tile>
   </Design.Layout>
 </template>
@@ -167,5 +172,10 @@ function search(): void {
     .map(([location, selected]) => location);
   filters.filterByLocation(locations);
   filters.sort(state.sort);
+}
+
+function clearFilters(): void {
+  filters.clearFilters();
+  state.searchPhrase = filters.searchPhrase();
 }
 </script>

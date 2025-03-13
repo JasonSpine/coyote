@@ -15,10 +15,19 @@ export class Filters {
   private jobOffers: JobOffer[] = [];
   private updateListener: JobOffersListener|null = null;
   private orderBy: OrderBy = 'most-recent';
-  private searchPhrase: string = '';
+  private _searchPhrase: string = '';
   private minimumSalary: number = 0;
   private workModeRemote: boolean = false;
   private locations: string[] = [];
+
+  clearFilters(): void {
+    this._searchPhrase = '';
+    this.locations = [];
+    this.minimumSalary = 0;
+    this.workModeRemote = false;
+    this.orderBy = 'most-recent';
+    this.update();
+  }
 
   onUpdate(listener: JobOffersListener): void {
     this.updateListener = listener;
@@ -30,7 +39,7 @@ export class Filters {
   }
 
   filter(searchPhrase: string): void {
-    this.searchPhrase = searchPhrase;
+    this._searchPhrase = searchPhrase;
     this.update();
   }
 
@@ -70,6 +79,10 @@ export class Filters {
     return [5000, 10000, 15000, 20000, 25000, 30000];
   }
 
+  searchPhrase(): string {
+    return this._searchPhrase;
+  }
+
   private update(): void {
     if (this.updateListener) {
       this.updateListener(this.filteredJobOffersInOrder());
@@ -78,7 +91,7 @@ export class Filters {
 
   private filteredJobOffersInOrder(): JobOffer[] {
     const offers = this.jobOffers
-      .filter(offer => offer.title.includes(this.searchPhrase))
+      .filter(offer => offer.title.includes(this._searchPhrase))
       .filter(offer => offer.salaryTo >= this.minimumSalary)
       .filter(offer => {
         if (this.workModeRemote) {
