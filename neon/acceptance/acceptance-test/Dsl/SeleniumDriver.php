@@ -61,6 +61,11 @@ readonly class SeleniumDriver
             $this->driver->findElements($this->byTestId($testId)));
     }
 
+    public function label(string $text): SeleniumElement
+    {
+        return new SeleniumElement($this->driver->findElement(WebDriverBy::xpath("//label[normalize-space()='$text']")));
+    }
+
     private function byTestId(string $testId): WebDriverBy
     {
         return $this->byCss("[data-testid='$testId']");

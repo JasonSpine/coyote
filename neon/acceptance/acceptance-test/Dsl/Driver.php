@@ -22,6 +22,7 @@ readonly class Driver
         ?string $publishDate = null,
         ?int    $salaryTo = null,
         ?string $workMode = null,
+        ?string $location = null,
     ): void
     {
         $this->acceptanceIntegration($this->url('/integration/job-offers'), [
@@ -29,6 +30,7 @@ readonly class Driver
             'jobOfferPublishDate' => $publishDate ?? '2000-01-01',
             'jobOfferSalaryTo'    => $salaryTo ?? 1000,
             'jobOfferWorkMode'    => $workMode ?? 'stationary',
+            'jobOfferLocations'   => $location ? [$location] : [],
         ]);
     }
 
@@ -74,7 +76,7 @@ readonly class Driver
 
     public function filterJobOffersBySalary(int $minimumSalary): void
     {
-        $this->selenium->element('jobOfferMinimumSalary')->fill("$minimumSalary");
+        $this->selenium->element('jobOfferMinimumSalarySelect')->select("$minimumSalary");
         $this->selenium->element('jobOfferSearch')->click();
     }
 
@@ -83,6 +85,13 @@ readonly class Driver
         if ($workMode === 'remote') {
             $this->selenium->element('jobOfferWorkMode')->check(true);
         }
+        $this->selenium->element('jobOfferSearch')->click();
+    }
+
+    public function filterJobOffersByLocation(string $location): void
+    {
+        $this->selenium->element('jobOfferLocation')->click();
+        $this->selenium->label($location)->click();
         $this->selenium->element('jobOfferSearch')->click();
     }
 

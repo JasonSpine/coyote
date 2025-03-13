@@ -2,6 +2,7 @@
 namespace Coyote\Providers\Neon;
 
 use Coyote\Domain\StringHtml;
+use Coyote\Job\Location;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
@@ -26,7 +27,11 @@ class ServiceProvider extends RouteServiceProvider
                         $jobOffer->title,
                         $jobOffer->boost_at->format('Y-m-d'),
                         $jobOffer->salary_to ?? 0,
-                        $jobOffer->is_remote ? 'remote' : 'stationary');
+                        $jobOffer->is_remote ? 'remote' : 'stationary',
+                        $jobOffer->locations
+                            ->map(fn(Location $location): string => $location->city)
+                            ->filter(fn(string $city) => !empty($city))
+                            ->toArray());
                 }
                 return view('job.home_modern', [
                     'styleUrl' => $neon->styleUrl(),

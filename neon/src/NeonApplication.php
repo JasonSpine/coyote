@@ -19,13 +19,19 @@ class NeonApplication
             html;
     }
 
-    public function addJobOffer(string $jobOfferTitle, string $publishDate, int $salaryTo, string $workMode): void
+    public function addJobOffer(
+        string $jobOfferTitle,
+        string $publishDate,
+        int    $salaryTo,
+        string $workMode,
+        array  $locations): void
     {
         $this->offers[] = [
             'title'       => $jobOfferTitle,
             'publishDate' => $publishDate,
             'salaryTo'    => $salaryTo,
             'workMode'    => $workMode,
+            'locations'   => $locations,
         ];
     }
 

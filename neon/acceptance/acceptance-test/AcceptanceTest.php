@@ -71,10 +71,10 @@ class AcceptanceTest extends TestCase
     #[Test]
     public function jobOfferIsFilteredByMinimumSalary(): void
     {
-        $this->driver->addJobOffer('Python Developer', salaryTo:1100);
-        $this->driver->addJobOffer('Kotlin Developer', salaryTo:1200);
+        $this->driver->addJobOffer('Python Developer', salaryTo:4500);
+        $this->driver->addJobOffer('Kotlin Developer', salaryTo:5500);
         $this->driver->visitJobOffers();
-        $this->driver->filterJobOffersBySalary(1150);
+        $this->driver->filterJobOffersBySalary(5000);
         Assert::assertContains('Kotlin Developer', $this->driver->fetchJobOffers());
         Assert::assertNotContains('Python Developer', $this->driver->fetchJobOffers());
     }
@@ -88,6 +88,17 @@ class AcceptanceTest extends TestCase
         $this->driver->filterJobOffersByWorkMode('remote');
         Assert::assertContains('Kotlin Developer', $this->driver->fetchJobOffers());
         Assert::assertNotContains('Java Developer', $this->driver->fetchJobOffers());
+    }
+
+    #[Test]
+    public function jobOfferIsFilteredByLocation(): void
+    {
+        $this->driver->addJobOffer('PHP Developer', location:'New York');
+        $this->driver->addJobOffer('Python Developer', location:'London');
+        $this->driver->visitJobOffers();
+        $this->driver->filterJobOffersByLocation('London');
+        Assert::assertContains('Python Developer', $this->driver->fetchJobOffers());
+        Assert::assertNotContains('PHP Developer', $this->driver->fetchJobOffers());
     }
 
     private function assertJobOffersOrder(string $higher, string $lower): void

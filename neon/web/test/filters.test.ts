@@ -6,17 +6,19 @@ interface JobOfferTemplate {
   publishDate?: string;
   salaryTo?: number;
   workMode?: 'stationary'|'remote';
+  locations?: string[];
 }
 
 function addJobOffer(
   filters: Filters,
-  {title, publishDate, salaryTo, workMode}: JobOfferTemplate,
+  {title, publishDate, salaryTo, workMode, locations}: JobOfferTemplate,
 ): void {
   filters.addJobOffer({
     title,
     publishDate: publishDate || '2000-01-01',
     salaryTo: salaryTo || 1000,
     workMode: workMode || 'stationary',
+    locations: locations || [],
   });
 }
 
@@ -128,4 +130,60 @@ test('job offers are filtered by work mode remote', () => {
     assertEquals(['Java Developer'], titles(jobOffers));
   });
   filters.filterByWorkModeRemote(true);
+});
+
+test('job offers are filtered by location', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {title: 'Close Job', locations: ['Europe']});
+  addJobOffer(filters, {title: 'Far Job', locations: ['America']});
+  filters.onUpdate(jobOffers => {
+    assertEquals(['Close Job'], titles(jobOffers));
+  });
+  filters.filterByLocation(['Europe']);
+});
+
+test('job offers are filtered by multiple locations', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {title: 'Blue', locations: ['Chicago']});
+  addJobOffer(filters, {title: 'Red', locations: ['Boston']});
+  addJobOffer(filters, {title: 'Green', locations: ['Detroit']});
+  filters.onUpdate(jobOffers => {
+    assertEquals(['Blue', 'Green'], titles(jobOffers));
+  });
+  filters.filterByLocation(['Chicago', 'Detroit']);
+});
+
+test('filter by location is reset after setting empty locations', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {title: 'Blue', locations: ['Chicago']});
+  addJobOffer(filters, {title: 'Red', locations: ['Boston']});
+  filters.filterByLocation(['Chicago']);
+  filters.onUpdate(jobOffers => {
+    assertEquals(['Blue', 'Red'], titles(jobOffers));
+  });
+  filters.filterByLocation([]);
+});
+
+test('list available locations, empty if there are no job offers', () => {
+  const filters = new Filters();
+  assertEquals([], filters.availableLocations());
+});
+
+test('list available locations, locations of multiple offers offer', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {title: 'Red', locations: ['Warsaw', 'Cracow']});
+  addJobOffer(filters, {title: 'Blue', locations: ['London']});
+  assertEquals(['Warsaw', 'Cracow', 'London'], filters.availableLocations());
+});
+
+test('list available locations, without duplicates', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {title: 'Red', locations: ['Warsaw']});
+  addJobOffer(filters, {title: 'Blue', locations: ['Warsaw']});
+  assertEquals(['Warsaw'], filters.availableLocations());
+});
+
+test('filters available salaries are specified', () => {
+  const filters = new Filters();
+  assertEquals([5000, 10000, 15000, 20000, 25000, 30000], filters.availableSalaries());
 });

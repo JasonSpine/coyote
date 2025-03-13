@@ -12,12 +12,7 @@
       </Design.TextField>
       <Design.Row>
         <Design.Tile nested>
-          <input data-testid="jobOfferMinimumSalary" v-model="state.minimumSalary">
-        </Design.Tile>
-        <Design.Tile nested>
-          <input type="checkbox" data-testid="jobOfferWorkMode" v-model="state.workModeRemote">
-          <Icon name="jobOfferWorkModeRemote"/>
-          Praca zdalna
+          <Design.CheckBox v-model="state.workModeRemote" test-id="jobOfferWorkMode" label="Praca zdalna" icon="jobOfferWorkModeRemote"/>
         </Design.Tile>
         <Design.Tile nested icon="jobOfferFilterSort">
           <select :data-testid="sortField.testId" v-model="state.sort" class="outline-none">
@@ -25,6 +20,27 @@
           </select>
         </Design.Tile>
       </Design.Row>
+    </Design.Tile>
+    <Design.Tile>
+      <Design.Row>
+        <Design.Tile nested>
+          <input data-testid="jobOfferMinimumSalary" v-model="state.minimumSalary">
+        </Design.Tile>
+        <Design.Tile nested icon="jobOfferFilterSalary">
+          <select data-testid="jobOfferMinimumSalarySelect" v-model="state.minimumSalary" class="outline-none">
+            <option
+              v-for="salary in filters.availableSalaries()"
+              :value="salary"
+              v-text="salary"/>
+          </select>
+        </Design.Tile>
+      </Design.Row>
+    </Design.Tile>
+    <Design.Tile test-id="jobOfferLocation">
+      <Design.CheckBox
+        v-model="state.locations[location]"
+        :label="location"
+        v-for="location in filters.availableLocations()"/>
     </Design.Tile>
     <ul class="space-y-2">
       <li v-for="jobOffer in state.jobOffers" :data-testid="jobOffer.testId">
@@ -40,6 +56,12 @@
           :value="option.value"
           v-text="option.title"/>
       </select>
+      <select data-testid="jobOfferMinimumSalarySelect" v-model="state.minimumSalary">
+        <option
+          v-for="salary in filters.availableSalaries()"
+          :value="salary"
+          v-text="salary"/>
+      </select>
       <input data-testid="jobOfferMinimumSalary" v-model="state.minimumSalary">
       <Design.Button @click="search" test-id="jobOfferSearch" primary>
         Pokaż oferty
@@ -50,7 +72,6 @@
 
 <script setup lang="ts">
 import {reactive} from "vue";
-import Icon from "./dom/component/Icon.vue";
 import {Design} from "./dom/design/design";
 import {Filters, OrderBy} from "./filters";
 
@@ -59,6 +80,7 @@ interface BackendJobOffer {
   salaryTo: number;
   publishDate: string;
   workMode: 'remote'|'stationary';
+  locations: string[];
 }
 
 interface VueJobOffer {
@@ -74,6 +96,7 @@ const state = reactive({
   minimumSalary: 0,
   workModeRemote: false,
   sort: 'most-recent' as OrderBy,
+  locations: {},
 });
 
 const filters = new Filters();
@@ -84,12 +107,13 @@ filters.onUpdate(jobOffers => {
   }));
 });
 
-initialJobOffers.forEach(jobOffer => {
+initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
   filters.addJobOffer({
     title: jobOffer.title,
     salaryTo: jobOffer.salaryTo,
     publishDate: jobOffer.publishDate,
     workMode: jobOffer.workMode,
+    locations: jobOffer.locations,
   });
 });
 
@@ -106,6 +130,10 @@ function search(): void {
   filters.filter(state.searchPhrase);
   filters.filterBySalary(state.minimumSalary);
   filters.filterByWorkModeRemote(state.workModeRemote);
+  const locations = Object.entries(state.locations)
+    .filter(([location, selected]) => selected)
+    .map(([location, selected]) => location);
+  filters.filterByLocation(locations);
   filters.sort(state.sort);
 }
 </script>

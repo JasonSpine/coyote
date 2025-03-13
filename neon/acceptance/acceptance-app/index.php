@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades;
 use Illuminate\Support\Facades\Route;
+use Neon\Acceptance\JobOffer;
 
 Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
     ->withRouting(function (): void {
@@ -16,21 +17,27 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
             StartSession::class,
         ])->group(function () {
             Route::get('/integration/job-offers', function (Request $request) {
-                session()->put('values', \json_encode([...sessionJobOffers(), [
-                    $request->query->get('jobOfferTitle'),
-                    $request->query->get('jobOfferPublishDate'),
-                    $request->query->get('jobOfferSalaryTo'),
-                    $request->query->get('jobOfferWorkMode'),
-                ]]));
+                sessionAddJobOffer(new JobOffer(
+                    $request->get('jobOfferTitle'),
+                    $request->get('jobOfferPublishDate'),
+                    $request->get('jobOfferSalaryTo'),
+                    $request->get('jobOfferWorkMode'),
+                    $request->get('jobOfferLocations', []),
+                ));
                 return \response(status:201);
             });
             Route::get('/', function (): Response {
                 $neon = new \Neon\NeonApplication('/neon');
-                $neon->addJobOffer('Swift Developer', '2023-03-03', 1400, 'remote');
-                $neon->addJobOffer('Rust Developer', '2000-01-01', 1500, 'stationary');
-                $neon->addJobOffer('Go Developer', '2012-02-02', 1000, 'stationary');
-                foreach (sessionJobOffers() as [$title, $publish, $salaryTo, $workMode]) {
-                    $neon->addJobOffer($title, $publish, $salaryTo, $workMode);
+                $neon->addJobOffer('Swift Developer', '2023-03-03', 4000, 'remote', ['New York']);
+                $neon->addJobOffer('Rust Developer', '2000-01-01', 7500, 'stationary', ['London']);
+                $neon->addJobOffer('Go Developer', '2012-02-02', 12500, 'stationary', ['Amsterdam']);
+                foreach (sessionJobOffers() as $jobOffer) {
+                    $neon->addJobOffer(
+                        $jobOffer->title,
+                        $jobOffer->publishDate,
+                        $jobOffer->salaryTo,
+                        $jobOffer->workMode,
+                        $jobOffer->locations);
                 }
                 return response(<<<EOF
                     <html>
@@ -78,7 +85,15 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
     ->create()
     ->handleRequest(Request::capture());
 
+/**
+ * @return JobOffer[]
+ */
 function sessionJobOffers(): array
 {
-    return json_decode(session()->get('values', '[]'), true);
+    return \unserialize(session()->get('values', serialize([])));
+}
+
+function sessionAddJobOffer(JobOffer $jobOffer): void
+{
+    session()->put('values', \serialize([...sessionJobOffers(), $jobOffer]));
 }

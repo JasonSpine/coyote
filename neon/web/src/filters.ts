@@ -3,6 +3,7 @@ export interface JobOffer {
   publishDate: string;
   salaryTo: number;
   workMode: 'stationary'|'remote';
+  locations: string[];
 }
 
 type JobOffersListener = (jobOffers: JobOffer[]) => void;
@@ -15,6 +16,7 @@ export class Filters {
   private searchPhrase: string = '';
   private minimumSalary: number = 0;
   private workModeRemote: boolean = false;
+  private locations: string[] = [];
 
   onUpdate(listener: JobOffersListener): void {
     this.updateListener = listener;
@@ -40,6 +42,11 @@ export class Filters {
     this.update();
   }
 
+  filterByLocation(locations: string[]): void {
+    this.locations = locations;
+    this.update();
+  }
+
   sortByPublishDate(): void {
     this.sort('most-recent');
   }
@@ -51,6 +58,14 @@ export class Filters {
   sort(order: OrderBy): void {
     this.orderBy = order;
     this.update();
+  }
+
+  availableLocations(): string[] {
+    return [...new Set(this.jobOffers.flatMap(offer => offer.locations))];
+  }
+
+  availableSalaries(): number[] {
+    return [5000, 10000, 15000, 20000, 25000, 30000];
   }
 
   private update(): void {
@@ -68,6 +83,17 @@ export class Filters {
           return offer.workMode === 'remote';
         }
         return true;
+      })
+      .filter(offer => {
+        if (this.locations.length === 0) {
+          return true;
+        }
+        for (const location of this.locations) {
+          if (offer.locations.includes(location)) {
+            return true;
+          }
+        }
+        return false;
       })
     ;
     this.sortInPlace(offers);
