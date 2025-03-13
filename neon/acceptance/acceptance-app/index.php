@@ -41,11 +41,8 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                 }
                 return response(<<<EOF
                     <html>
-                    <head>
-                        <link href="//fonts.googleapis.com/css?family=Inter:500,700" rel="stylesheet" type="text/css">
-                        <link rel="stylesheet" href="{$neon->styleUrl()}">
-                    </head>
-                    <body class="bg-body">{$neon->htmlMarkup()}</body>
+                    <head>{$neon->htmlMarkupHead()}</head>
+                    <body class="bg-body">{$neon->htmlMarkupBody()}</body>
                     </html>
                     EOF,
                 );

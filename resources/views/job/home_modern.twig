@@ -27,12 +27,11 @@
 
 {% block head %}
   {{ parent() }}
-  {{ head }}
-  <link rel="stylesheet" type="text/css" href="{{ styleUrl }}" title="includeShadowRoot">
+  {{ neonHead }}
 {% endblock %}
 
 {% block container %}
   <div id="neon-application" data-decoupled="true" style="all:initial;">
-    {{ jobBoard }}
+    {{ neonBody }}
   </div>
 {% endblock %}

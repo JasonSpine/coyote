@@ -34,8 +34,8 @@ class ServiceProvider extends RouteServiceProvider
                             ->toArray());
                 }
                 return view('job.home_modern', [
-                    'styleUrl' => $neon->styleUrl(),
-                    'jobBoard' => new StringHtml($neon->htmlMarkup()),
+                    'neonHead' => new StringHtml($neon->htmlMarkupHead()),
+                    'neonBody' => new StringHtml($neon->htmlMarkupBody()),
                 ]);
             });
         });

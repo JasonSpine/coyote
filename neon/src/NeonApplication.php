@@ -3,20 +3,43 @@ namespace Neon;
 
 class NeonApplication
 {
+    private ViteManifest $vite;
     private array $offers = [];
 
-    public function __construct(private string $basePath) {}
-
-    public function htmlMarkup(): string
+    public function __construct(private string $basePath)
     {
-        $jobOffers = json_encode($this->jobOffers());
+        $this->vite = new ViteManifest(__DIR__ . '/../web/');
+    }
+
+    public function htmlMarkupBody(): string
+    {
+        $jobOffers = json_encode($this->offers);
+        $scriptUrl = $this->url($this->vite->scriptUrl());
         return <<<html
             <div id="neon-application">
                 <div id="vueApplication"></div>
             </div>
             <script>var jobOffers = {$jobOffers};</script>
-            <script src="{$this->scriptUrl()}"></script>        
+            <script src="{$scriptUrl}"></script>        
             html;
+    }
+
+    public function htmlMarkupHead(): string
+    {
+        $styleUrl = $this->url($this->vite->styleUrl());
+        $faLightUrl = $this->url($this->vite->fontAwesomeLightUrl());
+        $faSolidUrl = $this->url($this->vite->fontAwesomeSolidUrl());
+        return <<<head
+            <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter:500,700">
+            <link rel="stylesheet" type="text/css" href="$styleUrl" title="includeShadowRoot">
+            <link rel="preload" href="$faLightUrl" as="font" type="font/woff2" crossorigin>
+            <link rel="preload" href="$faSolidUrl" as="font" type="font/woff2" crossorigin>
+        head;
+    }
+
+    public function viteFile(string $file): string
+    {
+        return $this->vite->fileContent($file);
     }
 
     public function addJobOffer(
@@ -35,33 +58,8 @@ class NeonApplication
         ];
     }
 
-    private function jobOffers(): array
-    {
-        return $this->offers;
-    }
-
-    private function scriptUrl(): string
-    {
-        return $this->url($this->viteManifest()['src/main.ts']['file']);
-    }
-
-    public function styleUrl(): string
-    {
-        return $this->url($this->viteManifest()['src/main.ts']['css'][0]);
-    }
-
     private function url(string $path): string
     {
         return \rTrim($this->basePath, '/') . '/' . $path;
-    }
-
-    private function viteManifest(): array
-    {
-        return json_decode($this->viteFile('manifest.json'), true);
-    }
-
-    public function viteFile(string $file): string
-    {
-        return \file_get_contents(__DIR__ . "/../web/dist/$file");
     }
 }
