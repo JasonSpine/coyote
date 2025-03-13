@@ -2,9 +2,11 @@ export interface JobOffer {
   title: string;
   publishDate: string;
   salaryTo: number;
-  workMode: 'stationary'|'remote';
+  workMode: WorkMode;
   locations: string[];
 }
+
+export type WorkMode = 'remote'|'stationary';
 
 type JobOffersListener = (jobOffers: JobOffer[]) => void;
 export type OrderBy = 'most-recent'|'highest-salary';

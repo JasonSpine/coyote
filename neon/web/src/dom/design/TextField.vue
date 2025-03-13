@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-body rounded-lg p-3 flex">
+  <div class="bg-tile-nested rounded-lg p-3 flex">
     <input
       class="outline-none flex-grow-1"
       :data-testid="props.testId"

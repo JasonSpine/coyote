@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap gap-2">
+  <div class="ml-auto">
     <slot/>
   </div>
 </template>

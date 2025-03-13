@@ -76,14 +76,15 @@ readonly class Driver
 
     public function filterJobOffersBySalary(int $minimumSalary): void
     {
-        $this->selenium->element('jobOfferMinimumSalarySelect')->select("$minimumSalary");
+        $this->selenium->element('jobOfferMinimumSalary')->select("$minimumSalary");
         $this->selenium->element('jobOfferSearch')->click();
     }
 
     public function filterJobOffersByWorkMode(string $workMode): void
     {
         if ($workMode === 'remote') {
-            $this->selenium->element('jobOfferWorkMode')->check(true);
+            $this->selenium->element('jobOfferWorkMode')->click();
+            $this->selenium->label('Praca zdalna')->check(true);
         }
         $this->selenium->element('jobOfferSearch')->click();
     }

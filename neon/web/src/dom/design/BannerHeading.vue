@@ -1,5 +1,5 @@
 <template>
-  <Design.Tile>
+  <Design.Tile space>
     <div class="space-y-1">
       <p class="text-sm">
         4programmers » Praca

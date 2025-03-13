@@ -2,7 +2,7 @@
 namespace Neon\Acceptance\Test\Dsl;
 
 use Facebook\WebDriver\Remote\RemoteWebElement;
-use Facebook\WebDriver\WebDriverSelect;
+use Facebook\WebDriver\WebDriverBy;
 
 readonly class SeleniumElement
 {
@@ -15,8 +15,8 @@ readonly class SeleniumElement
 
     public function select(string $dropdownOption): void
     {
-        $select = new WebDriverSelect($this->element);
-        $select->selectByVisibleText($dropdownOption);
+        $this->element->click();
+        $this->element->findElement(WebDriverBy::xpath("//*[normalize-space()='$dropdownOption']"))->click();
     }
 
     public function click(): void

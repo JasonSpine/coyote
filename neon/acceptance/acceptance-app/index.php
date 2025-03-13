@@ -41,8 +41,11 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                 }
                 return response(<<<EOF
                     <html>
-                    <head>{$neon->htmlMarkupHead()}</head>
-                    <body class="bg-body">{$neon->htmlMarkupBody()}</body>
+                    <head>
+                        <meta name="viewport" content="width=device-width,initial-scale=1">
+                        {$neon->htmlMarkupHead()}
+                    </head>
+                    <body class="bg-tile-nested">{$neon->htmlMarkupBody()}</body>
                     </html>
                     EOF,
                 );

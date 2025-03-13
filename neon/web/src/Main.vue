@@ -6,63 +6,76 @@
         v-model="state.searchPhrase"
         placeholder="Szukaj po tytule, nazwie firmy"
         test-id="jobOfferSearchPhrase">
-        <Design.Button test-id="jobOfferSearch" @click="search" icon="jobOfferSearch" primary>
-          Szukaj
-        </Design.Button>
+        <Design.Button test-id="jobOfferSearch" @click="search" icon="jobOfferSearch" primary/>
       </Design.TextField>
-      <Design.Row>
-        <Design.Tile nested>
-          <Design.CheckBox v-model="state.workModeRemote" test-id="jobOfferWorkMode" label="Praca zdalna" icon="jobOfferWorkModeRemote"/>
-        </Design.Tile>
-        <Design.Tile nested icon="jobOfferFilterSort">
-          <select :data-testid="sortField.testId" v-model="state.sort" class="outline-none">
-            <option v-for="option in sortField.options" :value="option.value" v-text="option.title"/>
-          </select>
-        </Design.Tile>
-      </Design.Row>
-    </Design.Tile>
-    <Design.Tile>
-      <Design.Row>
-        <Design.Tile nested>
-          <input data-testid="jobOfferMinimumSalary" v-model="state.minimumSalary">
-        </Design.Tile>
-        <Design.Tile nested icon="jobOfferFilterSalary">
-          <select data-testid="jobOfferMinimumSalarySelect" v-model="state.minimumSalary" class="outline-none">
-            <option
-              v-for="salary in filters.availableSalaries()"
-              :value="salary"
-              v-text="salary"/>
-          </select>
-        </Design.Tile>
-      </Design.Row>
-    </Design.Tile>
-    <Design.Tile test-id="jobOfferLocation">
-      <Design.CheckBox
-        v-model="state.locations[location]"
-        :label="location"
-        v-for="location in filters.availableLocations()"/>
+      <div>
+        <Design.Row class="max-md:hidden">
+          <Design.Drawer test-id="jobOfferLocation" icon="jobOfferFilterLocation" title="Lokalizacja">
+            <Design.CheckBox
+              v-model="state.locations[location]"
+              :label="location"
+              v-for="location in filters.availableLocations()"/>
+          </Design.Drawer>
+          <Design.Drawer
+            :test-id="workModeField.testId"
+            :title="workModeField.title"
+            :icon="workModeField.icon">
+            <Design.CheckBox
+              :label="workModeField.remoteLabel"
+              :icon="workModeField.remoteIcon"
+              v-model="state.workModeRemote"/>
+          </Design.Drawer>
+          <Design.Dropdown
+            :icon="salaryField.icon"
+            :title="salaryField.title"
+            :test-id="salaryField.testId"
+            :options="salaryField.options"
+            v-model="state.minimumSalary"/>
+          <Design.RowEnd>
+            <Design.Dropdown
+              :title="sortField.title"
+              :test-id="sortField.testId"
+              :icon="sortField.icon"
+              :options="sortField.options"
+              v-model="state.sort"/>
+          </Design.RowEnd>
+        </Design.Row>
+        <Design.Button
+          class="md:hidden w-full"
+          icon="jobOfferFilter"
+          primary-outline>
+          Filtruj oferty
+        </Design.Button>
+      </div>
     </Design.Tile>
     <ul class="space-y-2">
       <li v-for="jobOffer in state.jobOffers" :data-testid="jobOffer.testId">
-        <Design.Tile>
-          {{ jobOffer.title }}
-        </Design.Tile>
+        <Design.JobOfferListItem :job-offer="jobOffer"/>
       </li>
     </ul>
     <Design.Tile>
-      <select :data-testid="sortField.testId" v-model="state.sort">
-        <option
-          v-for="option in sortField.options"
-          :value="option.value"
-          v-text="option.title"/>
-      </select>
-      <select data-testid="jobOfferMinimumSalarySelect" v-model="state.minimumSalary">
-        <option
-          v-for="salary in filters.availableSalaries()"
-          :value="salary"
-          v-text="salary"/>
-      </select>
-      <input data-testid="jobOfferMinimumSalary" v-model="state.minimumSalary">
+      <Design.Drawer
+        :test-id="workModeField.testId"
+        :title="workModeField.title"
+        :icon="workModeField.icon">
+        <Design.CheckBox
+          :label="workModeField.remoteLabel"
+          :icon="workModeField.remoteIcon"
+          v-model="state.workModeRemote"/>
+      </Design.Drawer>
+      <Design.Dropdown
+        :icon="salaryField.icon"
+        :title="salaryField.title"
+        :test-id="salaryField.testId"
+        :options="salaryField.options"
+        v-model="state.minimumSalary"/>
+      <Design.Divider/>
+      <Design.Dropdown
+        :title="sortField.title"
+        :test-id="sortField.testId"
+        :icon="sortField.icon"
+        :options="sortField.options"
+        v-model="state.sort"/>
       <Design.Button @click="search" test-id="jobOfferSearch" primary>
         Pokaż oferty
       </Design.Button>
@@ -73,19 +86,20 @@
 <script setup lang="ts">
 import {reactive} from "vue";
 import {Design} from "./dom/design/design";
-import {Filters, OrderBy} from "./filters";
+import {Filters, OrderBy, WorkMode} from "./filters";
 
 interface BackendJobOffer {
   title: string;
   salaryTo: number;
   publishDate: string;
-  workMode: 'remote'|'stationary';
+  workMode: WorkMode;
   locations: string[];
 }
 
-interface VueJobOffer {
+export interface VueJobOffer {
   title: string;
-  testId: string;
+  locations: string[];
+  workMode: WorkMode,
 }
 
 const initialJobOffers: BackendJobOffer[] = window['jobOffers'];
@@ -103,7 +117,9 @@ const filters = new Filters();
 filters.onUpdate(jobOffers => {
   state.jobOffers = jobOffers.map(jobOffer => ({
     title: jobOffer.title,
-    testId: 'jobOfferTitle',
+    url: '',
+    locations: jobOffer.locations,
+    workMode: jobOffer.workMode,
   }));
 });
 
@@ -118,12 +134,28 @@ initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
 });
 
 const sortField = {
-  type: 'singleSelect',
+  title: 'Sortuj według',
   testId: 'jobOfferSort',
+  icon: 'jobOfferFilterSort',
   options: [
     {value: 'most-recent', title: 'Najnowsze'},
     {value: 'highest-salary', title: 'Najwyższe wynagrodzenie'},
   ],
+};
+
+const salaryField = {
+  title: 'Wynagrodzenie',
+  icon: 'jobOfferFilterSalary',
+  testId: 'jobOfferMinimumSalary',
+  options: filters.availableSalaries().map(salary => salary.toString()),
+};
+
+const workModeField = {
+  testId: 'jobOfferWorkMode',
+  title: 'Typ pracy',
+  icon: 'jobOfferFilterWorkMode',
+  remoteLabel: 'Praca zdalna',
+  remoteIcon: 'jobOfferWorkModeRemote',
 };
 
 function search(): void {
