@@ -16,9 +16,12 @@
         <div class="size-12 rounded flex-shrink-0 flex items-center justify-center bg-accent-back text-accent-front">
           <Icon name="jobOfferLogoPlaceholder"/>
         </div>
-        <p class="text-lg leading-6" data-testid="jobOfferTitle">
-          <a :href="jobOffer.url" v-text="jobOffer.title"/>
-        </p>
+        <div>
+          <p class="text-lg leading-6" data-testid="jobOfferTitle">
+            <a :href="jobOffer.url" v-text="jobOffer.title"/>
+          </p>
+          {{ jobOffer.companyName }}
+        </div>
       </Design.Row>
     </Design.Tile>
   </Design.Tile>

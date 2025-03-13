@@ -31,7 +31,8 @@ class ServiceProvider extends RouteServiceProvider
                         $jobOffer->locations
                             ->map(fn(Location $location): string => $location->city)
                             ->filter(fn(string $city) => !empty($city))
-                            ->toArray());
+                            ->toArray(),
+                        $jobOffer->firm->name);
                 }
                 return view('job.home_modern', [
                     'neonHead' => new StringHtml($neon->htmlMarkupHead()),

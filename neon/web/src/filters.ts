@@ -4,6 +4,7 @@ export interface JobOffer {
   salaryTo: number;
   workMode: WorkMode;
   locations: string[];
+  companyName: string|null;
 }
 
 export type WorkMode = 'remote'|'stationary';

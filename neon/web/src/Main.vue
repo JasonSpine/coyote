@@ -99,12 +99,15 @@ interface BackendJobOffer {
   publishDate: string;
   workMode: WorkMode;
   locations: string[];
+  companyName: string|null;
 }
 
 export interface VueJobOffer {
   title: string;
   locations: string[];
-  workMode: WorkMode,
+  workMode: WorkMode;
+  url: string;
+  companyName: string|null;
 }
 
 const initialJobOffers: BackendJobOffer[] = window['jobOffers'];
@@ -125,6 +128,7 @@ filters.onUpdate(jobOffers => {
     url: '',
     locations: jobOffer.locations,
     workMode: jobOffer.workMode,
+    companyName: jobOffer.companyName,
   }));
 });
 
@@ -135,6 +139,7 @@ initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
     publishDate: jobOffer.publishDate,
     workMode: jobOffer.workMode,
     locations: jobOffer.locations,
+    companyName: jobOffer.companyName,
   });
 });
 

@@ -23,21 +23,23 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                     $request->get('jobOfferSalaryTo'),
                     $request->get('jobOfferWorkMode'),
                     $request->get('jobOfferLocations', []),
+                    null,
                 ));
                 return \response(status:201);
             });
             Route::get('/', function (): Response {
                 $neon = new \Neon\NeonApplication('/neon');
-                $neon->addJobOffer('Swift Developer', '2023-03-03', 4000, 'remote', ['New York']);
-                $neon->addJobOffer('Rust Developer', '2000-01-01', 7500, 'stationary', ['London']);
-                $neon->addJobOffer('Go Developer', '2012-02-02', 12500, 'stationary', ['Amsterdam']);
+                $neon->addJobOffer('Swift Developer', '2023-03-03', 4000, 'remote', ['New York'], 'Spotify');
+                $neon->addJobOffer('Rust Developer', '2000-01-01', 7500, 'stationary', ['London'], 'Facebook');
+                $neon->addJobOffer('Go Developer', '2012-02-02', 12500, 'stationary', ['Amsterdam'], 'Microsoft');
                 foreach (sessionJobOffers() as $jobOffer) {
                     $neon->addJobOffer(
                         $jobOffer->title,
                         $jobOffer->publishDate,
                         $jobOffer->salaryTo,
                         $jobOffer->workMode,
-                        $jobOffer->locations);
+                        $jobOffer->locations,
+                        $jobOffer->companyName);
                 }
                 return response(<<<EOF
                     <html>
