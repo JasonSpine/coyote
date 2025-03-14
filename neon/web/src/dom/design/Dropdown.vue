@@ -1,8 +1,9 @@
 <template>
   <Design.Drawer
-    :test-id="props.testId"
-    :icon="props.icon"
     :title="props.title"
+    :icon="props.icon"
+    :test-id="props.testId"
+    :nested="props.nested"
     v-model:open="open">
     <div v-for="option in options" @click="select(option.value)" class="cursor-pointer text-nowrap">
       <Icon v-if="selected === option.value" name="dropdownOptionSelected" class="text-primary mr-1"/>
@@ -27,6 +28,7 @@ interface Props {
   title: string;
   icon?: IconName;
   testId?: string;
+  nested?: boolean;
   options: DrawerOptions;
 }
 

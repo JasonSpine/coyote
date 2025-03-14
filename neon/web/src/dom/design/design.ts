@@ -4,6 +4,7 @@ import CheckBox from "./CheckBox.vue";
 import Divider from "./Divider.vue";
 import Drawer from "./Drawer.vue";
 import Dropdown from "./Dropdown.vue";
+import DropdownLabel from "./DropdownLabel.vue";
 import JobOfferListItem from "./JobOfferListItem.vue";
 import Layout from "./Layout.vue";
 import Row from "./Row.vue";
@@ -18,6 +19,7 @@ export const Design = {
   Divider,
   Drawer,
   Dropdown,
+  DropdownLabel,
   JobOfferListItem,
   Layout,
   Row,

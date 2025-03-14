@@ -1,5 +1,5 @@
 <template>
-  <Design.Tile>
+  <Design.Tile vertical>
     <Design.Row>
       <Design.Tile nested-pill icon="jobOfferLocation" v-for="location in jobOffer.locations">
         {{ location }}

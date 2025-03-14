@@ -1,7 +1,7 @@
 <template>
   <Design.Layout>
     <Design.BannerHeading/>
-    <Design.Tile>
+    <Design.Tile vertical>
       <Design.TextField
         v-model="state.searchPhrase"
         placeholder="Szukaj po tytule, nazwie firmy"
@@ -10,13 +10,14 @@
       </Design.TextField>
       <div>
         <Design.Row class="max-md:hidden">
-          <Design.Drawer test-id="jobOfferLocation" icon="jobOfferFilterLocation" title="Lokalizacja">
+          <Design.Drawer nested test-id="jobOfferLocation" icon="jobOfferFilterLocation" title="Lokalizacja">
             <Design.CheckBox
               v-model="state.locations[location]"
               :label="location"
               v-for="location in filters.availableLocations()"/>
           </Design.Drawer>
           <Design.Drawer
+            nested
             :test-id="workModeField.testId"
             :title="workModeField.title"
             :icon="workModeField.icon">
@@ -26,19 +27,12 @@
               v-model="state.workModeRemote"/>
           </Design.Drawer>
           <Design.Dropdown
+            nested
             :icon="salaryField.icon"
             :title="salaryField.title"
             :test-id="salaryField.testId"
             :options="salaryField.options"
             v-model="state.minimumSalary"/>
-          <Design.RowEnd>
-            <Design.Dropdown
-              :title="sortField.title"
-              :test-id="sortField.testId"
-              :icon="sortField.icon"
-              :options="sortField.options"
-              v-model="state.sort"/>
-          </Design.RowEnd>
         </Design.Row>
         <Design.Button
           class="md:hidden w-full"
@@ -48,13 +42,22 @@
         </Design.Button>
       </div>
     </Design.Tile>
+    <Design.DropdownLabel label="Sortowanie:">
+      <Design.Dropdown
+        :title="sortField.title"
+        :test-id="sortField.testId"
+        :icon="sortField.icon"
+        :options="sortField.options"
+        v-model="state.sort"/>
+    </Design.DropdownLabel>
     <ul class="space-y-2">
       <li v-for="jobOffer in state.jobOffers" :data-testid="jobOffer.testId">
         <Design.JobOfferListItem :job-offer="jobOffer"/>
       </li>
     </ul>
-    <Design.Tile space>
+    <Design.Tile vertical space class="mt-32 w-1/2 h-128 flex flex-col">
       <Design.Drawer
+        nested
         :test-id="workModeField.testId"
         :title="workModeField.title"
         :icon="workModeField.icon">
@@ -64,6 +67,7 @@
           v-model="state.workModeRemote"/>
       </Design.Drawer>
       <Design.Dropdown
+        nested
         :icon="salaryField.icon"
         :title="salaryField.title"
         :test-id="salaryField.testId"
@@ -71,12 +75,13 @@
         v-model="state.minimumSalary"/>
       <Design.Divider/>
       <Design.Dropdown
+        nested
         :title="sortField.title"
         :test-id="sortField.testId"
         :icon="sortField.icon"
         :options="sortField.options"
         v-model="state.sort"/>
-      <Design.Row space>
+      <Design.Row space class="mt-auto">
         <Design.Button @click="clearFilters" test-id="jobOfferClearFilters" outline>
           Wyczyść filtry
         </Design.Button>

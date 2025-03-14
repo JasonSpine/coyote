@@ -9,25 +9,53 @@
 import {computed} from "vue";
 import Icon, {IconName} from "../component/Icon.vue";
 
+const props = defineProps<Props>();
+
 interface Props {
   nested?: boolean;
   icon?: IconName;
   testId?: string;
   nestedPill?: boolean;
   space?: boolean;
+  vertical?: boolean;
 }
 
-const props = defineProps<Props>();
 const tileClass = computed(() => {
+  return [
+    props.nested || props.nestedPill ? 'bg-tile-nested' : 'bg-tile',
+    rounded(),
+    padding(),
+    verticalSpacing(),
+  ];
+});
+
+function rounded(): string {
   if (props.nestedPill) {
-    return 'bg-tile-nested rounded-3xl py-2 px-3';
+    return 'rounded-3xl';
+  }
+  if (!props.nested) {
+    return 'rounded-xl';
+  }
+  return 'rounded-lg';
+}
+
+function padding(): string {
+  if (props.nestedPill) {
+    return 'py-2 px-3';
   }
   if (props.nested) {
-    return 'bg-tile-nested rounded-lg p-2';
+    return 'p-2';
   }
   if (props.space) {
-    return 'bg-tile rounded-xl space-y-4 p-4';
+    return 'p-4';
   }
-  return 'bg-tile rounded-xl space-y-2 p-2';
-});
+  return 'p-2';
+}
+
+function verticalSpacing(): string {
+  if (props.vertical) {
+    return props.space ? 'space-y-4' : 'space-y-2';
+  }
+  return '';
+}
 </script>
