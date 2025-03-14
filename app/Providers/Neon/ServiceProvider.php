@@ -3,6 +3,7 @@ namespace Coyote\Providers\Neon;
 
 use Coyote\Domain\StringHtml;
 use Coyote\Job\Location;
+use Coyote\Services\UrlBuilder;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
@@ -25,6 +26,7 @@ class ServiceProvider extends RouteServiceProvider
                 foreach ($repository->jobOffers() as $jobOffer) {
                     $neon->addJobOffer(
                         $jobOffer->title,
+                        UrlBuilder::job($jobOffer, true),
                         $jobOffer->boost_at->format('Y-m-d'),
                         $jobOffer->salary_to ?? 0,
                         $jobOffer->is_remote ? 'remote' : 'stationary',

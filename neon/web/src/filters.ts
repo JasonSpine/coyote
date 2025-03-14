@@ -1,5 +1,6 @@
 export interface JobOffer {
   title: string;
+  url: string;
   publishDate: string;
   salaryTo: number;
   workMode: WorkMode;

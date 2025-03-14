@@ -19,6 +19,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
             Route::get('/integration/job-offers', function (Request $request) {
                 sessionAddJobOffer(new JobOffer(
                     $request->get('jobOfferTitle'),
+                    '',
                     $request->get('jobOfferPublishDate'),
                     $request->get('jobOfferSalaryTo'),
                     $request->get('jobOfferWorkMode'),
@@ -29,12 +30,13 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
             });
             Route::get('/', function (): Response {
                 $neon = new \Neon\NeonApplication('/neon');
-                $neon->addJobOffer('Swift Developer', '2023-03-03', 4000, 'remote', ['New York'], 'Spotify');
-                $neon->addJobOffer('Rust Developer', '2000-01-01', 7500, 'stationary', ['London'], 'Facebook');
-                $neon->addJobOffer('Go Developer', '2012-02-02', 12500, 'stationary', ['Amsterdam'], 'Microsoft');
+                $neon->addJobOffer('Swift Developer', '', '2023-03-03', 4000, 'remote', ['New York'], 'Spotify');
+                $neon->addJobOffer('Rust Developer', '', '2000-01-01', 7500, 'stationary', ['London'], 'Facebook');
+                $neon->addJobOffer('Go Developer', '', '2012-02-02', 12500, 'stationary', ['Amsterdam'], 'Microsoft');
                 foreach (sessionJobOffers() as $jobOffer) {
                     $neon->addJobOffer(
                         $jobOffer->title,
+                        $jobOffer->url,
                         $jobOffer->publishDate,
                         $jobOffer->salaryTo,
                         $jobOffer->workMode,

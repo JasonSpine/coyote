@@ -95,6 +95,7 @@ import {Filters, OrderBy, WorkMode} from "./filters";
 
 interface BackendJobOffer {
   title: string;
+  url: string;
   salaryTo: number;
   publishDate: string;
   workMode: WorkMode;
@@ -125,7 +126,7 @@ const filters = new Filters();
 filters.onUpdate(jobOffers => {
   state.jobOffers = jobOffers.map(jobOffer => ({
     title: jobOffer.title,
-    url: '',
+    url: jobOffer.url,
     locations: jobOffer.locations,
     workMode: jobOffer.workMode,
     companyName: jobOffer.companyName,
@@ -135,6 +136,7 @@ filters.onUpdate(jobOffers => {
 initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
   filters.addJobOffer({
     title: jobOffer.title,
+    url: jobOffer.url,
     salaryTo: jobOffer.salaryTo,
     publishDate: jobOffer.publishDate,
     workMode: jobOffer.workMode,

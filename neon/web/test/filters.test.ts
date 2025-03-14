@@ -15,10 +15,12 @@ function addJobOffer(
 ): void {
   filters.addJobOffer({
     title: title || 'Job offer',
+    url: '',
     publishDate: publishDate || '2000-01-01',
     salaryTo: salaryTo || 1000,
     workMode: workMode || 'stationary',
     locations: locations || [],
+    companyName: '',
   });
 }
 
