@@ -12,7 +12,9 @@
 </template>
 
 <script setup lang="ts">
+import {watch} from 'vue';
 import Icon, {IconName} from "../component/Icon.vue";
+import {useClickOutside} from "../vue/clickOutside";
 import {Design} from "./design";
 
 interface Props {
@@ -23,8 +25,17 @@ interface Props {
 
 const props = defineProps<Props>();
 const open = defineModel('open', {default: false, type: Boolean});
+const clickOutside = useClickOutside(true);
 
 function toggle(): void {
   open.value = !open.value;
 }
+
+watch(open, (newValue: boolean): void => {
+  if (newValue) {
+    clickOutside.addClickListener(() => open.value = false);
+  } else {
+    clickOutside.removeAll();
+  }
+});
 </script>
