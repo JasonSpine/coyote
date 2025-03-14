@@ -76,7 +76,6 @@
       <Design.Divider/>
       <Design.Dropdown
         nested
-        :title="sortField.title"
         :test-id="sortField.testId"
         :icon="sortField.icon"
         :options="sortField.options"
@@ -151,7 +150,6 @@ initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
 });
 
 const sortField = {
-  title: 'Sortuj według',
   testId: 'jobOfferSort',
   icon: 'jobOfferFilterSort',
   options: [

@@ -1,6 +1,6 @@
 <template>
   <Design.Drawer
-    :title="props.title"
+    :title="title"
     :icon="props.icon"
     :test-id="props.testId"
     :nested="props.nested"
@@ -25,7 +25,7 @@ interface DrawerOption {
 type DrawerOptions = DrawerOption[]|string[];
 
 interface Props {
-  title: string;
+  title?: string;
   icon?: IconName;
   testId?: string;
   nested?: boolean;
@@ -41,7 +41,17 @@ function select(value: string): void {
   open.value = false;
 }
 
-const options = computed<VueOption[]>(() => {
+const title = computed((): string => {
+  if (props.title) {
+    return props.title;
+  }
+  if (selected.value) {
+    return options.value.find(option => option.value === selected.value).title;
+  }
+  throw new Error('Without v-model, :title="" is required in <Design.Dropdown/>.');
+});
+
+const options = computed<DrawerOption[]>(() => {
   return props.options.map(function (option: DrawerOption|string): DrawerOption {
     if (typeof option === 'string') {
       return {value: option, title: option};
