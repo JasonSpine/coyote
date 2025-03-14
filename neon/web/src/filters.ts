@@ -93,7 +93,7 @@ export class Filters {
 
   private filteredJobOffersInOrder(): JobOffer[] {
     const offers = this.jobOffers
-      .filter(offer => offer.title.includes(this._searchPhrase))
+      .filter(offer => offer.title.toLowerCase().includes(this._searchPhrase.toLowerCase()))
       .filter(offer => offer.salaryTo >= this.minimumSalary)
       .filter(offer => {
         if (this.workModeRemote) {

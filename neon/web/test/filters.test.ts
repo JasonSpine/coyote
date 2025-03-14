@@ -105,6 +105,15 @@ test('job offers are filtered by search phrase', () => {
   filters.filter('Python');
 });
 
+test('job offers are filtered by search phrase, case insensitive', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {title: 'Python Developer'});
+  filters.onUpdate(jobOffers => {
+    assertEquals(['Python Developer'], titles(jobOffers));
+  });
+  filters.filter('PyThOn');
+});
+
 test('job offers are filtered by minimal salary', () => {
   const filters = new Filters();
   addJobOffer(filters, {title: 'Python Developer', salaryTo: 1000});
