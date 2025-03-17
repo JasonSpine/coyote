@@ -6,6 +6,7 @@ readonly class FontAwesomePro
     public function icons(): array
     {
         $faTick = 'fa-light fa-check';
+        $faSolidTick = 'fa-solid fa-check';
         $faCross = 'fa-light fa-xmark';
         $faSpinner = 'fa-light fa-spinner';
 
@@ -246,7 +247,7 @@ readonly class FontAwesomePro
             'topicActionMove'                           => 'fa-light fa-circle-arrow-right',
             'topicActionLock'                           => 'fa-light fa-lock',
             'topicActionUnlock'                         => 'fa-light fa-unlock',
-            'topicAccepted'                             => $faTick,
+            'topicAccepted'                             => $faSolidTick,
             'topicReported'                             => 'fa-light fa-flag',
             'topicStateSticky'                          => 'fa-light fa-thumbtack',
             'topicStateLocked'                          => 'fa-light fa-lock',
