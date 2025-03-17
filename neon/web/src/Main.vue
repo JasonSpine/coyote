@@ -9,7 +9,7 @@
         <Design.Button test-id="jobOfferSearch" @click="search" icon="jobOfferSearch" primary/>
       </Design.TextField>
       <div>
-        <Design.Row class="max-md:hidden">
+        <Design.Row class="max-md:hidden" vertical-center>
           <Design.Drawer nested test-id="jobOfferLocation" icon="jobOfferFilterLocation" title="Lokalizacja">
             <Design.CheckBox
               v-model="state.locations[location]"
@@ -31,6 +31,11 @@
             :test-id="salaryField.testId"
             :options="salaryField.options"
             v-model="state.minimumSalary"/>
+          <Design.RowEnd>
+            <span @click="clearFilters" class="cursor-pointer">
+              Wyczyść filtry
+            </span>
+          </Design.RowEnd>
         </Design.Row>
         <Design.Button
           class="md:hidden w-full"
