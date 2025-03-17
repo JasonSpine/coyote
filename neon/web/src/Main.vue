@@ -171,6 +171,7 @@ const sortField = {
   options: [
     {value: 'most-recent', title: 'Najnowsze'},
     {value: 'highest-salary', title: 'Najwyższe wynagrodzenie'},
+    {value: 'lowest-salary', title: 'Najniższe wynagrodzenie'},
   ],
 };
 

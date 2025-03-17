@@ -12,7 +12,7 @@ export interface JobOffer {
 export type WorkMode = 'fullyRemote'|'stationary'|'hybrid';
 
 type JobOffersListener = (jobOffers: JobOffer[]) => void;
-export type OrderBy = 'most-recent'|'highest-salary';
+export type OrderBy = 'most-recent'|'highest-salary'|'lowest-salary';
 
 export class Filters {
   private jobOffers: JobOffer[] = [];
@@ -144,9 +144,15 @@ export class Filters {
       offers.sort((offer1: JobOffer, offer2: JobOffer): number => {
         return offer1.publishDate > offer2.publishDate ? -1 : 1;
       });
-    } else {
+    }
+    if (this.orderBy === 'highest-salary') {
       offers.sort((offer1: JobOffer, offer2: JobOffer): number => {
         return offer1.salaryTo > offer2.salaryTo ? -1 : 1;
+      });
+    }
+    if (this.orderBy === 'lowest-salary') {
+      offers.sort((offer1: JobOffer, offer2: JobOffer): number => {
+        return offer1.salaryTo < offer2.salaryTo ? -1 : 1;
       });
     }
   }

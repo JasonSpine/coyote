@@ -86,6 +86,16 @@ test('job offers are sorted by highest salary', () => {
   filters.sortByHighestSalary();
 });
 
+test('job offers are sorted by lowest salary', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {title: 'JS Developer', salaryTo: 1000});
+  addJobOffer(filters, {title: 'Java Developer', salaryTo: 1200});
+  filters.onUpdate(jobOffers => {
+    assertEquals(['JS Developer', 'Java Developer'], titles(jobOffers));
+  });
+  filters.sort('lowest-salary');
+});
+
 test('filter by search phrase calls listener', () => {
   const filters = new Filters();
   let wasCalled = false;
