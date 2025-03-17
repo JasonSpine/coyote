@@ -1,15 +1,17 @@
 <?php
-namespace Neon\Acceptance;
-
-use Neon\WorkMode;
+namespace Neon;
 
 readonly class JobOffer
 {
+    /**
+     * @param string[] $locations
+     */
     public function __construct(
         public string   $title,
         public string   $url,
         public string   $publishDate,
-        public int      $salaryTo,
+        public ?int     $salaryFrom,
+        public ?int     $salaryTo,
         public WorkMode $workMode,
         public array    $locations,
         public ?string  $companyName,

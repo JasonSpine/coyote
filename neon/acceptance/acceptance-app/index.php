@@ -8,7 +8,8 @@ use Illuminate\Http\Response;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades;
 use Illuminate\Support\Facades\Route;
-use Neon\Acceptance\JobOffer;
+use Neon\JobOffer;
+use Neon\NeonApplication;
 use Neon\WorkMode;
 
 Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
@@ -22,6 +23,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                     $request->get('jobOfferTitle'),
                     '',
                     $request->get('jobOfferPublishDate'),
+                    null,
                     $request->get('jobOfferSalaryTo'),
                     WorkMode::from($request->get('jobOfferWorkMode')),
                     $request->get('jobOfferLocations', []),
@@ -30,21 +32,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                 return \response(status:201);
             });
             Route::get('/', function (): Response {
-                $neon = new \Neon\NeonApplication('/neon');
-                $neon->addJobOffer('Swift Developer', '', '2023-03-03', null, 4000, WorkMode::FullyRemote, ['New York'], 'Spotify');
-                $neon->addJobOffer('Rust Developer', '', '2000-01-01', null, 7500, WorkMode::Stationary, ['London'], 'Facebook');
-                $neon->addJobOffer('Go Developer', '', '2012-02-02', null, 12500, WorkMode::Hybrid, ['Amsterdam'], 'Microsoft');
-                foreach (sessionJobOffers() as $jobOffer) {
-                    $neon->addJobOffer(
-                        $jobOffer->title,
-                        $jobOffer->url,
-                        $jobOffer->publishDate,
-                        null,
-                        $jobOffer->salaryTo,
-                        $jobOffer->workMode,
-                        $jobOffer->locations,
-                        $jobOffer->companyName);
-                }
+                $neon = neonApplication();
                 return response(<<<EOF
                     <html>
                     <head>
@@ -57,7 +45,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                 );
             });
             Route::get('/neon/assets/{filename}', function (string $filename): Response {
-                $neon = new \Neon\NeonApplication('/neon');
+                $neon = new NeonApplication('/neon');
                 return response($neon->viteFile("/assets/$filename"));
             });
         });
@@ -90,6 +78,18 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
     ->withExceptions()
     ->create()
     ->handleRequest(Request::capture());
+
+function neonApplication(): NeonApplication
+{
+    $neon = new NeonApplication('/neon');
+    $neon->addJobOffer(new JobOffer('Swift Developer', '', '2023-03-03', null, 4000, WorkMode::FullyRemote, ['New York'], 'Spotify'));
+    $neon->addJobOffer(new JobOffer('Rust Developer', '', '2000-01-01', null, 7500, WorkMode::Stationary, ['London'], 'Facebook'));
+    $neon->addJobOffer(new JobOffer('Go Developer', '', '2012-02-02', null, 12500, WorkMode::Hybrid, ['Amsterdam'], 'Microsoft'));
+    foreach (sessionJobOffers() as $jobOffer) {
+        $neon->addJobOffer($jobOffer);
+    }
+    return $neon;
+}
 
 /**
  * @return JobOffer[]

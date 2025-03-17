@@ -42,27 +42,9 @@ class NeonApplication
         return $this->vite->fileContent($file);
     }
 
-    public function addJobOffer(
-        string   $jobOfferTitle,
-        string   $jobOfferUrl,
-        string   $publishDate,
-        ?int     $salaryFrom,
-        ?int     $salaryTo,
-        WorkMode $workMode,
-        array    $locations,
-        ?string  $companyName,
-    ): void
+    public function addJobOffer(JobOffer $jobOffer): void
     {
-        $this->offers[] = [
-            'title'       => $jobOfferTitle,
-            'url'         => $jobOfferUrl,
-            'publishDate' => $publishDate,
-            'salaryFrom'  => $salaryFrom,
-            'salaryTo'    => $salaryTo,
-            'workMode'    => $workMode,
-            'locations'   => $locations,
-            'companyName' => $companyName,
-        ];
+        $this->offers[] = $jobOffer;
     }
 
     private function url(string $path): string

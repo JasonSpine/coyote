@@ -1,6 +1,7 @@
 <?php
 namespace Coyote\Providers\Neon;
 
+use Coyote;
 use Coyote\Domain\StringHtml;
 use Coyote\Job;
 use Coyote\Job\Location;
@@ -25,18 +26,7 @@ class ServiceProvider extends RouteServiceProvider
                 $neon = new Neon\NeonApplication('/neon');
                 $repository = app(JobElasticSearchRepository::class);
                 foreach ($repository->jobOffers() as $jobOffer) {
-                    $neon->addJobOffer(
-                        $jobOffer->title,
-                        UrlBuilder::job($jobOffer, true),
-                        $jobOffer->boost_at->format('Y-m-d'),
-                        $jobOffer->salary_from,
-                        $jobOffer->salary_to,
-                        $this->workMode($jobOffer),
-                        $jobOffer->locations
-                            ->map(fn(Location $location): string => $location->city)
-                            ->filter(fn(string $city) => !empty($city))
-                            ->toArray(),
-                        $jobOffer->firm->name);
+                    $neon->addJobOffer($this->jobOffer($jobOffer));
                 }
                 return view('job.home_modern', [
                     'neonHead' => new StringHtml($neon->htmlMarkupHead()),
@@ -46,7 +36,23 @@ class ServiceProvider extends RouteServiceProvider
         });
     }
 
-    function workMode(Job $jobOffer): Neon\WorkMode
+    private function jobOffer(Coyote\Job $jobOffer): Neon\JobOffer
+    {
+        return new Neon\JobOffer(
+            $jobOffer->title,
+            UrlBuilder::job($jobOffer, true),
+            $jobOffer->boost_at->format('Y-m-d'),
+            $jobOffer->salary_from,
+            $jobOffer->salary_to,
+            $this->workMode($jobOffer),
+            $jobOffer->locations
+                ->map(fn(Location $location): string => $location->city)
+                ->filter(fn(string $city) => !empty($city))
+                ->toArray(),
+            $jobOffer->firm->name);
+    }
+
+    private function workMode(Job $jobOffer): Neon\WorkMode
     {
         if (!$jobOffer->is_remote) {
             return Neon\WorkMode::Stationary;
