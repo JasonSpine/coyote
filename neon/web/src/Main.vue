@@ -1,6 +1,14 @@
 <template>
   <Design.Layout>
     <Design.BannerHeading/>
+    <Design.Row>
+      <Design.Tabs selected="allOffers" :tabs="pageTabs" @change="redirectToMyOffers"/>
+      <Design.RowEnd>
+        <Design.Button icon="add" primary-outline @click="redirectToOfferForm">
+          Dodaj ofertę
+        </Design.Button>
+      </Design.RowEnd>
+    </Design.Row>
     <Design.Tile vertical>
       <Design.TextField
         v-model="state.searchPhrase"
@@ -174,6 +182,11 @@ initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
   });
 });
 
+const pageTabs = [
+  {value: 'allOffers', title: 'Ogłoszenia'},
+  {value: 'myOffers', title: 'Moje ogłoszenia'},
+];
+
 const sortField = {
   testId: 'jobOfferSort',
   icon: 'jobOfferFilterSort',
@@ -216,5 +229,13 @@ function search(): void {
 function clearFilters(): void {
   filters.clearFilters();
   state.searchPhrase = filters.searchPhrase();
+}
+
+function redirectToMyOffers(): void {
+  window.location.href = '/Praca/Moje';
+}
+
+function redirectToOfferForm(): void {
+  window.location.href = '/Praca/Oferta';
 }
 </script>

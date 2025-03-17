@@ -34,7 +34,7 @@ const variantClass = computed(() => {
     return 'bg-primary text-on-primary';
   }
   if (props.primaryOutline) {
-    return 'text-primary bg-tile border border-primary';
+    return 'text-primary border border-primary';
   }
   if (props.outline) {
     return 'text-neutral-600 dark:text-neutral-050 border border-current';

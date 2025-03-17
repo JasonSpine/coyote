@@ -20,10 +20,12 @@ interface Props {
 const jobOfferLocation = 'fa-light fa-location-dot';
 const jobOfferWorkModeStationary = 'fa-light fa-suitcase';
 const check = 'fa-light fa-check';
+const plus = 'fa-light fa-plus';
 const icons = {
   dropdownClosed: 'fa-light fa-chevron-down',
   dropdownOptionSelected: check,
   checkboxChecked: check,
+  add: plus,
   jobOfferFavourite: 'fa-light fa-star',
   jobOfferFavouriteChecked: 'fa-solid fa-star',
   jobOfferWorkModeRemote: 'fa-solid fa-wifi',

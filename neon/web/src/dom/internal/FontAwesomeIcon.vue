@@ -111,4 +111,8 @@ interface Props {
 .fa-check:before {
   content: "\f00c";
 }
+
+.fa-plus:before {
+  content: "\2b";
+}
 </style>
