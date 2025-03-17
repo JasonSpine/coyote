@@ -9,6 +9,7 @@
     --color-tile-nested: var(--color-navy-050);
     --color-word: var(--color-neutral-600);
     --color-divider: var(--color-neutral-050);
+    --color-tag: var(--color-navy-100);
 
     @variant dark {
       --color-on-primary: var(--color-navy-950);
@@ -17,7 +18,8 @@
       --color-tile: var(--color-neutral-800);
       --color-tile-nested: var(--color-neutral-900);
       --color-word: var(--color-neutral-300);
-      --color-divider: var(--color-neutral-700)
+      --color-divider: var(--color-neutral-700);
+      --color-tag: var(--color-navy-950);
     }
   }
 }
@@ -49,6 +51,7 @@
   --color-tile-nested: var(--color-tile-nested);
 
   --color-word: var(--color-word);
+  --color-tag: var(--color-tag);
 
   --text-xs: 0.625rem;
   --text-sm: 0.75rem;

@@ -102,6 +102,7 @@ interface BackendJobOffer {
   workMode: WorkMode;
   locations: string[];
   companyName: string|null;
+  tagNames: string[];
 }
 
 export interface VueJobOffer {
@@ -111,6 +112,7 @@ export interface VueJobOffer {
   url: string;
   companyName: string|null;
   salary: VueSalary|null;
+  tagNames: string[];
 }
 
 export interface VueSalary {
@@ -139,6 +141,7 @@ filters.onUpdate(jobOffers => {
     workMode: jobOffer.workMode,
     companyName: jobOffer.companyName,
     salary: salary(jobOffer),
+    tagNames: jobOffer.tagNames,
   }));
 });
 
@@ -162,6 +165,7 @@ initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
     workMode: jobOffer.workMode,
     locations: jobOffer.locations,
     companyName: jobOffer.companyName,
+    tagNames: jobOffer.tagNames,
   });
 });
 

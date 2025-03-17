@@ -7,6 +7,7 @@ export interface JobOffer {
   workMode: WorkMode;
   locations: string[];
   companyName: string|null;
+  tagNames: string[];
 }
 
 export type WorkMode = 'fullyRemote'|'stationary'|'hybrid';

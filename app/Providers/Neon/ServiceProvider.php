@@ -49,7 +49,8 @@ class ServiceProvider extends RouteServiceProvider
                 ->map(fn(Location $location): string => $location->city)
                 ->filter(fn(string $city) => !empty($city))
                 ->toArray(),
-            $jobOffer->firm->name);
+            $jobOffer->firm->name,
+            $this->jobOfferTags($jobOffer));
     }
 
     private function workMode(Job $jobOffer): Neon\WorkMode
@@ -61,5 +62,15 @@ class ServiceProvider extends RouteServiceProvider
             return Neon\WorkMode::FullyRemote;
         }
         return Neon\WorkMode::Hybrid;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function jobOfferTags(Coyote\Job $jobOffer): array
+    {
+        return $jobOffer->tags
+            ->map(fn(Coyote\Tag $tag) => $tag->real_name ?? $tag->name)
+            ->toArray();
     }
 }

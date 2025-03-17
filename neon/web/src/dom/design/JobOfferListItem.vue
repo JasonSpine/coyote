@@ -23,7 +23,13 @@
           <p class="text-lg leading-6" data-testid="jobOfferTitle">
             <a :href="jobOffer.url" v-text="jobOffer.title"/>
           </p>
-          {{ jobOffer.companyName }}
+          <div class="flex space-x-2">
+            <span>{{ jobOffer.companyName }}</span>
+            <span v-for="tag in jobOffer.tagNames.slice(0,5)" v-text="tag" class="bg-tag px-2 rounded"/>
+            <span v-if="jobOffer.tagNames.length > 5">
+              +{{ jobOffer.tagNames.length - 5 }}
+            </span>
+          </div>
         </div>
         <div v-if="jobOffer.salary">
           <Design.Salary :salary="jobOffer.salary"/>
