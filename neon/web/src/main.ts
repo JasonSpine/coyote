@@ -21,17 +21,35 @@ function transformToShadowRoot(element: HTMLElement): ShadowRoot {
 }
 
 function shadowRootCopyStyleSheets(root: ShadowRoot): void {
-  for (const styleSheet of window.document.styleSheets) {
-    if (styleSheet.title === 'includeShadowRoot') {
-      root.adoptedStyleSheets.push(copiedStyleSheet(styleSheet));
-    }
+  const styleSheet = shadowRootStylesheet(root);
+  if (!styleSheet) {
+    return;
   }
+  styleSheet.disabled = true;
+  const [htmlRootStyles, shadowRootStyles] = splitStylesheets(styleSheet);
+  window.document.adoptedStyleSheets.push(htmlRootStyles);
+  root.adoptedStyleSheets.push(shadowRootStyles);
 }
 
-function copiedStyleSheet(source: CSSStyleSheet): CSSStyleSheet {
-  const copy = new CSSStyleSheet();
-  for (let index = 0; index < source.cssRules.length; index++) {
-    copy.insertRule(source.cssRules.item(index).cssText, index);
+function shadowRootStylesheet(root: ShadowRoot): CSSStyleSheet|null {
+  for (const styleSheet of window.document.styleSheets) {
+    if (styleSheet.title === 'includeShadowRoot') {
+      return styleSheet;
+    }
   }
-  return copy;
+  throw new Error('Failed to parse shadow root stylesheet.');
+}
+
+function splitStylesheets(styleSheet: CSSStyleSheet): [CSSStyleSheet, CSSStyleSheet] {
+  const propertyStyles = new CSSStyleSheet();
+  const stylesClone = new CSSStyleSheet();
+  for (let index = 0; index < styleSheet.cssRules.length; index++) {
+    const rule = styleSheet.cssRules.item(index)!;
+    if (rule.constructor.name === 'CSSPropertyRule') {
+      propertyStyles.insertRule(rule.cssText);
+    } else {
+      stylesClone.insertRule(rule.cssText, index);
+    }
+  }
+  return [propertyStyles, stylesClone];
 }
