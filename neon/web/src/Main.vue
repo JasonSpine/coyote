@@ -60,21 +60,25 @@
         <Design.JobOfferListItem :job-offer="jobOffer"/>
       </li>
     </ul>
-    <Design.Tile vertical space class="mt-32 w-1/2 h-128 flex flex-col">
-      <Design.Drawer nested :test-id="tagsField.testId" :icon="tagsField.icon" :title="tagsField.title">
-        <Design.CheckBox v-for="tag in tagsField.values" :label="tag" v-model="state.tags[tag]"/>
-      </Design.Drawer>
-      <Design.Drawer nested :test-id="locationsField.testId" :icon="locationsField.icon" :title="locationsField.title">
-        <Design.CheckBox v-for="location in locationsField.values" :label="location" v-model="state.locations[location]"/>
-      </Design.Drawer>
-      <Design.Drawer
-        nested
-        :test-id="workModeField.testId"
-        :title="workModeField.title"
-        :icon="workModeField.icon">
-        <Design.CheckBox :label="workModeField.remoteLabel" :icon="workModeField.remoteIcon" v-model="state.workModeRemote"/>
-        <Design.CheckBox :label="workModeField.hybridLabel" :icon="workModeField.hybridIcon" v-model="state.workModeHybrid"/>
-      </Design.Drawer>
+    <Design.Tile space class="mt-32 w-1/2 h-128 flex flex-col">
+      <h1 class="text-xl mt-2">Filtruj oferty</h1>
+      <Design.Divider/>
+      <div class="space-y-4">
+        <Design.Drawer nested :test-id="tagsField.testId" :icon="tagsField.icon" :title="tagsField.title">
+          <Design.CheckBox v-for="tag in tagsField.values" :label="tag" v-model="state.tags[tag]"/>
+        </Design.Drawer>
+        <Design.Drawer nested :test-id="locationsField.testId" :icon="locationsField.icon" :title="locationsField.title">
+          <Design.CheckBox v-for="location in locationsField.values" :label="location" v-model="state.locations[location]"/>
+        </Design.Drawer>
+        <Design.Drawer
+          nested
+          :test-id="workModeField.testId"
+          :title="workModeField.title"
+          :icon="workModeField.icon">
+          <Design.CheckBox :label="workModeField.remoteLabel" :icon="workModeField.remoteIcon" v-model="state.workModeRemote"/>
+          <Design.CheckBox :label="workModeField.hybridLabel" :icon="workModeField.hybridIcon" v-model="state.workModeHybrid"/>
+        </Design.Drawer>
+      </div>
       <Design.Divider/>
       <Design.Dropdown
         nested
@@ -95,7 +99,7 @@
 </template>
 
 <script setup lang="ts">
-import {reactive, watch} from "vue";
+import {reactive, ref, watch} from "vue";
 import {Design} from "./dom/design/design";
 import {Filters, OrderBy, WorkMode} from "./filters";
 
