@@ -50,7 +50,8 @@ class ServiceProvider extends RouteServiceProvider
                 ->filter(fn(string $city) => !empty($city))
                 ->toArray(),
             $jobOffer->firm->name,
-            $this->jobOfferTags($jobOffer));
+            $this->jobOfferTags($jobOffer),
+            $this->jobOfferLegalForm($jobOffer));
     }
 
     private function workMode(Job $jobOffer): Neon\WorkMode
@@ -72,5 +73,14 @@ class ServiceProvider extends RouteServiceProvider
         return $jobOffer->tags
             ->map(fn(Coyote\Tag $tag) => $tag->real_name ?? $tag->name)
             ->toArray();
+    }
+
+    private function jobOfferLegalForm(Coyote\Job $jobOffer): Neon\LegalForm
+    {
+        return match ($jobOffer->employment) {
+            'employment' => Neon\LegalForm::FullTime,
+            'b2b' => Neon\LegalForm::Contract,
+            'mandatory', 'contract' => Neon\LegalForm::PartTime,
+        };
     }
 }

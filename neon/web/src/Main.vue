@@ -101,7 +101,7 @@
 <script setup lang="ts">
 import {reactive, ref, watch} from "vue";
 import {Design} from "./dom/design/design";
-import {Filters, OrderBy, WorkMode} from "./filters";
+import {Filters, LegalForm, OrderBy, WorkMode} from "./filters";
 
 interface BackendJobOffer {
   title: string;
@@ -113,6 +113,7 @@ interface BackendJobOffer {
   locations: string[];
   companyName: string|null;
   tagNames: string[];
+  legalForm: LegalForm;
 }
 
 export interface VueJobOffer {
@@ -123,6 +124,7 @@ export interface VueJobOffer {
   companyName: string|null;
   salary: VueSalary|null;
   tagNames: string[];
+  legalForm: LegalForm;
 }
 
 export interface VueSalary {
@@ -155,6 +157,7 @@ filters.onUpdate(offers => {
     companyName: offer.companyName,
     salary: salary(offer),
     tagNames: offer.tagNames,
+    legalForm: offer.legalForm,
   }));
 });
 
@@ -179,6 +182,7 @@ initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
     locations: jobOffer.locations,
     companyName: jobOffer.companyName,
     tagNames: jobOffer.tagNames,
+    legalForm: jobOffer.legalForm,
   });
 });
 

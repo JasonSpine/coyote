@@ -13,6 +13,7 @@
       <Design.Tile nested-pill icon="jobOfferWorkModeStationary" v-if="jobOffer.workMode === 'stationary'">
         Praca stacjonarna
       </Design.Tile>
+      <Design.Tile nested-pill v-text="jobOfferLegalFormTitle"/>
     </Design.Row>
     <Design.Tile nested>
       <div class="flex space-x-2">
@@ -43,6 +44,8 @@
 </template>
 
 <script setup lang="ts">
+import {computed} from "vue";
+import {LegalForm} from "../../filters";
 import {VueJobOffer} from "../../Main.vue";
 import Icon from "../component/Icon.vue";
 import {Design} from "./design";
@@ -52,4 +55,13 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+
+const jobOfferLegalFormTitle = computed((): string => {
+  const titles: Record<LegalForm, string> = {
+    'fullTime': 'Pełny etat',
+    'contract': 'Kontrakt',
+    'partTime': 'Praca dorywcza',
+  };
+  return titles[props.jobOffer.legalForm];
+});
 </script>

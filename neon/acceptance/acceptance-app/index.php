@@ -28,7 +28,8 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                     WorkMode::from($request->get('jobOfferWorkMode')),
                     $request->get('jobOfferLocations', []),
                     null,
-                    $request->get('jobOfferTags', [])));
+                    $request->get('jobOfferTags', []),
+                    \Neon\LegalForm::FullTime));
                 return \response(status:201);
             });
             Route::get('/', function (): Response {
@@ -82,9 +83,31 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
 function neonApplication(): NeonApplication
 {
     $neon = new NeonApplication('/neon');
-    $neon->addJobOffer(new JobOffer('Swift Developer', '', '2023-03-03', null, 4000, WorkMode::FullyRemote, ['New York'], 'Spotify', ['swift', 'ios']));
-    $neon->addJobOffer(new JobOffer('Rust Developer', '', '2000-01-01', null, 7500, WorkMode::Stationary, ['London'], 'Facebook', ['rust', 'cargo']));
-    $neon->addJobOffer(new JobOffer('Go Developer', '', '2012-02-02', null, 12500, WorkMode::Hybrid, ['Amsterdam'], 'Microsoft', ['go', 'golang']));
+    $neon->addJobOffer(new JobOffer('Swift Developer', '',
+        '2023-03-03',
+        null, 4000,
+        WorkMode::FullyRemote,
+        ['New York'],
+        'Spotify',
+        ['swift', 'ios'],
+        \Neon\LegalForm::FullTime));
+    $neon->addJobOffer(new JobOffer('Rust Developer', '',
+        '2000-01-01',
+        null, 7500,
+        WorkMode::Stationary,
+        ['London'],
+        'Facebook',
+        ['rust', 'cargo'],
+        \Neon\LegalForm::Contract));
+    $neon->addJobOffer(new JobOffer('Go Developer', '',
+        '2012-02-02',
+        null,
+        12500,
+        WorkMode::Hybrid,
+        ['Amsterdam'],
+        'Microsoft',
+        ['go', 'golang'],
+        \Neon\LegalForm::PartTime));
     foreach (sessionJobOffers() as $jobOffer) {
         $neon->addJobOffer($jobOffer);
     }

@@ -8,9 +8,11 @@ export interface JobOffer {
   locations: string[];
   companyName: string|null;
   tagNames: string[];
+  legalForm: LegalForm;
 }
 
 export type WorkMode = 'fullyRemote'|'stationary'|'hybrid';
+export type LegalForm = 'fullTime'|'contract'|'partTime';
 
 type JobOffersListener = (jobOffers: JobOffer[]) => void;
 export type OrderBy = 'most-recent'|'highest-salary'|'lowest-salary';
