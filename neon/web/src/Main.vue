@@ -47,7 +47,7 @@
         </Design.Button>
       </div>
     </Design.Tile>
-    <Design.DropdownLabel label="Sortowanie:">
+    <Design.DropdownLabel label="Sortowanie:" class="max-md:hidden">
       <Design.Dropdown
         :title="sortField.title"
         :test-id="sortField.testId"
@@ -60,7 +60,7 @@
         <Design.JobOfferListItem :job-offer="jobOffer"/>
       </li>
     </ul>
-    <Design.Tile space class="mt-32 w-1/2 h-128 flex flex-col">
+    <Design.Tile space class="mt-32 md:w-1/2 h-128 flex flex-col">
       <h1 class="text-xl mt-2">Filtruj oferty</h1>
       <Design.Divider/>
       <div class="space-y-4">
