@@ -4,6 +4,9 @@ export interface JobOffer {
   publishDate: string;
   salaryTo: number|null;
   salaryFrom: number|null;
+  salaryCurrency: Currency|null;
+  salaryIsNet: boolean|null;
+  salaryRate: Rate|null;
   workMode: WorkMode;
   locations: string[];
   companyName: string|null;
@@ -14,6 +17,8 @@ export interface JobOffer {
 
 export type WorkMode = 'fullyRemote'|'stationary'|'hybrid';
 export type LegalForm = 'fullTime'|'contract'|'partTime';
+export type Currency = 'PLN'|'EUR'|'USD'|'GBP'|'CHF';
+export type Rate = 'hourly'|'monthly'|'weekly'|'yearly';
 
 type JobOffersListener = (jobOffers: JobOffer[]) => void;
 export type OrderBy = 'most-recent'|'highest-salary'|'lowest-salary';

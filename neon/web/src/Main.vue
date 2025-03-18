@@ -101,13 +101,12 @@
 <script setup lang="ts">
 import {reactive, ref, watch} from "vue";
 import {Design} from "./dom/design/design";
-import {Filters, LegalForm, OrderBy, WorkMode} from "./filters";
+import {Currency, Filters, LegalForm, OrderBy, Rate, WorkMode} from "./filters";
 
 interface BackendJobOffer {
   title: string;
   url: string;
-  salaryFrom: number|null;
-  salaryTo: number|null;
+  salary: BackendSalary|null;
   publishDate: string;
   workMode: WorkMode;
   locations: string[];
@@ -115,6 +114,14 @@ interface BackendJobOffer {
   companyLogoUrl: string|null;
   tagNames: string[];
   legalForm: LegalForm;
+}
+
+interface BackendSalary {
+  rangeFrom: number;
+  rangeTo: number;
+  currency: Currency;
+  rate: Rate;
+  isNet: boolean;
 }
 
 export interface VueJobOffer {
@@ -132,6 +139,9 @@ export interface VueJobOffer {
 export interface VueSalary {
   to: number;
   from: number;
+  currency: Currency;
+  isNet: boolean;
+  rate: Rate;
 }
 
 const initialJobOffers: BackendJobOffer[] = window['jobOffers'];
@@ -169,6 +179,9 @@ function salary(jobOffer: JobOffer): VueSalary|null {
     return {
       from: jobOffer.salaryFrom!,
       to: jobOffer.salaryTo!,
+      currency: jobOffer.salaryCurrency!,
+      isNet: jobOffer.salaryIsNet!,
+      rate: jobOffer.salaryRate!,
     };
   }
   return null;
@@ -178,8 +191,11 @@ initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
   filters.addJobOffer({
     title: jobOffer.title,
     url: jobOffer.url,
-    salaryTo: jobOffer.salaryTo,
-    salaryFrom: jobOffer.salaryFrom,
+    salaryFrom: jobOffer.salary?.rangeFrom || null,
+    salaryTo: jobOffer.salary?.rangeTo || null,
+    salaryCurrency: jobOffer.salary?.currency || null,
+    salaryIsNet: jobOffer.salary?.isNet || null,
+    salaryRate: jobOffer.salary?.rate || null,
     publishDate: jobOffer.publishDate,
     workMode: jobOffer.workMode,
     locations: jobOffer.locations,

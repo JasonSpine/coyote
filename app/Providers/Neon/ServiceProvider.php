@@ -42,8 +42,7 @@ class ServiceProvider extends RouteServiceProvider
             $jobOffer->title,
             UrlBuilder::job($jobOffer, true),
             $jobOffer->boost_at->format('Y-m-d'),
-            $jobOffer->salary_from,
-            $jobOffer->salary_to,
+            $this->jobOfferSalary($jobOffer),
             $this->workMode($jobOffer),
             $jobOffer->locations
                 ->map(fn(Location $location): string => $location->city)
@@ -91,5 +90,18 @@ class ServiceProvider extends RouteServiceProvider
             return null;
         }
         return (string)($jobOffer->firm->logo->url());
+    }
+
+    private function jobOfferSalary(Job $jobOffer): ?Neon\Salary
+    {
+        if ($jobOffer->salary_from === null && $jobOffer->salary_to === null) {
+            return null;
+        }
+        return new Neon\Salary(
+            $jobOffer->salary_from ?? $jobOffer->salary_to,
+            $jobOffer->salary_to ?? $jobOffer->salary_from,
+            Neon\Currency::from($jobOffer->currency->name),
+            Neon\Rate::from($jobOffer->rate),
+            !$jobOffer->is_gross);
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades;
 use Illuminate\Support\Facades\Route;
+use Neon\Currency;
 use Neon\JobOffer;
 use Neon\NeonApplication;
 use Neon\WorkMode;
@@ -23,8 +24,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                     $request->get('jobOfferTitle'),
                     '',
                     $request->get('jobOfferPublishDate'),
-                    null,
-                    $request->get('jobOfferSalaryTo'),
+                    salary($request->get('jobOfferSalaryTo')),
                     WorkMode::from($request->get('jobOfferWorkMode')),
                     $request->get('jobOfferLocations', []),
                     null,
@@ -86,7 +86,7 @@ function neonApplication(): NeonApplication
     $neon = new NeonApplication('/neon');
     $neon->addJobOffer(new JobOffer('Swift Developer', '',
         '2023-03-03',
-        3000, 4000,
+        salaryRange(2000, 3000, \Neon\Rate::Weekly),
         WorkMode::FullyRemote,
         ['New York'],
         'Spotify',
@@ -95,7 +95,7 @@ function neonApplication(): NeonApplication
         \Neon\LegalForm::FullTime));
     $neon->addJobOffer(new JobOffer('Rust Developer', '',
         '2000-01-01',
-        15000, 17500,
+        salaryRange(75, 100, \Neon\Rate::Hourly),
         WorkMode::Stationary,
         ['London'],
         'Facebook',
@@ -104,8 +104,7 @@ function neonApplication(): NeonApplication
         \Neon\LegalForm::Contract));
     $neon->addJobOffer(new JobOffer('Go Developer', '',
         '2012-02-02',
-        20000,
-        22500,
+        salaryRange(20000, 22500),
         WorkMode::Hybrid,
         ['Amsterdam'],
         'Microsoft',
@@ -129,4 +128,22 @@ function sessionJobOffers(): array
 function sessionAddJobOffer(JobOffer $jobOffer): void
 {
     session()->put('values', \serialize([...sessionJobOffers(), $jobOffer]));
+}
+
+function salary(?int $salaryTo): ?\Neon\Salary
+{
+    if ($salaryTo === null) {
+        return null;
+    }
+    return salaryRange($salaryTo, $salaryTo);
+}
+
+function salaryRange(int $salaryFrom, int $salaryTo, ?\Neon\Rate $rate = null): \Neon\Salary
+{
+    return new \Neon\Salary(
+        $salaryFrom,
+        $salaryTo,
+        Currency::PLN,
+        $rate ?? \Neon\Rate::Monthly,
+        true);
 }
