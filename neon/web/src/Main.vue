@@ -62,7 +62,7 @@
     </ul>
     <Design.Tile space class="mt-32 md:w-1/2 h-128 flex flex-col">
       <h1 class="text-xl mt-2">Filtruj oferty</h1>
-      <Design.Divider/>
+      <Design.Divider space/>
       <div class="space-y-4">
         <Design.Drawer nested :test-id="tagsField.testId" :icon="tagsField.icon" :title="tagsField.title">
           <Design.CheckBox v-for="tag in tagsField.values" :label="tag" v-model="state.tags[tag]"/>
@@ -79,7 +79,7 @@
           <Design.CheckBox :label="workModeField.hybridLabel" :icon="workModeField.hybridIcon" v-model="state.workModeHybrid"/>
         </Design.Drawer>
       </div>
-      <Design.Divider/>
+      <Design.Divider space/>
       <Design.Dropdown
         nested
         :test-id="sortField.testId"

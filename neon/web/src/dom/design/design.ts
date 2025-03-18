@@ -11,6 +11,7 @@ import Row from "./Row.vue";
 import RowEnd from "./RowEnd.vue";
 import Salary from "./Salary.vue";
 import Tabs from "./Tabs.vue";
+import TagList from "./TagList.vue";
 import TextField from "./TextField.vue";
 import Tile from "./Tile.vue";
 
@@ -27,7 +28,8 @@ export const Design = {
   Row,
   RowEnd,
   Salary,
-  TextField,
   Tabs,
+  TagList,
+  TextField,
   Tile,
 };

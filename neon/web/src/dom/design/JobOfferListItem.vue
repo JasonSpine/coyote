@@ -23,17 +23,20 @@
           <p class="text-lg leading-6" data-testid="jobOfferTitle">
             <a :href="jobOffer.url" v-text="jobOffer.title"/>
           </p>
-          <div class="flex space-x-2">
+          <div class="flex space-x-2 max-md:hidden">
             <span>{{ jobOffer.companyName }}</span>
-            <span v-for="tag in jobOffer.tagNames.slice(0,5)" v-text="tag" class="bg-tag px-2 rounded"/>
-            <span v-if="jobOffer.tagNames.length > 5">
-              +{{ jobOffer.tagNames.length - 5 }}
-            </span>
+            <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
           </div>
         </div>
         <div v-if="jobOffer.salary">
           <Design.Salary :salary="jobOffer.salary"/>
         </div>
+      </div>
+      <div class="md:hidden">
+        <Design.Divider/>
+        <span>{{ jobOffer.companyName }}</span>
+        <Design.Divider/>
+        <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
       </div>
     </Design.Tile>
   </Design.Tile>
