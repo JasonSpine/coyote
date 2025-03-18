@@ -15,6 +15,9 @@ export type WorkMode = 'fullyRemote'|'stationary'|'hybrid';
 type JobOffersListener = (jobOffers: JobOffer[]) => void;
 export type OrderBy = 'most-recent'|'highest-salary'|'lowest-salary';
 
+type Predicate<T> = (argument: T) => boolean;
+type Function<I, O> = (argument: I) => O;
+
 export class Filters {
   private jobOffers: JobOffer[] = [];
   private updateListener: JobOffersListener|null = null;
@@ -24,10 +27,12 @@ export class Filters {
   private workModeRemote: boolean = false;
   private workModeHybrid: boolean = false;
   private locations: string[] = [];
+  private tags: string[] = [];
 
   clearFilters(): void {
     this._searchPhrase = '';
     this.locations = [];
+    this.tags = [];
     this.minimumSalary = 0;
     this.workModeRemote = false;
     this.orderBy = 'most-recent';
@@ -68,6 +73,11 @@ export class Filters {
     this.update();
   }
 
+  filterByTags(tags: string[]): void {
+    this.tags = tags;
+    this.update();
+  }
+
   sortByPublishDate(): void {
     this.sort('most-recent');
   }
@@ -82,7 +92,15 @@ export class Filters {
   }
 
   availableLocations(): string[] {
-    return [...new Set(this.jobOffers.flatMap(offer => offer.locations))];
+    return this.flatMap(offer => offer.locations);
+  }
+
+  availableTags(): string[] {
+    return this.flatMap(offer => offer.tagNames);
+  }
+
+  private flatMap(simplifier: Function<JobOffer, string[]>): string[] {
+    return [...new Set(this.jobOffers.flatMap(simplifier))];
   }
 
   availableSalaries(): number[] {
@@ -104,21 +122,25 @@ export class Filters {
       .filter(offer => offer.title.toLowerCase().includes(this._searchPhrase.toLowerCase()))
       .filter(offer => offer.salaryTo >= this.minimumSalary)
       .filter(offer => this.matchesByLocation(offer))
+      .filter(offer => this.matchesByTag(offer))
       .filter(offer => this.matchesByWorkMode(offer));
     this.sortInPlace(offers);
     return offers;
   }
 
   private matchesByLocation(offer: JobOffer): boolean {
-    if (this.locations.length === 0) {
+    return this.matchesByPredicate(this.locations, location => offer.locations.includes(location));
+  }
+
+  private matchesByTag(offer: JobOffer): boolean {
+    return this.matchesByPredicate(this.tags, tag => offer.tagNames.includes(tag));
+  }
+
+  private matchesByPredicate(options: string[], predicate: Predicate<string>): boolean {
+    if (options.length === 0) {
       return true;
     }
-    for (const location of this.locations) {
-      if (offer.locations.includes(location)) {
-        return true;
-      }
-    }
-    return false;
+    return options.filter(predicate).length > 0;
   }
 
   private matchesByWorkMode(offer: JobOffer): boolean {

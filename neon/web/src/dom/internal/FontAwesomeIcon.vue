@@ -115,4 +115,8 @@ interface Props {
 .fa-plus:before {
   content: "\2b";
 }
+
+.fa-tag:before {
+  content: "\f02b";
+}
 </style>

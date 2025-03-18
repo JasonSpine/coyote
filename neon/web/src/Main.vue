@@ -18,6 +18,12 @@
       </Design.TextField>
       <div>
         <Design.Row class="max-md:hidden" vertical-center>
+          <Design.Drawer nested test-id="jobOfferTags" icon="jobOfferFilterTechnology" title="Technologie">
+            <Design.CheckBox
+              v-model="state.tags[tag]"
+              :label="tag"
+              v-for="tag in filters.availableTags()"/>
+          </Design.Drawer>
           <Design.Drawer nested test-id="jobOfferLocation" icon="jobOfferFilterLocation" title="Lokalizacja">
             <Design.CheckBox
               v-model="state.locations[location]"
@@ -143,6 +149,7 @@ const state = reactive({
   workModeHybrid: false,
   sort: 'most-recent' as OrderBy,
   locations: {},
+  tags: {},
 });
 
 const filters = new Filters();
@@ -219,11 +226,13 @@ function search(): void {
   filters.filterBySalary(state.minimumSalary);
   filters.filterByWorkModeRemote(state.workModeRemote);
   filters.filterByWorkModeHybrid(state.workModeHybrid);
-  const locations = Object.entries(state.locations)
-    .filter(([location, selected]) => selected)
-    .map(([location, selected]) => location);
-  filters.filterByLocation(locations);
+  filters.filterByLocation(selected(state.locations));
+  filters.filterByTags(selected(state.tags));
   filters.sort(state.sort);
+}
+
+function selected<V>(checkboxList: Record<string, boolean>): string[] {
+  return Object.entries(checkboxList).filter(([item, selected]) => selected).map(([item, selected]) => item);
 }
 
 function clearFilters(): void {

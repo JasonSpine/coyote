@@ -7,11 +7,12 @@ interface JobOfferTemplate {
   salaryTo?: number;
   workMode?: 'stationary'|'fullyRemote'|'hybrid';
   locations?: string[];
+  tags?: string[];
 }
 
 function addJobOffer(
   filters: Filters,
-  {title, publishDate, salaryTo, workMode, locations}: JobOfferTemplate,
+  {title, publishDate, salaryTo, workMode, locations, tags}: JobOfferTemplate,
 ): void {
   filters.addJobOffer({
     title: title || 'Job offer',
@@ -22,6 +23,7 @@ function addJobOffer(
     workMode: workMode || 'stationary',
     locations: locations || [],
     companyName: '',
+    tagNames: tags || [],
   });
 }
 
@@ -175,6 +177,16 @@ test('job offers are filtered by work mode both simultaneously', () => {
   filters.filterByWorkModeRemote(true);
 });
 
+test('filtering by location calls listener', () => {
+  const filters = new Filters();
+  let wasCalled = false;
+  filters.onUpdate(() => {
+    wasCalled = true;
+  });
+  filters.filterByLocation([]);
+  assertTrue(wasCalled);
+});
+
 test('job offers are filtered by location', () => {
   const filters = new Filters();
   addJobOffer(filters, {title: 'Close Job', locations: ['Europe']});
@@ -274,6 +286,14 @@ describe('clear filters', () => {
     filters.clearFilters();
   });
 
+  test('clears tags', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {tags: ['java']});
+    filters.filterByTags(['kotlin']);
+    filters.onUpdate(jobOffers => assertEquals(1, jobOffers.length));
+    filters.clearFilters();
+  });
+
   test('resets sort', () => {
     const filters = new Filters();
     addJobOffer(filters, {title: 'Python', salaryTo: 1000});
@@ -292,4 +312,37 @@ describe('inspect filters', () => {
     filters.filter('foo');
     assertEquals('foo', filters.searchPhrase());
   });
+});
+
+test('filtering by tags calls listener', () => {
+  const filters = new Filters();
+  let wasCalled = false;
+  filters.onUpdate(() => {
+    wasCalled = true;
+  });
+  filters.filterByTags([]);
+  assertTrue(wasCalled);
+});
+
+test('job offers are filtered by multiple tags', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {title: 'Blue', tags: ['java']});
+  addJobOffer(filters, {title: 'Red', tags: ['python']});
+  addJobOffer(filters, {title: 'Green', tags: ['kotlin']});
+  filters.onUpdate(jobOffers => {
+    assertEquals(['Blue', 'Green'], titles(jobOffers));
+  });
+  filters.filterByTags(['java', 'kotlin']);
+});
+
+test('list available tags, empty if there are no job offers', () => {
+  const filters = new Filters();
+  assertEquals([], filters.availableTags());
+});
+
+test('list available tags, tags of multiple offers offer', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {title: 'Red', tags: ['java', 'kotlin']});
+  addJobOffer(filters, {title: 'Blue', tags: ['python']});
+  assertEquals(['java', 'kotlin', 'python'], filters.availableTags());
 });

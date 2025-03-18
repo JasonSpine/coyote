@@ -28,7 +28,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                     WorkMode::from($request->get('jobOfferWorkMode')),
                     $request->get('jobOfferLocations', []),
                     null,
-                    []));
+                    $request->get('jobOfferTags', [])));
                 return \response(status:201);
             });
             Route::get('/', function (): Response {

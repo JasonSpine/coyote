@@ -113,6 +113,17 @@ class AcceptanceTest extends TestCase
     }
 
     #[Test]
+    public function jobOfferIsFilteredByTags(): void
+    {
+        $this->driver->addJobOffer('PHP Developer', tag:'php');
+        $this->driver->addJobOffer('Python Developer', tag:'python');
+        $this->driver->visitJobOffers();
+        $this->driver->filterJobOffersByTag('python');
+        Assert::assertContains('Python Developer', $this->driver->fetchJobOffers());
+        Assert::assertNotContains('PHP Developer', $this->driver->fetchJobOffers());
+    }
+
+    #[Test]
     public function jobOffersCanBeCleared(): void
     {
         $this->driver->addJobOffer('Job Offer');

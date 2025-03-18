@@ -23,6 +23,7 @@ readonly class Driver
         ?int    $salaryTo = null,
         ?string $workMode = null,
         ?string $location = null,
+        ?string $tag = null,
     ): void
     {
         $this->acceptanceIntegration($this->url('/integration/job-offers'), [
@@ -31,6 +32,7 @@ readonly class Driver
             'jobOfferSalaryTo'    => $salaryTo ?? 1000,
             'jobOfferWorkMode'    => $workMode ?? 'stationary',
             'jobOfferLocations'   => $location ? [$location] : [],
+            'jobOfferTags'        => $tag ? [$tag] : [],
         ]);
     }
 
@@ -97,6 +99,13 @@ readonly class Driver
     {
         $this->selenium->element('jobOfferLocation')->click();
         $this->selenium->label($location)->click();
+        $this->selenium->element('jobOfferSearch')->click();
+    }
+
+    public function filterJobOffersByTag(string $tag): void
+    {
+        $this->selenium->element('jobOfferTags')->click();
+        $this->selenium->label($tag)->click();
         $this->selenium->element('jobOfferSearch')->click();
     }
 
