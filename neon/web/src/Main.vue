@@ -18,17 +18,11 @@
       </Design.TextField>
       <div>
         <Design.Row class="max-md:hidden" vertical-center>
-          <Design.Drawer nested test-id="jobOfferTags" icon="jobOfferFilterTechnology" title="Technologie">
-            <Design.CheckBox
-              v-model="state.tags[tag]"
-              :label="tag"
-              v-for="tag in filters.availableTags()"/>
+          <Design.Drawer nested :test-id="tagsField.testId" :icon="tagsField.icon" :title="tagsField.title">
+            <Design.CheckBox v-for="tag in tagsField.values" :label="tag" v-model="state.tags[tag]"/>
           </Design.Drawer>
-          <Design.Drawer nested test-id="jobOfferLocation" icon="jobOfferFilterLocation" title="Lokalizacja">
-            <Design.CheckBox
-              v-model="state.locations[location]"
-              :label="location"
-              v-for="location in filters.availableLocations()"/>
+          <Design.Drawer nested :test-id="locationsField.testId" :icon="locationsField.icon" :title="locationsField.title">
+            <Design.CheckBox v-for="location in locationsField.values" :label="location" v-model="state.locations[location]"/>
           </Design.Drawer>
           <Design.Drawer
             nested
@@ -73,6 +67,12 @@
       </li>
     </ul>
     <Design.Tile vertical space class="mt-32 w-1/2 h-128 flex flex-col">
+      <Design.Drawer nested :test-id="tagsField.testId" :icon="tagsField.icon" :title="tagsField.title">
+        <Design.CheckBox v-for="tag in tagsField.values" :label="tag" v-model="state.tags[tag]"/>
+      </Design.Drawer>
+      <Design.Drawer nested :test-id="locationsField.testId" :icon="locationsField.icon" :title="locationsField.title">
+        <Design.CheckBox v-for="location in locationsField.values" :label="location" v-model="state.locations[location]"/>
+      </Design.Drawer>
       <Design.Drawer
         nested
         :test-id="workModeField.testId"
@@ -219,6 +219,19 @@ const workModeField = {
   remoteIcon: 'jobOfferWorkModeRemote',
   hybridLabel: 'Praca hybrydowa',
   hybridIcon: 'jobOfferWorkModeHybrid',
+};
+
+const tagsField = {
+  testId: 'jobOfferTags',
+  icon: 'jobOfferFilterTechnology',
+  title: 'Technologie',
+  values: filters.availableTags(),
+};
+const locationsField = {
+  testId: 'jobOfferLocation',
+  icon: 'jobOfferFilterLocation',
+  title: 'Lokalizacja',
+  values: filters.availableLocations(),
 };
 
 function search(): void {
