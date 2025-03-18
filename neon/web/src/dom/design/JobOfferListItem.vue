@@ -29,15 +29,22 @@
             <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
           </div>
         </div>
-        <div v-if="jobOffer.salary">
+        <div v-if="jobOffer.salary" class="max-md:hidden">
           <Design.Salary :salary="jobOffer.salary"/>
         </div>
       </div>
       <div class="md:hidden">
         <Design.Divider/>
-        <span>{{ jobOffer.companyName }}</span>
-        <Design.Divider/>
-        <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
+        <Design.Row vertical-center>
+          <span>{{ jobOffer.companyName }}</span>
+          <Design.RowEnd>
+            <Design.Salary v-if="jobOffer.salary" :salary="jobOffer.salary"/>
+          </Design.RowEnd>
+        </Design.Row>
+        <template v-if="jobOffer.tagNames.length">
+          <Design.Divider/>
+          <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
+        </template>
       </div>
     </Design.Tile>
   </Design.Tile>

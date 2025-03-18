@@ -85,7 +85,7 @@ function neonApplication(): NeonApplication
     $neon = new NeonApplication('/neon');
     $neon->addJobOffer(new JobOffer('Swift Developer', '',
         '2023-03-03',
-        null, 4000,
+        3000, 4000,
         WorkMode::FullyRemote,
         ['New York'],
         'Spotify',
@@ -93,7 +93,7 @@ function neonApplication(): NeonApplication
         \Neon\LegalForm::FullTime));
     $neon->addJobOffer(new JobOffer('Rust Developer', '',
         '2000-01-01',
-        null, 7500,
+        15000, 17500,
         WorkMode::Stationary,
         ['London'],
         'Facebook',
@@ -101,8 +101,8 @@ function neonApplication(): NeonApplication
         \Neon\LegalForm::Contract));
     $neon->addJobOffer(new JobOffer('Go Developer', '',
         '2012-02-02',
-        null,
-        12500,
+        20000,
+        22500,
         WorkMode::Hybrid,
         ['Amsterdam'],
         'Microsoft',
