@@ -56,7 +56,7 @@
         v-model="state.sort"/>
     </Design.DropdownLabel>
     <ul class="space-y-2">
-      <li v-for="jobOffer in state.jobOffers" :data-testid="jobOffer.testId">
+      <li v-for="jobOffer in jobOffers" :data-testid="jobOffer.testId">
         <Design.JobOfferListItem :job-offer="jobOffer"/>
       </li>
     </ul>
@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import {reactive} from "vue";
+import {reactive, watch} from "vue";
 import {Design} from "./dom/design/design";
 import {Filters, OrderBy, WorkMode} from "./filters";
 
@@ -128,8 +128,9 @@ export interface VueSalary {
 
 const initialJobOffers: BackendJobOffer[] = window['jobOffers'];
 
+const jobOffers = ref<VueJobOffer[]>([]);
+
 const state = reactive({
-  jobOffers: [] as VueJobOffer[],
   searchPhrase: '',
   minimumSalary: 0,
   workModeRemote: false,
@@ -138,17 +139,18 @@ const state = reactive({
   locations: {},
   tags: {},
 });
+watch(state, (): void => search());
 
 const filters = new Filters();
-filters.onUpdate(jobOffers => {
-  state.jobOffers = jobOffers.map(jobOffer => ({
-    title: jobOffer.title,
-    url: jobOffer.url,
-    locations: jobOffer.locations,
-    workMode: jobOffer.workMode,
-    companyName: jobOffer.companyName,
-    salary: salary(jobOffer),
-    tagNames: jobOffer.tagNames,
+filters.onUpdate(offers => {
+  jobOffers.value = offers.map(offer => ({
+    title: offer.title,
+    url: offer.url,
+    locations: offer.locations,
+    workMode: offer.workMode,
+    companyName: offer.companyName,
+    salary: salary(offer),
+    tagNames: offer.tagNames,
   }));
 });
 
