@@ -13,7 +13,8 @@
       <Design.TextField
         v-model="state.searchPhrase"
         placeholder="Szukaj po tytule, nazwie firmy"
-        test-id="jobOfferSearchPhrase">
+        test-id="jobOfferSearchPhrase"
+        @submit="search">
         <Design.Button test-id="jobOfferSearch" @click="search" icon="jobOfferSearch" primary/>
       </Design.TextField>
       <div>

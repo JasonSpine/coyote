@@ -4,20 +4,27 @@
       class="outline-none flex-grow-1"
       :data-testid="props.testId"
       :placeholder="props.placeholder"
-      v-model="text">
+      v-model="text"
+      @keyup.enter="submit">
     <slot/>
   </div>
 </template>
+
 <script setup lang="ts">
 interface Props {
   placeholder: string;
   testId: string;
 }
 
+interface Emit {
+  (event: 'submit', value: string): void;
+}
+
 const props = defineProps<Props>();
-const text = defineModel();
+const emit = defineEmits<Emit>();
+const text = defineModel<string>({default: ''});
+
+function submit(): void {
+  emit('submit', text.value);
+}
 </script>
-<!--<input class="flex-grow-1" placeholder="Szukaj po tytule, nazwie firmy" v-model="searchPhrase">-->
-<!--<button class="button py-1 p-3 cursor-pointer" @click="search" data-testid="search">-->
-<!--  <Icon name="jobOfferSearch"/>-->
-<!--</button>-->
