@@ -20,10 +20,15 @@ function addJobOffer(
     publishDate: publishDate || '2000-01-01',
     salaryTo: salaryTo || 1000,
     salaryFrom: 1000,
+    salaryCurrency: 'PLN',
+    salaryIsNet: false,
+    salaryRate: 'monthly',
     workMode: workMode || 'stationary',
     locations: locations || [],
     companyName: '',
+    companyLogoUrl: null,
     tagNames: tags || [],
+    legalForm: 'fullTime',
   });
 }
 
@@ -286,6 +291,14 @@ describe('clear filters', () => {
     filters.clearFilters();
   });
 
+  test('clears work mode hybrid', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {workMode: 'stationary'});
+    filters.filterByWorkModeHybrid(true);
+    filters.onUpdate(jobOffers => assertEquals(1, jobOffers.length));
+    filters.clearFilters();
+  });
+
   test('clears tags', () => {
     const filters = new Filters();
     addJobOffer(filters, {tags: ['java']});
@@ -345,4 +358,47 @@ test('list available tags, tags of multiple offers offer', () => {
   addJobOffer(filters, {title: 'Red', tags: ['java', 'kotlin']});
   addJobOffer(filters, {title: 'Blue', tags: ['python']});
   assertEquals(['java', 'kotlin', 'python'], filters.availableTags());
+});
+
+describe('count filters', () => {
+  test('initially, there is 0 filters', () => {
+    const filters = new Filters();
+    assertEquals(0, filters.count());
+  });
+
+  test('search phrase increases count by 1', () => {
+    const filters = new Filters();
+    filters.filter('search');
+    assertEquals(1, filters.count());
+  });
+
+  test('filtering by locations increases count by 1', () => {
+    const filters = new Filters();
+    filters.filterByLocation(['London']);
+    assertEquals(1, filters.count());
+  });
+
+  test('filtering by work mode remote increases count by 1', () => {
+    const filters = new Filters();
+    filters.filterByWorkModeRemote(true);
+    assertEquals(1, filters.count());
+  });
+
+  test('filtering by work mode hybrid increases count by 1', () => {
+    const filters = new Filters();
+    filters.filterByWorkModeHybrid(true);
+    assertEquals(1, filters.count());
+  });
+
+  test('filtering by tags increases count by 1', () => {
+    const filters = new Filters();
+    filters.filterByTags(['python']);
+    assertEquals(1, filters.count());
+  });
+
+  test('filtering by minimum salary increases count by 1', () => {
+    const filters = new Filters();
+    filters.filterBySalary(12);
+    assertEquals(1, filters.count());
+  });
 });

@@ -43,6 +43,7 @@ export class Filters {
     this.tags = [];
     this.minimumSalary = 0;
     this.workModeRemote = false;
+    this.workModeHybrid = false;
     this.orderBy = 'most-recent';
     this.update();
   }
@@ -71,8 +72,8 @@ export class Filters {
     this.update();
   }
 
-  filterByWorkModeHybrid(workModeRemote: boolean): void {
-    this.workModeHybrid = workModeRemote;
+  filterByWorkModeHybrid(workModeHybrid: boolean): void {
+    this.workModeHybrid = workModeHybrid;
     this.update();
   }
 
@@ -186,5 +187,28 @@ export class Filters {
         return offer1.salaryTo < offer2.salaryTo ? -1 : 1;
       });
     }
+  }
+
+  count(): number {
+    let count = 0;
+    if (this._searchPhrase.length > 0) {
+      count++;
+    }
+    if (this.locations.length > 0) {
+      count++;
+    }
+    if (this.workModeRemote) {
+      count++;
+    }
+    if (this.workModeHybrid) {
+      count++;
+    }
+    if (this.tags.length > 0) {
+      count++;
+    }
+    if (this.minimumSalary > 0) {
+      count++;
+    }
+    return count;
   }
 }

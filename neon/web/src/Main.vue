@@ -36,6 +36,9 @@
           <Design.RowEnd>
             <span @click="clearFilters" class="cursor-pointer">
               Wyczyść filtry
+              <span v-if="filtersCount">
+                ({{ filtersCount }})
+              </span>
             </span>
           </Design.RowEnd>
         </Design.Row>
@@ -89,6 +92,9 @@
       <Design.Row space class="mt-auto">
         <Design.Button @click="clearFilters" test-id="jobOfferClearFilters" outline>
           Wyczyść filtry
+          <span v-if="filtersCount">
+            ({{ filtersCount }})
+          </span>
         </Design.Button>
         <Design.Button @click="search" test-id="jobOfferSearch" primary class="flex-grow-1">
           Pokaż oferty
@@ -147,6 +153,7 @@ export interface VueSalary {
 const initialJobOffers: BackendJobOffer[] = window['jobOffers'];
 
 const jobOffers = ref<VueJobOffer[]>([]);
+const filtersCount = ref<number>(0);
 
 const state = reactive({
   searchPhrase: '',
@@ -172,6 +179,8 @@ filters.onUpdate(offers => {
     tagNames: offer.tagNames,
     legalForm: offer.legalForm,
   }));
+  console.log(filters.count());
+  filtersCount.value = filters.count();
 });
 
 function salary(jobOffer: JobOffer): VueSalary|null {
@@ -255,12 +264,19 @@ function search(): void {
 }
 
 function selected<V>(checkboxList: Record<string, boolean>): string[] {
-  return Object.entries(checkboxList).filter(([item, selected]) => selected).map(([item, selected]) => item);
+  return Object.entries(checkboxList)
+    .filter(([item, selected]) => selected)
+    .map(([item, selected]) => item);
 }
 
 function clearFilters(): void {
-  filters.clearFilters();
-  state.searchPhrase = filters.searchPhrase();
+  state.searchPhrase = '';
+  state.minimumSalary = 0;
+  state.workModeRemote = false;
+  state.workModeHybrid = false;
+  state.locations = {};
+  state.tags = {};
+  state.sort = 'most-recent';
 }
 
 function redirectToMyOffers(): void {
