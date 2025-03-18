@@ -1,6 +1,7 @@
 <template>
   <div :class="tileClass" :data-testid="props.testId">
     <Icon v-if="props.icon" :name="props.icon" class="mr-2"/>
+    {{ props.text }}
     <slot/>
   </div>
 </template>
@@ -18,6 +19,7 @@ interface Props {
   nestedPill?: boolean;
   space?: boolean;
   vertical?: boolean;
+  text?: string;
 }
 
 const tileClass = computed(() => {

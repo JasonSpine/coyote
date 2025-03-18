@@ -1,38 +1,40 @@
 <template>
   <Design.Tile vertical>
     <Design.Row>
-      <Design.Tile nested-pill icon="jobOfferLocation" v-for="location in jobOffer.locations">
-        {{ location }}
-      </Design.Tile>
-      <Design.Tile nested-pill icon="jobOfferWorkModeRemote" v-if="jobOffer.workMode === 'fullyRemote'">
-        Praca zdalna
-      </Design.Tile>
-      <Design.Tile nested-pill icon="jobOfferWorkModeHybrid" v-if="jobOffer.workMode === 'hybrid'">
-        Praca hybrydowa
-      </Design.Tile>
-      <Design.Tile nested-pill icon="jobOfferWorkModeStationary" v-if="jobOffer.workMode === 'stationary'">
-        Praca stacjonarna
-      </Design.Tile>
-      <Design.Tile nested-pill v-text="jobOfferLegalFormTitle"/>
+      <Design.Tile nested-pill v-for="badge in badges" :text="badge.title" :icon="badge.icon"/>
     </Design.Row>
     <Design.Tile nested>
-      <div class="flex space-x-2">
-        <div class="size-12 rounded flex-shrink-0 flex items-center justify-center bg-accent-back text-accent-front">
-          <Icon name="jobOfferLogoPlaceholder"/>
-        </div>
-        <div class="flex-grow-1">
-          <p class="text-lg leading-6" data-testid="jobOfferTitle">
-            <a :href="jobOffer.url" v-text="jobOffer.title"/>
-          </p>
-          <div class="flex space-x-2 max-md:hidden">
-            <span>{{ jobOffer.companyName }}</span>
-            <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
+      <Design.Row vertical-center>
+        <div class="md:px-2">
+          <div class="size-12 rounded flex-shrink-0 flex items-center justify-center bg-accent-back text-accent-front">
+            <Icon name="jobOfferLogoPlaceholder"/>
           </div>
         </div>
-        <div v-if="jobOffer.salary" class="max-md:hidden">
-          <Design.Salary :salary="jobOffer.salary"/>
+        <div class="flex-grow-1">
+          <Design.Row vertical-center apart>
+            <p class="text-lg leading-6" data-testid="jobOfferTitle">
+              <a :href="jobOffer.url" v-text="jobOffer.title"/>
+            </p>
+            <div v-if="jobOffer.salary" class="max-md:hidden">
+              <Design.Salary :salary="jobOffer.salary"/>
+            </div>
+          </Design.Row>
+          <Design.Row apart class="max-md:hidden mt-2" vertical-center>
+            <div class="flex space-x-2">
+              <span v-if="jobOffer.companyName" v-text="jobOffer.companyName"/>
+              <div>
+                <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
+              </div>
+            </div>
+            <Design.Row class="space-x-2 text-sm">
+              <div v-for="badge in badges">
+                <Icon :name="badge.icon" v-if="badge.icon"/>
+                {{ badge.title }}
+              </div>
+            </Design.Row>
+          </Design.Row>
         </div>
-      </div>
+      </Design.Row>
       <div class="md:hidden">
         <Design.Divider/>
         <Design.Row vertical-center>
@@ -52,18 +54,42 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import {LegalForm} from "../../filters";
+import {LegalForm, WorkMode} from "../../filters";
 import {VueJobOffer} from "../../Main.vue";
-import Icon from "../component/Icon.vue";
+import Icon, {IconName} from "../component/Icon.vue";
 import {Design} from "./design";
+
+const props = defineProps<Props>();
 
 interface Props {
   jobOffer: VueJobOffer;
 }
 
-const props = defineProps<Props>();
+const badges = computed<Badge[]>((): Badge[] => {
+  return [
+    workModeBadge.value,
+    ...locationBadges.value,
+    {title: legalFormTitle.value},
+  ];
+});
 
-const jobOfferLegalFormTitle = computed((): string => {
+const workModeBadge = computed<Badge>((): Badge => {
+  const badges: Record<WorkMode, Badge> = {
+    'stationary': {icon: 'jobOfferWorkModeStationary', title: 'Praca stacjonarna'},
+    'fullyRemote': {icon: 'jobOfferWorkModeRemote', title: 'Praca zdalna'},
+    'hybrid': {icon: 'jobOfferWorkModeHybrid', title: 'Praca hybrydowa'},
+  };
+  return badges[props.jobOffer.workMode];
+});
+
+const locationBadges = computed<Badge[]>((): Badge[] => {
+  return props.jobOffer.locations.map(location => ({
+    icon: 'jobOfferLocation',
+    title: location,
+  }));
+});
+
+const legalFormTitle = computed((): string => {
   const titles: Record<LegalForm, string> = {
     'fullTime': 'Pełny etat',
     'contract': 'Kontrakt',
@@ -71,4 +97,9 @@ const jobOfferLegalFormTitle = computed((): string => {
   };
   return titles[props.jobOffer.legalForm];
 });
+
+interface Badge {
+  title: string;
+  icon?: IconName;
+}
 </script>
