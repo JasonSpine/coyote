@@ -32,13 +32,6 @@
             <Design.CheckBox :label="workModeField.remoteLabel" :icon="workModeField.remoteIcon" v-model="state.workModeRemote"/>
             <Design.CheckBox :label="workModeField.hybridLabel" :icon="workModeField.hybridIcon" v-model="state.workModeHybrid"/>
           </Design.Drawer>
-          <Design.Dropdown
-            nested
-            :icon="salaryField.icon"
-            :title="salaryField.title"
-            :test-id="salaryField.testId"
-            :options="salaryField.options"
-            v-model="state.minimumSalary"/>
           <Design.RowEnd>
             <span @click="clearFilters" class="cursor-pointer">
               Wyczyść filtry
@@ -81,13 +74,6 @@
         <Design.CheckBox :label="workModeField.remoteLabel" :icon="workModeField.remoteIcon" v-model="state.workModeRemote"/>
         <Design.CheckBox :label="workModeField.hybridLabel" :icon="workModeField.hybridIcon" v-model="state.workModeHybrid"/>
       </Design.Drawer>
-      <Design.Dropdown
-        nested
-        :icon="salaryField.icon"
-        :title="salaryField.title"
-        :test-id="salaryField.testId"
-        :options="salaryField.options"
-        v-model="state.minimumSalary"/>
       <Design.Divider/>
       <Design.Dropdown
         nested
@@ -202,13 +188,6 @@ const sortField = {
     {value: 'highest-salary', title: 'Najwyższe wynagrodzenie'},
     {value: 'lowest-salary', title: 'Najniższe wynagrodzenie'},
   ],
-};
-
-const salaryField = {
-  title: 'Wynagrodzenie',
-  icon: 'jobOfferFilterSalary',
-  testId: 'jobOfferMinimumSalary',
-  options: filters.availableSalaries().map(salary => salary.toString()),
 };
 
 const workModeField = {

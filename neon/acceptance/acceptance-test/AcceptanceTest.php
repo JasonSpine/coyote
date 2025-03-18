@@ -69,17 +69,6 @@ class AcceptanceTest extends TestCase
     }
 
     #[Test]
-    public function jobOfferIsFilteredByMinimumSalary(): void
-    {
-        $this->driver->addJobOffer('Python Developer', salaryTo:4500);
-        $this->driver->addJobOffer('Kotlin Developer', salaryTo:5500);
-        $this->driver->visitJobOffers();
-        $this->driver->filterJobOffersBySalary(5000);
-        Assert::assertContains('Kotlin Developer', $this->driver->fetchJobOffers());
-        Assert::assertNotContains('Python Developer', $this->driver->fetchJobOffers());
-    }
-
-    #[Test]
     public function jobOfferIsFilteredByWorkModeFullyRemote(): void
     {
         $this->driver->addJobOffer('Java Developer', workMode:'stationary');
