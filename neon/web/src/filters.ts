@@ -7,6 +7,7 @@ export interface JobOffer {
   workMode: WorkMode;
   locations: string[];
   companyName: string|null;
+  companyLogoUrl: string|null;
   tagNames: string[];
   legalForm: LegalForm;
 }

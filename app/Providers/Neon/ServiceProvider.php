@@ -50,6 +50,7 @@ class ServiceProvider extends RouteServiceProvider
                 ->filter(fn(string $city) => !empty($city))
                 ->toArray(),
             $jobOffer->firm->name,
+            $this->jobOfferLogoUrl($jobOffer),
             $this->jobOfferTags($jobOffer),
             $this->jobOfferLegalForm($jobOffer));
     }
@@ -82,5 +83,13 @@ class ServiceProvider extends RouteServiceProvider
             'b2b' => Neon\LegalForm::Contract,
             'mandatory', 'contract' => Neon\LegalForm::PartTime,
         };
+    }
+
+    private function jobOfferLogoUrl(Job $jobOffer): ?string
+    {
+        if ($jobOffer->firm->logo->getFilename() === null) {
+            return null;
+        }
+        return (string)($jobOffer->firm->logo->url());
     }
 }

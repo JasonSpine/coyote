@@ -6,8 +6,11 @@
     <Design.Tile nested>
       <Design.Row vertical-center>
         <div class="md:px-2">
-          <div class="size-12 rounded flex-shrink-0 flex items-center justify-center bg-accent-back text-accent-front">
-            <Icon name="jobOfferLogoPlaceholder"/>
+          <div class="size-14 rounded-lg overflow-hidden">
+            <img v-if="props.jobOffer.companyLogoUrl" :src="props.jobOffer.companyLogoUrl"/>
+            <div v-else class="size-14 rounded flex-shrink-0 flex items-center justify-center bg-accent-back text-accent-front">
+              <Icon name="jobOfferLogoPlaceholder"/>
+            </div>
           </div>
         </div>
         <div class="flex-grow-1">

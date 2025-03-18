@@ -28,6 +28,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                     WorkMode::from($request->get('jobOfferWorkMode')),
                     $request->get('jobOfferLocations', []),
                     null,
+                    null,
                     $request->get('jobOfferTags', []),
                     \Neon\LegalForm::FullTime));
                 return \response(status:201);
@@ -89,6 +90,7 @@ function neonApplication(): NeonApplication
         WorkMode::FullyRemote,
         ['New York'],
         'Spotify',
+        null,
         ['swift', 'ios'],
         \Neon\LegalForm::FullTime));
     $neon->addJobOffer(new JobOffer('Rust Developer', '',
@@ -97,6 +99,7 @@ function neonApplication(): NeonApplication
         WorkMode::Stationary,
         ['London'],
         'Facebook',
+        null,
         ['rust', 'cargo'],
         \Neon\LegalForm::Contract));
     $neon->addJobOffer(new JobOffer('Go Developer', '',
@@ -106,6 +109,7 @@ function neonApplication(): NeonApplication
         WorkMode::Hybrid,
         ['Amsterdam'],
         'Microsoft',
+        null,
         ['go', 'golang'],
         \Neon\LegalForm::PartTime));
     foreach (sessionJobOffers() as $jobOffer) {

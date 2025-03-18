@@ -16,6 +16,7 @@ readonly class JobOffer
         public WorkMode  $workMode,
         public array     $locations,
         public ?string   $companyName,
+        public ?string   $companyLogoUrl,
         public array     $tagNames,
         public LegalForm $legalForm,
     ) {}
