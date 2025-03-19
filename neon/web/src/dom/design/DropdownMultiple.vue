@@ -31,7 +31,7 @@ interface Props {
 export interface DropdownOption {
   value: string;
   title: string;
-  icon: IconName;
+  icon?: IconName;
 }
 
 function selected(value: T): boolean {
