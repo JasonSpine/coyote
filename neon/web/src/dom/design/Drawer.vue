@@ -5,12 +5,10 @@
       <span class="mr-2">{{ props.title }}</span>
       <Icon name="dropdownClosed" class="ml-auto"/>
     </div>
-    <Design.Tile
-      v-if="open"
-      class="absolute z-[1] min-w-full w-max border border-divider"
-      :space="!props.noSpace"
-      :vertical="!props.noSpace">
-      <slot/>
+    <Design.Tile v-if="open" :space="!props.noSpace" class="absolute z-[1] min-w-full w-max border border-divider">
+      <div :class="{'space-y-4':!props.noSpace, 'max-h-96 overflow-y-auto pr-12 -mr-3': props.scrollable}">
+        <slot/>
+      </div>
     </Design.Tile>
   </Design.Tile>
 </template>
@@ -27,6 +25,7 @@ interface Props {
   testId?: string;
   nested?: boolean;
   noSpace?: boolean;
+  scrollable?: boolean;
 }
 
 const props = defineProps<Props>();

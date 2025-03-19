@@ -19,10 +19,10 @@
       </Design.TextField>
       <div>
         <Design.Row class="max-md:hidden" vertical-center>
-          <Design.Drawer nested :test-id="tagsField.testId" :icon="tagsField.icon" :title="tagsField.title">
+          <Design.Drawer scrollable nested :test-id="tagsField.testId" :icon="tagsField.icon" :title="tagsField.title">
             <Design.CheckBox v-for="tag in tagsField.values" :label="tag" v-model="state.tags[tag]"/>
           </Design.Drawer>
-          <Design.Drawer nested :test-id="locationsField.testId" :icon="locationsField.icon" :title="locationsField.title">
+          <Design.Drawer scrollable nested :test-id="locationsField.testId" :icon="locationsField.icon" :title="locationsField.title">
             <Design.CheckBox v-for="location in locationsField.values" :label="location" v-model="state.locations[location]"/>
           </Design.Drawer>
           <Design.Drawer
@@ -67,10 +67,10 @@
       <h1 class="text-xl mt-2">Filtruj oferty</h1>
       <Design.Divider space/>
       <div class="space-y-4">
-        <Design.Drawer nested :test-id="tagsField.testId" :icon="tagsField.icon" :title="tagsField.title">
+        <Design.Drawer scrollable nested :test-id="tagsField.testId" :icon="tagsField.icon" :title="tagsField.title">
           <Design.CheckBox v-for="tag in tagsField.values" :label="tag" v-model="state.tags[tag]"/>
         </Design.Drawer>
-        <Design.Drawer nested :test-id="locationsField.testId" :icon="locationsField.icon" :title="locationsField.title">
+        <Design.Drawer scrollable nested :test-id="locationsField.testId" :icon="locationsField.icon" :title="locationsField.title">
           <Design.CheckBox v-for="location in locationsField.values" :label="location" v-model="state.locations[location]"/>
         </Design.Drawer>
         <Design.Drawer
@@ -246,6 +246,7 @@ const tagsField = {
   title: 'Technologie',
   values: filters.availableTags(),
 };
+
 const locationsField = {
   testId: 'jobOfferLocation',
   icon: 'jobOfferFilterLocation',
