@@ -106,29 +106,9 @@
 
 <script setup lang="ts">
 import {reactive, ref, watch} from "vue";
-import {Design} from "./dom/design/design";
-import {Currency, Filters, LegalForm, OrderBy, Rate, WorkMode} from "./filters";
-
-interface BackendJobOffer {
-  title: string;
-  url: string;
-  salary: BackendSalary|null;
-  publishDate: string;
-  workMode: WorkMode;
-  locations: string[];
-  companyName: string|null;
-  companyLogoUrl: string|null;
-  tagNames: string[];
-  legalForm: LegalForm;
-}
-
-interface BackendSalary {
-  rangeFrom: number;
-  rangeTo: number;
-  currency: Currency;
-  rate: Rate;
-  isNet: boolean;
-}
+import {initialJobOffers} from "../backendIntegration";
+import {Currency, Filters, LegalForm, OrderBy, Rate, WorkMode} from "../filters";
+import {Design} from "./design/design";
 
 export interface VueJobOffer {
   title: string;
@@ -149,8 +129,6 @@ export interface VueSalary {
   isNet: boolean;
   rate: Rate;
 }
-
-const initialJobOffers: BackendJobOffer[] = window['jobOffers'];
 
 const jobOffers = ref<VueJobOffer[]>([]);
 const filtersCount = ref<number>(0);
@@ -179,7 +157,6 @@ filters.onUpdate(offers => {
     tagNames: offer.tagNames,
     legalForm: offer.legalForm,
   }));
-  console.log(filters.count());
   filtersCount.value = filters.count();
 });
 

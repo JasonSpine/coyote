@@ -58,8 +58,8 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {LegalForm, WorkMode} from "../../filters";
-import {VueJobOffer} from "../../Main.vue";
 import Icon, {IconName} from "../component/Icon.vue";
+import {VueJobOffer} from "../JobBoard.vue";
 import {Design} from "./design";
 
 const props = defineProps<Props>();

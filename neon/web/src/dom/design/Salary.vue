@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {Rate} from "../../filters";
-import {VueSalary} from "../../Main.vue";
+import {VueSalary} from "../JobBoard.vue";
 
 interface Props {
   salary: VueSalary;
