@@ -23,7 +23,7 @@
             </div>
           </Design.Row>
           <Design.Row apart class="max-md:hidden mt-2" vertical-center>
-            <div class="flex space-x-2">
+            <div class="flex space-x-2 items-center">
               <span v-if="jobOffer.companyName" v-text="jobOffer.companyName"/>
               <div>
                 <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
