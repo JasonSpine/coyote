@@ -45,9 +45,6 @@ function padding(): string {
   if (props.nestedPill) {
     return 'py-2 px-3';
   }
-  if (props.nested) {
-    return 'p-2';
-  }
   if (props.space) {
     return 'p-4';
   }

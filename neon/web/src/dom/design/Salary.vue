@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-accent-back text-accent-front p-2 rounded">
+  <div class="bg-accent-back text-accent-front p-2 rounded-lg">
     {{ props.salary.from }} - {{ props.salary.to }}
     {{ props.salary.currency }}
     {{ props.salary.isNet ? 'netto' : '' }}
