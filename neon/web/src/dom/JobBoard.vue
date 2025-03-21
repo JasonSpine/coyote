@@ -47,7 +47,7 @@
             :options="legalFormField.options"
             v-model="state.legalForms"/>
           <Design.RowEnd>
-            <span @click="clearFilters" class="cursor-pointer">
+            <span @click="clearFilters" class="cursor-pointer" data-testid="jobOfferClearFilters">
               Wyczyść filtry
               <span v-if="filtersCount">
                 ({{ filtersCount }})
@@ -58,6 +58,7 @@
         <Design.Button
           class="md:hidden w-full"
           icon="jobOfferFilter"
+          @click="openMobileFilters"
           primary-outline>
           Filtruj oferty
         </Design.Button>
@@ -79,57 +80,66 @@
           @favourite-change="favourite => favouriteChange(jobOffer, favourite)"/>
       </li>
     </ul>
-    <Design.Tile space class="mt-32 md:w-1/2 h-128 flex flex-col">
-      <h1 class="text-xl mt-2">Filtruj oferty</h1>
-      <Design.Divider space/>
-      <div class="space-y-4">
-        <Design.DropdownMultiple
+    <div class="bg-tile md:hidden fixed z-[1031] top-0 left-0 w-screen h-screen" v-if="mobileFiltersVisible">
+      <Design.Tile space class="flex flex-col h-full">
+        <Design.Row vertical-center class="mt-2">
+          <h1 class="text-xl">Filtruj oferty</h1>
+          <Design.RowEnd>
+            <div class="px-4 py-2 cursor-pointer" @click="closeMobileFilters">
+              <Icon name="jobOfferFilterClose"/>
+            </div>
+          </Design.RowEnd>
+        </Design.Row>
+        <Design.Divider space/>
+        <div class="space-y-4">
+          <Design.DropdownMultiple
+            nested
+            :test-id="tagsField.testId"
+            :title="tagsField.title"
+            :icon="tagsField.icon"
+            :options="tagsField.options"
+            v-model="state.tags"/>
+          <Design.DropdownMultiple
+            nested
+            :test-id="locationsField.testId"
+            :title="locationsField.title"
+            :icon="locationsField.icon"
+            :options="locationsField.options"
+            v-model="state.locations"/>
+          <Design.DropdownMultiple
+            nested
+            :test-id="workModeField.testId"
+            :title="workModeField.title"
+            :icon="workModeField.icon"
+            :options="workModeField.options"
+            v-model="state.workModes"/>
+          <Design.DropdownMultiple
+            nested
+            :title="legalFormField.title"
+            :icon="legalFormField.icon"
+            :options="legalFormField.options"
+            v-model="state.legalForms"/>
+        </div>
+        <Design.Divider space/>
+        <Design.Dropdown
           nested
-          :test-id="tagsField.testId"
-          :title="tagsField.title"
-          :icon="tagsField.icon"
-          :options="tagsField.options"
-          v-model="state.tags"/>
-        <Design.DropdownMultiple
-          nested
-          :test-id="locationsField.testId"
-          :title="locationsField.title"
-          :icon="locationsField.icon"
-          :options="locationsField.options"
-          v-model="state.locations"/>
-        <Design.DropdownMultiple
-          nested
-          :test-id="workModeField.testId"
-          :title="workModeField.title"
-          :icon="workModeField.icon"
-          :options="workModeField.options"
-          v-model="state.workModes"/>
-        <Design.DropdownMultiple
-          nested
-          :title="legalFormField.title"
-          :icon="legalFormField.icon"
-          :options="legalFormField.options"
-          v-model="state.legalForms"/>
-      </div>
-      <Design.Divider space/>
-      <Design.Dropdown
-        nested
-        :test-id="sortField.testId"
-        :icon="sortField.icon"
-        :options="sortField.options"
-        v-model="state.sort"/>
-      <Design.Row space class="mt-auto">
-        <Design.Button @click="clearFilters" test-id="jobOfferClearFilters" outline>
-          Wyczyść filtry
-          <span v-if="filtersCount">
-            ({{ filtersCount }})
-          </span>
-        </Design.Button>
-        <Design.Button @click="search" test-id="jobOfferSearch" primary class="flex-grow-1">
-          Pokaż oferty
-        </Design.Button>
-      </Design.Row>
-    </Design.Tile>
+          :test-id="sortField.testId"
+          :icon="sortField.icon"
+          :options="sortField.options"
+          v-model="state.sort"/>
+        <Design.Row space class="mt-auto">
+          <Design.Button @click="clearFilters" test-id="jobOfferClearFilters" outline>
+            Wyczyść filtry
+            <span v-if="filtersCount">
+              ({{ filtersCount }})
+            </span>
+          </Design.Button>
+          <Design.Button @click="closeMobileFilters" test-id="jobOfferSearch" primary class="flex-grow-1">
+            Pokaż oferty
+          </Design.Button>
+        </Design.Row>
+      </Design.Tile>
+    </div>
   </Design.Layout>
 </template>
 
@@ -137,6 +147,7 @@
 import {reactive, ref, watch} from "vue";
 import {BackendJobOffer, initialJobOffers} from "../backendIntegration";
 import {Currency, Filters, JobOffer, LegalForm, OrderBy, Rate, WorkMode} from "../filters";
+import Icon from "./component/Icon.vue";
 import {Design, DropdownOption} from "./design/design";
 
 export interface VueJobOffer {
@@ -233,9 +244,9 @@ initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
 search();
 
 const tabs = [
-  {value: 'allOffers', title: 'Ogłoszenia'},
-  {value: 'favouriteOffers', title: 'Ulubione ogłoszenia'},
-  {value: 'myOffers', title: 'Moje ogłoszenia'},
+  {value: 'allOffers', title: 'Ogłoszenia', titleShort: 'Ogłoszenia'},
+  {value: 'favouriteOffers', title: 'Ulubione ogłoszenia', titleShort: 'Ulubione'},
+  {value: 'myOffers', title: 'Moje ogłoszenia', titleShort: 'Moje'},
 ];
 
 const sortField = {
@@ -318,5 +329,15 @@ function clearFilters(): void {
 
 function redirectToOfferForm(): void {
   window.location.href = '/Praca/Oferta';
+}
+
+const mobileFiltersVisible = ref<boolean>(false);
+
+function openMobileFilters(): void {
+  mobileFiltersVisible.value = true;
+}
+
+function closeMobileFilters(): void {
+  mobileFiltersVisible.value = false;
 }
 </script>
