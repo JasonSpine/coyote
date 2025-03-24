@@ -16,6 +16,7 @@ export interface JobOffer {
   isFavourite: boolean;
   isMine: boolean;
   promoted: boolean;
+  experience: WorkExperience|null;
 }
 
 export type WorkMode = 'stationary'|'hybrid'|'fullyRemote';
@@ -23,6 +24,7 @@ export type LegalForm = 'employment'|'b2b'|'of-mandate'|'specific-task';
 export type Currency = 'PLN'|'EUR'|'USD'|'GBP'|'CHF';
 export type Rate = 'hourly'|'monthly'|'weekly'|'yearly';
 export type OrderBy = 'promoted'|'most-recent'|'highest-salary'|'lowest-salary';
+export type WorkExperience = 'intern'|'junior'|'mid-level'|'senior'|'lead'|'manager';
 
 type JobOffersListener = (jobOffers: JobOffer[]) => void;
 
@@ -41,6 +43,7 @@ export class Filters {
   private onlyFavourite: boolean;
   private onlyMine: boolean;
   private legalForms: LegalForm[] = [];
+  private workExperiences: WorkExperience[] = [];
 
   clearFilters(): void {
     this.searchPhrase = '';
@@ -101,6 +104,11 @@ export class Filters {
     this.update();
   }
 
+  filterByWorkExperience(workExperiences: WorkExperience[]): void {
+    this.workExperiences = workExperiences;
+    this.update();
+  }
+
   sortByPublishDate(): void {
     this.sort('most-recent');
   }
@@ -145,7 +153,8 @@ export class Filters {
       .filter(offer => this.matchesByWorkMode(offer))
       .filter(offer => this.matchesByFavourite(offer))
       .filter(offer => this.matchesByMine(offer))
-      .filter(offer => this.matchesByLegalForm(offer));
+      .filter(offer => this.matchesByLegalForm(offer))
+      .filter(offer => this.matchesByWorkExperience(offer));
     this.sortInPlace(offers);
     return offers;
   }
@@ -182,6 +191,16 @@ export class Filters {
       return true;
     }
     return this.legalForms.includes(offer.legalForm);
+  }
+
+  private matchesByWorkExperience(offer: JobOffer): boolean {
+    if (this.workExperiences.length === 0) {
+      return true;
+    }
+    if (offer.experience === null) {
+      return true;
+    }
+    return this.workExperiences.includes(offer.experience);
   }
 
   private matchesByFavourite(offer: JobOffer): boolean {

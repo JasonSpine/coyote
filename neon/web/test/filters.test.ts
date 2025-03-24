@@ -1,4 +1,4 @@
-import {Filters, JobOffer, LegalForm} from "../src/filters";
+import {Filters, JobOffer, LegalForm, WorkExperience} from "../src/filters";
 import {assertEquals, assertTrue, describe, test} from "./assertion";
 
 interface JobOfferTemplate {
@@ -13,6 +13,7 @@ interface JobOfferTemplate {
   legalForm?: LegalForm;
   promoted?: boolean;
   companyName?: string;
+  experience?: WorkExperience|null;
 }
 
 function addJobOffer(filters: Filters, template: JobOfferTemplate): void {
@@ -34,6 +35,7 @@ function addJobOffer(filters: Filters, template: JobOfferTemplate): void {
     isFavourite: template.favourite || false,
     isMine: template.mine || false,
     promoted: template.promoted || false,
+    experience: template.experience || null,
   });
 }
 
@@ -514,4 +516,25 @@ test('search phrase searches in company name', () => {
     assertEquals(['Python Developer'], titles(jobOffers));
   });
   filters.filter('microsoft');
+});
+
+describe('filter by work experience', () => {
+  test('filter job offers by work experience', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {title: 'Small', experience: 'intern'});
+    addJobOffer(filters, {title: 'Big', experience: 'manager'});
+    filters.onUpdate(jobOffers => {
+      assertEquals(['Big'], titles(jobOffers));
+    });
+    filters.filterByWorkExperience(['manager']);
+  });
+
+  test('job offer without experience is included regardless of filter', () => {
+    const filters = new Filters();
+    addJobOffer(filters, {title: 'Offer', experience: null});
+    filters.onUpdate(jobOffers => {
+      assertEquals(['Offer'], titles(jobOffers));
+    });
+    filters.filterByWorkExperience(['manager']);
+  });
 });

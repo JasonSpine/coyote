@@ -1,4 +1,4 @@
-import {Currency, LegalForm, Rate, WorkMode} from "./filters";
+import {Currency, LegalForm, Rate, WorkExperience, WorkMode} from "./filters";
 
 export const initialJobOffers: BackendJobOffer[] = window['jobOffers'];
 
@@ -16,6 +16,7 @@ export interface BackendJobOffer {
   isFavourite: boolean;
   isMine: boolean;
   promoted: boolean;
+  experience: WorkExperience|null;
 }
 
 export interface BackendSalary {

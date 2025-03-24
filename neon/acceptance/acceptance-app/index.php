@@ -34,7 +34,8 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                     \Neon\LegalForm::EmploymentContract,
                     false,
                     false,
-                    false));
+                    false,
+                    null));
                 return \response(status:201);
             });
             Route::get('/', function (): Response {
@@ -89,7 +90,8 @@ function neonApplication(): NeonApplication
         \Neon\LegalForm::EmploymentContract,
         false,
         true,
-        false));
+        false,
+        null));
     $neon->addJobOffer(new JobOffer('Rust Developer', '',
         '2000-01-01',
         salaryRange(75, 100, \Neon\Rate::Hourly),
@@ -101,7 +103,8 @@ function neonApplication(): NeonApplication
         \Neon\LegalForm::BusinessToBusiness,
         false,
         false,
-        false));
+        false,
+        null));
     $neon->addJobOffer(new JobOffer('Go Developer', '',
         '2012-02-02',
         salaryRange(20000, 22500),
@@ -113,7 +116,8 @@ function neonApplication(): NeonApplication
         \Neon\LegalForm::ContractForSpecificTask,
         false,
         true,
-        true));
+        true,
+        null));
     foreach (sessionJobOffers() as $jobOffer) {
         $neon->addJobOffer($jobOffer);
     }

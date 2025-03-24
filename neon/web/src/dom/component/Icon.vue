@@ -48,6 +48,7 @@ const icons = {
   jobOfferFilterCurrency: 'fa-light fa-coins',
   jobOfferFilterSort: 'fa-light fa-bars-sort',
   jobOfferFilterLegalForm: 'fa-light fa-suitcase',
+  jobOfferFilterWorkExperience: 'fa-light fa-chart-line',
 };
 
 const fontAwesomeClasses = computed<string>((): string => icons[props.name]);

@@ -5,7 +5,8 @@
     :test-id="props.testId"
     :title="props.title"
     :icon="props.icon"
-    :blip="blip">
+    :blip="valuesCount"
+    :open-to-left="props.openToLeft">
     <Design.CheckBox
       v-for="option in props.options"
       :label="option.title"
@@ -28,12 +29,13 @@ interface Props {
   testId: string;
   title: string;
   icon: IconName;
-  options: DropdownOption[];
+  options: DropdownOption<T>[];
   blip?: string;
+  openToLeft?: boolean;
 }
 
-export interface DropdownOption {
-  value: string;
+export interface DropdownOption<T> {
+  value: T;
   title: string;
   icon?: IconName;
 }
@@ -50,7 +52,7 @@ function toggle(value: T, checked: boolean): void {
   }
 }
 
-const blip = computed((): string|undefined => {
+const valuesCount = computed((): string|undefined => {
   if (model.value.length === 0) {
     return undefined;
   }

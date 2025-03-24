@@ -123,4 +123,8 @@ interface Props {
 .fa-tag:before {
   content: "\f02b";
 }
+
+.fa-chart-line:before {
+  content: "\f201";
+}
 </style>

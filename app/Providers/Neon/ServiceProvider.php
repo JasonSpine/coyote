@@ -55,7 +55,8 @@ class ServiceProvider extends RouteServiceProvider
             $this->jobOfferLegalForm($jobOffer),
             $this->isSubscribed($jobOffer),
             $this->isMine($jobOffer),
-            $this->isPromoted($jobOffer));
+            $this->isPromoted($jobOffer),
+            $this->workExperience($jobOffer));
     }
 
     private function workMode(Job $jobOffer): Neon\WorkMode
@@ -129,5 +130,18 @@ class ServiceProvider extends RouteServiceProvider
     private function isPromoted(Job $jobOffer): bool
     {
         return $jobOffer->is_ads;
+    }
+
+    private function workExperience(Job $jobOffer): ?Neon\WorkExperience
+    {
+        return match ($jobOffer->seniority) {
+            'student' => Neon\WorkExperience::Intern,
+            'junior' => Neon\WorkExperience::Junior,
+            'mid' => Neon\WorkExperience::MidLevel,
+            'senior' => Neon\WorkExperience::Senior,
+            'lead' => Neon\WorkExperience::Lead,
+            'manager' => Neon\WorkExperience::Manager,
+            null => null,
+        };
     }
 }

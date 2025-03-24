@@ -18,7 +18,7 @@
         <Design.Button test-id="jobOfferSearch" @click="search" icon="jobOfferSearch" primary/>
       </Design.TextField>
       <div>
-        <Design.Row class="max-md:hidden" vertical-center>
+        <Design.Row class="max-md:hidden" vertical-center wrap>
           <Design.DropdownMultiple
             nested
             :test-id="tagsField.testId"
@@ -46,6 +46,12 @@
             :icon="legalFormField.icon"
             :options="legalFormField.options"
             v-model="state.legalForms"/>
+          <Design.DropdownMultiple
+            nested open-to-left
+            :title="workExperienceField.title"
+            :icon="workExperienceField.icon"
+            :options="workExperienceField.options"
+            v-model="state.workExperiences"/>
           <Design.RowEnd>
             <span @click="clearFilters" class="cursor-pointer" data-testid="jobOfferClearFilters">
               Wyczyść filtry
@@ -119,6 +125,12 @@
             :icon="legalFormField.icon"
             :options="legalFormField.options"
             v-model="state.legalForms"/>
+          <Design.DropdownMultiple
+            nested
+            :title="workExperienceField.title"
+            :icon="workExperienceField.icon"
+            :options="workExperienceField.options"
+            v-model="state.workExperiences"/>
         </div>
         <Design.Divider space/>
         <Design.Dropdown
@@ -146,7 +158,7 @@
 <script setup lang="ts">
 import {reactive, ref, watch} from "vue";
 import {BackendJobOffer, initialJobOffers} from "../backendIntegration";
-import {Currency, Filters, JobOffer, LegalForm, OrderBy, Rate, WorkMode} from "../filters";
+import {Currency, Filters, JobOffer, LegalForm, OrderBy, Rate, WorkExperience, WorkMode} from "../filters";
 import Icon from "./component/Icon.vue";
 import {Design, DropdownOption} from "./design/design";
 
@@ -183,6 +195,7 @@ const state = reactive({
   minimumSalary: 0,
   workModes: [],
   legalForms: [],
+  workExperiences: [],
   sort: 'promoted' as OrderBy,
   locations: [],
   tags: [],
@@ -239,6 +252,7 @@ initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
     isFavourite: jobOffer.isFavourite,
     isMine: jobOffer.isMine,
     promoted: jobOffer.promoted,
+    experience: jobOffer.experience,
   });
 });
 search();
@@ -260,7 +274,7 @@ const sortField = {
   ],
 };
 
-const workModeFieldOptions: DropdownOption[] = [
+const workModeFieldOptions: DropdownOption<WorkMode>[] = [
   {value: 'fullyRemote', title: 'Praca zdalna'},
   {value: 'hybrid', title: 'Praca hybrydowa'},
   {value: 'stationary', title: 'Praca stacjonarna'},
@@ -287,7 +301,7 @@ const locationsField = {
   options: toMap(filters.availableLocations()),
 };
 
-const legalFormFieldOptions: DropdownOption[] = [
+const legalFormFieldOptions: DropdownOption<LegalForm>[] = [
   {value: 'employment', title: 'Umowa o pracę'},
   {value: 'of-mandate', title: 'Umowa zlecenie'},
   {value: 'specific-task', title: 'Umowa o dzieło'},
@@ -301,7 +315,22 @@ const legalFormField = {
   options: legalFormFieldOptions,
 };
 
-function toMap(values: string[]): DropdownOption[] {
+const workExperienceFieldOptions: DropdownOption<WorkExperience>[] = [
+  {value: 'intern', title: 'Stażysta'},
+  {value: 'junior', title: 'Junior'},
+  {value: 'mid-level', title: 'Mid/Regular'},
+  {value: 'senior', title: 'Senior'},
+  {value: 'lead', title: 'Lead'},
+  {value: 'manager', title: 'Manager'},
+];
+
+const workExperienceField = {
+  title: 'Doświadczenie',
+  icon: 'jobOfferFilterWorkExperience',
+  options: workExperienceFieldOptions,
+};
+
+function toMap(values: string[]): DropdownOption<string>[] {
   return values.map(value => ({value, title: value}));
 }
 
@@ -314,6 +343,7 @@ function search(): void {
   filters.filterByFavourite(state.tab === 'favouriteOffers');
   filters.filterByMine(state.tab === 'myOffers');
   filters.filterByLegalForm(state.legalForms);
+  filters.filterByWorkExperience(state.workExperiences);
   filters.sort(state.sort);
 }
 
@@ -325,6 +355,7 @@ function clearFilters(): void {
   state.tags = [];
   state.sort = 'promoted';
   state.legalForms = [];
+  state.workExperiences = [];
 }
 
 function redirectToOfferForm(): void {

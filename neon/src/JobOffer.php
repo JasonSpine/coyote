@@ -8,18 +8,19 @@ readonly class JobOffer
      * @param string[] $tagNames
      */
     public function __construct(
-        public string    $title,
-        public string    $url,
-        public string    $publishDate,
-        public ?Salary   $salary,
-        public WorkMode  $workMode,
-        public array     $locations,
-        public ?string   $companyName,
-        public ?string   $companyLogoUrl,
-        public array     $tagNames,
-        public LegalForm $legalForm,
-        public bool      $isFavourite,
-        public bool      $isMine,
-        public bool      $promoted,
+        public string          $title,
+        public string          $url,
+        public string          $publishDate,
+        public ?Salary         $salary,
+        public WorkMode        $workMode,
+        public array           $locations,
+        public ?string         $companyName,
+        public ?string         $companyLogoUrl,
+        public array           $tagNames,
+        public LegalForm       $legalForm,
+        public bool            $isFavourite,
+        public bool            $isMine,
+        public bool            $promoted,
+        public ?WorkExperience $experience,
     ) {}
 }
