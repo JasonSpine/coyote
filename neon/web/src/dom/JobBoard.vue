@@ -61,12 +61,9 @@
             </span>
           </Design.RowEnd>
         </Design.Row>
-        <Design.Button
-          class="md:hidden w-full"
-          icon="jobOfferFilter"
-          @click="openMobileFilters"
-          primary-outline>
-          Filtruj oferty
+        <Design.Button class="md:hidden w-full" @click="openMobileFilters" primary-outline>
+          <Icon name="jobOfferFilter" class="mr-2"/>
+          {{ mobileFilterButtonText }}
         </Design.Button>
       </div>
     </Design.Tile>
@@ -156,7 +153,7 @@
 </template>
 
 <script setup lang="ts">
-import {reactive, ref, watch} from "vue";
+import {computed, reactive, ref, watch} from "vue";
 import {BackendJobOffer, initialJobOffers} from "../backendIntegration";
 import {Currency, Filters, JobOffer, LegalForm, OrderBy, Rate, WorkExperience, WorkMode} from "../filters";
 import Icon from "./component/Icon.vue";
@@ -371,4 +368,17 @@ function openMobileFilters(): void {
 function closeMobileFilters(): void {
   mobileFiltersVisible.value = false;
 }
+
+const mobileFilterButtonText = computed(() => {
+  if (filtersCount.value === 0) {
+    return 'Filtruj oferty';
+  }
+  if (filtersCount.value === 1) {
+    return 'Zastosowano 1 filtr';
+  }
+  if (filtersCount.value < 5) {
+    return `Zastosowano ${filtersCount.value} filtry`;
+  }
+  return `Zastosowano ${filtersCount.value} filtrów`;
+});
 </script>

@@ -441,6 +441,18 @@ describe('count filters', () => {
     filters.filterBySalary(12);
     assertEquals(1, filters.count());
   });
+  
+  test('filtering by legal form increases count by 1',() => {
+    const filters = new Filters();
+    filters.filterByLegalForm(['b2b']);
+    assertEquals(1, filters.count());
+  });
+
+  test('filtering by work experience increases count by 1',() => {
+    const filters = new Filters();
+    filters.filterByWorkExperience(['senior']);
+    assertEquals(1, filters.count());
+  });
 });
 
 describe('filtering job offers by favourite', () => {

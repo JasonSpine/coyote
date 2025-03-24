@@ -127,4 +127,8 @@ interface Props {
 .fa-chart-line:before {
   content: "\f201";
 }
+
+.fa-filter:before {
+  content: "\f0b0";
+}
 </style>

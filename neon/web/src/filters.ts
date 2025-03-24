@@ -260,6 +260,12 @@ export class Filters {
     if (this.minimumSalary > 0) {
       count++;
     }
+    if (this.legalForms.length > 0) {
+      count++;
+    }
+    if (this.workExperiences.length > 0) {
+      count++;
+    }
     return count;
   }
 }
