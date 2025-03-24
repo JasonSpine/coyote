@@ -291,14 +291,14 @@ const tagsField = {
   testId: 'jobOfferTags',
   icon: 'jobOfferFilterTechnology',
   title: 'Technologie',
-  options: toMap(filters.availableTags()),
+  options: dropdownOptions(filters.availableTags()),
 };
 
 const locationsField = {
   testId: 'jobOfferLocation',
   icon: 'jobOfferFilterLocation',
   title: 'Lokalizacja',
-  options: toMap(filters.availableLocations()),
+  options: dropdownOptions(filters.availableLocations()),
 };
 
 const legalFormFieldOptions: DropdownOption<LegalForm>[] = [
@@ -330,7 +330,7 @@ const workExperienceField = {
   options: workExperienceFieldOptions,
 };
 
-function toMap(values: string[]): DropdownOption<string>[] {
+function dropdownOptions(values: string[]): DropdownOption<string>[] {
   return values.map(value => ({value, title: value}));
 }
 
