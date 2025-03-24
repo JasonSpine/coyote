@@ -433,18 +433,6 @@
                       </ul>
                     </div>
                   {% endif %}
-
-                  {% if not job.is_expired %}
-                    <div class="neon-tile neon-rounded p-4 mb-3 neon-box">
-                      <span class="text-muted">Dodatkowe pytania?</span>
-                      <div>
-                        {{ icon('jobOfferAdditionalQuestions') }}
-                        <a href="#comments">
-                          Zadaj pytanie dotyczące tego ogłoszenia
-                        </a>
-                      </div>
-                    </div>
-                  {% endif %}
                 </div>
               </div>
             </div>
@@ -474,19 +462,6 @@
             </table>
           </div>
         {% endif %}
-      </div>
-      <div id="js-comments" v-cloak>
-        <div class="mb-2" id="comments">
-          {{ icon('jobOfferComments') }}
-          Pytania i odpowiedzi
-        </div>
-        <vue-comment-form v-if="isAuthorized" resource-id="{{ job.id }}" resource="Coyote\Job"></vue-comment-form>
-        <div v-if="commentsCount > 0" class="card">
-          <div class="card-body">
-            <vue-comment v-for="comment in comments" :key="comment.id" :comment="comment"></vue-comment>
-          </div>
-        </div>
-        <vue-notifications></vue-notifications>
       </div>
     </div>
 

@@ -58,13 +58,6 @@
                 Ulubiona
               </a>
             </li>
-            <li class="list-inline-item">
-              <a :href="job.url + '#comments'">
-                <vue-icon name="jobOfferComments"/>
-                {{ job.comments_count }}
-                {{ declination(job.comments_count, ['komentarz', 'komentarze', 'komentarzy']) }}
-              </a>
-            </li>
           </ul>
         </div>
       </div>
