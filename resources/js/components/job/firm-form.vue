@@ -40,7 +40,6 @@
 
     <div class="form-group">
       <label class="col-form-label">Logo</label>
-
       <div class="row">
         <div class="col-sm-2">
           <vue-thumbnail
@@ -55,9 +54,8 @@
     </div>
 
     <vue-form-group :errors="errors['firm.website']" label="Strona WWW" class="border-bottom">
-      <vue-text v-model="firm.website" :is-invalid="'firm.website' in errors" name="firm[website]"></vue-text>
-
-      <span class="form-text text-muted">Firmowa strona WWW. Będzie ona wyświetlana przy ofercie.</span>
+      <vue-text v-model="firm.website" :is-invalid="'firm.website' in errors" name="firm[website]"/>
+      <span class="form-text text-muted" v-text="'Firmowa strona WWW. Będzie ona wyświetlana przy ofercie.'"/>
     </vue-form-group>
 
     <vue-form-group label="Opis firmy" class="border-bottom">
@@ -74,12 +72,10 @@
             :url="photo.url"
             :only-image="true"
             @upload="addPhoto"
-            @delete="removePhoto">
-          </vue-thumbnail>
+            @delete="removePhoto"/>
         </div>
-
         <div class="col-sm-2">
-          <vue-thumbnail @upload="addPhoto" name="asset"></vue-thumbnail>
+          <vue-thumbnail @upload="addPhoto" name="asset"/>
         </div>
       </div>
     </div>
