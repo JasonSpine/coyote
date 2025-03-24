@@ -177,48 +177,6 @@
                     </section>
                   {% endif %}
 
-                  {% if job.features %}
-                    <section>
-                      <div class="pt-4">
-                        <h3 class="mt-4">
-                          Metodologia pracy
-                        </h3>
-                      </div>
-                      <ul class="features list-group list-group-horizontal row">
-                        {% for feature in job.features %}
-                          <li class="list-group-item col-12 col-sm-6 {{ feature.pivot.checked ? 'checked' }}">
-                            {% if feature.pivot.checked %}
-                              {{ icon('jobOfferFeaturePresent') }}
-                            {% else %}
-                              {{ icon('jobOfferFeatureMissing') }}
-                            {% endif %}
-                            {{ feature.name }}
-                            {% if feature.pivot.getAttribute('value') %}
-                              <small class="text-muted"> ― {{ feature.pivot.getAttribute('value') }}</small>
-                            {% endif %}
-                          </li>
-                        {% endfor %}
-                      </ul>
-                    </section>
-                  {% endif %}
-
-                  {% if job.firm.benefits|length %}
-                    <section>
-                      <div class="pt-4">
-                        <h3 class="mt-4">Oferujemy</h3>
-                      </div>
-
-                      <ul class="benefits list-group list-group-horizontal row">
-                        {% for benefit in job.firm.benefits %}
-                          <li class="list-group-item col-12 col-sm-6 checked">
-                            {{ icon('jobOfferBenefit') }}
-                            {{ benefit.name }}
-                          </li>
-                        {% endfor %}
-                      </ul>
-                    </section>
-                  {% endif %}
-
                   {% if job.firm.name and (assets|length > 0 or job.firm.youtube_url) %}
                     <section>
                       <div class="pt-4">

@@ -111,46 +111,6 @@
         </vue-map>
       </div>
     </vue-form-group>
-
-    <div class="form-group border-bottom" v-show="firm.is_agency === false">
-      <label class="col-form-label">Benefity</label>
-      <span class="form-text text-muted">
-        Kliknij na wybraną pozycję, aby zaznaczyć benefity jakie oferuje Twoja firma. Jeżeli nie ma go na liście, możesz dodać nową pozycję wpisując ją w
-        polu poniżej.
-      </span>
-      <ol class="benefits list-group list-group-horizontal d-flex flex-row flex-wrap">
-        <li
-          class="list-group-item w-50 clickable"
-          v-for="benefit in defaultBenefits"
-          :class="{checked: firm.benefits.includes(benefit)}"
-          @click="TOGGLE_BENEFIT(benefit)"
-        >
-          <vue-icon name="jobOfferBenefitPresent" v-if="firm.benefits.includes(benefit)"/>
-          <vue-icon name="jobOfferBenefitMissing" v-else/>
-          {{ benefit }}
-        </li>
-        <template v-for="benefit in firm.benefits">
-          <li class="list-group-item w-50 checked" v-if="!defaultBenefits.includes(benefit)">
-            <vue-icon name="jobOfferBenefitCustom"/>
-            <input maxlength="100" :value="benefit" class="form-control form-control-sm" @keydown.enter.prevent="">
-            <button class="btn btn-sm btn-delete text-danger" title="Usuń tę pozycję" @click.prevent="REMOVE_BENEFIT(benefit)">
-              <vue-icon name="jobOfferBenefitRemove"/>
-            </button>
-          </li>
-        </template>
-        <li class="list-group-item w-50 checked">
-          <vue-icon name="jobOfferBenefitCustom"/>
-          <input
-            v-model="benefit"
-            type="text"
-            maxlength="100"
-            class="form-control form-control-sm"
-            @keydown.enter.prevent="addBenefit"
-            placeholder="Wpisz tekst i naciśnij Enter, aby dodać">
-        </li>
-      </ol>
-      <div class="clearfix"/>
-    </div>
   </div>
 </template>
 

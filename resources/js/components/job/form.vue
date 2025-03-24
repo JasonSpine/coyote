@@ -113,24 +113,6 @@
       <input type="hidden" name="description" v-model="job.description">
     </div>
 
-    <div class="form-group border-bottom">
-      <label class="col-form-label">Narzędzia oraz metodologie pracy</label>
-
-      <ol class="features list-group list-group-horizontal d-flex flex-row flex-wrap">
-        <li class="list-group-item w-50" v-for="(feature, index) in job.features" :class="{checked: feature.checked}">
-          <div class="row form-group">
-            <div class="col-6" @click="TOGGLE_FEATURE(feature)">
-              <vue-icon name="jobOfferFeaturePresent" v-if="feature.checked"/>
-              <vue-icon name="jobOfferFeatureMissing" v-else/>
-              {{ feature.name }}
-            </div>
-            <div class="col-6" v-show="feature.checked && feature.default">
-              <input type="text" class="form-control form-control-sm" :placeholder="feature.default" v-model="feature.value">
-            </div>
-          </div>
-        </li>
-      </ol>
-    </div>
     <div class="form-group">
       <div class="custom-control custom-radio">
         <input
