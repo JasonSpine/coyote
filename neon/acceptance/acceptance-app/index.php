@@ -35,6 +35,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                     false,
                     false,
                     false,
+                    false,
                     null));
                 return \response(status:201);
             });
@@ -91,6 +92,7 @@ function neonApplication(): NeonApplication
         false,
         true,
         false,
+        false,
         null));
     $neon->addJobOffer(new JobOffer('Rust Developer', '',
         '2000-01-01',
@@ -103,6 +105,7 @@ function neonApplication(): NeonApplication
         \Neon\LegalForm::BusinessToBusiness,
         false,
         false,
+        true,
         false,
         null));
     $neon->addJobOffer(new JobOffer('Go Developer', '',
@@ -115,6 +118,7 @@ function neonApplication(): NeonApplication
         ['go', 'golang'],
         \Neon\LegalForm::ContractForSpecificTask,
         false,
+        true,
         true,
         true,
         null));

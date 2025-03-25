@@ -170,6 +170,7 @@ export interface VueJobOffer {
   tagNames: string[];
   legalForm: LegalForm;
   isFavourite: boolean;
+  isNew: boolean;
 }
 
 export interface VueSalary {
@@ -213,6 +214,7 @@ filters.onUpdate(offers => {
     tagNames: offer.tagNames,
     legalForm: offer.legalForm,
     isFavourite: offer.isFavourite,
+    isNew: offer.isNew,
   }));
   filtersCount.value = filters.count();
 });
@@ -248,6 +250,7 @@ initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
     legalForm: jobOffer.legalForm,
     isFavourite: jobOffer.isFavourite,
     isMine: jobOffer.isMine,
+    isNew: jobOffer.isNew,
     promoted: jobOffer.promoted,
     experience: jobOffer.experience,
   });

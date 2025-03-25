@@ -1,6 +1,7 @@
 <?php
 namespace Coyote\Providers\Neon;
 
+use Carbon\Carbon;
 use Coyote;
 use Coyote\Domain\Settings\UserTheme;
 use Coyote\Domain\StringHtml;
@@ -56,6 +57,7 @@ class ServiceProvider extends RouteServiceProvider
             $this->isSubscribed($jobOffer),
             $this->isMine($jobOffer),
             $this->isPromoted($jobOffer),
+            $this->isNew($jobOffer),
             $this->workExperience($jobOffer));
     }
 
@@ -143,5 +145,10 @@ class ServiceProvider extends RouteServiceProvider
             'manager' => Neon\WorkExperience::Manager,
             null => null,
         };
+    }
+
+    private function isNew(Job $jobOffer): bool
+    {
+        return new \Carbon\Carbon($jobOffer->boost_at)->diffInDays(Carbon::now()) <= 2;
     }
 }

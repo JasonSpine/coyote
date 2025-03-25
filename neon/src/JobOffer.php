@@ -20,6 +20,7 @@ readonly class JobOffer
         public LegalForm       $legalForm,
         public bool            $isFavourite,
         public bool            $isMine,
+        public bool            $isNew,
         public bool            $promoted,
         public ?WorkExperience $experience,
     ) {}

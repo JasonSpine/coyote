@@ -15,6 +15,7 @@ export interface JobOffer {
   legalForm: LegalForm;
   isFavourite: boolean;
   isMine: boolean;
+  isNew: boolean;
   promoted: boolean;
   experience: WorkExperience|null;
 }

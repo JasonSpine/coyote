@@ -6,6 +6,7 @@ import Drawer from "./Drawer.vue";
 import Dropdown from "./Dropdown.vue";
 import DropdownLabel from "./DropdownLabel.vue";
 import DropdownMultiple from "./DropdownMultiple.vue";
+import JobOfferBadge from "./JobOfferBadge.vue";
 import JobOfferFavouriteButton from "./JobOfferFavouriteButton.vue";
 import JobOfferListItem from "./JobOfferListItem.vue";
 import Layout from "./Layout.vue";
@@ -29,6 +30,7 @@ export const Design = {
   Dropdown,
   DropdownLabel,
   DropdownMultiple,
+  JobOfferBadge,
   JobOfferFavouriteButton,
   JobOfferListItem,
   Layout,

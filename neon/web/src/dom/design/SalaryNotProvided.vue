@@ -1,5 +1,9 @@
 <template>
-  <div class="bg-dim-accent-back text-dim-accent-front p-2 rounded-lg">
+  <Design.JobOfferBadge color="gray">
     Nie podano $$$
-  </div>
+  </Design.JobOfferBadge>
 </template>
+
+<script setup>
+import {Design} from './design.js';
+</script>

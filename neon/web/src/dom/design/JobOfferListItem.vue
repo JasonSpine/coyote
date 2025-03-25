@@ -1,12 +1,12 @@
 <template>
   <Design.Tile vertical>
-    <Design.Row wrap>
+    <Design.Row wrap vertical-center>
       <Design.Tile nested-pill v-for="badge in badges" :text="badge.title" :icon="badge.icon"/>
-      <Design.RowEnd>
-        <Design.JobOfferFavouriteButton
-          :favourite="jobOffer.isFavourite"
-          @favourite-change="toggleFavourite"/>
-      </Design.RowEnd>
+      <Design.RowEnd/>
+      <Design.JobOfferBadge color="pink" v-text="'Nowe'" v-if="jobOffer.isNew" text-small/>
+      <Design.JobOfferFavouriteButton
+        :favourite="jobOffer.isFavourite"
+        @favourite-change="toggleFavourite"/>
     </Design.Row>
     <Design.Tile nested desktop-space>
       <Design.Row vertical-center>

@@ -1,16 +1,17 @@
 <template>
-  <div class="bg-accent-back text-accent-front p-2 rounded-lg">
+  <Design.JobOfferBadge color="primary">
     {{ salaryRange }}
     {{ props.salary.currency }}
     {{ props.salary.isNet ? 'netto' : '' }}
     {{ rateTitle }}
-  </div>
+  </Design.JobOfferBadge>
 </template>
 
 <script setup lang="ts">
 import {computed} from "vue";
 import {Rate} from "../../filters";
 import {VueSalary} from "../JobBoard.vue";
+import {Design} from "./design";
 
 interface Props {
   salary: VueSalary;
