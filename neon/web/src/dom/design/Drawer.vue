@@ -1,11 +1,11 @@
 <template>
-  <Design.Tile :nested="props.nested" class="cursor-pointer relative" @click="toggle">
+  <Design.Material :nested="props.nested" class="cursor-pointer relative" @click="toggle">
     <div class="flex" :data-testid="props.testId">
       <Icon :name="props.icon" v-if="props.icon" class="mr-2"/>
       <span class="mr-2 font-medium" v-text="props.title"/>
       <Icon name="dropdownClosed" class="ml-auto"/>
     </div>
-    <Design.Tile
+    <Design.Material
       @click.stop
       v-if="open"
       :space="!props.noSpace"
@@ -14,13 +14,13 @@
       <div :class="{'space-y-4': !props.noSpace, 'max-h-96 overflow-y-auto pr-12 -mr-3': props.scrollable}">
         <slot/>
       </div>
-    </Design.Tile>
+    </Design.Material>
     <div v-if="props.blip" v-text="props.blip" :class="[
       'absolute -top-1 -right-1',
       'rounded-full size-4 leading-4 text-center text-xs',
       'bg-primary text-on-primary',
     ]"/>
-  </Design.Tile>
+  </Design.Material>
 </template>
 
 <script setup lang="ts">

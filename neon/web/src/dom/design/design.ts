@@ -10,6 +10,7 @@ import JobOfferBadge from "./JobOfferBadge.vue";
 import JobOfferFavouriteButton from "./JobOfferFavouriteButton.vue";
 import JobOfferListItem from "./JobOfferListItem.vue";
 import Layout from "./Layout.vue";
+import Material from "./Material.vue";
 import Row from "./Row.vue";
 import RowEnd from "./RowEnd.vue";
 import Salary from "./Salary.vue";
@@ -34,6 +35,7 @@ export const Design = {
   JobOfferFavouriteButton,
   JobOfferListItem,
   Layout,
+  Material,
   Row,
   RowEnd,
   Salary,

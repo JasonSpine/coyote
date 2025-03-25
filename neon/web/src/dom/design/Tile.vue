@@ -1,14 +1,20 @@
 <template>
-  <div :class="tileClass" :data-testid="props.testId">
+  <Design.Material
+    :nested="props.nested || props.nestedPill"
+    :round="rounded"
+    :class="tileClass"
+    :data-testid="props.testId">
     <Icon v-if="props.icon" :name="props.icon" class="mr-2"/>
     {{ props.text }}
     <slot/>
-  </div>
+  </Design.Material>
 </template>
 
 <script setup lang="ts">
 import {computed} from "vue";
 import Icon, {IconName} from "../component/Icon.vue";
+import {Design} from "./design";
+import {MaterialRound} from "./Material.vue";
 
 const props = defineProps<Props>();
 
@@ -23,26 +29,17 @@ interface Props {
   text?: string;
 }
 
-const tileClass = computed(() => {
-  return [
-    props.nested || props.nestedPill ? 'bg-tile-nested' : 'bg-tile',
-    rounded(),
-    padding(),
-    verticalSpacing(),
-    fontSize(),
-    wrapping(),
-  ];
-});
+const tileClass = computed(() => [padding(), verticalSpacing(), fontSize(), wrapping()]);
 
-function rounded(): string {
+const rounded = computed((): MaterialRound => {
   if (props.nestedPill) {
-    return 'rounded-3xl';
+    return 'full';
   }
   if (props.nested) {
-    return 'rounded-lg';
+    return 'regular';
   }
-  return 'rounded-2xl';
-}
+  return 'large';
+});
 
 function padding(): string {
   if (props.nestedPill) {
@@ -65,16 +62,10 @@ function verticalSpacing(): string {
 }
 
 function fontSize(): string {
-  if (props.nestedPill) {
-    return 'text-sm';
-  }
-  return '';
+  return props.nestedPill ? 'text-sm' : '';
 }
 
 function wrapping(): string {
-  if (props.nestedPill) {
-    return 'whitespace-nowrap';
-  }
-  return '';
+  return props.nestedPill ? 'whitespace-nowrap' : '';
 }
 </script>
