@@ -108,8 +108,8 @@ const locationBadges = computed<Badge[]>((): Badge[] => {
 
 const legalFormTitle = computed((): string => {
   const titles: Record<LegalForm, string> = {
-    'b2b': 'Kontrakt',
-    'employment': 'Pełny etat',
+    'b2b': 'B2B',
+    'employment': 'Umowa o pracę',
     'of-mandate': 'Umowa zlecenie',
     'specific-task': 'Umowa o dzieło',
   };
