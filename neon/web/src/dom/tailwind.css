@@ -7,6 +7,8 @@
   --color-on-primary: var(--color-white);
   --color-accent-front: var(--color-green-800);
   --color-accent-back: var(--color-green-050);
+  --color-dim-accent-back: var(--color-navy-100);
+  --color-dim-accent-front: var(--color-neutral-600);
   --color-tile: var(--color-white);
   --color-tile-nested: var(--color-navy-025);
   --color-tile-highlight: #bbe7ca;
@@ -23,6 +25,8 @@
     --color-on-primary: var(--color-navy-950);
     --color-accent-front: var(--color-green-500);
     --color-accent-back: var(--color-green-950);
+    --color-dim-accent-back: var(--color-neutral-950);
+    --color-dim-accent-front: var(--color-neutral-400);
     --color-tile: var(--color-neutral-800);
     --color-tile-nested: var(--color-neutral-900);
     --color-tile-highlight: #0d5c28;
@@ -48,6 +52,7 @@
   --color-neutral-700: #2b2e30;
   --color-neutral-800: #181a1b;
   --color-neutral-900: #121314;
+  --color-neutral-950: #0a0a0b;
   --color-green-050: #e7f7e6;
   --color-green-500: #00a538;
   --color-green-700: #016a24;
@@ -60,6 +65,8 @@
   --color-on-primary: var(--color-on-primary);
   --color-accent-front: var(--color-accent-front);
   --color-accent-back: var(--color-accent-back);
+  --color-dim-accent-front: var(--color-dim-accent-front);
+  --color-dim-accent-back: var(--color-dim-accent-back);
   --color-divider: var(--color-divider);
   --color-tag: var(--color-tag);
 

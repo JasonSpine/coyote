@@ -21,8 +21,9 @@
             <p class="text-lg leading-6" data-testid="jobOfferTitle">
               <a :href="jobOffer.url" v-text="jobOffer.title"/>
             </p>
-            <div v-if="jobOffer.salary" class="max-md:hidden">
-              <Design.Salary :salary="jobOffer.salary"/>
+            <div class="max-md:hidden">
+              <Design.Salary :salary="jobOffer.salary" v-if="jobOffer.salary"/>
+              <Design.SalaryNotProvided v-else/>
             </div>
           </Design.Row>
           <Design.Row apart class="max-md:hidden mt-2" vertical-center>
@@ -45,6 +46,7 @@
           <span>{{ jobOffer.companyName }}</span>
           <Design.RowEnd>
             <Design.Salary v-if="jobOffer.salary" :salary="jobOffer.salary"/>
+            <Design.SalaryNotProvided v-else/>
           </Design.RowEnd>
         </Design.Row>
         <template v-if="jobOffer.tagNames.length">
