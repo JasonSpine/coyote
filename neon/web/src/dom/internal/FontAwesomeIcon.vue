@@ -21,6 +21,13 @@ interface Props {
 }
 
 @font-face {
+  font-family: 'Font Awesome 6 Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./fa-regular-400.woff2') format('woff2'), url('./fa-regular-400.ttf') format('truetype');
+}
+
+@font-face {
   font-family: 'Font Awesome 6 Free';
   font-style: normal;
   font-weight: 900;
@@ -34,6 +41,13 @@ interface Props {
   display: inline-block;
 }
 
+.fa-regular {
+  font-family: 'Font Awesome 6 Pro';
+  font-style: normal;
+  font-weight: 400;
+  display: inline-block;
+}
+
 .fa-light {
   font-family: 'Font Awesome 6 Pro';
   font-style: normal;
@@ -42,6 +56,7 @@ interface Props {
 }
 
 .fa-light,
+.fa-regular,
 .fa-solid {
   &:before {
     content: var(--fa);

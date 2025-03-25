@@ -25,6 +25,11 @@ readonly class ViteManifest
         return $this->manifest['src/dom/internal/fa-light-300.woff2']['file'];
     }
 
+    public function fontAwesomeRegularUrl(): string
+    {
+        return $this->manifest['src/dom/internal/fa-regular-400.woff2']['file'];
+    }
+
     public function fontAwesomeSolidUrl(): string
     {
         return $this->manifest['src/dom/internal/fa-solid-900.woff2']['file'];

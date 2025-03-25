@@ -29,11 +29,13 @@ class NeonApplication
     {
         $styleUrl = $this->url($this->vite->styleUrl());
         $faLightUrl = $this->url($this->vite->fontAwesomeLightUrl());
+        $faRegularUrl = $this->url($this->vite->fontAwesomeRegularUrl());
         $faSolidUrl = $this->url($this->vite->fontAwesomeSolidUrl());
         return <<<head
             <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter:500,700">
             <link rel="stylesheet" type="text/css" href="$styleUrl" title="includeShadowRoot">
             <link rel="preload" href="$faLightUrl" as="font" type="font/woff2" crossorigin>
+            <link rel="preload" href="$faRegularUrl" as="font" type="font/woff2" crossorigin>
             <link rel="preload" href="$faSolidUrl" as="font" type="font/woff2" crossorigin>
         head;
     }

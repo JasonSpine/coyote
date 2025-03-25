@@ -38,7 +38,7 @@ const icons = {
   jobOfferLocation,
   jobOfferCompany: 'fa-light fa-building',
   jobOfferLogoPlaceholder: 'fa-light fa-laptop-code',
-  jobOfferSearch: 'fa-light fa-magnifying-glass',
+  jobOfferSearch: 'fa-regular fa-magnifying-glass',
   jobOfferFilter: 'fa-light fa-filter',
   jobOfferFilterClose: 'fa-light fa-close',
   jobOfferFilterTechnology: 'fa-light fa-code',
