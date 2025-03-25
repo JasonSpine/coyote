@@ -1,6 +1,6 @@
 <template>
   <div class="bg-accent-back text-accent-front p-2 rounded-lg">
-    {{ props.salary.from }} - {{ props.salary.to }}
+    {{ salaryRange }}
     {{ props.salary.currency }}
     {{ props.salary.isNet ? 'netto' : '' }}
     {{ rateTitle }}
@@ -26,5 +26,12 @@ const rateTitle = computed((): string => {
     'yearly': '/ rocznie',
   };
   return titles[props.salary.rate];
+});
+
+const salaryRange = computed((): string => {
+  if (props.salary.from === props.salary.to) {
+    return props.salary.from.toString();
+  }
+  return `${props.salary.from} - ${props.salary.to}`;
 });
 </script>

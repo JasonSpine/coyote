@@ -107,7 +107,7 @@ function neonApplication(): NeonApplication
         null));
     $neon->addJobOffer(new JobOffer('Go Developer', '',
         '2012-02-02',
-        salaryRange(20000, 22500),
+        salaryRange(20000, 20000),
         WorkMode::Hybrid,
         ['Amsterdam'],
         'Microsoft',
