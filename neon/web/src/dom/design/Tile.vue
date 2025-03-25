@@ -38,10 +38,10 @@ function rounded(): string {
   if (props.nestedPill) {
     return 'rounded-3xl';
   }
-  if (!props.nested) {
-    return 'rounded-xl';
+  if (props.nested) {
+    return 'rounded-lg';
   }
-  return 'rounded-lg';
+  return 'rounded-2xl';
 }
 
 function padding(): string {

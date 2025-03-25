@@ -15,7 +15,7 @@
         placeholder="Szukaj po tytule, nazwie firmy"
         test-id="jobOfferSearchPhrase"
         @submit="search">
-        <Design.Button test-id="jobOfferSearch" @click="search" icon="jobOfferSearch" primary/>
+        <Design.Button test-id="jobOfferSearch" @click="search" icon="jobOfferSearch" primary square/>
       </Design.TextField>
       <div>
         <Design.Row class="max-md:hidden" vertical-center wrap>
@@ -76,7 +76,7 @@
         open-to-left
         v-model="state.sort"/>
     </Design.DropdownLabel>
-    <ul class="space-y-2">
+    <ul class="space-y-4">
       <li v-for="jobOffer in jobOffers" :data-testid="jobOffer.testId">
         <Design.JobOfferListItem
           :job-offer="jobOffer"

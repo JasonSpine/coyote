@@ -1,8 +1,8 @@
 <template>
   <button
     @click="click"
-    class="cursor-pointer rounded-lg px-4 py-2"
-    :class="variantClass"
+    class="cursor-pointer rounded-lg"
+    :class="[variantClass, sizeClass]"
     :data-testid="props.testId">
     <Icon v-if="props.icon" :name="props.icon"/>
     <slot/>
@@ -21,6 +21,7 @@ interface Props {
   primary?: boolean;
   primaryOutline?: boolean;
   outline?: boolean;
+  square?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -40,5 +41,12 @@ const variantClass = computed(() => {
     return 'text-neutral-600 dark:text-neutral-050 border border-current';
   }
   return '';
+});
+
+const sizeClass = computed(() => {
+  if (props.square) {
+    return 'size-8.5';
+  }
+  return 'px-4 py-2';
 });
 </script>

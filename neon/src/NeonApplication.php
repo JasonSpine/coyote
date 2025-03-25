@@ -18,7 +18,7 @@ class NeonApplication
         $themeAttribute = $this->theme($theme);
         return <<<html
             <div id="neon-application" data-theme="$themeAttribute">
-                <div id="vueApplication" class="bg-tile-nested"></div>
+                <div id="vueApplication" class="bg-body"></div>
             </div>
             <script>var jobOffers = {$jobOffers};</script>
             <script src="{$scriptUrl}"></script>        
@@ -32,7 +32,7 @@ class NeonApplication
         $faRegularUrl = $this->url($this->vite->fontAwesomeRegularUrl());
         $faSolidUrl = $this->url($this->vite->fontAwesomeSolidUrl());
         return <<<head
-            <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter:500,700">
+            <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter:400,500,700">
             <link rel="stylesheet" type="text/css" href="$styleUrl" title="includeShadowRoot">
             <link rel="preload" href="$faLightUrl" as="font" type="font/woff2" crossorigin>
             <link rel="preload" href="$faRegularUrl" as="font" type="font/woff2" crossorigin>
