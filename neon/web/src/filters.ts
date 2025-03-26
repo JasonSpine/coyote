@@ -46,6 +46,10 @@ export class Filters {
   private legalForms: LegalForm[] = [];
   private workExperiences: WorkExperience[] = [];
 
+  total(): number {
+    return this.jobOffers.length;
+  }
+
   clearFilters(): void {
     this.searchPhrase = '';
     this.locations = [];

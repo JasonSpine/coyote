@@ -36,6 +36,7 @@ function addJobOffer(filters: Filters, template: JobOfferTemplate): void {
     isMine: template.mine || false,
     promoted: template.promoted || false,
     experience: template.experience || null,
+    isNew: false,
   });
 }
 
@@ -441,14 +442,14 @@ describe('count filters', () => {
     filters.filterBySalary(12);
     assertEquals(1, filters.count());
   });
-  
-  test('filtering by legal form increases count by 1',() => {
+
+  test('filtering by legal form increases count by 1', () => {
     const filters = new Filters();
     filters.filterByLegalForm(['b2b']);
     assertEquals(1, filters.count());
   });
 
-  test('filtering by work experience increases count by 1',() => {
+  test('filtering by work experience increases count by 1', () => {
     const filters = new Filters();
     filters.filterByWorkExperience(['senior']);
     assertEquals(1, filters.count());
@@ -549,4 +550,13 @@ describe('filter by work experience', () => {
     });
     filters.filterByWorkExperience(['manager']);
   });
+});
+
+test('show total number of offers, regardless of filters', () => {
+  const filters = new Filters();
+  addJobOffer(filters, {});
+  filters.onUpdate(jobOffers => {
+    assertEquals(1, filters.total());
+  });
+  filters.filter('Nothing');
 });

@@ -76,7 +76,10 @@
         open-to-left
         v-model="state.sort"/>
     </Design.DropdownLabel>
-    <ul class="space-y-4">
+    <Design.Material v-if="allJobOffersAreFilteredOut" nested class="text-word text-center my-2 py-6">
+      Nie znaleźliśmy żadnych ofert, pasujących do Twoich kryteriów wyszukiwania.
+    </Design.Material>
+    <ul class="space-y-4" v-else>
       <li v-for="jobOffer in jobOffers" :data-testid="jobOffer.testId">
         <Design.JobOfferListItem
           :job-offer="jobOffer"
@@ -231,6 +234,13 @@ function salary(jobOffer: JobOffer): VueSalary|null {
   }
   return null;
 }
+
+const allJobOffersAreFilteredOut = computed<boolean>(() => {
+  if (filters.total() > 0) {
+    return jobOffers.value.length === 0;
+  }
+  return false;
+});
 
 initialJobOffers.forEach((jobOffer: BackendJobOffer): void => {
   filters.addJobOffer({
