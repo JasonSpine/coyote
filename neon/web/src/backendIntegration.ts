@@ -17,7 +17,7 @@ export interface BackendJobOffer {
   isMine: boolean;
   isNew: boolean;
   promoted: boolean;
-  experience: WorkExperience|null;
+  experience: WorkExperience;
 }
 
 export interface BackendSalary {

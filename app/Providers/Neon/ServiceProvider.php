@@ -143,7 +143,7 @@ class ServiceProvider extends RouteServiceProvider
             'senior' => Neon\WorkExperience::Senior,
             'lead' => Neon\WorkExperience::Lead,
             'manager' => Neon\WorkExperience::Manager,
-            null => null,
+            null => Neon\WorkExperience::NotProvided,
         };
     }
 

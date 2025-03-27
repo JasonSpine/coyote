@@ -17,7 +17,7 @@ export interface JobOffer {
   isMine: boolean;
   isNew: boolean;
   promoted: boolean;
-  experience: WorkExperience|null;
+  experience: WorkExperience;
 }
 
 export type WorkMode = 'stationary'|'hybrid'|'fullyRemote';
@@ -25,7 +25,7 @@ export type LegalForm = 'employment'|'b2b'|'of-mandate'|'specific-task';
 export type Currency = 'PLN'|'EUR'|'USD'|'GBP'|'CHF';
 export type Rate = 'hourly'|'monthly'|'weekly'|'yearly';
 export type OrderBy = 'promoted'|'most-recent'|'highest-salary'|'lowest-salary';
-export type WorkExperience = 'intern'|'junior'|'mid-level'|'senior'|'lead'|'manager';
+export type WorkExperience = 'intern'|'junior'|'mid-level'|'senior'|'lead'|'manager'|'not-provided';
 
 type JobOffersListener = (jobOffers: JobOffer[]) => void;
 

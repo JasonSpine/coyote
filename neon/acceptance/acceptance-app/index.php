@@ -36,7 +36,7 @@ Application::configure(__DIR__ . DIRECTORY_SEPARATOR . 'laravel')
                     false,
                     false,
                     false,
-                    null));
+                    \Neon\WorkExperience::NotProvided));
                 return \response(status:201);
             });
             Route::get('/', function (): Response {
@@ -93,7 +93,7 @@ function neonApplication(): NeonApplication
         true,
         false,
         false,
-        null));
+        \Neon\WorkExperience::Senior));
     $neon->addJobOffer(new JobOffer('Rust Developer', '',
         '2000-01-01',
         salaryRange(75, 100, \Neon\Rate::Hourly),
@@ -107,7 +107,7 @@ function neonApplication(): NeonApplication
         false,
         true,
         false,
-        null));
+        \Neon\WorkExperience::Junior));
     $neon->addJobOffer(new JobOffer('Go Developer', '',
         '2012-02-02',
         salaryRange(20000, 20000),
@@ -121,7 +121,7 @@ function neonApplication(): NeonApplication
         true,
         true,
         true,
-        null));
+        \Neon\WorkExperience::NotProvided));
     foreach (sessionJobOffers() as $jobOffer) {
         $neon->addJobOffer($jobOffer);
     }

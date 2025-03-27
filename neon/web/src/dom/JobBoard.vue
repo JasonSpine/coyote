@@ -338,6 +338,7 @@ const workExperienceFieldOptions: DropdownOption<WorkExperience>[] = [
   {value: 'senior', title: 'Senior'},
   {value: 'lead', title: 'Lead'},
   {value: 'manager', title: 'Manager'},
+  {value: 'not-provided', title: 'Pozostałe'},
 ];
 
 const workExperienceField = {

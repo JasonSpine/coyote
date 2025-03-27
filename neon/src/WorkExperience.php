@@ -9,4 +9,5 @@ enum WorkExperience: string
     case Senior = 'senior';
     case Lead = 'lead';
     case Manager = 'manager';
+    case NotProvided = 'not-provided';
 }
