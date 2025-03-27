@@ -27,7 +27,7 @@ class OfferController extends Controller
 
     public function index(Job $job, UserPlanBundlePresenter $presenter): View
     {
-        $this->breadcrumb->push('Praca', route('job.home'));
+        $this->breadcrumb->push('Praca', route('neon.jobOffer.list'));
         $this->breadcrumb->push($job->title, UrlBuilder::job($job, true));
         $parser = app('parser.job');
         if (!empty($job->description)) {

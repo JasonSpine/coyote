@@ -126,7 +126,7 @@ class SubmitController extends Controller
 
     private function breadcrumb(Job $job): void
     {
-        $this->breadcrumb->push('Praca', route('job.home'));
+        $this->breadcrumb->push('Praca', route('neon.jobOffer.list'));
         if ($job->exists) {
             $this->breadcrumb->push($job->title, route('job.offer', [$job->id, $job->slug]));
             $this->breadcrumb->push('Edycja oferty', route('job.submit'));

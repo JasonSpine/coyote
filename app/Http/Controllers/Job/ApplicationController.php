@@ -29,7 +29,7 @@ class ApplicationController extends Controller
         }
         abort_if(!$job->enable_apply, 404);
         $this->breadcrumb->pushMany([
-            'Praca'                          => route('job.home'),
+            'Praca'                          => route('neon.jobOffer.list'),
             $job->title                      => UrlBuilder::job($job, true),
             'Aplikuj na to stanowisko pracy' => route('job.application', ['job' => $job]),
         ]);

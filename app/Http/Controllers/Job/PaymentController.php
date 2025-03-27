@@ -47,7 +47,7 @@ class PaymentController extends Controller
             ['except' => 'success'],
         );
 
-        $this->breadcrumb->push('Praca', route('job.home'));
+        $this->breadcrumb->push('Praca', route('neon.jobOffer.list'));
         $this->vatRates = $this->country->vatRatesList();
     }
 

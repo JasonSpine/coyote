@@ -29,6 +29,6 @@ class DeleteController extends Controller
             event(new JobDeleted($job));
         });
 
-        return redirect()->route('job.home')->with('success', 'Oferta pracy została usunięta.');
+        return redirect()->route('neon.jobOffer.list')->with('success', 'Oferta pracy została usunięta.');
     }
 }
