@@ -202,7 +202,13 @@ const state = reactive({
   tags: [],
   tab: 'allOffers',
 });
-watch(state, (): void => search());
+watch(state, (newValue): void => {
+  if (newValue.tab === 'myOffers') {
+    redirectToMyOffers();
+  } else {
+    search();
+  }
+});
 
 const filters = new Filters();
 filters.onUpdate(offers => {
@@ -370,6 +376,10 @@ function clearFilters(): void {
 
 function redirectToOfferForm(): void {
   window.location.href = '/Praca/Oferta';
+}
+
+function redirectToMyOffers(): void {
+  window.location.href = '/Praca/Moje';
 }
 
 const mobileFiltersVisible = ref<boolean>(false);
