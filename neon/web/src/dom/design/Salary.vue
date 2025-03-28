@@ -31,8 +31,20 @@ const rateTitle = computed((): string => {
 
 const salaryRange = computed((): string => {
   if (props.salary.from === props.salary.to) {
-    return props.salary.from.toString();
+    return formatNumber(props.salary.from);
   }
-  return `${props.salary.from} - ${props.salary.to}`;
+  return `${formatNumber(props.salary.from)} - ${formatNumber(props.salary.to)}`;
 });
+
+function formatNumber(number: number): string {
+  return addThousandSeparator(number, ' ');
+}
+
+function addThousandSeparator(number: number, separator: string) {
+  const digits = number.toString();
+  if (digits.length > 3) {
+    return digits.substring(0, digits.length - 3) + separator + digits.substring(digits.length - 3);
+  }
+  return digits;
+}
 </script>
