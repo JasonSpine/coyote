@@ -24,7 +24,7 @@ export class Driver {
   async initiatePayment(jobOfferTitle: string, cardNumber: string): None {
     await this.createJobOffer(jobOfferTitle, 'paid');
     await this.fillCardDetails(cardNumber);
-    await this.web.click('Zapłać');
+    await this.proceedCardPayment();
   }
 
   private async createJobOffer(title: string, pricingType: PricingType): None {
@@ -48,10 +48,14 @@ export class Driver {
       await this.web.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
       if (payment === 'completed') {
         await this.fillCardDetails(paymentCardNumber!);
-        await this.web.click('Zapłać');
+        await this.proceedCardPayment();
         await this.web.waitForText('Płatność sfinalizowana!');
       }
     }
+  }
+
+  private async proceedCardPayment(): None {
+    await this.web.click('Zapłać i Publikuj');
   }
 
   async updateJobOffer(sourceTitle: string, targetTitle: string): None {
@@ -63,7 +67,7 @@ export class Driver {
   }
 
   async searchJobOffers(searchPhrase: string): None {
-    await this.web.fillByPlaceholder('Wyszukaj', searchPhrase);
+    await this.web.fillByPlaceholder('Szukaj po tytule', searchPhrase);
     await this.web.clickByTestId('search');
   }
 

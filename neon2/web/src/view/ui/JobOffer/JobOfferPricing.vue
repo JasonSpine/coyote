@@ -1,13 +1,17 @@
 <template>
-  <button @click="emit('select', 'free')">
+  <p>Znajdź najlepszych programistów szybciej i skuteczniej!</p>
+  <p>4programmers każdego miesiąca odwiedza ponad 150 000+ programistów.</p>
+  <Design.Button primary @click="emit('select', 'free')">
     Publikuj ogłoszenie
-  </button>
-  <button @click="emit('select', 'paid')">
+  </Design.Button>
+  <Design.Button primary @click="emit('select', 'paid')">
     Kup ogłoszenie
-  </button>
+  </Design.Button>
 </template>
 
 <script setup lang="ts">
+import {Design} from "../design/design";
+
 const emit = defineEmits<Emit>();
 
 interface Emit {
