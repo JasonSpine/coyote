@@ -11,7 +11,7 @@
   <Design.Tile>
     <Design.Row>
       <Design.RowEnd>
-        <Design.Button primary @click="emit('create', jobTitle, props.type, props.plan)">
+        <Design.Button primary @click="emit('create', jobTitle, props.plan)">
           Dodaj
         </Design.Button>
       </Design.RowEnd>
@@ -28,12 +28,11 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
 interface Props {
-  type: 'free'|'paid';
   plan: PricingPlan;
 }
 
 interface Emit {
-  (event: 'create', title: string, type: 'free'|'paid', plan: PricingPlan): void;
+  (event: 'create', title: string, plan: PricingPlan): void;
 }
 
 const jobTitle = ref<string>('');

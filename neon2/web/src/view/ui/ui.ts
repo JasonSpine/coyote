@@ -9,7 +9,7 @@ import JobBoard, {JobBoardProps, Screen} from './JobBoard.vue';
 export {Screen} from './JobBoard.vue';
 
 export interface ViewListener {
-  createJob: (title: string, plan: 'free'|'paid', pricingPlan: PricingPlan) => void;
+  createJob: (title: string, pricingPlan: PricingPlan) => void;
   updateJob: (id: number, title: string) => void;
   payForJob: (id: number) => void;
   managePaymentMethod: (action: 'mount'|'unmount', cssSelector?: string) => void;
@@ -100,8 +100,8 @@ export class VueUi implements UserInterface {
     const that = this;
     return h(JobBoard, {
       ...this.vueState,
-      onCreate(title: string, type: 'free'|'paid', plan: PricingPlan): void {
-        that.viewListeners.forEach(listener => listener.createJob(title, type, plan));
+      onCreate(title: string, plan: PricingPlan): void {
+        that.viewListeners.forEach(listener => listener.createJob(title, plan));
       },
       onUpdate(id: number, title: string): void {
         that.viewListeners.forEach(listener => listener.updateJob(id, title));

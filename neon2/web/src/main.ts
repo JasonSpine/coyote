@@ -19,7 +19,8 @@ export type PlanBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|'premium'|PlanBundleName;
 
 view.addEventListener({
-  createJob(title: string, type: 'free'|'paid', pricingPlan: PricingPlan): void {
+  createJob(title: string, pricingPlan: PricingPlan): void {
+    const type = pricingPlan === 'free' ? 'free' : 'paid';
     backend.addJobOffer(title, type, (jobOffer: BackendJobOffer): void => {
       const {id, title, expiresInDays, status} = jobOffer;
       payments.addJobOffer({jobOfferId: id, paymentId: jobOffer.paymentId, pricingPlan});

@@ -21,7 +21,6 @@
       @select="selectPlan"/>
     <JobOfferForm
       v-if="props.screen === 'form'"
-      :type="selectedPricingType!"
       :plan="selectedPricingPlan!"
       @create="createJob"/>
     <JobOfferPaymentForm
@@ -79,7 +78,7 @@ const props = defineProps<JobBoardProps>();
 const emit = defineEmits<Emit>();
 
 interface Emit {
-  (event: 'create', title: string, type: 'free'|'paid', plan: PricingPlan): void;
+  (event: 'create', title: string, plan: PricingPlan): void;
   (event: 'update', id: number, title: string): void;
   (event: 'navigate', screen: Screen, id: number|null): void;
   (event: 'search', searchPhrase: string);
@@ -92,15 +91,14 @@ function navigate(newScreen: Screen, id?: number): void {
   emit('navigate', newScreen, id || null);
 }
 
-const selectedPricingType = ref<'free'|'paid'|null>(null);
 const selectedPricingPlan = ref<PricingPlan|null>(null);
 
 const currentJobOffer = computed<JobOffer>(() => {
   return props.jobOffers.find(offer => offer.id === props.currentJobOfferId)!;
 });
 
-function createJob(jobOfferTitle: string, type: 'free'|'paid', plan: PricingPlan): void {
-  emit('create', jobOfferTitle, type, plan);
+function createJob(jobOfferTitle: string, plan: PricingPlan): void {
+  emit('create', jobOfferTitle, plan);
 }
 
 function editJob(id: number): void {
@@ -119,8 +117,7 @@ function updateJob(id: number, title: string): void {
   emit('update', id, title);
 }
 
-function selectPlan(plan: 'free'|'paid', bundleName: PlanBundleName, pricingPlan: PricingPlan): void {
-  selectedPricingType.value = plan;
+function selectPlan(bundleName: PlanBundleName, pricingPlan: PricingPlan): void {
   selectedPricingPlan.value = pricingPlan;
   navigate('form');
 }
@@ -149,7 +146,7 @@ const toastTitle = computed<string|null>(() => {
   }
   const titles: Record<Toast, string> = {
     created: 'Dodano ofertę pracy!',
-    edited: 'Zaktualizowano ofertę pracy!'
+    edited: 'Zaktualizowano ofertę pracy!',
   };
   return titles[props.toast];
 });
