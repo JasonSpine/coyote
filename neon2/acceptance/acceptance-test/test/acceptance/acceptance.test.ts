@@ -44,3 +44,10 @@ describe('The publishing time depends on the pricing of the job offer.', () => {
     await dsl.assertJobOfferExpiresInDays({jobOfferTitle: 'Paid offer', expectedExpiry: 30});
   });
 });
+
+describe('Purchased plan bundle entitles to multiple job offers.', () => {
+  test('Job offer is created alongside a strategic plan bundle.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Strategic Offer', bundle: 'strategic'});
+    await dsl.assertJobOfferIsListed({jobOfferTitle: 'Strategic Offer'});
+  });
+});

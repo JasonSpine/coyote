@@ -5,6 +5,8 @@ import {assertContains, assertEquals, assertNotContains} from './playwright';
 export type PricingType = 'free'|'paid';
 export type Payment = 'completed'|'ignored';
 export type Card = 'valid'|'declined'|'expired'|'insufficientFunds';
+export type PricingBundle = 'strategic';
+export type PricingPlan = 'free'|'premium'|'strategic';
 
 export class Dsl {
   private mangler: Mangler;
@@ -22,7 +24,12 @@ export class Dsl {
     await this.driver.loadApplication();
   }
 
-  async publishJobOffer(jobOffer: {title: string, pricingType?: PricingType, payment?: Payment}): None {
+  async publishJobOffer(jobOffer: {
+    title: string,
+    pricingType?: PricingType,
+    payment?: Payment,
+    bundle?: PricingBundle,
+  }): None {
     await this.driver.publishJobOffer(
       this.enc(jobOffer.title),
       jobOffer.pricingType || 'free',

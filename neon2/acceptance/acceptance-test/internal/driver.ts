@@ -1,5 +1,5 @@
 import {Page} from '@playwright/test';
-import {Payment, PricingType} from './dsl';
+import {Payment, PricingPlan, PricingType} from './dsl';
 import {WebDriver} from './webDriver';
 
 export type PaymentNotification = string;
@@ -16,22 +16,34 @@ export class Driver {
     await this.web.navigate('/');
   }
 
-  async publishJobOffer(title: string, pricingType: PricingType, payment: Payment, paymentCardNumber?: string): None {
-    await this.createJobOffer(title, pricingType);
-    await this.finalizeJobOfferPayment(pricingType, payment, paymentCardNumber);
+  async publishJobOffer(
+    title: string,
+    pricingType: PricingType,
+    payment: Payment,
+    paymentCardNumber?: string,
+  ): None {
+    const pricingPlan: PricingPlan = pricingType === 'free' ? 'free' : 'premium';
+    await this.createJobOffer(title, pricingPlan);
+    if (pricingType === 'paid') {
+      await this.finalizeJobOfferPayment(payment, paymentCardNumber!);
+    }
   }
 
   async initiatePayment(jobOfferTitle: string, cardNumber: string): None {
-    await this.createJobOffer(jobOfferTitle, 'paid');
+    await this.createJobOffer(jobOfferTitle, 'premium');
     await this.fillCardDetails(cardNumber);
     await this.proceedCardPayment();
   }
 
-  private async createJobOffer(title: string, pricingType: PricingType): None {
+  private async createJobOffer(title: string, pricingPlan: PricingPlan): None {
     await this.web.click('Dodaj ofertę');
-    if (pricingType === 'free') {
+    if (pricingPlan === 'free') {
       await this.web.click('Publikuj ogłoszenie');
-    } else {
+    }
+    if (pricingPlan === 'premium') {
+      await this.web.click('Kup ogłoszenie');
+    }
+    if (pricingPlan === 'strategic') {
       await this.web.click('Kup ogłoszenie');
     }
     await this.web.fillByLabel('Tytuł oferty', title);
@@ -43,14 +55,12 @@ export class Driver {
     await this.web.fill('paymentProviderCard', cardNumber);
   }
 
-  private async finalizeJobOfferPayment(pricingType: PricingType, payment: Payment, paymentCardNumber?: string): None {
-    if (pricingType === 'paid') {
-      await this.web.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
-      if (payment === 'completed') {
-        await this.fillCardDetails(paymentCardNumber!);
-        await this.proceedCardPayment();
-        await this.web.waitForText('Płatność sfinalizowana!');
-      }
+  private async finalizeJobOfferPayment(payment: Payment, paymentCardNumber: string): None {
+    await this.web.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
+    if (payment === 'completed') {
+      await this.fillCardDetails(paymentCardNumber);
+      await this.proceedCardPayment();
+      await this.web.waitForText('Płatność sfinalizowana!');
     }
   }
 
