@@ -26,10 +26,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
-class TopicController extends BaseController
-{
-    public function index(Request $request, Forum $forum, Topic $topic): Collection|View|array
-    {
+class TopicController extends BaseController {
+    public function index(Request $request, Forum $forum, Topic $topic): Collection|View|array {
         $this->breadcrumb->push($topic->title, route('forum.topic', [$forum->slug, $topic->id, $topic->slug]),
             leafWithLink:true);
 
@@ -114,7 +112,11 @@ class TopicController extends BaseController
         $seePreviousUrl = null;
         if ($request->filled('p')) {
             $postId = $request->get('p');
-            $post = Post::query()->withTrashed()->find($postId);
+            if (ctype_digit($postId)) {
+                $post = Post::query()->withTrashed()->find($postId);
+            } else {
+                $post = null;
+            }
             if ($post) {
                 $resource->setSelectedPostId($postId);
                 $topicResource->setSelectedPostId($postId);
@@ -173,8 +175,7 @@ class TopicController extends BaseController
             ]);
     }
 
-    private function discussionForumPosting(Topic $topic, string $html): Seo\Schema
-    {
+    private function discussionForumPosting(Topic $topic, string $html): Seo\Schema {
         $user = $topic->firstPost->user;
         return new Seo\Schema(new DiscussionForumPosting(
             route('forum.topic', [$topic->forum, $topic, $topic->slug]),
@@ -189,8 +190,7 @@ class TopicController extends BaseController
         ));
     }
 
-    private function flags(Forum $forum): array
-    {
+    private function flags(Forum $forum): array {
         /** @var Flags $flags */
         $flags = resolve(Flags::class);
         $resourceFlags = $flags
@@ -200,8 +200,7 @@ class TopicController extends BaseController
         return FlagResource::collection($resourceFlags)->toArray($this->request);
     }
 
-    public function mark(Topic $topic): void
-    {
+    public function mark(Topic $topic): void {
         $tracker = Tracker::make($topic);
         $tracker->asRead($topic->last_post_created_at);
     }
