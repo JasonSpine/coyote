@@ -9,12 +9,14 @@ import RowEnd from "./RowEnd.vue";
 import Tabs from "./Tabs.vue";
 import TextField from "./TextField.vue";
 import Tile from "./Tile.vue";
+import Toast from "./Toast.vue";
 
 import "./tailwind.css";
 
 export const Design = {
   BannerHeading,
   Button,
+  Toast,
   Card,
   CheckBox,
   Layout,

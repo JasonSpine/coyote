@@ -146,4 +146,8 @@ interface Props {
 .fa-filter:before {
   content: "\f0b0";
 }
+
+.fa-circle-info:before {
+  content: "\f05a";
+}
 </style>

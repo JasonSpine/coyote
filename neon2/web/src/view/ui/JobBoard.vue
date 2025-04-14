@@ -5,7 +5,7 @@
       Wróć
     </span>
     <hr/>
-    <p v-if="toastTitle" v-text="toastTitle"/>
+    <Design.Toast v-if="toastTitle" :title="toastTitle"/>
     <p data-testid="paymentNotification" v-text="paymentNotificationTitle" :data-value="props.paymentNotification"/>
     <p data-testid="paymentStatus" v-text="paymentStatusTitle"/>
     <JobOfferPricing

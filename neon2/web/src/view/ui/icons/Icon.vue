@@ -23,12 +23,15 @@ const jobOfferWorkModeHybrid = 'fa-light fa-globe-wifi';
 const jobOfferWorkModeRemote = 'fa-solid fa-wifi';
 const check = 'fa-light fa-check';
 const plus = 'fa-light fa-plus';
+const close = 'fa-light fa-close';
 
 const icons = {
   dropdownClosed: 'fa-light fa-chevron-down',
   dropdownOptionSelected: check,
   checkboxChecked: check,
   add: plus,
+  toastClose: close,
+  toastInfo: 'fa-light fa-circle-info',
   jobOfferFavourite: 'fa-light fa-star',
   jobOfferFavouriteChecked: 'fa-solid fa-star',
   jobOfferWorkModeRemote,
@@ -40,7 +43,7 @@ const icons = {
   jobOfferLogoPlaceholder: 'fa-light fa-laptop-code',
   jobOfferSearch: 'fa-regular fa-magnifying-glass',
   jobOfferFilter: 'fa-light fa-filter',
-  jobOfferFilterClose: 'fa-light fa-close',
+  jobOfferFilterClose: close,
   jobOfferFilterTechnology: 'fa-light fa-code',
   jobOfferFilterLocation: jobOfferLocation,
   jobOfferFilterWorkMode: 'fa-light fa-globe',
