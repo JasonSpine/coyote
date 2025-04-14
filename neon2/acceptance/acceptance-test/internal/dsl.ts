@@ -5,8 +5,8 @@ import {assertContains, assertEquals, assertNotContains} from './playwright';
 export type PricingType = 'free'|'paid';
 export type Payment = 'completed'|'ignored';
 export type Card = 'valid'|'declined'|'expired'|'insufficientFunds';
-export type PricingBundle = 'strategic';
-export type PricingPlan = 'free'|'premium'|'strategic';
+export type PricingBundleName = 'strategic'|'growth';
+export type PricingPlan = 'free'|'premium'|PricingBundleName;
 
 export class Dsl {
   private mangler: Mangler;
@@ -26,15 +26,22 @@ export class Dsl {
 
   async publishJobOffer(jobOffer: {
     title: string,
+    plan?: PricingPlan,
     pricingType?: PricingType,
     payment?: Payment,
-    bundle?: PricingBundle,
   }): None {
     await this.driver.publishJobOffer(
       this.enc(jobOffer.title),
-      jobOffer.pricingType || 'free',
+      this.pricingPlan(jobOffer.plan, jobOffer.pricingType),
       jobOffer.payment || 'completed',
       this.cardNumber('valid'));
+  }
+
+  private pricingPlan(plan: PricingPlan|undefined, pricingType: PricingType|undefined): PricingPlan {
+    if (plan) {
+      return plan;
+    }
+    return pricingType === 'paid' ? 'premium' : 'free';
   }
 
   async updateJobOffer(update: {title: string, updatedTitle: string}): None {
@@ -91,6 +98,19 @@ export class Dsl {
   async assertPaymentStatus(assertion: {expectedPaymentStatus: PaymentStatus}): None {
     assertEquals(assertion.expectedPaymentStatus,
       await this.driver.readPaymentStatus());
+  }
+
+  async assertPlanBundleRemaining(assertion: {
+    expectedRemainingJobOffers: number,
+    expectedBundleName: PricingBundleName
+  }): None {
+    const bundle = await this.driver.findPlanBundle();
+    assertEquals(assertion.expectedBundleName, bundle.bundleName);
+    assertEquals(assertion.expectedRemainingJobOffers, bundle.remainingJobOffers);
+  }
+
+  async assertPlanBundleNone(): None {
+    assertEquals(false, await this.driver.hasPlanBundle());
   }
 }
 

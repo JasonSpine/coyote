@@ -1,9 +1,10 @@
 import {JobOffer} from '../jobBoard';
+import {PlanBundleName} from "../main";
 import {PaymentNotification} from "../paymentProvider";
 import {PaymentStatus} from "../paymentService";
 import {Screen, UserInterface, ViewListener} from './ui/ui';
 
-export type Toast = 'created'|'edited'|'paid';
+export type Toast = 'created'|'edited';
 
 export class View {
   private jobOffers: JobOffer[] = [];
@@ -65,7 +66,10 @@ export class View {
   }
 
   jobOfferPaid(): void {
-    this.ui.setToast('paid');
     this.ui.setScreen('home');
+  }
+
+  setPlanBundle(planName: PlanBundleName, remainingJobOffers: number): void {
+    this.ui.setPlanBundle(planName, remainingJobOffers);
   }
 }

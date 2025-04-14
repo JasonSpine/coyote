@@ -1,5 +1,5 @@
 import {Page} from '@playwright/test';
-import {Payment, PricingPlan, PricingType} from './dsl';
+import {Payment, PricingBundleName, PricingPlan} from './dsl';
 import {WebDriver} from './webDriver';
 
 export type PaymentNotification = string;
@@ -18,13 +18,14 @@ export class Driver {
 
   async publishJobOffer(
     title: string,
-    pricingType: PricingType,
+    pricingPlan: PricingPlan,
     payment: Payment,
     paymentCardNumber?: string,
   ): None {
-    const pricingPlan: PricingPlan = pricingType === 'free' ? 'free' : 'premium';
     await this.createJobOffer(title, pricingPlan);
-    if (pricingType === 'paid') {
+    if (pricingPlan === 'free') {
+      await this.web.waitForText('Dodano ofertę pracy!');
+    } else {
       await this.finalizeJobOfferPayment(payment, paymentCardNumber!);
     }
   }
@@ -44,7 +45,10 @@ export class Driver {
       await this.web.click('Kup ogłoszenie');
     }
     if (pricingPlan === 'strategic') {
-      await this.web.click('Kup ogłoszenie');
+      await this.web.click('Kup pakiet Strategic');
+    }
+    if (pricingPlan === 'growth') {
+      await this.web.click('Kup pakiet Growth');
     }
     await this.web.fillByLabel('Tytuł oferty', title);
     await this.web.click('Dodaj');
@@ -60,7 +64,7 @@ export class Driver {
     if (payment === 'completed') {
       await this.fillCardDetails(paymentCardNumber);
       await this.proceedCardPayment();
-      await this.web.waitForText('Płatność sfinalizowana!');
+      await this.web.waitForText('Płatność zaksięgowana!');
     }
   }
 
@@ -92,21 +96,45 @@ export class Driver {
 
   async readPaymentNotification(): Promise<PaymentNotification> {
     await this.web.waitUntilVisible('paymentNotification');
-    const notification = await this.web.readValue('paymentNotification');
+    const notification = await this.web.readTestValue('paymentNotification');
     return notification as PaymentNotification;
   }
 
   async readPaymentStatus(): Promise<PaymentStatus> {
     await this.web.waitUntilVisible('paymentStatus');
     const status = await this.web.read('paymentStatus');
-    if (status === 'Płatność przyjęta!') {
+    if (status === 'Płatność zaksięgowana!') {
       return 'paymentComplete';
     }
-    if (status === 'Płatność odrzucona') {
+    if (status === 'Płatność odrzucona.') {
       return 'paymentFailed';
     }
     throw new Error('Failed to parse payment status.');
   }
+
+  async findPlanBundle(): Promise<PlanBundle> {
+    return this.parsePlanBundle(await this.web.read('planBundle'));
+  }
+
+  private parsePlanBundle(planBundle: string): PlanBundle {
+    const match = planBundle.match(/^Pozostało (\d+) ofert\(y\) z Pakietu (\w+)\.$/);
+    if (!match) {
+      throw new Error('Failed to parse plan bundle.');
+    }
+    return {
+      bundleName: match[2].toLowerCase() as PricingBundleName,
+      remainingJobOffers: parseInt(match[1], 10),
+    };
+  }
+
+  async hasPlanBundle(): Promise<boolean> {
+    return await this.web.isVisible('planBundle');
+  }
+}
+
+interface PlanBundle {
+  bundleName: PricingBundleName;
+  remainingJobOffers: number;
 }
 
 type None = Promise<void>;

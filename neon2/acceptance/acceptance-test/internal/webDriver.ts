@@ -44,12 +44,17 @@ export class WebDriver {
     await this.page.getByTestId(testId).waitFor({state: 'visible', timeout: 7500});
   }
 
-  async read(testId: string): Promise<string|null> {
-    return await this.page.getByTestId(testId).textContent();
+  async read(testId: string): Promise<string> {
+    const string = await this.page.getByTestId(testId).textContent();
+    return string!;
   }
 
-  async readValue(testId: string): Promise<string|null> {
-    return await this.page.getByTestId(testId).getAttribute('data-value');
+  async isVisible(testId: string): Promise<boolean> {
+    return await this.page.getByTestId(testId).isVisible();
+  }
+
+  async readTestValue(testId: string): Promise<string|null> {
+    return await this.page.getByTestId(testId).getAttribute('data-test-value');
   }
 
   async fill(testId: string, value: string): None {

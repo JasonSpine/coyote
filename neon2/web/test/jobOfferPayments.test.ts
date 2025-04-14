@@ -1,4 +1,4 @@
-import {JobOfferPayments} from "../src/jobOfferPayments";
+import {JobOfferPayment, JobOfferPayments} from "../src/jobOfferPayments";
 import {assertEquals, describe, test} from "./assertion";
 
 describe('Job offers association with payments.', () => {
@@ -19,5 +19,15 @@ describe('Job offers association with payments.', () => {
     };
     payments.addJobOffer(jobOffer);
     assertEquals('payment', payments.paymentId(25));
+  });
+  test('Read job pricing plan by payment id', () => {
+    const payments = new JobOfferPayments();
+    const jobOffer: JobOfferPayment = {
+      paymentId: 'payment-id',
+      jobOfferId: 25,
+      pricingPlan: 'growth',
+    };
+    payments.addJobOffer(jobOffer);
+    assertEquals('growth', payments.pricingPlan('payment-id'));
   });
 });

@@ -6,14 +6,23 @@
     </span>
     <hr/>
     <Design.Toast v-if="toastTitle" :title="toastTitle"/>
-    <p data-testid="paymentNotification" v-text="paymentNotificationTitle" :data-value="props.paymentNotification"/>
-    <p data-testid="paymentStatus" v-text="paymentStatusTitle"/>
+    <Design.Toast v-if="planBundleToast"
+                  :title="planBundleToast"
+                  test-id="planBundle"/>
+    <Design.Toast test-id="paymentNotification"
+                  :test-value="props.paymentNotification!"
+                  v-if="paymentNotificationTitle"
+                  :title="paymentNotificationTitle"/>
+    <Design.Toast test-id="paymentStatus"
+                  v-if="paymentStatusTitle"
+                  :title="paymentStatusTitle"/>
     <JobOfferPricing
       v-if="props.screen === 'pricing'"
       @select="selectPlan"/>
     <JobOfferForm
       v-if="props.screen === 'form'"
-      :plan="selectedPlan!"
+      :type="selectedPricingType!"
+      :plan="selectedPricingPlan!"
       @create="createJob"/>
     <JobOfferPaymentForm
       v-if="props.screen === 'payment' && props.currentJobOfferId"
@@ -41,6 +50,7 @@
 <script setup lang="ts">
 import {computed, ref} from 'vue';
 import {JobOffer} from '../../jobBoard';
+import {PlanBundleName, PricingPlan} from "../../main";
 import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
@@ -51,6 +61,7 @@ import JobOfferHome from './JobOffer/JobOfferHome.vue';
 import JobOfferPaymentForm from './JobOffer/JobOfferPaymentForm.vue';
 import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
 import JobOfferShow from './JobOffer/JobOfferShow.vue';
+import {PlanBundle} from "./ui";
 
 export interface JobBoardProps {
   jobOffers: JobOffer[];
@@ -59,6 +70,7 @@ export interface JobBoardProps {
   currentJobOfferId: number|null;
   paymentNotification: PaymentNotification|null;
   paymentStatus: PaymentStatus|null;
+  planBundle: PlanBundle|null;
 }
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
@@ -67,7 +79,7 @@ const props = defineProps<JobBoardProps>();
 const emit = defineEmits<Emit>();
 
 interface Emit {
-  (event: 'create', title: string, plan: 'free'|'paid'): void;
+  (event: 'create', title: string, type: 'free'|'paid', plan: PricingPlan): void;
   (event: 'update', id: number, title: string): void;
   (event: 'navigate', screen: Screen, id: number|null): void;
   (event: 'search', searchPhrase: string);
@@ -80,14 +92,15 @@ function navigate(newScreen: Screen, id?: number): void {
   emit('navigate', newScreen, id || null);
 }
 
-const selectedPlan = ref<'free'|'paid'|null>(null);
+const selectedPricingType = ref<'free'|'paid'|null>(null);
+const selectedPricingPlan = ref<PricingPlan|null>(null);
 
 const currentJobOffer = computed<JobOffer>(() => {
   return props.jobOffers.find(offer => offer.id === props.currentJobOfferId)!;
 });
 
-function createJob(jobOfferTitle: string, plan: 'free'|'paid'): void {
-  emit('create', jobOfferTitle, plan);
+function createJob(jobOfferTitle: string, type: 'free'|'paid', plan: PricingPlan): void {
+  emit('create', jobOfferTitle, type, plan);
 }
 
 function editJob(id: number): void {
@@ -106,8 +119,9 @@ function updateJob(id: number, title: string): void {
   emit('update', id, title);
 }
 
-function selectPlan(plan: 'free'|'paid'): void {
-  selectedPlan.value = plan;
+function selectPlan(plan: 'free'|'paid', bundleName: PlanBundleName, pricingPlan: PricingPlan): void {
+  selectedPricingType.value = plan;
+  selectedPricingPlan.value = pricingPlan;
   navigate('form');
 }
 
@@ -135,22 +149,39 @@ const toastTitle = computed<string|null>(() => {
   }
   const titles: Record<Toast, string> = {
     created: 'Dodano ofertę pracy!',
-    edited: 'Zaktualizowano ofertę pracy!',
-    paid: 'Płatność sfinalizowana!',
+    edited: 'Zaktualizowano ofertę pracy!'
   };
   return titles[props.toast];
 });
 
-const paymentStatusTitle = computed<string>((): string => {
+const planBundleToast = computed<string|null>(() => {
+  if (props.planBundle === null) {
+    return null;
+  }
+  return `Pozostało ${props.planBundle.remainingJobOffers} ofert(y) z Pakietu ${capitalize(props.planBundle.bundleName)}.`;
+});
+
+function capitalize(string: string): string {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+const paymentStatusTitle = computed<string|null>(() => {
+  if (props.paymentStatus === null) {
+    return null;
+  }
   const titles: Record<PaymentStatus, string> = {
-    paymentComplete: 'Płatność przyjęta!',
-    paymentFailed: 'Płatność odrzucona',
+    paymentComplete: 'Płatność zaksięgowana!',
+    paymentFailed: 'Płatność odrzucona.',
   };
   return titles[props.paymentStatus];
 });
-const paymentNotificationTitle = computed<string>(() => {
+
+const paymentNotificationTitle = computed<string|null>(() => {
+  if (props.paymentNotification === null) {
+    return null;
+  }
   const titles: Record<PaymentNotification, string> = {
-    processed: 'Płatność została zaakceptowana.',
+    processed: 'Przyjęto polecenie płatności.',
     declinedCardExpired: 'Karta płatnicza wygasła. Użyj aktualnej karty i spróbuj ponownie.',
     declinedInsufficientFunds: 'Brak wystarczających środków na koncie. Upewnij się, że masz wystarczającą ilość środków lub użyj innej karty.',
     declinedCard: 'Płatność została odrzucona przez bank. Sprawdź dane karty lub skontaktuj się ze swoim bankiem.',

@@ -1,5 +1,6 @@
 import {createApp, h, Reactive, reactive, VNode} from 'vue';
 import {JobOffer} from '../../jobBoard';
+import {PlanBundleName, PricingPlan} from "../../main";
 import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
@@ -8,7 +9,7 @@ import JobBoard, {JobBoardProps, Screen} from './JobBoard.vue';
 export {Screen} from './JobBoard.vue';
 
 export interface ViewListener {
-  createJob: (title: string, plan: 'free'|'paid') => void;
+  createJob: (title: string, plan: 'free'|'paid', pricingPlan: PricingPlan) => void;
   updateJob: (id: number, title: string) => void;
   payForJob: (id: number) => void;
   managePaymentMethod: (action: 'mount'|'unmount', cssSelector?: string) => void;
@@ -25,10 +26,16 @@ export interface UserInterface {
   setCurrentJobOfferId(jobOfferId: number): void;
   setPaymentNotification(notification: PaymentNotification): void;
   setPaymentStatus(status: PaymentStatus): void;
+  setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number): void;
 }
 
 export type NavigationListener = (screen: Screen) => void;
 export type SearchListener = (searchPhrase: string) => void;
+
+export interface PlanBundle {
+  bundleName: PlanBundleName;
+  remainingJobOffers: number;
+}
 
 export class VueUi implements UserInterface {
   private vueState: Reactive<JobBoardProps> = reactive<JobBoardProps>({
@@ -38,6 +45,7 @@ export class VueUi implements UserInterface {
     currentJobOfferId: null,
     paymentNotification: null,
     paymentStatus: null,
+    planBundle: null,
   });
   private viewListeners: ViewListener[] = [];
   private navigationListeners: NavigationListener[] = [];
@@ -79,6 +87,10 @@ export class VueUi implements UserInterface {
     this.vueState.paymentStatus = status;
   }
 
+  setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number): void {
+    this.vueState.planBundle = {bundleName, remainingJobOffers};
+  }
+
   mount(cssSelector: string): void {
     const render = this.vueRender.bind(this);
     createApp({render}).mount(cssSelector);
@@ -88,8 +100,8 @@ export class VueUi implements UserInterface {
     const that = this;
     return h(JobBoard, {
       ...this.vueState,
-      onCreate(title: string, plan: 'free'|'paid'): void {
-        that.viewListeners.forEach(listener => listener.createJob(title, plan));
+      onCreate(title: string, type: 'free'|'paid', plan: PricingPlan): void {
+        that.viewListeners.forEach(listener => listener.createJob(title, type, plan));
       },
       onUpdate(id: number, title: string): void {
         that.viewListeners.forEach(listener => listener.updateJob(id, title));

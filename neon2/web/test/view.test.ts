@@ -1,4 +1,7 @@
 import {JobOffer} from '../src/jobBoard';
+import {PlanBundleName} from "../src/main";
+import {PaymentNotification} from "../src/paymentProvider";
+import {PaymentStatus} from "../src/paymentService";
 import {NavigationListener, Screen, SearchListener, UserInterface, ViewListener} from '../src/view/ui/ui';
 import {Toast, View} from '../src/view/view';
 import {assertEquals, beforeEach, describe, test} from './assertion';
@@ -122,6 +125,12 @@ class MemoryUi implements UserInterface {
 
   setCurrentJobOfferId(jobOfferId: number): void {
   }
+
+  setPaymentNotification(notification: PaymentNotification): void {}
+
+  setPaymentStatus(status: PaymentStatus): void {}
+
+  setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number): void {}
 
   navigate(): void {
     this.naviListeners.forEach(listener => listener());

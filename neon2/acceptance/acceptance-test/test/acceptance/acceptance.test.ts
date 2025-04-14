@@ -46,8 +46,37 @@ describe('The publishing time depends on the pricing of the job offer.', () => {
 });
 
 describe('Purchased plan bundle entitles to multiple job offers.', () => {
+  test('Given no purchases job offers, there is no plan bundle.', async (dsl: Dsl) => {
+    await dsl.assertPlanBundleNone();
+  });
   test('Job offer is created alongside a strategic plan bundle.', async (dsl: Dsl) => {
-    await dsl.publishJobOffer({title: 'Strategic Offer', bundle: 'strategic'});
+    await dsl.publishJobOffer({title: 'Strategic Offer', plan: 'strategic'});
     await dsl.assertJobOfferIsListed({jobOfferTitle: 'Strategic Offer'});
+  });
+  test('Given a strategic bundle has been purchased, there is 2 remaining job offers.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Strategic Offer', plan: 'strategic'});
+    await dsl.assertPlanBundleRemaining({
+      expectedRemainingJobOffers: 2,
+      expectedBundleName: 'strategic',
+    });
+  });
+  test('Given a growth bundle has been purchased, there is 4 remaining job offers.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Growth Offer', plan: 'growth'});
+    await dsl.assertPlanBundleRemaining({
+      expectedRemainingJobOffers: 4,
+      expectedBundleName: 'growth',
+    });
+  });
+  test('Given a premium plan has been purchased, there is no remaining job offers.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Strategic Offer', plan: 'premium'});
+    await dsl.assertPlanBundleNone();
+  });
+  test('Given a free plan has been purchased, there is no remaining job offers.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Strategic Offer', plan: 'free'});
+    await dsl.assertPlanBundleNone();
+  });
+  test('Given an unfinished payment, there is no remaining job offers.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Strategic Offer', plan: 'growth', payment: 'ignored'});
+    await dsl.assertPlanBundleNone();
   });
 });

@@ -1,6 +1,6 @@
 <template>
   <h2>
-    Wybrany plan: {{props.plan === 'free' ? 'Darmowy' : 'Płatny'}}
+    Wybrany plan: {{props.plan}}
   </h2>
   <Design.Card title="Podstawowe informacje">
     <label>
@@ -11,7 +11,7 @@
   <Design.Tile>
     <Design.Row>
       <Design.RowEnd>
-        <Design.Button primary @click="emit('create', jobTitle, props.plan)">
+        <Design.Button primary @click="emit('create', jobTitle, props.type, props.plan)">
           Dodaj
         </Design.Button>
       </Design.RowEnd>
@@ -21,17 +21,19 @@
 
 <script setup lang="ts">
 import {ref} from 'vue';
+import {PricingPlan} from "../../../main";
 import {Design} from "../design/design";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
 interface Props {
-  plan: 'free'|'paid';
+  type: 'free'|'paid';
+  plan: PricingPlan;
 }
 
 interface Emit {
-  (event: 'create', title: string, plan: 'free'|'paid'): void;
+  (event: 'create', title: string, type: 'free'|'paid', plan: PricingPlan): void;
 }
 
 const jobTitle = ref<string>('');

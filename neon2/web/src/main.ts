@@ -15,13 +15,16 @@ const paymentProvider: PaymentProvider = backend.testMode()
 const payment = new PaymentService(backend, paymentProvider);
 const payments = new JobOfferPayments();
 
+export type PlanBundleName = 'strategic'|'growth';
+export type PricingPlan = 'free'|'premium'|PlanBundleName;
+
 view.addEventListener({
-  createJob(title: string, plan: 'free'|'paid'): void {
-    backend.addJobOffer(title, plan, (jobOffer: BackendJobOffer): void => {
+  createJob(title: string, type: 'free'|'paid', pricingPlan: PricingPlan): void {
+    backend.addJobOffer(title, type, (jobOffer: BackendJobOffer): void => {
       const {id, title, expiresInDays, status} = jobOffer;
-      payments.addJobOffer({jobOfferId: id, paymentId: jobOffer.paymentId});
+      payments.addJobOffer({jobOfferId: id, paymentId: jobOffer.paymentId, pricingPlan});
       board.jobOfferCreated({id, title, expiresInDays, status});
-      view.jobOfferCreated(id, plan === 'paid');
+      view.jobOfferCreated(id, pricingPlan !== 'free');
     });
   },
   updateJob(id: number, title: string): void {
@@ -51,10 +54,24 @@ payment.addEventListener({
     view.setPaymentStatus(status);
     if (status === 'paymentComplete') {
       board.jobOfferPaid(payments.jobOfferId(paymentId));
+      const pricingPlan = payments.pricingPlan(paymentId);
+      if (pricingPlan !== 'premium') {
+        view.setPlanBundle(pricingPlan, remainingJobOffers(pricingPlan));
+      }
       view.jobOfferPaid();
     }
   },
 });
+
+function remainingJobOffers(planBundle: PlanBundleName): number {
+  if (planBundle === 'strategic') {
+    return 2;
+  }
+  if (planBundle === 'growth') {
+    return 4;
+  }
+  throw new Error('Failed to set remaining job offers for a pricing plan.');
+}
 
 backend.initialJobOffers()
   .forEach(offer => board.jobOfferCreated({...offer}));

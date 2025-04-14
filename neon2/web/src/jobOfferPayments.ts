@@ -1,3 +1,5 @@
+import {PricingPlan} from "./main";
+
 export class JobOfferPayments {
   private payments: JobOfferPayment[] = [];
 
@@ -6,15 +8,24 @@ export class JobOfferPayments {
   }
 
   jobOfferId(paymentId: string): number {
-    return this.payments.find(payment => payment.paymentId === paymentId)!.jobOfferId;
+    return this.jobOffer(paymentId).jobOfferId;
+  }
+
+  pricingPlan(paymentId: string): PricingPlan {
+    return this.jobOffer(paymentId).pricingPlan;
   }
 
   paymentId(jobOfferId: number): string {
     return this.payments.find(payment => payment.jobOfferId === jobOfferId)!.paymentId;
   }
+
+  private jobOffer(paymentId: string): JobOfferPayment {
+    return this.payments.find(payment => payment.paymentId === paymentId)!;
+  }
 }
 
-interface JobOfferPayment {
+export interface JobOfferPayment {
   jobOfferId: number;
   paymentId: string;
+  pricingPlan: PricingPlan;
 }
