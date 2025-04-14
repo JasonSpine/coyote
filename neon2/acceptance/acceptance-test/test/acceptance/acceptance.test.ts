@@ -67,6 +67,13 @@ describe('Purchased plan bundle entitles to multiple job offers.', () => {
       expectedBundleName: 'growth',
     });
   });
+  test('Given a scale bundle has been purchased, there is 19 remaining job offers.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Scale Offer', plan: 'scale'});
+    await dsl.assertPlanBundleRemaining({
+      expectedRemainingJobOffers: 19,
+      expectedBundleName: 'scale',
+    });
+  });
   test('Given a premium plan has been purchased, there is no remaining job offers.', async (dsl: Dsl) => {
     await dsl.publishJobOffer({title: 'Strategic Offer', plan: 'premium'});
     await dsl.assertPlanBundleNone();

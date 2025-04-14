@@ -15,7 +15,7 @@ const paymentProvider: PaymentProvider = backend.testMode()
 const payment = new PaymentService(backend, paymentProvider);
 const payments = new JobOfferPayments();
 
-export type PlanBundleName = 'strategic'|'growth';
+export type PlanBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|'premium'|PlanBundleName;
 
 view.addEventListener({
@@ -69,6 +69,9 @@ function remainingJobOffers(planBundle: PlanBundleName): number {
   }
   if (planBundle === 'growth') {
     return 4;
+  }
+  if (planBundle === 'scale') {
+    return 19;
   }
   throw new Error('Failed to set remaining job offers for a pricing plan.');
 }

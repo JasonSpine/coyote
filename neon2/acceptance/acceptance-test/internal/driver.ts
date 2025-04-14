@@ -50,6 +50,9 @@ export class Driver {
     if (pricingPlan === 'growth') {
       await this.web.click('Kup pakiet Growth');
     }
+    if (pricingPlan === 'scale') {
+      await this.web.click('Kup pakiet Scale');
+    }
     await this.web.fillByLabel('Tytuł oferty', title);
     await this.web.click('Dodaj');
     await this.web.waitForText('Dodano ofertę pracy!');

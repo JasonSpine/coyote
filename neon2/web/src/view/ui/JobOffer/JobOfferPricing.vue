@@ -13,6 +13,9 @@
   <Design.Button primary @click="emit('select', 'paid','growth','growth')">
     Kup pakiet Growth
   </Design.Button>
+  <Design.Button primary @click="emit('select', 'paid','growth','scale')">
+    Kup pakiet Scale
+  </Design.Button>
 </template>
 
 <script setup lang="ts">
