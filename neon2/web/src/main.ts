@@ -21,7 +21,7 @@ view.addEventListener({
       const {id, title, expiresInDays, status} = jobOffer;
       payments.addJobOffer({jobOfferId: id, paymentId: jobOffer.paymentId});
       board.jobOfferCreated({id, title, expiresInDays, status});
-      view.jobOfferCreated(id, plan);
+      view.jobOfferCreated(id, plan === 'paid');
     });
   },
   updateJob(id: number, title: string): void {
