@@ -1,6 +1,8 @@
+import {PricingPlan} from "./main";
+
 export class JobBoardBackend {
-  addJobOffer(title: string, plan: 'free'|'paid', created: (jobOffer: BackendJobOffer) => void): void {
-    request('POST', '/neon2/job-offers', {jobOfferTitle: title, jobOfferPlan: plan})
+  addJobOffer(title: string, pricingPlan: PricingPlan, created: (jobOffer: BackendJobOffer) => void): void {
+    request('POST', '/neon2/job-offers', {jobOfferTitle: title, jobOfferPlan: pricingPlan})
       .then(response => response.json())
       .then((jobOffer: BackendJobOffer): void => created(jobOffer));
   }
@@ -11,7 +13,7 @@ export class JobBoardBackend {
   }
 
   preparePayment(paymentId: string): Promise<BackendPreparedPayment> {
-    return request('POST', '/neon2/job-offers/payment', {paymentId: paymentId})
+    return request('POST', '/neon2/job-offers/payment', {paymentId, userId: this.userId()})
       .then(response => response.json());
   }
 
@@ -23,6 +25,16 @@ export class JobBoardBackend {
   initialJobOffers(): BackendJobOffer[] {
     const backendInput = window['backendInput'] as BackendInput;
     return backendInput.jobOffers;
+  }
+
+  initialPlanBundle(): BackendPlanBundle {
+    const backendInput = window['backendInput'] as BackendInput;
+    return backendInput.planBundle;
+  }
+
+  private userId(): number {
+    const backendInput = window['backendInput'] as BackendInput;
+    return backendInput.userId;
   }
 
   testMode(): boolean {
@@ -42,6 +54,8 @@ function request(method: string, url: string, body: object) {
 interface BackendInput {
   jobOffers: BackendJobOffer[];
   testMode: boolean;
+  planBundle: BackendPlanBundle;
+  userId: number;
 }
 
 export interface BackendJobOffer {
@@ -66,4 +80,10 @@ interface ProviderNotReady {
   providerReady: false;
   paymentId: string;
   paymentToken: null;
+}
+
+interface BackendPlanBundle {
+  hasBundle: boolean;
+  remainingJobOffers?: number;
+  planBundleName?: 'strategic'|'growth'|'scale';
 }

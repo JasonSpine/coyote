@@ -9,14 +9,29 @@ readonly class PaymentGate {
     public function __construct() {
         $this->database = new Database();
         $this->database->execute('CREATE TABLE IF NOT EXISTS payments (
+            userId INTEGER NOT NULL,
             paymentId TEXT NOT NULL UNIQUE,
             status TEXT NOT NULL);');
     }
 
-    public function storePaymentStatus(string $paymentId, PaymentStatus $status): void {
-        $this->database->execute('INSERT INTO payments (paymentId, status)
-            VALUES (:paymentId, :status)
-            ON CONFLICT(paymentId) DO UPDATE SET status = excluded.status;', [
+    public function createPayment(int $userId, string $paymentId): void {
+        $this->database->execute('INSERT INTO payments (userId, paymentId, status) 
+            VALUES (:userId, :paymentId, :status);', [
+            'userId'    => $userId,
+            'paymentId' => $paymentId,
+            'status'    => $this->format(PaymentStatus::Awaiting),
+        ]);
+    }
+
+    public function paymentUserId(string $paymentId): int {
+        $values = $this->database->query('SELECT userId FROM payments WHERE paymentId = :paymentId;', [
+            'paymentId' => $paymentId,
+        ]);
+        return $values[0]['userId'];
+    }
+
+    public function updatePaymentStatus(string $paymentId, PaymentStatus $status): void {
+        $this->database->execute('UPDATE payments SET status = :status WHERE paymentId = :paymentId;', [
             'paymentId' => $paymentId,
             'status'    => $this->format($status),
         ]);

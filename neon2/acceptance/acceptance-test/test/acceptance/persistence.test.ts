@@ -30,3 +30,35 @@ describe('Job offer in a non-free plan requires a payment.', () => {
     await dsl.assertJobOfferIsNotListed({jobOfferTitle: 'New offer'});
   });
 });
+
+describe('Purchased plan bundle entitles to multiple job offers.', () => {
+  test('Given a strategic bundle has been purchased, there is 2 remaining job offers.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Strategic Offer', plan: 'strategic'});
+    await dsl.resetClient();
+    await dsl.assertPlanBundleRemaining({
+      expectedRemainingJobOffers: 2,
+      expectedBundleName: 'strategic',
+    });
+  });
+  test('Given a premium plan has been purchased, there is no remaining job offers.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Premium Offer', plan: 'premium'});
+    await dsl.resetClient();
+    await dsl.assertPlanBundleNone();
+  });
+  test('Given a growth bundle has been purchased, there is 4 remaining job offers.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Growth Offer', plan: 'growth'});
+    await dsl.resetClient();
+    await dsl.assertPlanBundleRemaining({
+      expectedRemainingJobOffers: 4,
+      expectedBundleName: 'growth',
+    });
+  });
+  test('Given a scale bundle has been purchased, there is 19 remaining job offers.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Scale Offer', plan: 'scale'});
+    await dsl.resetClient();
+    await dsl.assertPlanBundleRemaining({
+      expectedRemainingJobOffers: 19,
+      expectedBundleName: 'scale',
+    });
+  });
+});

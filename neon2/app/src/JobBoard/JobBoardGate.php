@@ -12,17 +12,22 @@ readonly class JobBoardGate {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             duration INTEGER NOT NULL,
+            pricingPlan TEXT NOT NULL,
             status TEXT NOT NULL,
             paymentId TEXT NOT NULL);');
     }
 
-    public function addJobOffer(string $title, string $plan, string $paymentId): JobOffer {
+    public function addJobOffer(
+        string $title,
+        string $pricingPlan,
+        string $paymentId,
+    ): JobOffer {
         $jobOffer = new JobOffer(0,
             $title,
-            $plan === 'free' ? 14 : 30,
-            $plan === 'free' ? JobOfferStatus::Published : JobOfferStatus::AwaitingPayment,
+            $pricingPlan === 'free' ? 14 : 30,
+            $pricingPlan === 'free' ? JobOfferStatus::Published : JobOfferStatus::AwaitingPayment,
             $paymentId);
-        $id = $this->insertJobOffer($jobOffer);
+        $id = $this->insertJobOffer($jobOffer, $pricingPlan);
         $jobOffer->id = $id;
         return $jobOffer;
     }
@@ -34,7 +39,7 @@ readonly class JobBoardGate {
         ]);
     }
 
-    public function payJobOfferPayment(int $jobOfferId): void {
+    public function publishJobOffer(int $jobOfferId): void {
         $this->database->execute('UPDATE job_offers SET status = :status WHERE id = :id;', [
             'id'     => $jobOfferId,
             'status' => $this->format(JobOfferStatus::Published),
@@ -55,16 +60,17 @@ readonly class JobBoardGate {
     }
 
     public function clear(): void {
-        $this->database->query('DELETE from job_offers;');
+        $this->database->execute('DELETE from job_offers;');
     }
 
-    private function insertJobOffer(JobOffer $jobOffer): int {
-        return $this->database->insert('INSERT INTO job_offers (title, duration, status, paymentId) 
-            VALUES (:title, :duration, :status, :paymentId);', [
-            'title'     => $jobOffer->title,
-            'duration'  => $jobOffer->expiresInDays,
-            'status'    => $this->format($jobOffer->status),
-            'paymentId' => $jobOffer->paymentId,
+    private function insertJobOffer(JobOffer $jobOffer, string $pricingPlan): int {
+        return $this->database->insert('INSERT INTO job_offers (title, duration, pricingPlan, status, paymentId) 
+            VALUES (:title, :duration, :pricingPlan, :status, :paymentId);', [
+            'title'       => $jobOffer->title,
+            'duration'    => $jobOffer->expiresInDays,
+            'pricingPlan' => $pricingPlan,
+            'status'      => $this->format($jobOffer->status),
+            'paymentId'   => $jobOffer->paymentId,
         ]);
     }
 
@@ -79,5 +85,10 @@ readonly class JobBoardGate {
     public function jobOfferIdByPaymentId(string $paymentId): int {
         $records = $this->database->query('SELECT id FROM job_offers WHERE paymentId = :paymentId;', ['paymentId' => $paymentId]);
         return $records[0]['id'];
+    }
+
+    public function pricingPlanByPaymentId(string $paymentId): string {
+        $records = $this->database->query('SELECT pricingPlan FROM job_offers WHERE paymentId = :paymentId;', ['paymentId' => $paymentId]);
+        return $records[0]['pricingPlan'];
     }
 }

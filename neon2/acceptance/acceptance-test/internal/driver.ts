@@ -12,8 +12,12 @@ export class Driver {
     this.web = new WebDriver(page);
   }
 
-  async loadApplication(): None {
-    await this.web.navigate('/');
+  async loadApplication(userId: number): None {
+    await this.web.navigate('/?userId=' + userId);
+  }
+
+  async reloadApplication(): None {
+    await this.web.reload();
   }
 
   async publishJobOffer(

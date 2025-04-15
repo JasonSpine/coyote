@@ -20,8 +20,7 @@ export type PricingPlan = 'free'|'premium'|PlanBundleName;
 
 view.addEventListener({
   createJob(title: string, pricingPlan: PricingPlan): void {
-    const type = pricingPlan === 'free' ? 'free' : 'paid';
-    backend.addJobOffer(title, type, (jobOffer: BackendJobOffer): void => {
+    backend.addJobOffer(title, pricingPlan, (jobOffer: BackendJobOffer): void => {
       const {id, title, expiresInDays, status} = jobOffer;
       payments.addJobOffer({jobOfferId: id, paymentId: jobOffer.paymentId, pricingPlan});
       board.jobOfferCreated({id, title, expiresInDays, status});
@@ -75,6 +74,11 @@ function remainingJobOffers(planBundle: PlanBundleName): number {
     return 19;
   }
   throw new Error('Failed to set remaining job offers for a pricing plan.');
+}
+
+const bundle = backend.initialPlanBundle();
+if (bundle.hasBundle) {
+  view.setPlanBundle(bundle.planBundleName, bundle.remainingJobOffers);
 }
 
 backend.initialJobOffers()

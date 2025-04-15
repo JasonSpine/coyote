@@ -4,15 +4,15 @@ namespace Neon2;
 readonly class JobBoardView {
     private Web\ViteManifest $vite;
 
-    public function __construct(private \Neon2\JobBoard\JobBoardGate $jobBoard) {
+    public function __construct(
+        private \Neon2\JobBoard\JobBoardGate   $jobBoard,
+        private \Neon2\JobBoard\PlanBundleGate $planBundles,
+    ) {
         $this->vite = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/');
     }
 
-    public function jobBoardView(bool $isTestMode): string {
-        $backendInput = $this->encodeBackendInput([
-            'jobOffers' => $this->jobBoard->listJobOffers(),
-            'testMode'  => $isTestMode,
-        ]);
+    public function jobBoardView(bool $isTestMode, int $userId): string {
+        $backendInput = $this->backendInput($isTestMode, $userId);
         $entryUrl = "/neon2/static/{$this->vite->scriptUrl()}";
         $styleUrl = "/neon2/static/{$this->vite->styleUrl()}";
         if ($isTestMode) {
@@ -46,5 +46,27 @@ readonly class JobBoardView {
 
     private function encodeBackendInput(array $arr): string {
         return \json_encode($arr, \JSON_THROW_ON_ERROR);
+    }
+
+    private function backendInput(bool $isTestMode, int $userId): string {
+        return $this->encodeBackendInput([
+            'jobOffers'  => $this->jobBoard->listJobOffers(),
+            'testMode'   => $isTestMode,
+            'planBundle' => $this->planBundle($userId),
+            'userId'     => $userId,
+        ]);
+    }
+
+    private function planBundle(int $userId): array {
+        if ($this->planBundles->hasBundle($userId)) {
+            return [
+                'hasBundle'          => true,
+                'remainingJobOffers' => $this->planBundles->remainingJobOffers($userId),
+                'planBundleName'     => $this->planBundles->planBundleName($userId),
+            ];
+        }
+        return [
+            'hasBundle' => false,
+        ];
     }
 }

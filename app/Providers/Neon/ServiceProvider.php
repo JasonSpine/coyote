@@ -47,7 +47,8 @@ class ServiceProvider extends RouteServiceProvider {
         });
         $payments = new PaymentGate();
         $jobBoardGate = new JobBoardGate();
-        $board = new JobBoard($payments, $jobBoardGate, testMode:false);
+        $planBundle = new JobBoard\PlanBundleGate();
+        $board = new JobBoard($payments, $jobBoardGate, $planBundle, testMode:false);
         if ($board->testMode()) {
             $provider = new TestPaymentProvider();
             $webhook = new TestPaymentWebhook($provider);
@@ -59,7 +60,9 @@ class ServiceProvider extends RouteServiceProvider {
         $this->middleware(['web'])->group(function () use ($payments, $webhook, $paymentService, $board, $jobBoardGate) {
             $this->get('/Neon', function (JobBoardView $jobBoardView) use ($board): string {
                 Gate::authorize('alpha-access');
-                return $jobBoardView->jobBoardView($board->testMode());
+                return $jobBoardView->jobBoardView(
+                    $board->testMode(),
+                    request()->query->get('userId', 1));
             });
             $this->group(['prefix' => '/neon2'], function () use ($payments, $webhook, $paymentService, $board, $jobBoardGate) {
                 $this->post('/job-offers', function () use ($board): JsonResponse {
@@ -70,7 +73,7 @@ class ServiceProvider extends RouteServiceProvider {
                         status:201);
                 });
                 $this->post('/job-offers/payment', function () use ($paymentService) {
-                    $payment = $paymentService->preparePayment(2000, request()->get('paymentId'));
+                    $payment = $paymentService->preparePayment(request()->get('userId'), 2000, request()->get('paymentId'));
                     return response()->json([
                         'providerReady' => $payment->providerReady,
                         'paymentId'     => $payment->paymentId,

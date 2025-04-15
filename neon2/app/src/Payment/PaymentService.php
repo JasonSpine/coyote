@@ -9,9 +9,9 @@ readonly class PaymentService {
         private PaymentProvider $provider,
     ) {}
 
-    public function preparePayment(int $amount, string $paymentId): PreparedPayment {
+    public function preparePayment(int $userId, int $amount, string $paymentId): PreparedPayment {
         $payment = $this->provider->prepareCardPayment($amount, $paymentId);
-        $this->gate->storePaymentStatus($payment->paymentId, PaymentStatus::Awaiting);
+        $this->gate->createPayment($userId, $payment->paymentId);
         return $payment;
     }
 }

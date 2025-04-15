@@ -18,8 +18,9 @@ if ($assetName === '/') {
 
 $gate = new PaymentGate();
 $jobBoardGate = new \Neon2\JobBoard\JobBoardGate();
-$jobBoardView = new \Neon2\JobBoardView($jobBoardGate);
-$board = new JobBoard($gate, $jobBoardGate, testMode:true);
+$planBundle = new JobBoard\PlanBundleGate();
+$jobBoardView = new \Neon2\JobBoardView($jobBoardGate, $planBundle);
+$board = new JobBoard($gate, $jobBoardGate, $planBundle, testMode:true);
 if ($board->testMode()) {
     $paymentProvider = new TestPaymentProvider();
     $paymentWebhook = new TestPaymentWebhook($paymentProvider);
@@ -43,7 +44,7 @@ if ($assetName === '/neon2/job-offers' && $_SERVER['REQUEST_METHOD'] === 'POST')
 }
 
 if ($assetName === '/neon2/job-offers/payment' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $payment = $paymentService->preparePayment(2000, $body['paymentId']);
+    $payment = $paymentService->preparePayment($body['userId'], 2000, $body['paymentId']);
     \http_response_code(201);
     \header('Content-Type: application/json');
     echo \json_encode([
@@ -83,7 +84,8 @@ if ($assetName === '/neon2/status' && $_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 if ($assetName === '/index.html') {
-    echo $jobBoardView->jobBoardView($board->testMode());
+    parse_str($_SERVER['QUERY_STRING'], $query);
+    echo $jobBoardView->jobBoardView($board->testMode(), $query['userId'] ?? 1);
     return;
 }
 

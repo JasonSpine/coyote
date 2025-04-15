@@ -8,6 +8,10 @@ export class WebDriver {
     await this.page.goto(url);
   }
 
+  async reload(): None {
+    await this.page.reload();
+  }
+
   async click(text: string): None {
     await this.page.getByText(text, {exact: true}).click();
   }

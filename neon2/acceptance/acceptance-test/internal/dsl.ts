@@ -16,12 +16,16 @@ export class Dsl {
   }
 
   async beforeEach(): None {
-    await this.driver.loadApplication();
+    await this.driver.loadApplication(this.newUserId());
     this.mangler.reset();
   }
 
+  private newUserId(): number {
+    return parseInt(Math.random().toString().substring(2));
+  }
+
   async resetClient(): None {
-    await this.driver.loadApplication();
+    await this.driver.reloadApplication();
   }
 
   async publishJobOffer(jobOffer: {

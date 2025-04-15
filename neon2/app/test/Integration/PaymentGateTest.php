@@ -1,6 +1,7 @@
 <?php
 namespace Test\Neon2\Integration;
 
+use Neon2\Database;
 use Neon2\Payment\PaymentGate;
 use Neon2\Payment\PaymentStatus;
 use PHPUnit\Framework\Attributes\Before;
@@ -13,24 +14,26 @@ class PaymentGateTest extends TestCase {
     #[Before]
     public function initialize(): void {
         $this->paymentGate = new PaymentGate();
+        $database = new Database();
+        $database->execute('DELETE FROM payments;');
     }
 
     #[Test]
-    public function storesPayments(): void {
-        $this->paymentGate->storePaymentStatus('foo', PaymentStatus::Completed);
-        $this->assertSame(PaymentStatus::Completed, $this->paymentGate->readPaymentStatus('foo'));
+    public function newlyCreatedPayment_hasStatusAwaitingPayment(): void {
+        $this->paymentGate->createPayment(42, 'payment-id');
+        $this->assertSame(PaymentStatus::Awaiting, $this->paymentGate->readPaymentStatus('payment-id'));
     }
 
     #[Test]
-    public function ifPaymentIsNotStored_returnsPaymentStatusAwaiting(): void {
-        $status = $this->paymentGate->readPaymentStatus('bar');
+    public function missingPayment_hasStatusAwaiting(): void {
+        $status = $this->paymentGate->readPaymentStatus('missing');
         $this->assertSame(PaymentStatus::Awaiting, $status);
     }
 
     #[Test]
     public function updatesPaymentStatus(): void {
-        $this->paymentGate->storePaymentStatus('cat', PaymentStatus::Awaiting);
-        $this->paymentGate->storePaymentStatus('cat', PaymentStatus::Completed);
-        $this->assertSame(PaymentStatus::Completed, $this->paymentGate->readPaymentStatus('cat'));
+        $this->paymentGate->createPayment(42, 'payment-42');
+        $this->paymentGate->updatePaymentStatus('payment-42', PaymentStatus::Completed);
+        $this->assertSame(PaymentStatus::Completed, $this->paymentGate->readPaymentStatus('payment-42'));
     }
 }
