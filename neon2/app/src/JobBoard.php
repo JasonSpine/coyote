@@ -17,21 +17,29 @@ readonly class JobBoard {
         return $this->testMode;
     }
 
-    public function paymentUpdate(Payment\PaymentUpdate $paymentUpdate): void {
-        if ($paymentUpdate->type === PaymentStatus::Completed) {
-            $this->payments->storePaymentStatus($paymentUpdate->paymentId, PaymentStatus::Completed);
-            $this->jobBoard->payJobOfferPayment($this->jobOfferId($paymentUpdate->paymentId));
-        }
-        if ($paymentUpdate->type === PaymentStatus::Failed) {
-            $this->payments->storePaymentStatus($paymentUpdate->paymentId, PaymentStatus::Failed);
-        }
-    }
-
     public function addJobOffer(string $jobOfferTitle, string $jobOfferPlan): JobOffer {
         return $this->jobBoard->addJobOffer(
             $jobOfferTitle,
             $jobOfferPlan,
             $this->generatePaymentId());
+    }
+
+    public function paymentUpdate(Payment\PaymentUpdate $paymentUpdate): void {
+        if ($paymentUpdate->type === PaymentStatus::Completed) {
+            $this->paymentCompleted($paymentUpdate);
+        }
+        if ($paymentUpdate->type === PaymentStatus::Failed) {
+            $this->payments->storePaymentStatus(
+                $paymentUpdate->paymentId,
+                PaymentStatus::Failed);
+        }
+    }
+
+    private function paymentCompleted(Payment\PaymentUpdate $paymentUpdate): void {
+        $this->payments->storePaymentStatus($paymentUpdate->paymentId,
+            PaymentStatus::Completed);
+        $jobOfferId = $this->jobOfferId($paymentUpdate->paymentId);
+        $this->jobBoard->payJobOfferPayment($jobOfferId);
     }
 
     private function generatePaymentId(): string {
