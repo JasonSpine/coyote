@@ -24,11 +24,11 @@ view.addEventListener({
   createJob(title: string, pricingPlan: PricingPlan): void {
     backend.addJobOffer(title, pricingPlan, (jobOffer: BackendJobOffer): void => {
       const {id, title, expiresInDays, status} = jobOffer;
-      payments.addJobOffer({jobOfferId: id, paymentId: jobOffer.paymentId, pricingPlan});
       board.jobOfferCreated({id, title, expiresInDays, status});
       if (pricingPlan === 'free') {
         view.jobOfferCreatedFree();
       } else {
+        payments.addJobOffer({jobOfferId: id, paymentId: jobOffer.paymentId, pricingPlan});
         view.jobOfferCreatedRequirePayment(id);
       }
     });

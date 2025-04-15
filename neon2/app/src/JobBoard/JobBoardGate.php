@@ -14,13 +14,13 @@ readonly class JobBoardGate {
             duration INTEGER NOT NULL,
             pricingPlan TEXT NOT NULL,
             status TEXT NOT NULL,
-            paymentId TEXT NOT NULL);');
+            paymentId TEXT);');
     }
 
     public function addJobOffer(
-        string $title,
-        string $pricingPlan,
-        string $paymentId,
+        string  $title,
+        string  $pricingPlan,
+        ?string $paymentId,
     ): JobOffer {
         $jobOffer = new JobOffer(0,
             $title,

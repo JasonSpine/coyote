@@ -10,7 +10,7 @@ use Neon2\Payment\PaymentStatus;
 readonly class JobBoard {
     public function __construct(
         private PaymentGate    $payments,
-        private JobBoardGate   $jobBoard,
+        private JobBoardGate   $jobBoardGate,
         private PlanBundleGate $planBundle,
         private bool           $testMode,
     ) {}
@@ -20,7 +20,10 @@ readonly class JobBoard {
     }
 
     public function addJobOffer(string $jobOfferTitle, string $jobOfferPlan): JobOffer {
-        return $this->jobBoard->addJobOffer(
+        if ($jobOfferPlan === 'free') {
+            return $this->jobBoardGate->addJobOffer($jobOfferTitle, 'free', null);
+        }
+        return $this->jobBoardGate->addJobOffer(
             $jobOfferTitle,
             $jobOfferPlan,
             $this->generatePaymentId());
@@ -41,10 +44,10 @@ readonly class JobBoard {
         $this->payments->updatePaymentStatus($paymentUpdate->paymentId,
             PaymentStatus::Completed);
         $jobOfferId = $this->jobOfferId($paymentUpdate->paymentId);
-        $this->jobBoard->publishJobOffer($jobOfferId);
+        $this->jobBoardGate->publishJobOffer($jobOfferId);
         $this->setPlanBundle(
             $this->payments->paymentUserId($paymentUpdate->paymentId),
-            $this->jobBoard->pricingPlanByPaymentId($paymentUpdate->paymentId));
+            $this->jobBoardGate->pricingPlanByPaymentId($paymentUpdate->paymentId));
     }
 
     private function generatePaymentId(): string {
@@ -52,7 +55,7 @@ readonly class JobBoard {
     }
 
     private function jobOfferId(string $paymentId): int {
-        return $this->jobBoard->jobOfferIdByPaymentId($paymentId);
+        return $this->jobBoardGate->jobOfferIdByPaymentId($paymentId);
     }
 
     private function setPlanBundle(int $bundleOwnerUserId, string $planBundleName): void {
@@ -75,7 +78,7 @@ readonly class JobBoard {
     }
 
     public function publishJobOfferUsingBundle(int $jobOfferId, int $userId): void {
-        $this->jobBoard->publishJobOffer($jobOfferId);
+        $this->jobBoardGate->publishJobOffer($jobOfferId);
         $this->planBundle->decreaseRemainingJobOffers($userId);
     }
 }

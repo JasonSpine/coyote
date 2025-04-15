@@ -4,6 +4,9 @@ export class JobOfferPayments {
   private payments: JobOfferPayment[] = [];
 
   addJobOffer(payment: JobOfferPayment): void {
+    if (payment.paymentId === null) {
+      throw new Error('Failed to accept job offer payment without paymentId.');
+    }
     this.payments.push(payment);
   }
 
