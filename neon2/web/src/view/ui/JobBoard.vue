@@ -23,14 +23,20 @@
       v-if="props.screen === 'form'"
       :plan="selectedPricingPlan!"
       @create="createJob"/>
-    <JobOfferPaymentForm
-      v-if="props.screen === 'payment' && props.currentJobOfferId"
-      :job-offer-id="props.currentJobOfferId"
-      :plan-bundle="props.planBundle"
-      @pay="payForJob"
-      @use-bundle="useBundle"
-      @mount-card-input="mountCardInput"
-      @unmount-card-input="unmountCardInput"/>
+    <template v-if="props.screen === 'payment' && props.currentJobOfferId">
+      <p>Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.</p>
+      <JobOfferRedeemBundle
+        v-if="props.planBundle"
+        :job-offer-id="props.currentJobOfferId"
+        :plan-bundle="props.planBundle"
+        @use-bundle="useBundle"/>
+      <JobOfferPaymentForm
+        v-else
+        :job-offer-id="props.currentJobOfferId"
+        @pay="payForJob"
+        @mount-card-input="mountCardInput"
+        @unmount-card-input="unmountCardInput"/>
+    </template>
     <JobOfferShow
       v-if="props.screen === 'show'"
       :job-offer="currentJobOffer"
@@ -61,6 +67,7 @@ import JobOfferForm from './JobOffer/JobOfferForm.vue';
 import JobOfferHome from './JobOffer/JobOfferHome.vue';
 import JobOfferPaymentForm from './JobOffer/JobOfferPaymentForm.vue';
 import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
+import JobOfferRedeemBundle from "./JobOffer/JobOfferRedeemBundle.vue";
 import JobOfferShow from './JobOffer/JobOfferShow.vue';
 import {PlanBundle} from "./ui";
 
