@@ -62,6 +62,13 @@ if ($assetName === '/neon2/job-offers' && $_SERVER['REQUEST_METHOD'] === 'PATCH'
     return;
 }
 
+if ($assetName === '/neon2/job-offers/use-bundle' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $board->publishJobOfferUsingBundle($body['jobOfferId'], $body['userId']);
+    \http_response_code(201);
+    \header('Content-Type: application/json');
+    return;
+}
+
 if ($assetName === '/neon2/webhook' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $paymentUpdate = $paymentWebhook->acceptPaymentUpdate(
         \file_get_contents('php://input'),

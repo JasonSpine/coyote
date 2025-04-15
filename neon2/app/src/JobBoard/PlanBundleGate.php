@@ -20,11 +20,12 @@ readonly class PlanBundleGate {
         ]);
         $this->database->execute('INSERT INTO plan_bundles 
             (userId, planBundleName, remainingJobOffers)
-            VALUES (:userId, :bundleName, :remaining);', [
-            'userId'     => $userId,
-            'bundleName' => $planBundleName,
-            'remaining'  => $remainingJobOffers,
-        ]);
+            VALUES (:userId, :bundleName, :remaining);',
+            [
+                'userId'     => $userId,
+                'bundleName' => $planBundleName,
+                'remaining'  => $remainingJobOffers,
+            ]);
     }
 
     public function hasBundle(int $userId): bool {
@@ -46,5 +47,12 @@ readonly class PlanBundleGate {
             'userId' => $userId,
         ]);
         return $query[0]['planBundleName'];
+    }
+
+    public function decreaseRemainingJobOffers(int $userId): void {
+        $this->database->execute('UPDATE plan_bundles 
+            SET remainingJobOffers = remainingJobOffers - 1 
+            WHERE userId = :userId;',
+            ['userId' => $userId]);
     }
 }

@@ -4,7 +4,7 @@ import {PaymentNotification} from "../paymentProvider";
 import {PaymentStatus} from "../paymentService";
 import {Screen, UserInterface, ViewListener} from './ui/ui';
 
-export type Toast = 'created'|'edited';
+export type Toast = 'created'|'edited'|'bundle-used';
 
 export class View {
   private jobOffers: JobOffer[] = [];
@@ -50,19 +50,24 @@ export class View {
     return jobOffer.title.toLowerCase().includes(this.searchPhrase.toLowerCase());
   }
 
-  jobOfferCreated(jobOfferId: number, paymentRequired: boolean): void {
+  jobOfferCreatedFree(): void {
     this.ui.setToast('created');
-    if (paymentRequired) {
-      this.ui.setCurrentJobOfferId(jobOfferId);
-      this.ui.setScreen('payment');
-    } else {
-      this.ui.setScreen('home');
-    }
+    this.ui.setScreen('home');
+  }
+
+  jobOfferCreatedRequirePayment(jobOfferId: number): void {
+    this.ui.setToast('created');
+    this.ui.setCurrentJobOfferId(jobOfferId);
+    this.ui.setScreen('payment');
   }
 
   jobOfferEdited(): void {
     this.ui.setToast('edited');
     this.ui.setScreen('home');
+  }
+
+  planBundleUsed(): void {
+    this.ui.setToast('bundle-used');
   }
 
   jobOfferPaid(): void {

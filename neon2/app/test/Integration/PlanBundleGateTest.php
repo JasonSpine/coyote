@@ -52,4 +52,11 @@ class PlanBundleGateTest extends TestCase {
         $this->assertSame(33, $this->planBundles->remainingJobOffers(116));
         $this->assertSame(44, $this->planBundles->remainingJobOffers(117));
     }
+
+    #[Test]
+    public function decreaseRemainingJobOffers(): void {
+        $this->planBundles->setBundle(118, 33, 'strategic');
+        $this->planBundles->decreaseRemainingJobOffers(118);
+        $this->assertSame(32, $this->planBundles->remainingJobOffers(118));
+    }
 }

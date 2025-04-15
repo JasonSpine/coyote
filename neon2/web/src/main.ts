@@ -3,6 +3,7 @@ import {JobBoard, JobOffer} from './jobBoard';
 import {JobOfferPayments} from "./jobOfferPayments";
 import {PaymentNotification, PaymentProvider, Stripe, TestPaymentProvider} from "./paymentProvider";
 import {PaymentService, PaymentStatus} from "./paymentService";
+import {PlanBundle} from "./planBundle";
 import {VueUi} from './view/ui/ui';
 import {View} from "./view/view";
 
@@ -14,6 +15,7 @@ const paymentProvider: PaymentProvider = backend.testMode()
   : new Stripe('pk_test_51RBWn0Rf5n1iRahJpeSAwkiae2lwuhS2BCH18TKWUOsE9WIn5SA6kojudAolQEcKuFjUTOwNBFNuzM89bQqctAnz00ciq6x7UN');
 const payment = new PaymentService(backend, paymentProvider);
 const payments = new JobOfferPayments();
+const planBundle = new PlanBundle();
 
 export type PlanBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|'premium'|PlanBundleName;
@@ -24,7 +26,11 @@ view.addEventListener({
       const {id, title, expiresInDays, status} = jobOffer;
       payments.addJobOffer({jobOfferId: id, paymentId: jobOffer.paymentId, pricingPlan});
       board.jobOfferCreated({id, title, expiresInDays, status});
-      view.jobOfferCreated(id, pricingPlan !== 'free');
+      if (pricingPlan === 'free') {
+        view.jobOfferCreatedFree();
+      } else {
+        view.jobOfferCreatedRequirePayment(id);
+      }
     });
   },
   updateJob(id: number, title: string): void {
@@ -36,6 +42,14 @@ view.addEventListener({
   },
   payForJob(jobOfferId: number): void {
     payment.initiatePayment(payments.paymentId(jobOfferId));
+  },
+  useBundleForJob(jobOfferId: number): void {
+    backend.publishJobOfferUsingBundle(jobOfferId).then(() => {
+      board.jobOfferPaid(jobOfferId);
+      view.planBundleUsed();
+      view.jobOfferPaid();
+      planBundle.decrease();
+    });
   },
   managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void {
     if (action === 'mount') {
@@ -56,11 +70,15 @@ payment.addEventListener({
       board.jobOfferPaid(payments.jobOfferId(paymentId));
       const pricingPlan = payments.pricingPlan(paymentId);
       if (pricingPlan !== 'premium') {
-        view.setPlanBundle(pricingPlan, remainingJobOffers(pricingPlan));
+        planBundle.set(pricingPlan, remainingJobOffers(pricingPlan));
       }
       view.jobOfferPaid();
     }
   },
+});
+
+planBundle.addListener(function (plan: PricingPlan, remainingJobOffers: number): void {
+  view.setPlanBundle(plan, remainingJobOffers);
 });
 
 function remainingJobOffers(planBundle: PlanBundleName): number {
@@ -78,7 +96,7 @@ function remainingJobOffers(planBundle: PlanBundleName): number {
 
 const bundle = backend.initialPlanBundle();
 if (bundle.hasBundle) {
-  view.setPlanBundle(bundle.planBundleName, bundle.remainingJobOffers);
+  planBundle.set(bundle.planBundleName, bundle.remainingJobOffers);
 }
 
 backend.initialJobOffers()

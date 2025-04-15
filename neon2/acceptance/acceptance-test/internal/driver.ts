@@ -67,12 +67,24 @@ export class Driver {
   }
 
   private async finalizeJobOfferPayment(payment: Payment, paymentCardNumber: string): None {
-    await this.web.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
+    if (payment === 'ignored') {
+      await this.web.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
+    }
     if (payment === 'completed') {
+      await this.web.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
       await this.fillCardDetails(paymentCardNumber);
       await this.proceedCardPayment();
       await this.web.waitForText('Płatność zaksięgowana!');
     }
+    if (payment === 'use-bundle') {
+      await this.web.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
+      await this.finalizePaymentByUsingBundle();
+      await this.web.waitForText('Skorzystałeś z pakietu, żeby opublikować ofertę!');
+    }
+  }
+
+  async finalizePaymentByUsingBundle(): None {
+    await this.web.click("Skorzystaj z pakietu by Opublikować");
   }
 
   private async proceedCardPayment(): None {

@@ -15,7 +15,7 @@ describe('JobBoard View', () => {
   });
   describe('Job offer state state is announced with a toast.', () => {
     test('Job offer creation is announced with a toast.', () => {
-      view.jobOfferCreated(1, false);
+      view.jobOfferCreatedFree();
       assertEquals('created', ui.lastToast());
     });
     test('Job offer edit is announced with a toast.', async () => {
@@ -26,7 +26,7 @@ describe('JobBoard View', () => {
 
   describe('The toast disappears after navigating to other screen', () => {
     test('Given a toast visible in screen, when interface is navigated to other screen, the toast is not visible.', () => {
-      view.jobOfferCreated(1, false);
+      view.jobOfferCreatedFree();
       ui.navigate();
       assertEquals(null, ui.lastToast());
     });
@@ -69,12 +69,12 @@ describe('JobBoard View', () => {
   describe('Changing state of a job navigates to appropriate screen.', () => {
     test('Creating a free job, changes screen to home.', () => {
       ui.setScreen('pricing');
-      view.jobOfferCreated(1, false);
+      view.jobOfferCreatedFree();
       assertEquals('home', ui.screen());
     });
     test('Creating a paid job, changes screen to payment.', () => {
       ui.setScreen('pricing');
-      view.jobOfferCreated(1, true);
+      view.jobOfferCreatedRequirePayment(1);
       assertEquals('payment', ui.screen());
     });
     test('Updating a job offer navigates back to home.', () => {

@@ -73,4 +73,9 @@ readonly class JobBoard {
         }
         return 19;
     }
+
+    public function publishJobOfferUsingBundle(int $jobOfferId, int $userId): void {
+        $this->jobBoard->publishJobOffer($jobOfferId);
+        $this->planBundle->decreaseRemainingJobOffers($userId);
+    }
 }

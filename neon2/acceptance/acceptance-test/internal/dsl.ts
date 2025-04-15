@@ -3,7 +3,7 @@ import {Mangler} from './mangler';
 import {assertContains, assertEquals, assertNotContains} from './playwright';
 
 export type PricingType = 'free'|'paid';
-export type Payment = 'completed'|'ignored';
+export type Payment = 'completed'|'ignored'|'use-bundle';
 export type Card = 'valid'|'declined'|'expired'|'insufficientFunds';
 export type PricingBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|'premium'|PricingBundleName;
@@ -54,6 +54,17 @@ export class Dsl {
 
   async searchJobOffers(search: {searchPhrase: string}): None {
     await this.driver.searchJobOffers(search.searchPhrase);
+  }
+
+  async purchasePlanBundle(bundle: {plan: PricingPlan, remaining: number}): None {
+    if (bundle.plan === 'strategic' && bundle.remaining === 2) {
+      await this.publishJobOffer({
+        title: 'Purchase a bundle',
+        plan: 'strategic',
+      });
+    } else {
+      throw new Error('Failed to initialize a pricing plan bundle.');
+    }
   }
 
   async assertJobOfferIsListed(assertion: {jobOfferTitle: string}): None {

@@ -26,7 +26,9 @@
     <JobOfferPaymentForm
       v-if="props.screen === 'payment' && props.currentJobOfferId"
       :job-offer-id="props.currentJobOfferId"
+      :plan-bundle="props.planBundle"
       @pay="payForJob"
+      @use-bundle="useBundle"
       @mount-card-input="mountCardInput"
       @unmount-card-input="unmountCardInput"/>
     <JobOfferShow
@@ -83,6 +85,7 @@ interface Emit {
   (event: 'navigate', screen: Screen, id: number|null): void;
   (event: 'search', searchPhrase: string);
   (event: 'pay', id: number): void;
+  (event: 'use-bundle', jobOfferId: number): void;
   (event: 'mount-card-input', cssSelector: string): void;
   (event: 'unmount-card-input'): void;
 }
@@ -111,6 +114,10 @@ function showJob(id: number): void {
 
 function payForJob(jobOfferId: number): void {
   emit('pay', jobOfferId);
+}
+
+function useBundle(jobOfferId: number): void {
+  emit('use-bundle', jobOfferId);
 }
 
 function updateJob(id: number, title: string): void {
@@ -147,6 +154,7 @@ const toastTitle = computed<string|null>(() => {
   const titles: Record<Toast, string> = {
     created: 'Dodano ofertę pracy!',
     edited: 'Zaktualizowano ofertę pracy!',
+    'bundle-used': 'Skorzystałeś z pakietu, żeby opublikować ofertę!',
   };
   return titles[props.toast];
 });

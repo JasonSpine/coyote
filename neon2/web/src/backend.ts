@@ -22,6 +22,10 @@ export class JobBoardBackend {
       .then(response => response.json());
   }
 
+  publishJobOfferUsingBundle(jobOfferId: number): Promise<void> {
+    return request('POST', '/neon2/job-offers/use-bundle', {jobOfferId, userId: this.userId()});
+  }
+
   initialJobOffers(): BackendJobOffer[] {
     const backendInput = window['backendInput'] as BackendInput;
     return backendInput.jobOffers;
