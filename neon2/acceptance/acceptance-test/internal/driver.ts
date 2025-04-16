@@ -30,11 +30,7 @@ export class Driver {
     payment: Payment,
     paymentCardNumber?: string,
   ): None {
-    await this.web.click('Dodaj ofertę');
-    if (payment !== 'redeem-bundle') {
-      await this.selectPricingPlan(pricingPlan);
-    }
-    await this.createJobOffer(title);
+    await this.createJobOffer(title, pricingPlan, payment);
     if (pricingPlan === 'free') {
       await this.web.waitForText('Dodano ofertę pracy!');
     } else {
@@ -42,15 +38,26 @@ export class Driver {
     }
   }
 
+  private async createJobOffer(
+    title: string,
+    pricingPlan: PricingPlan,
+    payment: Payment) {
+    await this.web.click('Dodaj ofertę');
+    if (payment !== 'redeem-bundle') {
+      await this.selectPricingPlan(pricingPlan);
+    }
+    await this.submitJobOfferForm(title);
+  }
+
   async initiatePayment(jobOfferTitle: string, cardNumber: string): None {
     await this.web.click('Dodaj ofertę');
     await this.selectPricingPlan('premium');
-    await this.createJobOffer(jobOfferTitle);
+    await this.submitJobOfferForm(jobOfferTitle);
     await this.fillCardDetails(cardNumber);
     await this.proceedCardPayment();
   }
 
-  private async createJobOffer(title: string): None {
+  private async submitJobOfferForm(title: string): None {
     await this.web.fillByLabel('Tytuł oferty', title);
     await this.web.click('Dodaj');
     await this.web.waitForText('Dodano ofertę pracy!');
