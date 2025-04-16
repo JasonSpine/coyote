@@ -54,7 +54,7 @@ class ServiceProvider extends RouteServiceProvider {
             $webhook = new TestPaymentWebhook($provider);
         } else {
             $provider = new Stripe('sk_test_51RBWn0Rf5n1iRahJzOJ6tJvWNO6fwKBaN7O2uVdhSGxVFVAsCeBTDgL13UWJ3VEGGLJc1ntyC5oDq5QQbVByEY8j00aluGGN0L');
-            $webhook = new StripeWebhook('whsec_W5t2VrjF8hVHk3Fp6bM4scZ5HyX9y4xB');
+            $webhook = new StripeWebhook('whsec_iTDuuN5SKhmVJms57mG2v1SaoxYvm76o');
         }
         $paymentService = new PaymentService($payments, $provider);
         $this->middleware(['web'])->group(function () use ($payments, $webhook, $paymentService, $board, $jobBoardGate) {
