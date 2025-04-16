@@ -38,6 +38,10 @@ export class Driver {
     }
   }
 
+  async finishPayment(paymentCardNumber: string): None {
+    await this.finalizeJobOfferPayment('completed', paymentCardNumber);
+  }
+
   private async createJobOffer(
     title: string,
     pricingPlan: PricingPlan,
@@ -84,19 +88,20 @@ export class Driver {
   }
 
   private async finalizeJobOfferPayment(payment: Payment, paymentCardNumber: string): None {
-    if (payment === 'ignored') {
-      await this.web.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
-    }
+    await this.web.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
     if (payment === 'completed') {
-      await this.web.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
       await this.fillCardDetails(paymentCardNumber);
       await this.proceedCardPayment();
       await this.web.waitForText('Płatność zaksięgowana!');
     }
     if (payment === 'redeem-bundle') {
-      await this.web.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
       await this.finalizePaymentByUsingBundle();
       await this.web.waitForText('Skorzystałeś z pakietu, żeby opublikować ofertę!');
+    }
+    if (payment === 'failed') {
+      await this.fillCardDetails(paymentCardNumber);
+      await this.proceedCardPayment();
+      await this.web.waitForText('Płatność odrzucona.');
     }
   }
 

@@ -4,7 +4,7 @@ import {Mangler} from './mangler';
 import {assertContains, assertEquals, assertNotContains} from './playwright';
 
 export type PricingType = 'free'|'paid';
-export type Payment = 'completed'|'ignored'|'redeem-bundle';
+export type Payment = 'completed'|'ignored'|'redeem-bundle'|'failed';
 export type Card = 'valid'|'declined'|'expired'|'insufficientFunds';
 export type PricingBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|'premium'|PricingBundleName;
@@ -47,17 +47,28 @@ export class Dsl {
       this.enc(jobOffer.title),
       this.pricingPlan(jobOffer.plan, jobOffer.pricingType, jobOffer.payment),
       jobOffer.payment || 'completed',
-      this.cardNumber('valid'));
+      this.cardPaymentFor(jobOffer.payment));
+  }
+
+  async finishPayment(): None {
+    await this.driver.finishPayment(this.cardNumber('valid'));
   }
 
   private pricingPlan(plan?: PricingPlan, pricingType?: PricingType, payment?: Payment): PricingPlan {
     if (plan) {
       return plan;
     }
-    if (payment === 'redeem-bundle') {
+    if (payment) {
       return 'premium';
     }
     return pricingType === 'paid' ? 'premium' : 'free';
+  }
+
+  private cardPaymentFor(payment?: Payment): None {
+    if (payment === 'failed') {
+      return this.cardNumber('declined');
+    }
+    return this.cardNumber('valid');
   }
 
   async updateJobOffer(update: {title: string, updatedTitle: string}): None {

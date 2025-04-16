@@ -16,7 +16,8 @@ readonly class PaymentGate {
 
     public function createPayment(int $userId, string $paymentId): void {
         $this->database->execute('INSERT INTO payments (userId, paymentId, status) 
-            VALUES (:userId, :paymentId, :status);', [
+            VALUES (:userId, :paymentId, :status)
+            ON CONFLICT (paymentId) DO NOTHING;', [
             'userId'    => $userId,
             'paymentId' => $paymentId,
             'status'    => $this->format(PaymentStatus::Awaiting),

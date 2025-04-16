@@ -100,3 +100,11 @@ describe('Purchased plan bundle entitles to multiple job offers.', () => {
     });
   });
 });
+
+describe('A failed payment can be retried.', () => {
+  test('Given a job offer with a failed payment, when payment is retried, the job offer is published.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Job offer', payment: 'failed'});
+    await dsl.finishPayment();
+    await dsl.assertJobOfferIsListed({jobOfferTitle: 'Job offer'});
+  });
+});
