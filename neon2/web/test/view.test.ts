@@ -99,6 +99,21 @@ describe('JobBoard View', () => {
       assertEquals(false, ui.planBundleCanRedeem());
     });
   });
+
+  describe('Adding a job offer navigates to appropriate screen.', () => {
+    test('With remaining job offers in bundle, adding a job offer navigates to form.', () => {
+      ui.setScreen('home');
+      view.setPlanBundle('strategic', 1);
+      ui.showJobOfferForm();
+      assertEquals('form', ui.screen());
+    });
+    test('With no remaining job offers in bundle, adding a job offer navigates to pricing.', () => {
+      ui.setScreen('home');
+      view.setPlanBundle('strategic', 0);
+      ui.showJobOfferForm();
+      assertEquals('pricing', ui.screen());
+    });
+  });
 });
 
 class MemoryUi implements UserInterface {
@@ -147,7 +162,11 @@ class MemoryUi implements UserInterface {
   }
 
   navigate(): void {
-    this.naviListeners.forEach(listener => listener());
+    this.naviListeners.forEach(listener => listener.setScreen(''));
+  }
+
+  showJobOfferForm(): void {
+    this.naviListeners.forEach(listener => listener.showJobOfferForm());
   }
 
   search(searchPhrase: string): void {

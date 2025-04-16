@@ -9,11 +9,21 @@ export type Toast = 'created'|'edited'|'bundle-used';
 export class View {
   private jobOffers: JobOffer[] = [];
   private searchPhrase: string = '';
+  private planBundleCanRedeem: boolean = false;
 
   constructor(private ui: UserInterface) {
-    this.ui.addNavigationListener((screen: Screen): void => {
-      this.ui.setToast(null);
-      this.ui.setScreen(screen);
+    this.ui.addNavigationListener({
+      setScreen: (screen: Screen): void => {
+        this.ui.setToast(null);
+        this.ui.setScreen(screen);
+      },
+      showJobOfferForm: (): void => {
+        if (this.planBundleCanRedeem) {
+          this.ui.setScreen('form');
+        } else {
+          this.ui.setScreen('pricing');
+        }
+      },
     });
     this.ui.addSearchListener(searchPhrase => {
       this.searchPhrase = searchPhrase;
@@ -75,6 +85,7 @@ export class View {
   }
 
   setPlanBundle(planName: PlanBundleName, remainingJobOffers: number): void {
-    this.ui.setPlanBundle(planName, remainingJobOffers, remainingJobOffers > 0);
+    this.planBundleCanRedeem = remainingJobOffers > 0;
+    this.ui.setPlanBundle(planName, remainingJobOffers, this.planBundleCanRedeem);
   }
 }

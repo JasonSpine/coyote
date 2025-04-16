@@ -30,7 +30,11 @@ export interface UserInterface {
   setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void;
 }
 
-export type NavigationListener = (screen: Screen) => void;
+export interface NavigationListener {
+  setScreen(screen: Screen): void;
+  showJobOfferForm(): void;
+}
+
 export type SearchListener = (searchPhrase: string) => void;
 
 export interface PlanBundle {
@@ -48,6 +52,7 @@ export class VueUi implements UserInterface {
     paymentNotification: null,
     paymentStatus: null,
     planBundle: null,
+    pricingPlan: null,
   });
   private viewListeners: ViewListener[] = [];
   private navigationListeners: NavigationListener[] = [];
@@ -91,6 +96,7 @@ export class VueUi implements UserInterface {
 
   setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
     this.vueState.planBundle = {bundleName, remainingJobOffers, canRedeem};
+    this.vueState.pricingPlan = bundleName;
   }
 
   mount(cssSelector: string): void {
@@ -102,6 +108,12 @@ export class VueUi implements UserInterface {
     const that = this;
     return h(JobBoard, {
       ...this.vueState,
+      onShowForm(): void {
+        that.navigationListeners.forEach(listener => listener.showJobOfferForm());
+      },
+      onSelectPlan(plan: PricingPlan): void {
+        that.vueState.pricingPlan = plan;
+      },
       onCreate(title: string, plan: PricingPlan): void {
         that.viewListeners.forEach(listener => listener.createJob(title, plan));
       },
@@ -115,7 +127,7 @@ export class VueUi implements UserInterface {
         that.viewListeners.forEach(listener => listener.useBundleForJob(jobOfferId));
       },
       onNavigate(screen: Screen, jobOfferId: number|null): void {
-        that.navigationListeners.forEach(listener => listener(screen));
+        that.navigationListeners.forEach(listener => listener.setScreen(screen));
         that.setCurrentJobOfferId(jobOfferId);
       },
       onSearch(searchPhrase: string): void {

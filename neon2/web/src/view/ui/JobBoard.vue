@@ -21,7 +21,7 @@
       @select="selectPlan"/>
     <JobOfferForm
       v-if="props.screen === 'form'"
-      :plan="selectedPricingPlan!"
+      :plan="props.pricingPlan!"
       @create="createJob"/>
     <template v-if="props.screen === 'payment' && props.currentJobOfferId">
       <p>Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.</p>
@@ -49,13 +49,13 @@
       v-if="props.screen === 'home'"
       :job-offers="props.jobOffers"
       @show="showJob"
-      @add="showPricing"
+      @add="showJobOfferForm"
       @search="searchJobs"/>
   </Design.Layout>
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from 'vue';
+import {computed} from 'vue';
 import {JobOffer} from '../../jobBoard';
 import {PlanBundleName, PricingPlan} from "../../main";
 import {PaymentNotification} from "../../paymentProvider";
@@ -79,6 +79,7 @@ export interface JobBoardProps {
   paymentNotification: PaymentNotification|null;
   paymentStatus: PaymentStatus|null;
   planBundle: PlanBundle|null;
+  pricingPlan: PricingPlan|null;
 }
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
@@ -87,6 +88,8 @@ const props = defineProps<JobBoardProps>();
 const emit = defineEmits<Emit>();
 
 interface Emit {
+  (event: 'show-form'): void;
+  (event: 'select-plan', plan: PricingPlan): void;
   (event: 'create', title: string, plan: PricingPlan): void;
   (event: 'update', id: number, title: string): void;
   (event: 'navigate', screen: Screen, id: number|null): void;
@@ -100,8 +103,6 @@ interface Emit {
 function navigate(newScreen: Screen, id?: number): void {
   emit('navigate', newScreen, id || null);
 }
-
-const selectedPricingPlan = ref<PricingPlan|null>(null);
 
 const currentJobOffer = computed<JobOffer>(() => {
   return props.jobOffers.find(offer => offer.id === props.currentJobOfferId)!;
@@ -132,12 +133,12 @@ function updateJob(id: number, title: string): void {
 }
 
 function selectPlan(bundleName: PlanBundleName, pricingPlan: PricingPlan): void {
-  selectedPricingPlan.value = pricingPlan;
   navigate('form');
+  emit('select-plan', pricingPlan);
 }
 
-function showPricing(): void {
-  navigate('pricing');
+function showJobOfferForm(): void {
+  emit('show-form');
 }
 
 function searchJobs(searchPhrase: string): void {
