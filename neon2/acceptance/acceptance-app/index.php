@@ -59,6 +59,7 @@ if ($assetName === '/neon2/job-offers' && $_SERVER['REQUEST_METHOD'] === 'PATCH'
     $jobBoardGate->editJobOffer($body['jobOfferId'], $body['jobOfferTitle']);
     \http_response_code(201);
     \header('Content-Type: application/json');
+    echo \json_encode([], \JSON_FORCE_OBJECT);
     return;
 }
 
@@ -66,6 +67,7 @@ if ($assetName === '/neon2/job-offers/redeem-bundle' && $_SERVER['REQUEST_METHOD
     $board->publishJobOfferUsingBundle($body['jobOfferId'], $body['userId']);
     \http_response_code(201);
     \header('Content-Type: application/json');
+    echo \json_encode([], \JSON_FORCE_OBJECT);
     return;
 }
 

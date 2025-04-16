@@ -1,19 +1,20 @@
 import {expect, test as playwrightTest, TestInfo} from '@playwright/test';
 import {Driver} from './driver';
 import {Dsl} from './dsl';
+import {HttpDriver} from "./httpDriver";
 
 export const describe = playwrightTest.describe;
 
 export function test(title: string, test: Test): void {
-  playwrightTest(title, async function ({page}): Promise<void> {
-    await test(new Dsl(new Driver(page)));
+  playwrightTest(title, async function ({page, request}): Promise<void> {
+    await test(new Dsl(new Driver(page), new HttpDriver(request)), request);
   });
 }
 
 type Test = (dsl: Dsl) => Promise<void>;
 
 export function beforeEach(block: (dsl: Dsl) => Promise<void>): void {
-  playwrightTest.beforeEach(({page}) => block(new Dsl(new Driver(page))));
+  playwrightTest.beforeEach(({page}) => block(new Dsl(new Driver(page), null)));
 }
 
 export function assertEquals(expected: any, actual: any): void {

@@ -1,4 +1,5 @@
 import {Driver, PaymentNotification, PaymentStatus} from './driver';
+import {HttpDriver} from "./httpDriver";
 import {Mangler} from './mangler';
 import {assertContains, assertEquals, assertNotContains} from './playwright';
 
@@ -11,7 +12,7 @@ export type PricingPlan = 'free'|'premium'|PricingBundleName;
 export class Dsl {
   private mangler: Mangler;
 
-  constructor(private driver: Driver) {
+  constructor(private driver: Driver, public http: HttpDriver|null) {
     this.mangler = new Mangler();
   }
 
@@ -26,6 +27,10 @@ export class Dsl {
 
   async resetClient(): None {
     await this.driver.reloadApplication();
+  }
+
+  encodeName(name: string): string {
+    return this.mangler.encoded(name);
   }
 
   async publishJobOffer(jobOffer: {

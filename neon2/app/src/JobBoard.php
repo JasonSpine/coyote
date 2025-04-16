@@ -78,7 +78,9 @@ readonly class JobBoard {
     }
 
     public function publishJobOfferUsingBundle(int $jobOfferId, int $userId): void {
-        $this->jobBoardGate->publishJobOffer($jobOfferId);
-        $this->planBundle->decreaseRemainingJobOffers($userId);
+        if ($this->planBundle->hasBundle($userId)) {
+            $this->jobBoardGate->publishJobOffer($jobOfferId);
+            $this->planBundle->decreaseRemainingJobOffers($userId);
+        }
     }
 }
