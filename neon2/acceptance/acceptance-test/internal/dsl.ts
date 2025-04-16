@@ -25,6 +25,10 @@ export class Dsl {
     return parseInt(Math.random().toString().substring(2));
   }
 
+  userId(): number {
+    return this.driver.userId();
+  }
+
   async resetClient(): None {
     await this.driver.reloadApplication();
   }
@@ -41,14 +45,17 @@ export class Dsl {
   }): None {
     await this.driver.publishJobOffer(
       this.enc(jobOffer.title),
-      this.pricingPlan(jobOffer.plan, jobOffer.pricingType),
+      this.pricingPlan(jobOffer.plan, jobOffer.pricingType, jobOffer.payment),
       jobOffer.payment || 'completed',
       this.cardNumber('valid'));
   }
 
-  private pricingPlan(plan: PricingPlan|undefined, pricingType: PricingType|undefined): PricingPlan {
+  private pricingPlan(plan?: PricingPlan, pricingType?: PricingType, payment?: Payment): PricingPlan {
     if (plan) {
       return plan;
+    }
+    if (payment === 'redeem-bundle') {
+      return 'premium';
     }
     return pricingType === 'paid' ? 'premium' : 'free';
   }

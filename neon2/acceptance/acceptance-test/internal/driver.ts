@@ -13,7 +13,11 @@ export class Driver {
   }
 
   async loadApplication(userId: number): None {
-    await this.web.navigate('/?userId=' + userId);
+    await this.web.navigate('/?userId=' + userId.toString());
+  }
+
+  userId(): number {
+    return parseInt(this.web.queryParam('userId'));
   }
 
   async reloadApplication(): None {

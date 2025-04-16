@@ -8,6 +8,11 @@ export class WebDriver {
     await this.page.goto(url);
   }
 
+  queryParam(queryParam: string): string {
+    const url = new URL(this.page.url());
+    return url.searchParams.get(queryParam);
+  }
+
   async reload(): None {
     await this.page.reload();
   }
