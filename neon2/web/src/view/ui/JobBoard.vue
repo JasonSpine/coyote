@@ -26,7 +26,7 @@
     <template v-if="props.screen === 'payment' && props.currentJobOfferId">
       <p>Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.</p>
       <JobOfferRedeemBundle
-        v-if="props.planBundle"
+        v-if="props.planBundle?.canRedeem"
         :job-offer-id="props.currentJobOfferId"
         :plan-bundle="props.planBundle"
         @use-bundle="useBundle"/>

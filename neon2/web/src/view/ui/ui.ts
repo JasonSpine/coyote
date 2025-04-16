@@ -27,7 +27,7 @@ export interface UserInterface {
   setCurrentJobOfferId(jobOfferId: number): void;
   setPaymentNotification(notification: PaymentNotification): void;
   setPaymentStatus(status: PaymentStatus): void;
-  setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number): void;
+  setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void;
 }
 
 export type NavigationListener = (screen: Screen) => void;
@@ -36,6 +36,7 @@ export type SearchListener = (searchPhrase: string) => void;
 export interface PlanBundle {
   bundleName: PlanBundleName;
   remainingJobOffers: number;
+  canRedeem: boolean;
 }
 
 export class VueUi implements UserInterface {
@@ -88,8 +89,8 @@ export class VueUi implements UserInterface {
     this.vueState.paymentStatus = status;
   }
 
-  setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number): void {
-    this.vueState.planBundle = {bundleName, remainingJobOffers};
+  setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
+    this.vueState.planBundle = {bundleName, remainingJobOffers, canRedeem};
   }
 
   mount(cssSelector: string): void {

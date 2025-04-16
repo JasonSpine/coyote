@@ -88,6 +88,17 @@ describe('JobBoard View', () => {
       assertEquals('home', ui.screen());
     });
   });
+
+  describe('Plan bundle can be redeemed, if there are any remaining job offers.', () => {
+    test('Plan bundle with job offers can be redeemed.', () => {
+      view.setPlanBundle('strategic', 1);
+      assertEquals(true, ui.planBundleCanRedeem());
+    });
+    test('Plan bundle without job offers can not be redeemed.', () => {
+      view.setPlanBundle('strategic', 0);
+      assertEquals(false, ui.planBundleCanRedeem());
+    });
+  });
 });
 
 class MemoryUi implements UserInterface {
@@ -96,6 +107,7 @@ class MemoryUi implements UserInterface {
   private toast: Toast|null = null;
   private _jobOffers: JobOffer[] = [];
   private _screen: Screen = 'home';
+  private _planBundleCanRedeem: boolean|null = null;
 
   mount(cssSelector: string): void {
   }
@@ -130,7 +142,9 @@ class MemoryUi implements UserInterface {
 
   setPaymentStatus(status: PaymentStatus): void {}
 
-  setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number): void {}
+  setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
+    this._planBundleCanRedeem = canRedeem;
+  }
 
   navigate(): void {
     this.naviListeners.forEach(listener => listener());
@@ -150,5 +164,9 @@ class MemoryUi implements UserInterface {
 
   screen(): Screen {
     return this._screen;
+  }
+
+  planBundleCanRedeem(): boolean {
+    return this._planBundleCanRedeem;
   }
 }

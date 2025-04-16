@@ -75,6 +75,6 @@ export class View {
   }
 
   setPlanBundle(planName: PlanBundleName, remainingJobOffers: number): void {
-    this.ui.setPlanBundle(planName, remainingJobOffers);
+    this.ui.setPlanBundle(planName, remainingJobOffers, remainingJobOffers > 0);
   }
 }
