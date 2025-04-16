@@ -3,5 +3,5 @@ composer.lock
 composer.phar
 vendor/
 
-# Persistance for tests
-database.db
+# Acceptance app logs
+ERROR.*.log

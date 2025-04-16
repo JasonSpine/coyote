@@ -41,6 +41,9 @@ jobs:
       - name: Install backend
         run: task app:install
 
+      - name: Install acceptance application
+        run: task accept:app:install
+
       - name: Start the acceptance app
         run: task accept:start &
 
