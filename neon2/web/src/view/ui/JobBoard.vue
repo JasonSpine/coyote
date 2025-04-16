@@ -1,6 +1,6 @@
 <template>
   <Design.Layout class="bg-body">
-    <Design.BannerHeading v-if="props.screen !== 'pricing'"/>
+    <Design.BannerHeading/>
     <span v-if="showHomeLink" @click="navigate('home')" class="cursor-pointer">
       Wróć
     </span>
