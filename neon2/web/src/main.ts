@@ -43,7 +43,7 @@ view.addEventListener({
   payForJob(jobOfferId: number): void {
     payment.initiatePayment(payments.paymentId(jobOfferId));
   },
-  useBundleForJob(jobOfferId: number): void {
+  redeemBundle(jobOfferId: number): void {
     backend.publishJobOfferUsingBundle(jobOfferId).then(() => {
       board.jobOfferPaid(jobOfferId);
       view.planBundleUsed();

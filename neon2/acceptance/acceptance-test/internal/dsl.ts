@@ -3,7 +3,7 @@ import {Mangler} from './mangler';
 import {assertContains, assertEquals, assertNotContains} from './playwright';
 
 export type PricingType = 'free'|'paid';
-export type Payment = 'completed'|'ignored'|'use-bundle';
+export type Payment = 'completed'|'ignored'|'redeem-bundle';
 export type Card = 'valid'|'declined'|'expired'|'insufficientFunds';
 export type PricingBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|'premium'|PricingBundleName;

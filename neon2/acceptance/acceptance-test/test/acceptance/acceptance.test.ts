@@ -88,12 +88,12 @@ describe('Purchased plan bundle entitles to multiple job offers.', () => {
   });
   test('Given an owned bundle, when a job offer is added without payment, the job offer is published.', async (dsl: Dsl) => {
     await dsl.purchasePlanBundle({plan: 'strategic', remaining: 2});
-    await dsl.publishJobOffer({title: 'A free job offer', pricingType: 'paid', payment: 'use-bundle'});
+    await dsl.publishJobOffer({title: 'A free job offer', pricingType: 'paid', payment: 'redeem-bundle'});
     await dsl.assertJobOfferIsListed({jobOfferTitle: 'A free job offer'});
   });
   test('Given a job offer was published using a bundle, the remaining job offers is decreased.', async (dsl: Dsl) => {
     await dsl.purchasePlanBundle({plan: 'strategic', remaining: 2});
-    await dsl.publishJobOffer({title: 'A free job offer', pricingType: 'paid', payment: 'use-bundle'});
+    await dsl.publishJobOffer({title: 'A free job offer', pricingType: 'paid', payment: 'redeem-bundle'});
     await dsl.assertPlanBundleRemaining({
       expectedRemainingJobOffers: 1,
       expectedBundleName: 'strategic',

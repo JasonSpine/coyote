@@ -27,7 +27,7 @@ export class Driver {
     paymentCardNumber?: string,
   ): None {
     await this.web.click('Dodaj ofertę');
-    if (payment !== 'use-bundle') {
+    if (payment !== 'redeem-bundle') {
       await this.selectPricingPlan(pricingPlan);
     }
     await this.createJobOffer(title);
@@ -82,7 +82,7 @@ export class Driver {
       await this.proceedCardPayment();
       await this.web.waitForText('Płatność zaksięgowana!');
     }
-    if (payment === 'use-bundle') {
+    if (payment === 'redeem-bundle') {
       await this.web.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
       await this.finalizePaymentByUsingBundle();
       await this.web.waitForText('Skorzystałeś z pakietu, żeby opublikować ofertę!');

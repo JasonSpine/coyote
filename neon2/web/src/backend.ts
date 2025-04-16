@@ -23,7 +23,7 @@ export class JobBoardBackend {
   }
 
   publishJobOfferUsingBundle(jobOfferId: number): Promise<void> {
-    return request('POST', '/neon2/job-offers/use-bundle', {jobOfferId, userId: this.userId()});
+    return request('POST', '/neon2/job-offers/redeem-bundle', {jobOfferId, userId: this.userId()});
   }
 
   initialJobOffers(): BackendJobOffer[] {

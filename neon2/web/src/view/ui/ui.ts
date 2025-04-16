@@ -12,7 +12,7 @@ export interface ViewListener {
   createJob: (title: string, pricingPlan: PricingPlan) => void;
   updateJob: (id: number, title: string) => void;
   payForJob: (id: number) => void;
-  useBundleForJob: (jobOfferId: number) => void;
+  redeemBundle: (jobOfferId: number) => void;
   managePaymentMethod: (action: 'mount'|'unmount', cssSelector?: string) => void;
 }
 
@@ -123,8 +123,8 @@ export class VueUi implements UserInterface {
       onPay(jobOfferId: number): void {
         that.viewListeners.forEach(listener => listener.payForJob(jobOfferId));
       },
-      onUseBundle(jobOfferId: number): void {
-        that.viewListeners.forEach(listener => listener.useBundleForJob(jobOfferId));
+      onRedeemBundle(jobOfferId: number): void {
+        that.viewListeners.forEach(listener => listener.redeemBundle(jobOfferId));
       },
       onNavigate(screen: Screen, jobOfferId: number|null): void {
         that.navigationListeners.forEach(listener => listener.setScreen(screen));

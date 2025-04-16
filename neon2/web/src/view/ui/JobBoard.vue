@@ -29,7 +29,7 @@
         v-if="props.planBundle?.canRedeem"
         :job-offer-id="props.currentJobOfferId"
         :plan-bundle="props.planBundle"
-        @use-bundle="useBundle"/>
+        @redeem-bundle="redeemBundle"/>
       <JobOfferPaymentForm
         v-else
         :job-offer-id="props.currentJobOfferId"
@@ -95,7 +95,7 @@ interface Emit {
   (event: 'navigate', screen: Screen, id: number|null): void;
   (event: 'search', searchPhrase: string);
   (event: 'pay', id: number): void;
-  (event: 'use-bundle', jobOfferId: number): void;
+  (event: 'redeem-bundle', jobOfferId: number): void;
   (event: 'mount-card-input', cssSelector: string): void;
   (event: 'unmount-card-input'): void;
 }
@@ -124,8 +124,8 @@ function payForJob(jobOfferId: number): void {
   emit('pay', jobOfferId);
 }
 
-function useBundle(jobOfferId: number): void {
-  emit('use-bundle', jobOfferId);
+function redeemBundle(jobOfferId: number): void {
+  emit('redeem-bundle', jobOfferId);
 }
 
 function updateJob(id: number, title: string): void {

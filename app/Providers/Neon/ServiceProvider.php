@@ -86,6 +86,10 @@ class ServiceProvider extends RouteServiceProvider {
                         request()->get('jobOfferTitle'));
                     return response(status:201);
                 });
+                $this->post('/job-offers/redeem-bundle', function () use ($board) {
+                    $board->publishJobOfferUsingBundle(request()->get('jobOfferId'), request()->get('userId'));
+                    return response()->json(status:201);
+                });
                 $this->post('/webhook', function () use ($webhook, $board) {
                     $paymentUpdate = $webhook->acceptPaymentUpdate(
                         \file_get_contents('php://input'),

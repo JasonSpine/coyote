@@ -5,7 +5,7 @@
   <Design.Tile>
     <Design.Row>
       <Design.RowEnd>
-        <Design.Button primary @click="useBundle">
+        <Design.Button primary @click="redeemBundle">
           Skorzystaj z pakietu by Opublikować
         </Design.Button>
       </Design.RowEnd>
@@ -26,10 +26,10 @@ interface Props {
 }
 
 interface Emit {
-  (event: 'use-bundle', jobOfferId: number): void;
+  (event: 'redeem-bundle', jobOfferId: number): void;
 }
 
-function useBundle(): void {
-  emit('use-bundle', props.jobOfferId);
+function redeemBundle(): void {
+  emit('redeem-bundle', props.jobOfferId);
 }
 </script>
