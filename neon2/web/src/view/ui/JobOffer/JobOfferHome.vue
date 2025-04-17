@@ -1,6 +1,6 @@
 <template>
   <Design.Button primary-outline @click="emit('add')">
-    Dodaj ofertę
+    Dodaj ogłoszenie
   </Design.Button>
   <Design.Tile>
     <Design.TextField

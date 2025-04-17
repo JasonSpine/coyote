@@ -1,9 +1,9 @@
 <template>
   <h1>
-    Oferta: {{props.jobOffer.title}}
+    Ogłoszenie: {{props.jobOffer.title}}
   </h1>
   <div>
-    Oferta wygasa za:
+    Ogłoszenie wygasa za:
     <span data-testid="jobOfferExpiresInDays">
       {{props.jobOffer.expiresInDays}}
     </span>

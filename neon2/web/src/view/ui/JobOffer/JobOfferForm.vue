@@ -4,7 +4,7 @@
   </h2>
   <Design.Card title="Podstawowe informacje">
     <label>
-      Tytuł oferty
+      Tytuł ogłoszenia
       <Design.TextField placeholder="np. Senior Java Developer" v-model="jobTitle"/>
     </label>
   </Design.Card>

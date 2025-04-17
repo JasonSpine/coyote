@@ -32,7 +32,7 @@ export class Driver {
   ): None {
     await this.createJobOffer(title, pricingPlan, payment);
     if (pricingPlan === 'free') {
-      await this.web.waitForText('Dodano ofertę pracy!');
+      await this.web.waitForText('Dodano ogłoszenie!');
     } else {
       await this.finalizeJobOfferPayment(payment, paymentCardNumber!);
     }
@@ -46,7 +46,7 @@ export class Driver {
     title: string,
     pricingPlan: PricingPlan,
     payment: Payment) {
-    await this.web.click('Dodaj ofertę');
+    await this.web.click('Dodaj ogłoszenie');
     if (payment !== 'redeem-bundle') {
       await this.selectPricingPlan(pricingPlan);
     }
@@ -54,7 +54,7 @@ export class Driver {
   }
 
   async initiatePayment(jobOfferTitle: string, cardNumber: string): None {
-    await this.web.click('Dodaj ofertę');
+    await this.web.click('Dodaj ogłoszenie');
     await this.selectPricingPlan('premium');
     await this.submitJobOfferForm(jobOfferTitle);
     await this.fillCardDetails(cardNumber);
@@ -62,9 +62,9 @@ export class Driver {
   }
 
   private async submitJobOfferForm(title: string): None {
-    await this.web.fillByLabel('Tytuł oferty', title);
+    await this.web.fillByLabel('Tytuł ogłoszenia', title);
     await this.web.click('Dodaj');
-    await this.web.waitForText('Dodano ofertę pracy!');
+    await this.web.waitForText('Dodano ogłoszenie!');
   }
 
   private async selectPricingPlan(pricingPlan: PricingPlan): None {
@@ -88,7 +88,7 @@ export class Driver {
   }
 
   private async finalizeJobOfferPayment(payment: Payment, paymentCardNumber: string): None {
-    await this.web.waitForText('Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.');
+    await this.web.waitForText('Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność.');
     if (payment === 'completed') {
       await this.fillCardDetails(paymentCardNumber);
       await this.proceedCardPayment();
@@ -96,7 +96,7 @@ export class Driver {
     }
     if (payment === 'redeem-bundle') {
       await this.finalizePaymentByUsingBundle();
-      await this.web.waitForText('Skorzystałeś z pakietu, żeby opublikować ofertę!');
+      await this.web.waitForText('Skorzystałeś z pakietu, żeby opublikować ogłoszenie!');
     }
     if (payment === 'failed') {
       await this.fillCardDetails(paymentCardNumber);
@@ -116,9 +116,9 @@ export class Driver {
   async updateJobOffer(sourceTitle: string, targetTitle: string): None {
     await this.web.click(sourceTitle);
     await this.web.click('Edytuj');
-    await this.web.fillByLabel('Tytuł oferty', targetTitle);
+    await this.web.fillByLabel('Tytuł ogłoszenia', targetTitle);
     await this.web.click('Zapisz');
-    await this.web.waitForText('Zaktualizowano ofertę pracy!');
+    await this.web.waitForText('Zaktualizowano ogłoszenie!');
   }
 
   async searchJobOffers(searchPhrase: string): None {
@@ -158,7 +158,7 @@ export class Driver {
   }
 
   private parsePlanBundle(planBundle: string): PlanBundle {
-    const match = planBundle.match(/^Pozostało (\d+) ofert\(y\) z Pakietu (\w+)\.$/);
+    const match = planBundle.match(/^Pozostało (\d+) ogłoszeń z Pakietu (\w+)\.$/);
     if (!match) {
       throw new Error('Failed to parse plan bundle.');
     }

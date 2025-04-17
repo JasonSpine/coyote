@@ -24,7 +24,7 @@
       :plan="props.pricingPlan!"
       @create="createJob"/>
     <template v-if="props.screen === 'payment' && props.currentJobOfferId">
-      <p>Oferta została stworzona, zostanie opublikowana kiedy zaksięgujemy płatność.</p>
+      <p>Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność.</p>
       <JobOfferRedeemBundle
         v-if="props.planBundle?.canRedeem"
         :job-offer-id="props.currentJobOfferId"
@@ -160,9 +160,9 @@ const toastTitle = computed<string|null>(() => {
     return null;
   }
   const titles: Record<Toast, string> = {
-    created: 'Dodano ofertę pracy!',
-    edited: 'Zaktualizowano ofertę pracy!',
-    'bundle-used': 'Skorzystałeś z pakietu, żeby opublikować ofertę!',
+    created: 'Dodano ogłoszenie!',
+    edited: 'Zaktualizowano ogłoszenie!',
+    'bundle-used': 'Skorzystałeś z pakietu, żeby opublikować ogłoszenie!',
   };
   return titles[props.toast];
 });
@@ -171,7 +171,7 @@ const planBundleToast = computed<string|null>(() => {
   if (props.planBundle === null) {
     return null;
   }
-  return `Pozostało ${props.planBundle.remainingJobOffers} ofert(y) z Pakietu ${capitalize(props.planBundle.bundleName)}.`;
+  return `Pozostało ${props.planBundle.remainingJobOffers} ogłoszeń z Pakietu ${capitalize(props.planBundle.bundleName)}.`;
 });
 
 function capitalize(string: string): string {
