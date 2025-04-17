@@ -1,10 +1,6 @@
 <template>
   <Design.Layout class="bg-body">
-    <Design.BannerHeading/>
-    <span v-if="showHomeLink" @click="navigate('home')" class="cursor-pointer">
-      Wróć
-    </span>
-    <hr/>
+    <Design.BannerHeading :back="showHomeLink" @back="navigate('home')"/>
     <Design.Toast v-if="toastTitle" :title="toastTitle"/>
     <Design.Toast v-if="planBundleToast"
                   :title="planBundleToast"
