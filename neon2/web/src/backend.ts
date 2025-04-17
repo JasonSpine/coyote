@@ -1,9 +1,9 @@
-import {CreateJobOffer, PricingPlan} from "./main";
+import {PricingPlan, SubmitJobOffer} from "./main";
 
 export class JobBoardBackend {
   addJobOffer(
     pricingPlan: PricingPlan,
-    jobOffer: CreateJobOffer,
+    jobOffer: SubmitJobOffer,
     created: (jobOffer: BackendJobOffer) => void,
   ): void {
     request('POST', '/neon2/job-offers', {
@@ -15,8 +15,12 @@ export class JobBoardBackend {
       .then((jobOffer: BackendJobOffer): void => created(jobOffer));
   }
 
-  updateJobOffer(id: number, title: string, updated: () => void): void {
-    request('PATCH', '/neon2/job-offers', {jobOfferId: id.toString(), jobOfferTitle: title})
+  updateJobOffer(id: number, jobOffer: SubmitJobOffer, updated: () => void): void {
+    request('PATCH', '/neon2/job-offers', {
+      jobOfferId: id.toString(),
+      jobOfferTitle: jobOffer.title,
+      jobOfferDescription: jobOffer.description,
+    })
       .then(() => updated());
   }
 

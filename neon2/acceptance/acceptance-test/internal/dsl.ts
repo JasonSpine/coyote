@@ -73,8 +73,16 @@ export class Dsl {
     return this.cardNumber('valid');
   }
 
-  async updateJobOffer(update: {title: string, updatedTitle: string}): None {
-    await this.driver.updateJobOffer(this.enc(update.title), this.enc(update.updatedTitle));
+  async updateJobOffer(update: {
+    title: string,
+    updatedTitle?: string,
+    updatedDescription?: string
+  }): None {
+    await this.driver.updateJobOffer(
+      this.enc(update.title),
+      this.enc(update.updatedTitle || update.title),
+      update.updatedDescription || 'Updated description',
+    );
   }
 
   async searchJobOffers(search: {searchPhrase: string}): None {

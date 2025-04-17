@@ -2,6 +2,7 @@
 namespace Neon2\JobBoard;
 
 use Neon2\Database;
+use Neon2\Request\JobOfferSubmit;
 
 readonly class JobBoardGate {
     private Database $database;
@@ -19,26 +20,28 @@ readonly class JobBoardGate {
     }
 
     public function addJobOffer(
-        string  $title,
-        string  $description,
-        string  $pricingPlan,
-        ?string $paymentId,
+        JobOfferSubmit $jobOffer,
+        string         $pricingPlan,
+        ?string        $paymentId,
     ): JobOffer {
-        $jobOffer = new JobOffer(0,
-            $title,
-            $description,
+        $record = new JobOffer(0,
+            $jobOffer->title,
+            $jobOffer->description,
             $pricingPlan === 'free' ? 14 : 30,
             $pricingPlan === 'free' ? JobOfferStatus::Published : JobOfferStatus::AwaitingPayment,
             $paymentId);
-        $id = $this->insertJobOffer($jobOffer, $pricingPlan);
-        $jobOffer->id = $id;
-        return $jobOffer;
+        $id = $this->insertJobOffer($record, $pricingPlan);
+        $record->id = $id;
+        return $record;
     }
 
-    public function editJobOffer(int $jobOfferId, string $jobOfferTitle): void {
-        $this->database->execute('UPDATE job_offers SET title = :title WHERE id = :id;', [
-            'id'    => $jobOfferId,
-            'title' => $jobOfferTitle,
+    public function editJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void {
+        $this->database->execute('UPDATE job_offers
+            SET title = :title, description = :description
+            WHERE id = :id;', [
+            'id'          => $jobOfferId,
+            'title'       => $jobOffer->title,
+            'description' => $jobOffer->description,
         ]);
     }
 

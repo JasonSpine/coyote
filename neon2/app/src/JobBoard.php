@@ -6,6 +6,7 @@ use Neon2\JobBoard\JobOffer;
 use Neon2\JobBoard\PlanBundleGate;
 use Neon2\Payment\PaymentGate;
 use Neon2\Payment\PaymentStatus;
+use Neon2\Request\JobOfferSubmit;
 
 readonly class JobBoard {
     public function __construct(
@@ -19,17 +20,15 @@ readonly class JobBoard {
         return $this->testMode;
     }
 
-    public function addJobOffer(string $jobOfferTitle, string $jobOfferPlan, string $jobOfferDescription): JobOffer {
+    public function addJobOffer(string $jobOfferPlan, JobOfferSubmit $jobOffer): JobOffer {
         if ($jobOfferPlan === 'free') {
             return $this->jobBoardGate->addJobOffer(
-                $jobOfferTitle,
-                $jobOfferDescription,
-                'free', 
+                $jobOffer,
+                'free',
                 null);
         }
         return $this->jobBoardGate->addJobOffer(
-            $jobOfferTitle,
-            $jobOfferDescription,
+            $jobOffer,
             $jobOfferPlan,
             $this->generatePaymentId());
     }

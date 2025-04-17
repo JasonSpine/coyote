@@ -79,3 +79,12 @@ describe('Purchased plan bundle entitles to multiple job offers.', () => {
     });
   });
 });
+
+describe('Job offer contains various job offer fields.', () => {
+  test('Job offer description can be updated.', async (dsl: Dsl) => {
+    await dsl.publishJobOffer({title: 'Updated', description: 'Before'});
+    await dsl.updateJobOffer({title: 'Updated', updatedDescription: 'After'});
+    await dsl.resetClient();
+    await dsl.assertJobOfferField({jobOfferTitle: 'Updated', expectedDescription: 'After'});
+  });
+});

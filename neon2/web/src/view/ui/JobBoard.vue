@@ -15,9 +15,8 @@
     <JobOfferPricing
       v-if="props.screen === 'pricing'"
       @select="selectPlan"/>
-    <JobOfferForm
+    <JobOfferCreate
       v-if="props.screen === 'form'"
-      :plan="props.pricingPlan!"
       @create="createJob"/>
     <template v-if="props.screen === 'payment' && props.currentJobOfferId">
       <p>Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność.</p>
@@ -39,6 +38,7 @@
       @edit="editJob"/>
     <JobOfferEdit
       v-if="props.screen === 'edit'"
+      :id="currentJobOffer.id"
       :job-offer="currentJobOffer"
       @update="updateJob"/>
     <JobOfferHome
@@ -53,13 +53,13 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {CreateJobOffer, PlanBundleName, PricingPlan} from "../../main";
+import {PlanBundleName, PricingPlan, SubmitJobOffer} from "../../main";
 import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
 import {Design} from "./design/design";
+import JobOfferCreate from "./JobOffer/JobOfferCreate.vue";
 import JobOfferEdit from './JobOffer/JobOfferEdit.vue';
-import JobOfferForm from './JobOffer/JobOfferForm.vue';
 import JobOfferHome from './JobOffer/JobOfferHome.vue';
 import JobOfferPaymentForm from './JobOffer/JobOfferPaymentForm.vue';
 import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
@@ -67,10 +67,13 @@ import JobOfferRedeemBundle from "./JobOffer/JobOfferRedeemBundle.vue";
 import JobOfferShow from './JobOffer/JobOfferShow.vue';
 import {PlanBundle} from "./ui";
 
+const props = defineProps<JobBoardProps>();
+const emit = defineEmits<Emit>();
+
 export interface JobBoardProps {
   jobOffers: JobOffer[];
-  toast: Toast|null;
   screen: Screen;
+  toast: Toast|null;
   currentJobOfferId: number|null;
   paymentNotification: PaymentNotification|null;
   paymentStatus: PaymentStatus|null;
@@ -78,16 +81,11 @@ export interface JobBoardProps {
   pricingPlan: PricingPlan|null;
 }
 
-export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
-
-const props = defineProps<JobBoardProps>();
-const emit = defineEmits<Emit>();
-
 interface Emit {
   (event: 'show-form'): void;
   (event: 'select-plan', plan: PricingPlan): void;
-  (event: 'create', plan: PricingPlan, jobOffer: CreateJobOffer): void;
-  (event: 'update', id: number, title: string): void;
+  (event: 'create', plan: PricingPlan, jobOffer: SubmitJobOffer): void;
+  (event: 'update', jobOfferId: number, jobOffer: SubmitJobOffer): void;
   (event: 'navigate', screen: Screen, id: number|null): void;
   (event: 'search', searchPhrase: string);
   (event: 'pay', id: number): void;
@@ -95,6 +93,8 @@ interface Emit {
   (event: 'mount-card-input', cssSelector: string): void;
   (event: 'unmount-card-input'): void;
 }
+
+export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
 function navigate(newScreen: Screen, id?: number): void {
   emit('navigate', newScreen, id || null);
@@ -104,8 +104,12 @@ const currentJobOffer = computed<JobOffer>(() => {
   return props.jobOffers.find(offer => offer.id === props.currentJobOfferId)!;
 });
 
-function createJob(plan: PricingPlan, jobOffer: CreateJobOffer): void {
-  emit('create', plan, jobOffer);
+function createJob(jobOffer: SubmitJobOffer): void {
+  emit('create', props.pricingPlan!, jobOffer);
+}
+
+function updateJob(id: number, jobOffer: SubmitJobOffer): void {
+  emit('update', id, jobOffer);
 }
 
 function editJob(id: number): void {
@@ -124,13 +128,9 @@ function redeemBundle(jobOfferId: number): void {
   emit('redeem-bundle', jobOfferId);
 }
 
-function updateJob(id: number, title: string): void {
-  emit('update', id, title);
-}
-
 function selectPlan(bundleName: PlanBundleName, pricingPlan: PricingPlan): void {
-  navigate('form');
   emit('select-plan', pricingPlan);
+  navigate('form');
 }
 
 function showJobOfferForm(): void {

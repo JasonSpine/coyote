@@ -1,7 +1,4 @@
 <template>
-  <h2>
-    Wybrany plan: {{props.plan}}
-  </h2>
   <Design.Card title="Podstawowe informacje">
     <label>
       Tytuł ogłoszenia
@@ -17,8 +14,8 @@
   <Design.Tile>
     <Design.Row>
       <Design.RowEnd>
-        <Design.Button primary @click="create">
-          Dodaj
+        <Design.Button primary @click="emit('submit', jobOffer)">
+          {{buttonTitle}}
         </Design.Button>
       </Design.RowEnd>
     </Design.Row>
@@ -26,27 +23,27 @@
 </template>
 
 <script setup lang="ts">
-import {reactive} from 'vue';
-import {CreateJobOffer, PricingPlan} from "../../../main";
+import {computed, reactive} from 'vue';
+import {SubmitJobOffer} from "../../../main";
 import {Design} from "../design/design";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
 interface Props {
-  plan: PricingPlan;
+  jobOffer: SubmitJobOffer;
+  mode: 'create'|'update';
 }
 
 interface Emit {
-  (event: 'create', plan: PricingPlan, jobOffer: CreateJobOffer): void;
+  (event: 'submit', jobOffer: SubmitJobOffer): void;
 }
 
-function create(): void {
-  emit('create', props.plan, jobOffer);
-}
-
-const jobOffer: CreateJobOffer = reactive<CreateJobOffer>({
-  title: '',
-  description: '',
+const jobOffer: SubmitJobOffer = reactive<SubmitJobOffer>({...props.jobOffer});
+const buttonTitle = computed<string>(() => {
+  if (props.mode === 'create') {
+    return 'Dodaj';
+  }
+  return 'Zapisz';
 });
 </script>

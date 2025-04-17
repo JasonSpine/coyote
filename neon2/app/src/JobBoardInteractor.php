@@ -12,6 +12,7 @@ use Neon2\Payment\Provider\Stripe;
 use Neon2\Payment\Provider\StripeWebhook;
 use Neon2\Payment\Provider\TestPaymentProvider;
 use Neon2\Payment\Provider\TestPaymentWebhook;
+use Neon2\Request\JobOfferSubmit;
 
 readonly class JobBoardInteractor {
     private JobBoard $board;
@@ -43,12 +44,12 @@ readonly class JobBoardInteractor {
             $userId ?? 1);
     }
 
-    public function createJobOffer(string $jobOfferTitle, string $jobOfferPlan, string $jobOfferDescription): JobOffer {
-        return $this->board->addJobOffer($jobOfferTitle, $jobOfferPlan, $jobOfferDescription);
+    public function createJobOffer(string $jobOfferPlan, JobOfferSubmit $jobOffer): JobOffer {
+        return $this->board->addJobOffer($jobOfferPlan, $jobOffer);
     }
 
-    public function updateJobOffer(int $jobOfferId, string $jobOfferTitle): void {
-        $this->jobBoardGate->editJobOffer($jobOfferId, $jobOfferTitle);
+    public function updateJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void {
+        $this->jobBoardGate->editJobOffer($jobOfferId, $jobOffer);
     }
 
     public function preparePayment(int $userId, string $paymentId, int $amount): PreparedPayment {

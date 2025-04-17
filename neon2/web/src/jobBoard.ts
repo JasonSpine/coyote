@@ -18,8 +18,10 @@ export class JobBoard {
     this.updateView();
   }
 
-  jobOfferUpdated(id: number, targetTitle: string): void {
-    this.findJobOffer(id).title = targetTitle;
+  jobOfferUpdated(id: number, targetTitle: string, targetDescription: string): void {
+    const jobOffer = this.findJobOffer(id);
+    jobOffer.title = targetTitle;
+    jobOffer.description = targetDescription;
     this.updateView();
   }
 

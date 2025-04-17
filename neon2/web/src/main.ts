@@ -20,13 +20,13 @@ const planBundle = new PlanBundle();
 export type PlanBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|'premium'|PlanBundleName;
 
-export interface CreateJobOffer {
+export interface SubmitJobOffer {
   title: string;
   description: string;
 }
 
 view.addEventListener({
-  createJob(pricingPlan: PricingPlan, jobOffer: CreateJobOffer): void {
+  createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {
     backend.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
       const {id, title, expiresInDays, status, description} = jobOffer;
       board.jobOfferCreated({id, title, description, expiresInDays, status});
@@ -38,10 +38,9 @@ view.addEventListener({
       }
     });
   },
-  updateJob(id: number, title: string): void {
-    const jobOfferId = id;
-    backend.updateJobOffer(jobOfferId, title, (): void => {
-      board.jobOfferUpdated(jobOfferId, title);
+  updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void {
+    backend.updateJobOffer(jobOfferId, jobOffer, (): void => {
+      board.jobOfferUpdated(jobOfferId, jobOffer.title, jobOffer.description);
       view.jobOfferEdited();
     });
   },

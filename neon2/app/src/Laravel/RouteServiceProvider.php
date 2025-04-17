@@ -1,18 +1,25 @@
 <?php
 namespace Neon2\Laravel;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades;
 use Illuminate\Support\ServiceProvider;
 use Neon2\JobBoardInteractor;
+use Neon2\Request\JobOfferSubmit;
 
 class RouteServiceProvider extends ServiceProvider {
     public function boot(): void {
         Facades\Route::post('/neon2/job-offers', function (JobBoardInteractor $listener) {
             $createdJobOffer = $listener->createJobOffer(
-                request()->get('jobOfferTitle'),
                 request()->get('jobOfferPlan'),
-                request()->get('jobOfferDescription'));
+                $this->requestJobOfferSubmit(request()));
             return response()->json($createdJobOffer, status:201);
+        });
+        Facades\Route::patch('/neon2/job-offers', function (JobBoardInteractor $listener) {
+            $listener->updateJobOffer(
+                request()->get('jobOfferId'),
+                $this->requestJobOfferSubmit(request()));
+            return response()->json([], status:201);
         });
         Facades\Route::post('/neon2/job-offers/payment', function (JobBoardInteractor $listener) {
             $preparedPayment = $listener->preparePayment(
@@ -20,12 +27,6 @@ class RouteServiceProvider extends ServiceProvider {
                 request()->get('paymentId'),
                 2000);
             return response()->json($preparedPayment, status:201);
-        });
-        Facades\Route::patch('/neon2/job-offers', function (JobBoardInteractor $listener) {
-            $listener->updateJobOffer(
-                request()->get('jobOfferId'),
-                request()->get('jobOfferTitle'));
-            return response()->json([], status:201);
         });
         Facades\Route::post('/neon2/job-offers/redeem-bundle', function (JobBoardInteractor $listener) {
             $listener->redeemBundle(
@@ -42,5 +43,11 @@ class RouteServiceProvider extends ServiceProvider {
             $status = $listener->paymentStatus(request()->query->get('paymentId'));
             return response()->json($status);
         });
+    }
+
+    private function requestJobOfferSubmit(Request $request): JobOfferSubmit {
+        return new JobOfferSubmit(
+            $request->get('jobOfferTitle'),
+            $request->get('jobOfferDescription'));
     }
 }

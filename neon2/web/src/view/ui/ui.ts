@@ -1,6 +1,6 @@
 import {createApp, h, Reactive, reactive, VNode} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {CreateJobOffer, PlanBundleName, PricingPlan} from "../../main";
+import {PlanBundleName, PricingPlan, SubmitJobOffer} from "../../main";
 import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
@@ -9,8 +9,8 @@ import JobBoard, {JobBoardProps, Screen} from './JobBoard.vue';
 export {Screen} from './JobBoard.vue';
 
 export interface ViewListener {
-  createJob: (plan: PricingPlan, jobOffer: CreateJobOffer) => void;
-  updateJob: (id: number, title: string) => void;
+  createJob: (plan: PricingPlan, jobOffer: SubmitJobOffer) => void;
+  updateJob: (jobOfferId: number, jobOffer: SubmitJobOffer) => void;
   payForJob: (id: number) => void;
   redeemBundle: (jobOfferId: number) => void;
   managePaymentMethod: (action: 'mount'|'unmount', cssSelector?: string) => void;
@@ -114,11 +114,11 @@ export class VueUi implements UserInterface {
       onSelectPlan(plan: PricingPlan): void {
         that.vueState.pricingPlan = plan;
       },
-      onCreate(plan: PricingPlan, jobOffer: CreateJobOffer): void {
+      onCreate(plan: PricingPlan, jobOffer: SubmitJobOffer): void {
         that.viewListeners.forEach(listener => listener.createJob(plan, jobOffer));
       },
-      onUpdate(id: number, title: string): void {
-        that.viewListeners.forEach(listener => listener.updateJob(id, title));
+      onUpdate(jobOfferId: number, jobOffer: SubmitJobOffer): void {
+        that.viewListeners.forEach(listener => listener.updateJob(jobOfferId, jobOffer));
       },
       onPay(jobOfferId: number): void {
         that.viewListeners.forEach(listener => listener.payForJob(jobOfferId));

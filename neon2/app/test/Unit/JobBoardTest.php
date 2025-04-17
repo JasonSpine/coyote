@@ -3,6 +3,7 @@ namespace Test\Neon2\Unit;
 
 use Neon2\JobBoard;
 use Neon2\Payment;
+use Neon2\Request\JobOfferSubmit;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -26,12 +27,12 @@ class JobBoardTest extends TestCase {
     #[Test]
     public function freeJobOffers_dontContainPaymentIdUnnecessarily(): void {
         $this->expectPaymentId(null);
-        $this->jobBoard->addJobOffer('Offer', 'free', '');
+        $this->jobBoard->addJobOffer('free', new JobOfferSubmit('Offer', ''));
     }
 
     private function expectPaymentId(?string $expectedPaymentId): void {
         $this->jobBoardGate->method('addJobOffer')
-            ->willReturnCallback(function (string $title, string $description, string $pricingPlan, ?string $paymentId)
+            ->willReturnCallback(function (JobOfferSubmit $jobOffer, string $pricingPlan, ?string $paymentId)
             use ($expectedPaymentId): JobBoard\JobOffer {
                 $this->assertSame($expectedPaymentId, $paymentId);
                 return $this->createMock(JobBoard\JobOffer::class);

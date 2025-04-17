@@ -117,10 +117,11 @@ export class Driver {
     await this.web.click('Zapłać i Publikuj');
   }
 
-  async updateJobOffer(sourceTitle: string, targetTitle: string): None {
+  async updateJobOffer(sourceTitle: string, targetTitle: string, targetDescription: string): None {
     await this.web.click(sourceTitle);
     await this.web.click('Edytuj');
     await this.web.fillByLabel('Tytuł ogłoszenia', targetTitle);
+    await this.web.fillByLabel('Opis ogłoszenia', targetDescription);
     await this.web.click('Zapisz');
     await this.web.waitForText('Zaktualizowano ogłoszenie!');
   }
