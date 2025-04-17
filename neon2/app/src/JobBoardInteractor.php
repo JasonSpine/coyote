@@ -45,11 +45,11 @@ readonly class JobBoardInteractor {
     }
 
     public function createJobOffer(string $jobOfferPlan, JobOfferSubmit $jobOffer): JobOffer {
-        return $this->board->addJobOffer($jobOfferPlan, $jobOffer);
+        return $this->board->createJobOffer($jobOfferPlan, $jobOffer);
     }
 
     public function updateJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void {
-        $this->jobBoardGate->editJobOffer($jobOfferId, $jobOffer);
+        $this->jobBoardGate->updateJobOffer($jobOfferId, $jobOffer);
     }
 
     public function preparePayment(int $userId, string $paymentId, int $amount): PreparedPayment {

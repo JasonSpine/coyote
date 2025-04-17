@@ -19,7 +19,7 @@ readonly class JobBoardGate {
             paymentId TEXT);');
     }
 
-    public function addJobOffer(
+    public function createJobOffer(
         JobOfferSubmit $jobOffer,
         string         $pricingPlan,
         ?string        $paymentId,
@@ -35,7 +35,7 @@ readonly class JobBoardGate {
         return $record;
     }
 
-    public function editJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void {
+    public function updateJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void {
         $this->database->execute('UPDATE job_offers
             SET title = :title, description = :description
             WHERE id = :id;', [
