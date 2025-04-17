@@ -194,7 +194,7 @@ const paymentNotificationTitle = computed<string|null>(() => {
     return null;
   }
   const titles: Record<PaymentNotification, string> = {
-    processed: 'Przyjęto polecenie płatności.',
+    accepted: 'Przyjęto polecenie płatności.',
     declinedCardExpired: 'Karta płatnicza wygasła. Użyj aktualnej karty i spróbuj ponownie.',
     declinedInsufficientFunds: 'Brak wystarczających środków na koncie. Upewnij się, że masz wystarczającą ilość środków lub użyj innej karty.',
     declinedCard: 'Płatność została odrzucona przez bank. Sprawdź dane karty lub skontaktuj się ze swoim bankiem.',

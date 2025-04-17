@@ -5,7 +5,7 @@ export interface PaymentProvider {
 }
 
 export type PaymentNotification =
-  |'processed'
+  |'accepted'
   |'declinedPayment'
   |'declinedCard'
   |'declinedInsufficientFunds'
@@ -46,7 +46,7 @@ export class Stripe implements PaymentProvider {
     }
     if (response.paymentIntent) {
       if (response.paymentIntent.status === 'succeeded') {
-        return 'processed';
+        return 'accepted';
       }
     }
     return 'unexpectedProviderResponse';
@@ -86,14 +86,14 @@ export class TestPaymentProvider implements PaymentProvider {
   async performPayment(paymentToken: string): Promise<PaymentNotification> {
     const cardNumber = this.cardNumber();
     const notification = this.paymentResultBasedOnCardNumber(cardNumber);
-    const paymentStatus = notification === 'processed' ? 'completed' : 'failed';
+    const paymentStatus = notification === 'accepted' ? 'completed' : 'failed';
     await callTestPaymentWebhook({paymentToken, paymentStatus});
     return notification;
   }
 
   private paymentResultBasedOnCardNumber(cardNumber: string): PaymentNotification {
     if (cardNumber === '4242424242424242') {
-      return 'processed';
+      return 'accepted';
     }
     if (cardNumber === '4000000000009995') {
       return 'declinedInsufficientFunds';

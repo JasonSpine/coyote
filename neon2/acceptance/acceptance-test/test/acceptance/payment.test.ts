@@ -16,10 +16,10 @@ describe('Payment processing.', () => {
     });
   });
 
-  describe('Payment notification is issued after the payment is processed.', () => {
-    test('Payment is processed.', async (dsl: Dsl) => {
+  describe('Payment notification is issued after the payment is accepted.', () => {
+    test('Payment is accepted.', async (dsl: Dsl) => {
       await dsl.initiatePayment({card: 'valid'});
-      await dsl.assertPaymentNotification({expectedPaymentNotification: 'processed'});
+      await dsl.assertPaymentNotification({expectedPaymentNotification: 'accepted'});
     });
     test('Payment with an expired card is declined.', async (dsl: Dsl) => {
       await dsl.initiatePayment({card: 'expired'});
