@@ -26,12 +26,12 @@ class JobBoardTest extends TestCase {
     #[Test]
     public function freeJobOffers_dontContainPaymentIdUnnecessarily(): void {
         $this->expectPaymentId(null);
-        $this->jobBoard->addJobOffer('Offer', 'free');
+        $this->jobBoard->addJobOffer('Offer', 'free', '');
     }
 
     private function expectPaymentId(?string $expectedPaymentId): void {
         $this->jobBoardGate->method('addJobOffer')
-            ->willReturnCallback(function (string $title, string $pricingPlan, ?string $paymentId)
+            ->willReturnCallback(function (string $title, string $description, string $pricingPlan, ?string $paymentId)
             use ($expectedPaymentId): JobBoard\JobOffer {
                 $this->assertSame($expectedPaymentId, $paymentId);
                 return $this->createMock(JobBoard\JobOffer::class);

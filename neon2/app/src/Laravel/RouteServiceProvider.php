@@ -10,7 +10,8 @@ class RouteServiceProvider extends ServiceProvider {
         Facades\Route::post('/neon2/job-offers', function (JobBoardInteractor $listener) {
             $createdJobOffer = $listener->createJobOffer(
                 request()->get('jobOfferTitle'),
-                request()->get('jobOfferPlan'));
+                request()->get('jobOfferPlan'),
+                request()->get('jobOfferDescription'));
             return response()->json($createdJobOffer, status:201);
         });
         Facades\Route::post('/neon2/job-offers/payment', function (JobBoardInteractor $listener) {

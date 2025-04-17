@@ -1,8 +1,16 @@
-import {PricingPlan} from "./main";
+import {CreateJobOffer, PricingPlan} from "./main";
 
 export class JobBoardBackend {
-  addJobOffer(title: string, pricingPlan: PricingPlan, created: (jobOffer: BackendJobOffer) => void): void {
-    request('POST', '/neon2/job-offers', {jobOfferTitle: title, jobOfferPlan: pricingPlan})
+  addJobOffer(
+    pricingPlan: PricingPlan,
+    jobOffer: CreateJobOffer,
+    created: (jobOffer: BackendJobOffer) => void,
+  ): void {
+    request('POST', '/neon2/job-offers', {
+      jobOfferPlan: pricingPlan,
+      jobOfferTitle: jobOffer.title,
+      jobOfferDescription: jobOffer.description,
+    })
       .then(response => response.json())
       .then((jobOffer: BackendJobOffer): void => created(jobOffer));
   }
@@ -68,6 +76,7 @@ export interface BackendJobOffer {
   expiresInDays: number;
   status: BackendJobOfferStatus;
   paymentId: string|null;
+  description: string;
 }
 
 export type BackendJobOfferStatus = 'published'|'awaitingPayment';

@@ -19,12 +19,17 @@ readonly class JobBoard {
         return $this->testMode;
     }
 
-    public function addJobOffer(string $jobOfferTitle, string $jobOfferPlan): JobOffer {
+    public function addJobOffer(string $jobOfferTitle, string $jobOfferPlan, string $jobOfferDescription): JobOffer {
         if ($jobOfferPlan === 'free') {
-            return $this->jobBoardGate->addJobOffer($jobOfferTitle, 'free', null);
+            return $this->jobBoardGate->addJobOffer(
+                $jobOfferTitle,
+                $jobOfferDescription,
+                'free', 
+                null);
         }
         return $this->jobBoardGate->addJobOffer(
             $jobOfferTitle,
+            $jobOfferDescription,
             $jobOfferPlan,
             $this->generatePaymentId());
     }

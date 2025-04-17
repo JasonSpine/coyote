@@ -6,7 +6,11 @@ export class HttpDriver {
   }
 
   async createJobOfferReturnId(jobOfferTitle: string, jobOfferPlan: PricingPlan): Promise<number> {
-    const jobOfferCreated = await this.post('/neon2/job-offers', {jobOfferTitle, jobOfferPlan});
+    const jobOfferCreated = await this.post('/neon2/job-offers', {
+      jobOfferPlan,
+      jobOfferTitle,
+      jobOfferDescription: 'description',
+    });
     return jobOfferCreated['id'];
   }
 

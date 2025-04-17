@@ -46,6 +46,7 @@ export interface JobOffer {
   title: string;
   expiresInDays: number;
   status: 'published'|'awaitingPayment';
+  description: string;
 }
 
 function copyArray<T>(array: T[]): T[] {

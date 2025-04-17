@@ -20,11 +20,16 @@ const planBundle = new PlanBundle();
 export type PlanBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|'premium'|PlanBundleName;
 
+export interface CreateJobOffer {
+  title: string;
+  description: string;
+}
+
 view.addEventListener({
-  createJob(title: string, pricingPlan: PricingPlan): void {
-    backend.addJobOffer(title, pricingPlan, (jobOffer: BackendJobOffer): void => {
-      const {id, title, expiresInDays, status} = jobOffer;
-      board.jobOfferCreated({id, title, expiresInDays, status});
+  createJob(pricingPlan: PricingPlan, jobOffer: CreateJobOffer): void {
+    backend.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
+      const {id, title, expiresInDays, status, description} = jobOffer;
+      board.jobOfferCreated({id, title, description, expiresInDays, status});
       if (pricingPlan === 'free') {
         view.jobOfferCreatedFree();
       } else {

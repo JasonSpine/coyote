@@ -53,7 +53,7 @@ class JobBoardGateTest extends TestCase {
 
     #[Test]
     public function editJobOffer(): void {
-        $jobOffer = $this->board->addJobOffer('Foo', 'free', '');
+        $jobOffer = $this->board->addJobOffer('Foo', '', 'free', '');
         $this->board->editJobOffer($jobOffer->id, 'New title');
         [$jobOffer] = $this->board->listJobOffers();
         $this->assertEquals('New title', $jobOffer->title);
@@ -83,7 +83,7 @@ class JobBoardGateTest extends TestCase {
 
     #[Test]
     public function readJobOfferIdByPaymentId(): void {
-        $jobOffer = $this->board->addJobOffer('Foo', 'free', 'payment-id');
+        $jobOffer = $this->board->addJobOffer('Foo', '', 'free', 'payment-id');
         $this->assertEquals(
             $jobOffer->id,
             $this->board->jobOfferIdByPaymentId('payment-id'));
@@ -91,15 +91,15 @@ class JobBoardGateTest extends TestCase {
 
     #[Test]
     public function readPricingPlanByPaymentId(): void {
-        $this->board->addJobOffer('Foo', 'scale', 'payment-id-123');
+        $this->board->addJobOffer('Foo', '', 'scale', 'payment-id-123');
         $this->assertSame('scale', $this->board->pricingPlanByPaymentId('payment-id-123'));
     }
 
     private function addFreeOffer(string $title): void {
-        $this->board->addJobOffer($title, 'free', '');
+        $this->board->addJobOffer($title, '', 'free', '');
     }
 
     private function addPaidOffer(string $title): JobOffer {
-        return $this->board->addJobOffer($title, 'premium', '');
+        return $this->board->addJobOffer($title, '', 'premium', '');
     }
 }

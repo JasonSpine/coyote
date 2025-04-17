@@ -5,13 +5,19 @@
   <Design.Card title="Podstawowe informacje">
     <label>
       Tytuł ogłoszenia
-      <Design.TextField placeholder="np. Senior Java Developer" v-model="jobTitle"/>
+      <Design.TextField placeholder="np. Senior Java Developer" v-model="jobOffer.title"/>
+    </label>
+  </Design.Card>
+  <Design.Card title="Opis ogłoszenia">
+    <label>
+      Opis ogłoszenia
+      <Design.TextField placeholder="Miejsce na szczegółowy opis oferty" v-model="jobOffer.description"/>
     </label>
   </Design.Card>
   <Design.Tile>
     <Design.Row>
       <Design.RowEnd>
-        <Design.Button primary @click="emit('create', jobTitle, props.plan)">
+        <Design.Button primary @click="create">
           Dodaj
         </Design.Button>
       </Design.RowEnd>
@@ -20,8 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
-import {PricingPlan} from "../../../main";
+import {reactive} from 'vue';
+import {CreateJobOffer, PricingPlan} from "../../../main";
 import {Design} from "../design/design";
 
 const props = defineProps<Props>();
@@ -32,8 +38,15 @@ interface Props {
 }
 
 interface Emit {
-  (event: 'create', title: string, plan: PricingPlan): void;
+  (event: 'create', plan: PricingPlan, jobOffer: CreateJobOffer): void;
 }
 
-const jobTitle = ref<string>('');
+function create(): void {
+  emit('create', props.plan, jobOffer);
+}
+
+const jobOffer: CreateJobOffer = reactive<CreateJobOffer>({
+  title: '',
+  description: '',
+});
 </script>

@@ -43,8 +43,8 @@ readonly class JobBoardInteractor {
             $userId ?? 1);
     }
 
-    public function createJobOffer(string $jobOfferTitle, string $jobOfferPlan): JobOffer {
-        return $this->board->addJobOffer($jobOfferTitle, $jobOfferPlan);
+    public function createJobOffer(string $jobOfferTitle, string $jobOfferPlan, string $jobOfferDescription): JobOffer {
+        return $this->board->addJobOffer($jobOfferTitle, $jobOfferPlan, $jobOfferDescription);
     }
 
     public function updateJobOffer(int $jobOfferId, string $jobOfferTitle): void {

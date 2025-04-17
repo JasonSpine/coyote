@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {PlanBundleName, PricingPlan} from "../../main";
+import {CreateJobOffer, PlanBundleName, PricingPlan} from "../../main";
 import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
@@ -90,7 +90,7 @@ const emit = defineEmits<Emit>();
 interface Emit {
   (event: 'show-form'): void;
   (event: 'select-plan', plan: PricingPlan): void;
-  (event: 'create', title: string, plan: PricingPlan): void;
+  (event: 'create', plan: PricingPlan, jobOffer: CreateJobOffer): void;
   (event: 'update', id: number, title: string): void;
   (event: 'navigate', screen: Screen, id: number|null): void;
   (event: 'search', searchPhrase: string);
@@ -108,8 +108,8 @@ const currentJobOffer = computed<JobOffer>(() => {
   return props.jobOffers.find(offer => offer.id === props.currentJobOfferId)!;
 });
 
-function createJob(jobOfferTitle: string, plan: PricingPlan): void {
-  emit('create', jobOfferTitle, plan);
+function createJob(plan: PricingPlan, jobOffer: CreateJobOffer): void {
+  emit('create', plan, jobOffer);
 }
 
 function editJob(id: number): void {

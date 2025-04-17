@@ -28,13 +28,14 @@ export class Driver {
     title: string,
     pricingPlan: PricingPlan,
     payment: Payment,
-    paymentCardNumber?: string,
+    paymentCardNumber: string,
+    description: string,
   ): None {
-    await this.createJobOffer(title, pricingPlan, payment);
+    await this.createJobOffer(title, pricingPlan, payment, description);
     if (pricingPlan === 'free') {
       await this.web.waitForText('Dodano ogłoszenie!');
     } else {
-      await this.finalizeJobOfferPayment(payment, paymentCardNumber!);
+      await this.finalizeJobOfferPayment(payment, paymentCardNumber);
     }
   }
 
@@ -45,24 +46,27 @@ export class Driver {
   private async createJobOffer(
     title: string,
     pricingPlan: PricingPlan,
-    payment: Payment) {
+    payment: Payment,
+    description: string,
+  ) {
     await this.web.click('Dodaj ogłoszenie');
     if (payment !== 'redeem-bundle') {
       await this.selectPricingPlan(pricingPlan);
     }
-    await this.submitJobOfferForm(title);
+    await this.submitJobOfferForm(title, description);
   }
 
   async initiatePayment(jobOfferTitle: string, cardNumber: string): None {
     await this.web.click('Dodaj ogłoszenie');
     await this.selectPricingPlan('premium');
-    await this.submitJobOfferForm(jobOfferTitle);
+    await this.submitJobOfferForm(jobOfferTitle, 'description');
     await this.fillCardDetails(cardNumber);
     await this.proceedCardPayment();
   }
 
-  private async submitJobOfferForm(title: string): None {
+  private async submitJobOfferForm(title: string, description: string): None {
     await this.web.fillByLabel('Tytuł ogłoszenia', title);
+    await this.web.fillByLabel('Opis ogłoszenia', description);
     await this.web.click('Dodaj');
     await this.web.waitForText('Dodano ogłoszenie!');
   }
@@ -132,7 +136,7 @@ export class Driver {
 
   async findJobOfferExpiryInDays(jobOfferTitle: string): Promise<number> {
     await this.web.click(jobOfferTitle);
-    return await this.web.readStringByTestId('jobOfferExpiresInDays');
+    return await this.web.readNumberByTestId('jobOfferExpiresInDays');
   }
 
   async readPaymentNotification(): Promise<PaymentNotification> {
@@ -170,6 +174,11 @@ export class Driver {
 
   async hasPlanBundle(): Promise<boolean> {
     return await this.web.isVisible('planBundle');
+  }
+
+  async findJobOfferField(jobOfferTitle: string, field: 'description'): Promise<string> {
+    await this.web.click(jobOfferTitle);
+    return await this.web.readStringByTestId('jobOfferDescription');
   }
 }
 

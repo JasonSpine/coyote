@@ -33,12 +33,20 @@ export class WebDriver {
     await this.page.getByPlaceholder(placeholder).fill(value);
   }
 
-  async readStringByTestId(testId: string): Promise<number> {
+  async readNumberByTestId(testId: string): Promise<number> {
     const text = await this.page.getByTestId(testId).textContent();
     if (text) {
       return parseInt(text);
     }
-    throw new Error(`Failed to read string by test id: ${testId}`);
+    throw new Error(`Failed to read a number by test id: ${testId}`);
+  }
+
+  async readStringByTestId(testId: string): Promise<string> {
+    const text = await this.page.getByTestId(testId).textContent();
+    if (text) {
+      return text.trim();
+    }
+    throw new Error(`Failed to read a string by test id: ${testId}`);
   }
 
   async listStringByTestId(testId: string): Promise<string[]> {

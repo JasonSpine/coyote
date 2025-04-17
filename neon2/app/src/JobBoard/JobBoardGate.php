@@ -11,6 +11,7 @@ readonly class JobBoardGate {
         $this->database->execute('CREATE TABLE IF NOT EXISTS job_offers (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
+            description TEXT NOT NULL,
             duration INTEGER NOT NULL,
             pricingPlan TEXT NOT NULL,
             status TEXT NOT NULL,
@@ -19,11 +20,13 @@ readonly class JobBoardGate {
 
     public function addJobOffer(
         string  $title,
+        string  $description,
         string  $pricingPlan,
         ?string $paymentId,
     ): JobOffer {
         $jobOffer = new JobOffer(0,
             $title,
+            $description,
             $pricingPlan === 'free' ? 14 : 30,
             $pricingPlan === 'free' ? JobOfferStatus::Published : JobOfferStatus::AwaitingPayment,
             $paymentId);
@@ -53,10 +56,11 @@ readonly class JobBoardGate {
         return array_map(fn(array $row) => new JobOffer(
             $row['id'],
             $row['title'],
+            $row['description'],
             $row['duration'],
             $this->parse($row['status']),
             $row['paymentId']),
-            $this->database->query('SELECT id, title, duration, status, paymentId FROM job_offers;'));
+            $this->database->query('SELECT id, title, description, duration, status, paymentId FROM job_offers;'));
     }
 
     public function clear(): void {
@@ -64,9 +68,10 @@ readonly class JobBoardGate {
     }
 
     private function insertJobOffer(JobOffer $jobOffer, string $pricingPlan): int {
-        return $this->database->insert('INSERT INTO job_offers (title, duration, pricingPlan, status, paymentId) 
-            VALUES (:title, :duration, :pricingPlan, :status, :paymentId);', [
+        return $this->database->insert('INSERT INTO job_offers (title, description, duration, pricingPlan, status, paymentId) 
+            VALUES (:title, :description, :duration, :pricingPlan, :status, :paymentId);', [
             'title'       => $jobOffer->title,
+            'description' => $jobOffer->description,
             'duration'    => $jobOffer->expiresInDays,
             'pricingPlan' => $pricingPlan,
             'status'      => $this->format($jobOffer->status),

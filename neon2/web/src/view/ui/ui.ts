@@ -1,6 +1,6 @@
 import {createApp, h, Reactive, reactive, VNode} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {PlanBundleName, PricingPlan} from "../../main";
+import {CreateJobOffer, PlanBundleName, PricingPlan} from "../../main";
 import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
@@ -9,7 +9,7 @@ import JobBoard, {JobBoardProps, Screen} from './JobBoard.vue';
 export {Screen} from './JobBoard.vue';
 
 export interface ViewListener {
-  createJob: (title: string, pricingPlan: PricingPlan) => void;
+  createJob: (plan: PricingPlan, jobOffer: CreateJobOffer) => void;
   updateJob: (id: number, title: string) => void;
   payForJob: (id: number) => void;
   redeemBundle: (jobOfferId: number) => void;
@@ -114,8 +114,8 @@ export class VueUi implements UserInterface {
       onSelectPlan(plan: PricingPlan): void {
         that.vueState.pricingPlan = plan;
       },
-      onCreate(title: string, plan: PricingPlan): void {
-        that.viewListeners.forEach(listener => listener.createJob(title, plan));
+      onCreate(plan: PricingPlan, jobOffer: CreateJobOffer): void {
+        that.viewListeners.forEach(listener => listener.createJob(plan, jobOffer));
       },
       onUpdate(id: number, title: string): void {
         that.viewListeners.forEach(listener => listener.updateJob(id, title));
