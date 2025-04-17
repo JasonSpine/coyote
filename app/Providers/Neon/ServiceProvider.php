@@ -9,23 +9,19 @@ use Coyote\Job;
 use Coyote\Job\Location;
 use Coyote\Services\UrlBuilder;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Neon;
-use Neon2\JobBoard;
-use Neon2\JobBoard\JobBoardGate;
-use Neon2\JobBoardView;
-use Neon2\Payment\PaymentGate;
-use Neon2\Payment\PaymentService;
-use Neon2\Payment\PaymentStatus;
-use Neon2\Payment\Provider\Stripe;
-use Neon2\Payment\Provider\StripeWebhook;
-use Neon2\Payment\Provider\TestPaymentProvider;
-use Neon2\Payment\Provider\TestPaymentWebhook;
+use Neon2\JobBoardInteractor;
 
 class ServiceProvider extends RouteServiceProvider {
+    public function register(): void {
+        parent::register();
+        $this->app->instance(
+            JobBoardInteractor::class,
+            new \Neon2\JobBoardInteractor(testMode:false));
+    }
+
     public function loadRoutes(): void {
         $this->get('/events', [
             'uses' => fn() => redirect('https://wydarzenia.4programmers.net/'),
@@ -45,67 +41,10 @@ class ServiceProvider extends RouteServiceProvider {
                     ]);
                 });
         });
-        $payments = new PaymentGate();
-        $jobBoardGate = new JobBoardGate();
-        $planBundle = new JobBoard\PlanBundleGate();
-        $board = new JobBoard($payments, $jobBoardGate, $planBundle, testMode:false);
-        if ($board->testMode()) {
-            $provider = new TestPaymentProvider();
-            $webhook = new TestPaymentWebhook($provider);
-        } else {
-            $provider = new Stripe('sk_test_51RBWn0Rf5n1iRahJzOJ6tJvWNO6fwKBaN7O2uVdhSGxVFVAsCeBTDgL13UWJ3VEGGLJc1ntyC5oDq5QQbVByEY8j00aluGGN0L');
-            $webhook = new StripeWebhook('whsec_iTDuuN5SKhmVJms57mG2v1SaoxYvm76o');
-        }
-        $paymentService = new PaymentService($payments, $provider);
-        $this->middleware(['web'])->group(function () use ($payments, $webhook, $paymentService, $board, $jobBoardGate) {
-            $this->get('/Neon', function (JobBoardView $jobBoardView) use ($board): string {
+        $this->middleware(['web'])->group(function () {
+            $this->get('/Neon', function (JobBoardInteractor $interactor): string {
                 Gate::authorize('alpha-access');
-                return $jobBoardView->jobBoardView(
-                    $board->testMode(),
-                    request()->query->get('userId', 1));
-            });
-            $this->group(['prefix' => '/neon2'], function () use ($payments, $webhook, $paymentService, $board, $jobBoardGate) {
-                $this->post('/job-offers', function () use ($board): JsonResponse {
-                    return response()->json(
-                        $board->addJobOffer(
-                            request()->get('jobOfferTitle'),
-                            request()->get('jobOfferPlan')),
-                        status:201);
-                });
-                $this->post('/job-offers/payment', function () use ($paymentService) {
-                    $payment = $paymentService->preparePayment(request()->get('userId'), 2000, request()->get('paymentId'));
-                    return response()->json([
-                        'providerReady' => $payment->providerReady,
-                        'paymentId'     => $payment->paymentId,
-                        'paymentToken'  => $payment->paymentToken,
-                    ]);
-                });
-                $this->patch('/job-offers', function () use ($jobBoardGate): Response {
-                    $jobBoardGate->editJobOffer(
-                        request()->get('jobOfferId'),
-                        request()->get('jobOfferTitle'));
-                    return response(status:201);
-                });
-                $this->post('/job-offers/redeem-bundle', function () use ($board) {
-                    $board->publishJobOfferUsingBundle(request()->get('jobOfferId'), request()->get('userId'));
-                    return response()->json(status:201);
-                });
-                $this->post('/webhook', function () use ($webhook, $board) {
-                    $paymentUpdate = $webhook->acceptPaymentUpdate(
-                        \file_get_contents('php://input'),
-                        $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '');
-                    if ($paymentUpdate) {
-                        $board->paymentUpdate($paymentUpdate);
-                    }
-                });
-                $this->get('/status', function () use ($payments) {
-                    $status = $payments->readPaymentStatus(request()->query->get('paymentId'));
-                    return response()->json(match ($status) {
-                        PaymentStatus::Completed => 'paymentComplete',
-                        PaymentStatus::Failed    => 'paymentFailed',
-                        PaymentStatus::Awaiting  => 'awaitingPayment',
-                    });
-                });
+                return $interactor->jobBoardView(auth()->id());
             });
         });
     }

@@ -21,12 +21,12 @@ readonly class JobBoardInteractor {
     private PaymentWebhook $paymentWebhook;
     private PaymentGate $gate;
 
-    public function __construct() {
+    public function __construct(bool $testMode) {
         $this->gate = new PaymentGate();
         $this->jobBoardGate = new JobBoardGate();
         $planBundle = new JobBoard\PlanBundleGate();
         $this->jobBoardView = new JobBoardView($this->jobBoardGate, $planBundle);
-        $this->board = new JobBoard($this->gate, $this->jobBoardGate, $planBundle, testMode:true);
+        $this->board = new JobBoard($this->gate, $this->jobBoardGate, $planBundle, $testMode);
         if ($this->board->testMode()) {
             $paymentProvider = new TestPaymentProvider();
             $this->paymentWebhook = new TestPaymentWebhook($paymentProvider);

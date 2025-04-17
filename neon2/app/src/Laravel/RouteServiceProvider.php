@@ -41,8 +41,5 @@ class RouteServiceProvider extends ServiceProvider {
             $status = $listener->paymentStatus(request()->query->get('paymentId'));
             return response()->json($status);
         });
-        Facades\Route::get('/', function (JobBoardInteractor $listener) {
-            return $listener->jobBoardView(request()->query->get('userId'));
-        });
     }
 }

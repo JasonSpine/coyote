@@ -12,6 +12,9 @@ require __DIR__ . '/../../app/vendor/autoload.php';
 $application = Application::configure(__DIR__ . '/laravel')
     ->withProviders([RouteServiceProvider::class])
     ->withRouting(function () {
+        Facades\Route::get('/', function (JobBoardInteractor $interactor) {
+            return $interactor->jobBoardView(request()->query->get('userId'));
+        });
         Facades\Route::get('/neon2/static/assets/{assetName}', function (string $assetName) {
             $asset = \realPath(__DIR__ . "/../../web/dist/assets/$assetName");
             if (file_exists($asset)) {
@@ -35,5 +38,5 @@ $application = Application::configure(__DIR__ . '/laravel')
     })
     ->withExceptions()
     ->create();
-$application->instance(JobBoardInteractor::class, new Neon2\JobBoardInteractor());
+$application->instance(JobBoardInteractor::class, new Neon2\JobBoardInteractor(testMode:true));
 $application->handleRequest(Request::capture());
