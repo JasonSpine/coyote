@@ -1,0 +1,26 @@
+<template>
+  <div class="flex space-x-8">
+    <Design.RadioButton
+      v-for="option in props.options"
+      :title="option.title"
+      :selected="option.value === selected"
+      @select="select(option)"/>
+  </div>
+</template>
+
+<script setup lang="ts" generic="U extends string|number">
+import {Design} from "./design";
+import {DrawerOption} from "./Dropdown.vue";
+
+const props = defineProps<Props>();
+
+interface Props {
+  options: DrawerOption<U>[];
+}
+
+function select(option: DrawerOption<U>): void {
+  selected.value = option.value;
+}
+
+const selected = defineModel<U, U, U>();
+</script>

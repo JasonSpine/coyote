@@ -42,9 +42,7 @@
     </Design.FieldGroup>
   </Design.Card>
   <Design.Card title="Tryb pracy">
-    <Design.FieldGroup label="Tryb pracy">
-      <Design.Dropdown icon="jobOfferFilterWorkMode" :options="workModeOptions" v-model="jobOffer.workMode"/>
-    </Design.FieldGroup>
+    <Design.RadioGroup :options="workModeOptions" v-model="jobOffer.workMode"/>
   </Design.Card>
   <Design.Card title="Lokalizacja">
     <Design.FieldGroup label="Lokalizacja">
