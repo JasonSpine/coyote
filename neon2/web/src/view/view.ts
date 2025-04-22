@@ -1,5 +1,5 @@
 import {JobOffer} from '../jobBoard';
-import {PlanBundleName} from "../main";
+import {PlanBundleName, UploadImage} from "../main";
 import {PaymentNotification} from "../paymentProvider";
 import {PaymentStatus} from "../paymentService";
 import {Screen, UserInterface, ViewListener} from './ui/ui';
@@ -87,5 +87,9 @@ export class View {
   setPlanBundle(planName: PlanBundleName, remainingJobOffers: number): void {
     this.planBundleCanRedeem = remainingJobOffers > 0;
     this.ui.setPlanBundle(planName, remainingJobOffers, this.planBundleCanRedeem);
+  }
+
+  upload(upload: UploadImage): void {
+    this.ui.upload(upload);
   }
 }

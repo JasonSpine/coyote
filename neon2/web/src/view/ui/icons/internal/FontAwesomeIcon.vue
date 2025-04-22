@@ -150,4 +150,8 @@ interface Props {
 .fa-circle-info:before {
   content: "\f05a";
 }
+
+.fa-circle-plus:before {
+  content: "\f055";
+}
 </style>

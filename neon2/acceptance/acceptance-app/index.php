@@ -13,7 +13,9 @@ $application = Application::configure(__DIR__ . '/laravel')
     ->withProviders([RouteServiceProvider::class])
     ->withRouting(function () {
         Facades\Route::get('/', function (JobBoardInteractor $interactor) {
-            return $interactor->jobBoardView(request()->query->get('userId'));
+            return $interactor->jobBoardView(
+                request()->query->get('userId'),
+                'csrf-token');
         });
         Facades\Route::get('/neon2/static/assets/{assetName}', function (string $assetName) {
             $asset = \realPath(__DIR__ . "/../../web/dist/assets/$assetName");

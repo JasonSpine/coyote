@@ -56,8 +56,8 @@ export class JobBoardBackend {
       .then(response => response.json());
   }
 
-  publishJobOfferUsingBundle(jobOfferId: number): Promise<void> {
-    return request('POST', '/neon2/job-offers/redeem-bundle', {jobOfferId, userId: this.userId()});
+  async publishJobOfferUsingBundle(jobOfferId: number): Promise<void> {
+    await request('POST', '/neon2/job-offers/redeem-bundle', {jobOfferId, userId: this.userId()});
   }
 
   initialJobOffers(): BackendJobOffer[] {
@@ -75,9 +75,26 @@ export class JobBoardBackend {
     return backendInput.userId;
   }
 
+  private csrfToken(): string {
+    const backendInput = window['backendInput'] as BackendInput;
+    return backendInput.csrfToken;
+  }
+
   testMode(): boolean {
     const backendInput = window['backendInput'] as BackendInput;
     return backendInput.testMode;
+  }
+
+  async uploadImageReturnUrl(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append('logo', file);
+    return fetch('/Firma/Logo', {
+      method: 'POST',
+      body: formData,
+      headers: {'X-CSRF-TOKEN': this.csrfToken()},
+    })
+      .then(response => response.json())
+      .then(uploadedImage => uploadedImage.url);
   }
 }
 
@@ -94,6 +111,7 @@ interface BackendInput {
   testMode: boolean;
   planBundle: BackendPlanBundle;
   userId: number;
+  csrfToken: string;
 }
 
 export interface BackendJobOffer {
@@ -143,7 +161,7 @@ interface BackendPlanBundle {
 
 export function toJobOffer(jobOffer: BackendJobOffer): JobOffer {
   const {fields, ...operationalFields} = jobOffer;
-  return {...operationalFields, ...fields, url: '', isNew: true, isFavourite: true};
+  return {...operationalFields, ...fields, isNew: true, isFavourite: true};
 }
 
 function invoiceInfoFields(invoiceInfo: InvoiceInformation): object {

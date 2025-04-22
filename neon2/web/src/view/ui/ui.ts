@@ -1,6 +1,6 @@
 import {createApp, h, Reactive, reactive, VNode} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {InvoiceInformation, PlanBundleName, PricingPlan, SubmitJobOffer} from "../../main";
+import {InvoiceInformation, PlanBundleName, PricingPlan, SubmitJobOffer, UploadImage} from "../../main";
 import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
@@ -28,6 +28,7 @@ export interface UserInterface {
   setPaymentNotification(notification: PaymentNotification): void;
   setPaymentStatus(status: PaymentStatus): void;
   setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void;
+  upload(upload: UploadImage): void;
 }
 
 export interface NavigationListener {
@@ -53,6 +54,7 @@ export class VueUi implements UserInterface {
     paymentStatus: null,
     planBundle: null,
     pricingPlan: null,
+    upload: null,
   });
   private viewListeners: ViewListener[] = [];
   private navigationListeners: NavigationListener[] = [];
@@ -97,6 +99,10 @@ export class VueUi implements UserInterface {
   setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
     this.vueState.planBundle = {bundleName, remainingJobOffers, canRedeem};
     this.vueState.pricingPlan = bundleName;
+  }
+
+  upload(upload: UploadImage): void {
+    this.vueState.upload = upload;
   }
 
   mount(cssSelector: string): void {

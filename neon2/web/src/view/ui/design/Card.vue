@@ -1,6 +1,6 @@
 <template>
   <Design.Tile vertical space>
-    <p v-text="props.title" class="text-lg font-semibold"/>
+    <p v-text="props.title" class="text-lg font-semibold text-neutral-800"/>
     <slot/>
   </Design.Tile>
 </template>

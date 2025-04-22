@@ -133,4 +133,12 @@ if (bundle.hasBundle) {
 backend.initialJobOffers()
   .forEach(offer => board.jobOfferCreated(toJobOffer(offer)));
 
+view.upload(async file => {
+  return await backend.uploadImageReturnUrl(file);
+});
+
 view.mount('#neonApplication');
+
+export interface UploadImage {
+  (file: File): Promise<string>;
+}

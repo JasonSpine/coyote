@@ -1,13 +1,15 @@
 <template>
-  <Design.Card title="Zatrudniająca firma">
-    <Design.FieldGroup label="Nazwa firmy">
-      <Design.TextField placeholder="Podaj nazwę firmy dla której chcesz dodać ogłoszenie" v-model="jobOffer.companyName"/>
-    </Design.FieldGroup>
-  </Design.Card>
   <Design.Card title="O firmie">
-    <Design.FieldGroup label="Logo firmy">
-      <Design.TextField placeholder="Format: JPEG, PNG. Max size 5MB" v-model="jobOffer.companyLogoUrl"/>
-    </Design.FieldGroup>
+    <Design.Row>
+      <div>
+        <Design.FieldLabel title="Logo firmy"/>
+        <Design.ImageUpload v-model="jobOffer.companyLogoUrl" :upload="props.upload"/>
+        Format: JPEG, PNG. Max size 5MB
+      </div>
+      <Design.FieldGroup label="Nazwa firmy">
+        <Design.TextField placeholder="Podaj nazwę firmy dla której chcesz dodać ogłoszenie" v-model="jobOffer.companyName"/>
+      </Design.FieldGroup>
+    </Design.Row>
   </Design.Card>
   <Design.Card title="Podstawowe informacje">
     <Design.FieldGroup label="Tytuł ogłoszenia">
@@ -67,7 +69,7 @@
 
 <script setup lang="ts">
 import {computed, reactive} from 'vue';
-import {Currency, LegalForm, Rate, SubmitJobOffer, WorkExperience, WorkMode} from "../../../main";
+import {Currency, LegalForm, Rate, SubmitJobOffer, UploadImage, WorkExperience, WorkMode} from "../../../main";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
 
@@ -77,9 +79,11 @@ const emit = defineEmits<Emit>();
 interface Props {
   jobOffer: SubmitJobOffer;
   mode: 'create'|'update';
+  upload: UploadImage;
 }
 
 interface Emit {
+  (event: 'change', jobOffer: SubmitJobOffer): void;
   (event: 'submit', jobOffer: SubmitJobOffer): void;
 }
 

@@ -2,18 +2,24 @@
   <JobOfferForm
     mode="create"
     :job-offer="newJobOffer"
+    :upload="props.upload"
     @submit="create"/>
 </template>
 
 <script setup lang="ts">
-import {SubmitJobOffer} from "../../../main";
+import {SubmitJobOffer, UploadImage} from "../../../main";
 import JobOfferForm from "./JobOfferForm.vue";
 
-const emit = defineEmits<Emit>();
+interface Props {
+  upload: UploadImage;
+}
 
 interface Emit {
   (event: 'create', jobOffer: SubmitJobOffer): void;
 }
+
+const props = defineProps<Props>();
+const emit = defineEmits<Emit>();
 
 function create(jobOffer: SubmitJobOffer): void {
   emit('create', jobOffer);

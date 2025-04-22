@@ -1,13 +1,15 @@
 <template>
   <div class="flex-1">
     <label>
-      <span v-text="props.label" class="mb-1 block font-medium"/>
+      <Design.FieldLabel :title="props.label"/>
       <slot/>
     </label>
   </div>
 </template>
 
 <script setup lang="ts">
+import {Design} from "./design";
+
 interface Props {
   label: string;
 }

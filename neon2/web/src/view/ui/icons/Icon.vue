@@ -52,6 +52,7 @@ const icons = {
   jobOfferFilterSort: 'fa-light fa-bars-sort',
   jobOfferFilterLegalForm: 'fa-light fa-suitcase',
   jobOfferFilterWorkExperience: 'fa-light fa-chart-line',
+  jobOfferUploadCompanyLogo: 'fa-light fa-circle-plus',
 };
 
 const fontAwesomeClasses = computed<string>((): string => icons[props.name]);

@@ -44,7 +44,11 @@ class ServiceProvider extends RouteServiceProvider {
         $this->middleware(['web'])->group(function () {
             $this->get('/Neon', function (JobBoardInteractor $interactor): string {
                 Gate::authorize('alpha-access');
-                return $interactor->jobBoardView(auth()->id());
+                $session = app('session');
+                $session->token();
+                return $interactor->jobBoardView(
+                    auth()->id(),
+                    $session->token());
             });
         });
     }

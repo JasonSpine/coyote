@@ -6,6 +6,8 @@ import Divider from "./Divider.vue";
 import Drawer from "./Drawer.vue";
 import Dropdown from "./Dropdown.vue";
 import FieldGroup from "./FieldGroup.vue";
+import FieldLabel from "./FieldLabel.vue";
+import ImageUpload from "./ImageUpload.vue";
 import JobOfferBadge from "./JobOffer/JobOfferBadge.vue";
 import JobOfferFavouriteButton from "./JobOffer/JobOfferFavouriteButton.vue";
 import JobOfferListItem from "./JobOffer/JobOfferListItem.vue";
@@ -35,6 +37,8 @@ export const Design = {
   Drawer,
   Dropdown,
   FieldGroup,
+  FieldLabel,
+  ImageUpload,
   JobOfferBadge,
   JobOfferFavouriteButton,
   JobOfferListItem,

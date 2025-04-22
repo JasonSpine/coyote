@@ -17,6 +17,7 @@
       @select="selectPlan"/>
     <JobOfferCreate
       v-if="props.screen === 'form'"
+      :upload="props.upload!"
       @create="createJob"/>
     <template v-if="props.screen === 'payment' && props.currentJobOfferId">
       <p>Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność.</p>
@@ -40,6 +41,7 @@
       v-if="props.screen === 'edit'"
       :id="currentJobOffer.id"
       :job-offer="currentJobOffer"
+      :upload="props.upload!"
       @update="updateJob"/>
     <JobOfferHome
       v-if="props.screen === 'home'"
@@ -53,7 +55,7 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {InvoiceInformation, PlanBundleName, PricingPlan, SubmitJobOffer} from "../../main";
+import {InvoiceInformation, PlanBundleName, PricingPlan, SubmitJobOffer, UploadImage} from "../../main";
 import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
@@ -79,6 +81,7 @@ export interface JobBoardProps {
   paymentStatus: PaymentStatus|null;
   planBundle: PlanBundle|null;
   pricingPlan: PricingPlan|null;
+  upload: UploadImage|null;
 }
 
 interface Emit {
