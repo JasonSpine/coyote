@@ -23,19 +23,30 @@ export type PaidPricingPlan = 'premium'|PlanBundleName;
 
 export interface SubmitJobOffer {
   title: string;
-  description: string;
-  companyName: string;
-  salaryRangeFrom: number;
-  salaryRangeTo: number;
+  description: string|null;
+  salaryRangeFrom: number|null;
+  salaryRangeTo: number|null;
   salaryIsNet: boolean;
   salaryCurrency: Currency;
   salaryRate: Rate;
   locations: string[];
-  companyLogoUrl: string;
   tagNames: string[];
   workMode: WorkMode;
   legalForm: LegalForm;
   experience: WorkExperience;
+  applicationMode: ApplicationMode;
+  applicationEmail: string|null;
+  applicationExternalAts: string|null;
+  companyName: string;
+  companyLogoUrl: string|null;
+  companyWebsiteUrl: string|null;
+  companyDescription: string|null;
+  companyPhotoUrl: string|null;
+  companyVideoUrl: string|null;
+  companySizeLevel: number|null;
+  companyFundingYear: number|null;
+  companyAddress: string|null;
+  companyHiringType: HiringType;
 }
 
 export type WorkMode = 'stationary'|'hybrid'|'fullyRemote';
@@ -43,6 +54,8 @@ export type LegalForm = 'employment'|'b2b'|'of-mandate'|'specific-task';
 export type WorkExperience = 'intern'|'junior'|'mid-level'|'senior'|'lead'|'manager'|'not-provided';
 export type Rate = 'monthly'|'hourly'|'yearly'|'weekly';
 export type Currency = 'PLN'|'EUR'|'USD'|'GBP'|'CHF';
+export type ApplicationMode = '4programmers'|'external-ats';
+export type HiringType = 'direct'|'agency';
 
 export interface InvoiceInformation {
   companyName: string,
@@ -133,12 +146,22 @@ if (bundle.hasBundle) {
 backend.initialJobOffers()
   .forEach(offer => board.jobOfferCreated(toJobOffer(offer)));
 
-view.upload(async file => {
-  return await backend.uploadImageReturnUrl(file);
+view.upload({
+  async uploadLogo(file: File): Promise<string> {
+    return await backend.uploadLogoReturnUrl(file);
+  },
+  async uploadAsset(file: File): Promise<string> {
+    return await backend.uploadAssetReturnUrl(file);
+  },
 });
 
 view.mount('#neonApplication');
 
 export interface UploadImage {
   (file: File): Promise<string>;
+}
+
+export interface UploadAssets {
+  uploadLogo: UploadImage;
+  uploadAsset: UploadImage;
 }

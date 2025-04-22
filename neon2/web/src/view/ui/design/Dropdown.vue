@@ -18,7 +18,7 @@
   </Design.Drawer>
 </template>
 
-<script setup lang="ts" generic="U extends string|number">
+<script setup lang="ts" generic="U extends string|number|null">
 import {computed, ref} from "vue";
 import Icon, {IconName} from "../icons/Icon.vue";
 import {Design} from "./design";
@@ -35,6 +35,7 @@ interface Props {
   nested?: boolean;
   options: DrawerOption<U>[];
   openToLeft?: boolean;
+  default?: string;
 }
 
 const props = defineProps<Props>();
@@ -50,6 +51,6 @@ const title = computed((): string => {
   if (props.title) {
     return props.title;
   }
-  return props.options.find(option => option.value === selected.value)!.title;
+  return props.options.find(option => option.value === selected.value)?.title || props.default || '';
 });
 </script>

@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {InvoiceInformation, PricingPlan, SubmitJobOffer, UploadImage} from "../../main";
+import {InvoiceInformation, PricingPlan, SubmitJobOffer, UploadAssets} from "../../main";
 import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
@@ -83,7 +83,7 @@ export interface JobBoardProps {
   paymentStatus: PaymentStatus|null;
   planBundle: PlanBundle|null;
   pricingPlan: PricingPlan|null;
-  upload: UploadImage|null;
+  upload: UploadAssets|null;
 }
 
 interface Emit {

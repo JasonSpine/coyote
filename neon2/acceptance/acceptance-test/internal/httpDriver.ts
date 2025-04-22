@@ -10,7 +10,6 @@ export class HttpDriver {
       jobOfferPlan,
       jobOfferTitle,
       jobOfferCompanyLogoUrl: '',
-      jobOfferCompanyName: '',
       jobOfferCompanyName: 'company name',
       jobOfferDescription: 'description',
       jobOfferExperience: 'not-provided',
@@ -23,6 +22,17 @@ export class HttpDriver {
       jobOfferSalaryRate: 'monthly',
       jobOfferTagNames: [],
       jobOfferWorkMode: 'stationary',
+      jobOfferCompanyWebsiteUrl: 'http://website',
+      jobOfferCompanyDescription: 'company description',
+      jobOfferCompanyPhotoUrl: 'http://photo',
+      jobOfferCompanyVideoUrl: 'http://video',
+      jobOfferCompanySizeLevel: 2,
+      jobOfferCompanyFundingYear: 1994,
+      jobOfferCompanyAddress: 'address',
+      jobOfferCompanyHiringType: 'direct',
+      jobOfferApplicationMode: '4programmers',
+      jobOfferApplicationEmail: 'application@mail',
+      jobOfferApplicationExternalAts: 'http://ats',
     });
     return jobOfferCreated['id'];
   }

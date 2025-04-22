@@ -11,6 +11,8 @@ use Neon\WorkExperience;
 use Neon\WorkMode;
 use Neon2\JobBoard\InvoiceInformation;
 use Neon2\JobBoardInteractor;
+use Neon2\Request\ApplicationMode;
+use Neon2\Request\HiringType;
 use Neon2\Request\JobOfferSubmit;
 
 class RouteServiceProvider extends ServiceProvider {
@@ -54,21 +56,31 @@ class RouteServiceProvider extends ServiceProvider {
 
     private function requestJobOfferSubmit(Request $request): JobOfferSubmit {
         return new JobOfferSubmit(
-            $request->get('jobOfferTitle') ?? '',
-            $request->get('jobOfferDescription') ?? '',
-            $request->get('jobOfferCompanyName') ?? '',
+            $request->get('jobOfferTitle'),
+            $request->get('jobOfferDescription'),
             $request->get('jobOfferSalaryRangeFrom'),
             $request->get('jobOfferSalaryRangeTo'),
             $request->get('jobOfferSalaryIsNet'),
             Currency::from($request->get('jobOfferSalaryCurrency')),
             Rate::from($request->get('jobOfferSalaryRate')),
             $request->get('jobOfferLocations'),
-            $request->get('jobOfferCompanyLogoUrl') ?? '',
             $request->get('jobOfferTagNames'),
             WorkMode::from($request->get('jobOfferWorkMode')),
             LegalForm::from($request->get('jobOfferLegalForm')),
             WorkExperience::from($request->get('jobOfferExperience')),
-        );
+            ApplicationMode::from($request->get('jobOfferApplicationMode')),
+            $request->get('jobOfferApplicationEmail'),
+            $request->get('jobOfferApplicationExternalAts'),
+            $request->get('jobOfferCompanyName'),
+            $request->get('jobOfferCompanyLogoUrl'),
+            $request->get('jobOfferCompanyWebsiteUrl'),
+            $request->get('jobOfferCompanyDescription'),
+            $request->get('jobOfferCompanyPhotoUrl'),
+            $request->get('jobOfferCompanyVideoUrl'),
+            $request->get('jobOfferCompanySizeLevel'),
+            $request->get('jobOfferCompanyFundingYear'),
+            $request->get('jobOfferCompanyAddress'),
+            HiringType::from($request->get('jobOfferCompanyHiringType')));
     }
 
     private function requestInvoiceInfo(Request $request): InvoiceInformation {

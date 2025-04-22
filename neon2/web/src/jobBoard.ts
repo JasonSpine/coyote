@@ -1,4 +1,4 @@
-import {Currency, LegalForm, Rate, SubmitJobOffer, WorkExperience, WorkMode} from "./main";
+import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, WorkExperience, WorkMode} from "./main";
 
 interface JobBoardObserver {
   (jobOffers: JobOffer[]): void;
@@ -51,19 +51,30 @@ export interface JobOffer {
   isNew: boolean;
   isFavourite: boolean;
   title: string;
-  description: string;
-  companyName: string;
-  salaryRangeFrom: number;
-  salaryRangeTo: number;
+  description: string|null;
+  salaryRangeFrom: number|null;
+  salaryRangeTo: number|null;
   salaryIsNet: boolean;
   salaryCurrency: Currency;
   salaryRate: Rate;
   locations: string[];
-  companyLogoUrl: string;
   tagNames: string[];
   workMode: WorkMode;
   legalForm: LegalForm;
   experience: WorkExperience;
+  applicationMode: ApplicationMode,
+  applicationEmail: string|null,
+  applicationExternalAts: string|null,
+  companyName: string;
+  companyLogoUrl: string|null;
+  companyWebsiteUrl: string|null,
+  companyDescription: string|null,
+  companyPhotoUrl: string|null,
+  companyVideoUrl: string|null,
+  companySizeLevel: number|null,
+  companyFundingYear: number|null,
+  companyAddress: string|null,
+  companyHiringType: HiringType,
 }
 
 function copyArray<T>(array: T[]): T[] {

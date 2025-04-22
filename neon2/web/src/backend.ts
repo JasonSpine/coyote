@@ -1,5 +1,5 @@
 import {JobOffer} from "./jobBoard";
-import {Currency, InvoiceInformation, LegalForm, PricingPlan, Rate, SubmitJobOffer, WorkExperience, WorkMode} from "./main";
+import {ApplicationMode, Currency, HiringType, InvoiceInformation, LegalForm, PricingPlan, Rate, SubmitJobOffer, WorkExperience, WorkMode} from "./main";
 
 function jobOfferFields(jobOffer: SubmitJobOffer): object {
   return {
@@ -17,6 +17,17 @@ function jobOfferFields(jobOffer: SubmitJobOffer): object {
     jobOfferWorkMode: jobOffer.workMode,
     jobOfferLegalForm: jobOffer.legalForm,
     jobOfferExperience: jobOffer.experience,
+    jobOfferCompanyWebsiteUrl: jobOffer.companyWebsiteUrl,
+    jobOfferCompanyDescription: jobOffer.companyDescription,
+    jobOfferCompanyPhotoUrl: jobOffer.companyPhotoUrl,
+    jobOfferCompanyVideoUrl: jobOffer.companyVideoUrl,
+    jobOfferCompanySizeLevel: jobOffer.companySizeLevel,
+    jobOfferCompanyFundingYear: jobOffer.companyFundingYear,
+    jobOfferCompanyAddress: jobOffer.companyAddress,
+    jobOfferCompanyHiringType: jobOffer.companyHiringType,
+    jobOfferApplicationMode: jobOffer.applicationMode,
+    jobOfferApplicationEmail: jobOffer.applicationEmail,
+    jobOfferApplicationExternalAts: jobOffer.applicationExternalAts,
   };
 }
 
@@ -85,10 +96,22 @@ export class JobBoardBackend {
     return backendInput.testMode;
   }
 
-  async uploadImageReturnUrl(file: File): Promise<string> {
+  async uploadLogoReturnUrl(file: File): Promise<string> {
     const formData = new FormData();
     formData.append('logo', file);
     return fetch('/Firma/Logo', {
+      method: 'POST',
+      body: formData,
+      headers: {'X-CSRF-TOKEN': this.csrfToken()},
+    })
+      .then(response => response.json())
+      .then(uploadedImage => uploadedImage.url);
+  }
+
+  async uploadAssetReturnUrl(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append('asset', file);
+    return fetch('/assets', {
       method: 'POST',
       body: formData,
       headers: {'X-CSRF-TOKEN': this.csrfToken()},
@@ -121,19 +144,30 @@ export interface BackendJobOffer {
   paymentId: string|null;
   fields: {
     title: string;
-    description: string;
-    companyName: string;
-    salaryRangeFrom: number;
-    salaryRangeTo: number;
+    description: string|null;
+    salaryRangeFrom: number|null;
+    salaryRangeTo: number|null;
     salaryIsNet: boolean;
     salaryCurrency: Currency;
     salaryRate: Rate;
     locations: string[];
-    companyLogoUrl: string;
     tagNames: string[];
     workMode: WorkMode;
     legalForm: LegalForm;
     experience: WorkExperience;
+    applicationMode: ApplicationMode,
+    applicationEmail: string|null,
+    applicationExternalAts: string|null,
+    companyName: string;
+    companyLogoUrl: string|null;
+    companyWebsiteUrl: string|null,
+    companyDescription: string|null,
+    companyPhotoUrl: string|null,
+    companyVideoUrl: string|null,
+    companySizeLevel: number|null,
+    companyFundingYear: number|null,
+    companyAddress: string|null,
+    companyHiringType: HiringType,
   };
 }
 

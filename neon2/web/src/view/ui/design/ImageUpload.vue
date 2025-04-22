@@ -27,7 +27,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const imageUrl = defineModel<string, string, string>();
+const imageUrl = defineModel<string|null>();
 const uploading = ref<boolean>(false);
 const hasImage = computed(() => !!imageUrl.value);
 
@@ -50,6 +50,6 @@ function uploadFile(file: File): void {
 }
 
 function removeImage(): void {
-  imageUrl.value = undefined;
+  imageUrl.value = null;
 }
 </script>

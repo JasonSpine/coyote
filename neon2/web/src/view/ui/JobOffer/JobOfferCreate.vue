@@ -8,11 +8,11 @@
 </template>
 
 <script setup lang="ts">
-import {SubmitJobOffer, UploadImage} from "../../../main";
+import {SubmitJobOffer, UploadAssets} from "../../../main";
 import JobOfferForm from "./JobOfferForm.vue";
 
 interface Props {
-  upload: UploadImage;
+  upload: UploadAssets;
 }
 
 interface Emit {
@@ -29,18 +29,29 @@ function create(jobOffer: SubmitJobOffer): void {
 
 const newJobOffer: SubmitJobOffer = {
   title: '',
-  description: '',
+  description: null,
   companyName: '',
-  salaryRangeFrom: 0,
-  salaryRangeTo: 0,
+  salaryRangeFrom: null,
+  salaryRangeTo: null,
   salaryIsNet: true,
   salaryCurrency: 'PLN',
   salaryRate: 'monthly',
-  locations: [''],
-  companyLogoUrl: '',
-  tagNames: [''],
+  locations: [],
+  companyLogoUrl: null,
+  tagNames: [],
   workMode: 'stationary',
   legalForm: 'employment',
   experience: 'not-provided',
+  applicationMode: '4programmers',
+  applicationExternalAts: null,
+  applicationEmail: null,
+  companyHiringType: 'direct',
+  companyFundingYear: null,
+  companySizeLevel: null,
+  companyAddress: null,
+  companyVideoUrl: null,
+  companyDescription: null,
+  companyWebsiteUrl: null,
+  companyPhotoUrl: null,
 };
 </script>

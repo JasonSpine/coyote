@@ -8,6 +8,8 @@ use Neon\WorkExperience;
 use Neon\WorkMode;
 use Neon2\JobBoard;
 use Neon2\Payment;
+use Neon2\Request\ApplicationMode;
+use Neon2\Request\HiringType;
 use Neon2\Request\JobOfferSubmit;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
@@ -47,19 +49,30 @@ class JobBoardTest extends TestCase {
     private function jobOffer(string $title): JobOfferSubmit {
         return new JobOfferSubmit(
             $title,
-            '',
-            '',
-            0,
-            0,
-            '',
+            null,
+            null,
+            null,
+            false,
             Currency::PLN,
             Rate::Monthly,
             [],
-            '',
             [],
             WorkMode::Hybrid,
             LegalForm::BusinessToBusiness,
             WorkExperience::Intern,
+            ApplicationMode::_4programmers,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            HiringType::Direct,
         );
     }
 }

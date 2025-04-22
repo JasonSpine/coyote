@@ -1,7 +1,7 @@
 <template>
   <div class="flex-1">
     <label>
-      <Design.FieldLabel :title="props.label"/>
+      <Design.FieldLabel :title="props.label" :required="props.required"/>
       <slot/>
     </label>
   </div>
@@ -12,6 +12,7 @@ import {Design} from "./design";
 
 interface Props {
   label: string;
+  required?: boolean;
 }
 
 const props = defineProps<Props>();
