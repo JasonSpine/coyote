@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-tile-nested rounded-lg p-2 flex">
+  <div class="rounded-lg p-2 flex" :class="inputClass">
     <input
       class="outline-none flex-grow-1"
       :data-testid="props.testId"
@@ -12,9 +12,12 @@
 </template>
 
 <script setup lang="ts">
+import {computed} from "vue";
+
 interface Props {
   placeholder: string;
   testId?: string;
+  nested?: boolean;
 }
 
 interface Emit {
@@ -33,4 +36,11 @@ function submit(): void {
 function change(): void {
   emit('change', text.value);
 }
+
+const inputClass = computed(() => {
+  if (props.nested) {
+    return 'bg-tile-nested';
+  }
+  return 'border border-neutral-100';
+});
 </script>

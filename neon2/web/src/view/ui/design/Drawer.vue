@@ -1,5 +1,9 @@
 <template>
-  <Design.Material :nested="props.nested" class="cursor-pointer relative" @click="toggle">
+  <Design.Material
+    :nested="props.nested"
+    class="cursor-pointer relative"
+    :class="{'border border-neutral-100': !props.nested}"
+    @click="toggle">
     <div class="flex" :data-testid="props.testId">
       <Icon :name="props.icon" v-if="props.icon" class="mr-2"/>
       <span class="mr-2 font-medium" v-text="props.title"/>

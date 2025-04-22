@@ -14,7 +14,7 @@
       <Design.TextField placeholder="np. Senior Java Developer" v-model="jobOffer.title"/>
     </Design.FieldGroup>
     <Design.FieldGroup label="Staż pracy">
-      <Design.Dropdown nested icon="jobOfferFilterWorkExperience" :options="workExperienceOptions" v-model="jobOffer.experience"/>
+      <Design.Dropdown icon="jobOfferFilterWorkExperience" :options="workExperienceOptions" v-model="jobOffer.experience"/>
     </Design.FieldGroup>
   </Design.Card>
   <Design.Card title="Technologie">
@@ -25,25 +25,25 @@
   <Design.Card title="Forma zatrudnienia i wynagrodzenie">
     <Design.Row>
       <Design.FieldGroup label="Rodzaj umowy">
-        <Design.Dropdown nested icon="jobOfferFilterLegalForm" :options="legalFormOptions" v-model="jobOffer.legalForm"/>
+        <Design.Dropdown icon="jobOfferFilterLegalForm" :options="legalFormOptions" v-model="jobOffer.legalForm"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Wynagrodzenie od (netto)">
-        <Design.Dropdown nested icon="jobOfferFilterCurrency" :options="salaryRangeOptions" v-model="jobOffer.salaryRangeFrom"/>
+        <Design.Dropdown icon="jobOfferFilterCurrency" :options="salaryRangeOptions" v-model="jobOffer.salaryRangeFrom"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Wynagrodzenie do (netto)">
-        <Design.Dropdown nested icon="jobOfferFilterCurrency" :options="salaryRangeOptions" v-model="jobOffer.salaryRangeTo"/>
+        <Design.Dropdown icon="jobOfferFilterCurrency" :options="salaryRangeOptions" v-model="jobOffer.salaryRangeTo"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Waluta">
-        <Design.Dropdown nested icon="jobOfferFilterCurrency" :options="salaryCurrencyOptions" v-model="jobOffer.salaryCurrency"/>
+        <Design.Dropdown icon="jobOfferFilterCurrency" :options="salaryCurrencyOptions" v-model="jobOffer.salaryCurrency"/>
       </Design.FieldGroup>
     </Design.Row>
     <Design.FieldGroup label="Częstotliwość wynagrodzenia">
-      <Design.Dropdown nested icon="jobOfferFilterSalary" :options="salaryRateOptions" v-model="jobOffer.salaryRate"/>
+      <Design.Dropdown icon="jobOfferFilterSalary" :options="salaryRateOptions" v-model="jobOffer.salaryRate"/>
     </Design.FieldGroup>
   </Design.Card>
   <Design.Card title="Tryb pracy">
     <Design.FieldGroup label="Tryb pracy">
-      <Design.Dropdown nested icon="jobOfferFilterWorkMode" :options="workModeOptions" v-model="jobOffer.workMode"/>
+      <Design.Dropdown icon="jobOfferFilterWorkMode" :options="workModeOptions" v-model="jobOffer.workMode"/>
     </Design.FieldGroup>
   </Design.Card>
   <Design.Card title="Lokalizacja">

@@ -4,6 +4,7 @@
   </Design.Button>
   <Design.Tile>
     <Design.TextField
+      nested
       v-model="searchPhrase"
       placeholder="Szukaj po tytule"
       @change="search">
