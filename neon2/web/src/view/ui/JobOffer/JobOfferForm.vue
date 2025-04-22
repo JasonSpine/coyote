@@ -1,4 +1,12 @@
 <template>
+  <Design.Stepper
+    v-model="step"
+    :steps="[
+        {title:'Informacje o firmie', value:'company'},
+        {title:'Kreator oferty pracy', value:'jobOffer'},
+        {title:'Podgląd oferty', value:'preview'},
+        {title:'Publikacja ogłoszenia', value:'publish'},
+      ]"/>
   <Design.Card title="O firmie">
     <Design.Row>
       <div>
@@ -68,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, reactive} from 'vue';
+import {computed, reactive, ref} from 'vue';
 import {Currency, LegalForm, Rate, SubmitJobOffer, UploadImage, WorkExperience, WorkMode} from "../../../main";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
@@ -136,4 +144,6 @@ const salaryRateOptions: DrawerOption<Rate>[] = [
 function range(items: number): number[] {
   return [...Array(items).keys()];
 }
+
+const step = ref<string>('company');
 </script>

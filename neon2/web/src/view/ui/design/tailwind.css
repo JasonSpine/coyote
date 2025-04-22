@@ -38,9 +38,12 @@
 
 @theme {
   --color-*: initial;
+  --color-white: white;
   --color-navy-025: #f5f7fa;
   --color-navy-050: #f0f2f5;
   --color-navy-100: #dde4ea;
+  --color-navy-200: #bdcad6;
+  --color-navy-600: #4e687e;
   --color-navy-950: #0a0d10;
   --color-neutral-050: #e4e6e7;
   --color-neutral-100: #c7c9cc;

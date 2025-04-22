@@ -53,6 +53,7 @@ const icons = {
   jobOfferFilterLegalForm: 'fa-light fa-suitcase',
   jobOfferFilterWorkExperience: 'fa-light fa-chart-line',
   jobOfferUploadCompanyLogo: 'fa-light fa-circle-plus',
+  jobOfferStepperStepFinished: check,
 };
 
 const fontAwesomeClasses = computed<string>((): string => icons[props.name]);

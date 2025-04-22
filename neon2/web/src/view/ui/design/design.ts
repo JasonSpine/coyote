@@ -20,6 +20,7 @@ import RadioButton from "./RadioButton.vue";
 import RadioGroup from "./RadioGroup.vue";
 import Row from "./Row.vue";
 import RowEnd from "./RowEnd.vue";
+import Stepper from "./Stepper.vue";
 import Tabs from "./Tabs.vue";
 import TextField from "./TextField.vue";
 import Tile from "./Tile.vue";
@@ -51,6 +52,7 @@ export const Design = {
   RadioGroup,
   Row,
   RowEnd,
+  Stepper,
   Tabs,
   TextField,
   Tile,
