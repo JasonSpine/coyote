@@ -206,7 +206,6 @@ export default {
     popularTags: {type: Array, default: () => []},
     post: {type: Object, required: true},
     treeAnswerPostId: {type: Number, required: false},
-    guestForm: {type: Boolean, default: false},
   },
   data() {
     return {
@@ -245,13 +244,6 @@ export default {
     ...mapMutations('poll', ['removeItem', 'resetDefaults']),
     ...mapMutations('posts', ['deleteAttachment', 'changePage']),
     async save() {
-      if (this.$props.guestForm) {
-        this.$emit('guestFormSaved', this.post.text);
-      } else {
-        await this.authenticatedSave();
-      }
-    },
-    async authenticatedSave() {
       await this.validateTags();
 
       this.isProcessing = true;

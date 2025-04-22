@@ -26,7 +26,6 @@ declare global {
     popularTags: string[];
     logs: Models.PostLog[];
     topicLink: string;
-    draftPost: string|null;
   }
 }
 

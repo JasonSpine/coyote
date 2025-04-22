@@ -1,5 +1,3 @@
-import axios from "axios";
-import Prism from "prismjs";
 import {mapGetters, mapState} from "vuex";
 
 import VueForm from "../../components/forum/form.vue";
@@ -32,7 +30,6 @@ export default {
       popularTags: window.popularTags,
       postFormHidden: false,
       editorRevealed: false,
-      draftPost: null,
     };
   },
   created() {
@@ -81,11 +78,6 @@ export default {
         hint.style.display = 'block';
       });
     });
-    if (window['draftPost']) {
-      if (window['draftPost'].topicId === store.getters["topics/topic"].id) {
-        this.includeDraftPost(window['draftPost'].text);
-      }
-    }
   },
   methods: {
     revealEditor(): void {
@@ -119,11 +111,6 @@ export default {
       window.location.hash = `id${post.id}`;
       this.resetForm();
     },
-    guestFormSaved(text: string): void {
-      this.undefinedPost = {text: '', html: '', assets: []};
-      this.resetForm();
-      this.addDraftPost({text, topicId: store.getters["topics/topic"].id});
-    },
     redirectToTopic(post: Post): void {
       this.undefinedPost = {text: '', html: '', assets: []};
       window.location.href = post.url;
@@ -134,30 +121,6 @@ export default {
     changeTreeTopicOrder(event: Event): void {
       const ordering: TreeOrderBy = event.target!.value;
       store.commit('topics/treeTopicOrder', ordering);
-    },
-    addDraftPost(draft): void {
-      axios.post('/Forum/Draft', {markdownText: draft.text, topicId: draft.topicId});
-      this.includeDraftPost(draft.text);
-    },
-    includeDraftPost(markdownText: string): void {
-      const now = new Date().toISOString();
-      renderMarkdown(markdownText).then(html => {
-        this.$data.draftPost = {
-          assets: [],
-          comments: [],
-          permissions: {},
-          created_at: now,
-          score: 1,
-          html,
-          text: markdownText,
-          user: {
-            initials: '4p',
-            name: 'Your account',
-            created_at: now,
-          },
-        };
-        nextTick(() => Prism.highlightAll());
-      });
     },
   },
   computed: {
@@ -170,8 +133,3 @@ export default {
     ...mapState('poll', ['poll']),
   },
 };
-
-async function renderMarkdown(markdown: string): Promise<string> {
-  const response = await axios.post<any>('/Forum/Preview', {text: markdown});
-  return response.data as string;
-}
