@@ -4,12 +4,10 @@ namespace Coyote\Services\Parser\Parsers;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 
-class Purifier implements Parser
-{
+class Purifier implements Parser {
     private HTMLPurifier_Config $config;
 
-    public function __construct(array $overrideAllowedHtml = null, private bool $canAddVideo = false)
-    {
+    public function __construct(array $overrideAllowedHtml = null, private bool $canAddVideo = false) {
         $config = HTMLPurifier_Config::createDefault();
         $config->autoFinalize = false;
         $config->loadArray([
@@ -50,8 +48,7 @@ class Purifier implements Parser
         }
     }
 
-    public function parse(string $text): string
-    {
+    public function parse(string $text): string {
         $def = $this->config->getHTMLDefinition(true);
 
         $anchor = $def->addBlankElement('a');
@@ -73,10 +70,9 @@ class Purifier implements Parser
         return (new HTMLPurifier)->purify($text, $this->config);
     }
 
-    private function allowedLanguageClasses(): array
-    {
+    private function allowedLanguageClasses(): array {
         $languages = [
-            'ada', 'asm', 'basic', 'bash', 'sh', 'batch', 'bat', 'brainfuck', 'bf', 'c', 'c++', 'cpp', 'c#', 'cs',
+            'ada', 'asm', 'basic', 'bash', 'sh', 'batch', 'bat', 'brainfuck', 'bf', 'c', 'c++', 'cpp', 'c#', 'csharp', 'cs',
             'clojure', 'clj', 'css', 'scss', 'sass', 'less', 'csv', 'pascal', 'delphi', 'dockerfile', 'elixir',
             'erlang', 'f#', 'fsharp', 'fortran', 'go', 'groovy', 'graphql', 'html', 'hs', 'haskell', 'ini', 'java',
             'js', 'json', 'julia', 'jsx', 'kt', 'kotlin', 'latex', 'tex', 'lisp', 'lua', 'markdown', 'md', 'matlab',
