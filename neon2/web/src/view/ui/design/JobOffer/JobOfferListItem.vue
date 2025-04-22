@@ -31,7 +31,7 @@
           </Design.Row>
           <Design.Row apart class="max-md:hidden mt-2" vertical-center>
             <Design.Row vertical-center class="space-x-2">
-              <span v-if="jobOffer.companyName" v-text="jobOffer.companyName"/>
+              <span v-if="jobOffer.companyName" v-text="jobOffer.companyName" class="text-neutral-900 dark:text-neutral-050"/>
               <Design.JobOfferTagList :tag-names="jobOffer.tagNames" :max="5"/>
             </Design.Row>
             <Design.Row class="space-x-2 text-sm">

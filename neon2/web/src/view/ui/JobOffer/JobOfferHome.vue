@@ -1,25 +1,27 @@
 <template>
-  <Design.Button primary-outline @click="emit('add')">
-    Dodaj ogłoszenie
-  </Design.Button>
-  <Design.Tile>
-    <Design.TextField
-      nested
-      v-model="searchPhrase"
-      placeholder="Szukaj po tytule"
-      @change="search">
-      <Design.Button test-id="search" icon="jobOfferSearch" primary square/>
-    </Design.TextField>
-  </Design.Tile>
-  <Design.JobOfferListItem
-    v-for="jobOffer in props.jobOffers"
-    :key="jobOffer.id"
-    :job-offer="jobOffer"
-    @select="emit('show', jobOffer.id)"
-    @favourite-change=""/>
-  <Design.Material v-if="props.jobOffers.length === 0" nested class="text-word text-center my-2 py-6">
-    Nie znaleźliśmy żadnych ofert, pasujących do Twoich kryteriów wyszukiwania.
-  </Design.Material>
+  <div class="text-neutral-600 dark:text-neutral-300 space-y-3">
+    <Design.Button primary-outline @click="emit('add')">
+      Dodaj ogłoszenie
+    </Design.Button>
+    <Design.Tile>
+      <Design.TextField
+        nested
+        v-model="searchPhrase"
+        placeholder="Szukaj po tytule"
+        @change="search">
+        <Design.Button test-id="search" icon="jobOfferSearch" primary square/>
+      </Design.TextField>
+    </Design.Tile>
+    <Design.JobOfferListItem
+      v-for="jobOffer in props.jobOffers"
+      :key="jobOffer.id"
+      :job-offer="jobOffer"
+      @select="emit('show', jobOffer.id)"
+      @favourite-change=""/>
+    <Design.Material v-if="props.jobOffers.length === 0" nested class="text-center my-2 py-6">
+      Nie znaleźliśmy żadnych ofert, pasujących do Twoich kryteriów wyszukiwania.
+    </Design.Material>
+  </div>
 </template>
 
 <script setup lang="ts">

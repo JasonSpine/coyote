@@ -12,7 +12,6 @@
   --color-tile: white;
   --color-tile-nested: var(--color-navy-025);
   --color-tile-highlight: #bbe7ca;
-  --color-word: var(--color-neutral-600);
   --color-word-standout: var(--color-neutral-700);
   --color-word-accent: var(--color-green-700);
   --color-divider: var(--color-neutral-050);
@@ -30,7 +29,6 @@
     --color-tile: var(--color-neutral-800);
     --color-tile-nested: var(--color-neutral-900);
     --color-tile-highlight: #0d5c28;
-    --color-word: var(--color-neutral-300);
     --color-word-standout: var(--color-neutral-050);
     --color-word-accent: var(--color-green-050);
     --color-divider: var(--color-neutral-700);
