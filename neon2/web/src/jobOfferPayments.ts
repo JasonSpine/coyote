@@ -1,4 +1,4 @@
-import {PricingPlan} from "./main";
+import {PaidPricingPlan} from "./main";
 
 export class JobOfferPayments {
   private payments: JobOfferPayment[] = [];
@@ -14,7 +14,7 @@ export class JobOfferPayments {
     return this.jobOffer(paymentId).jobOfferId;
   }
 
-  pricingPlan(paymentId: string): PricingPlan {
+  pricingPlan(paymentId: string): PaidPricingPlan {
     return this.jobOffer(paymentId).pricingPlan;
   }
 
@@ -30,5 +30,5 @@ export class JobOfferPayments {
 export interface JobOfferPayment {
   jobOfferId: number;
   paymentId: string;
-  pricingPlan: PricingPlan;
+  pricingPlan: PaidPricingPlan;
 }

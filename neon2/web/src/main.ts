@@ -18,7 +18,8 @@ const payments = new JobOfferPayments();
 const planBundle = new PlanBundle();
 
 export type PlanBundleName = 'strategic'|'growth'|'scale';
-export type PricingPlan = 'free'|'premium'|PlanBundleName;
+export type PricingPlan = 'free'|PaidPricingPlan;
+export type PaidPricingPlan = 'premium'|PlanBundleName;
 
 export interface SubmitJobOffer {
   title: string;
@@ -59,7 +60,7 @@ view.addEventListener({
       if (pricingPlan === 'free') {
         view.jobOfferCreatedFree();
       } else {
-        payments.addJobOffer({jobOfferId: jobOffer.id, paymentId: jobOffer.paymentId, pricingPlan});
+        payments.addJobOffer({jobOfferId: jobOffer.id, paymentId: jobOffer.paymentId!, pricingPlan});
         view.jobOfferCreatedRequirePayment(jobOffer.id);
       }
     });
@@ -107,7 +108,7 @@ payment.addEventListener({
   },
 });
 
-planBundle.addListener(function (plan: PricingPlan, remainingJobOffers: number): void {
+planBundle.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
   view.setPlanBundle(plan, remainingJobOffers);
 });
 
@@ -126,7 +127,7 @@ function remainingJobOffers(planBundle: PlanBundleName): number {
 
 const bundle = backend.initialPlanBundle();
 if (bundle.hasBundle) {
-  planBundle.set(bundle.planBundleName, bundle.remainingJobOffers);
+  planBundle.set(bundle.planBundleName!, bundle.remainingJobOffers!);
 }
 
 backend.initialJobOffers()

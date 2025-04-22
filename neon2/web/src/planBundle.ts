@@ -1,15 +1,15 @@
-import {PricingPlan} from "./main";
+import {PlanBundleName} from "./main";
 
 export class PlanBundle {
   private listeners: PlanBundleListener[] = [];
-  private plan: PricingPlan|null = null;
+  private plan: PlanBundleName|null = null;
   private remainingJobOffers: number|null = null;
 
   addListener(listener: PlanBundleListener): void {
     this.listeners.push(listener);
   }
 
-  set(plan: PricingPlan, remainingJobOffers: number): void {
+  set(plan: PlanBundleName, remainingJobOffers: number): void {
     this.plan = plan;
     this.remainingJobOffers = remainingJobOffers;
     this.updateListeners();
@@ -24,8 +24,8 @@ export class PlanBundle {
   }
 
   private updateListeners(): void {
-    this.listeners.forEach(listener => listener(this.plan, this.remainingJobOffers));
+    this.listeners.forEach(listener => listener(this.plan!, this.remainingJobOffers!));
   }
 }
 
-type PlanBundleListener = (plan: PricingPlan, remainingJobOffers: number) => void;
+type PlanBundleListener = (plan: PlanBundleName, remainingJobOffers: number) => void;
