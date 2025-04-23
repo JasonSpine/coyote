@@ -20,16 +20,16 @@
       :upload="props.upload!"
       @create="createJob"
       @abort="abortCreate"/>
-    <template v-if="props.screen === 'payment' && props.currentJobOfferId">
+    <template v-if="props.screen === 'payment'">
       <p>Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność.</p>
       <JobOfferRedeemBundle
         v-if="props.planBundle?.canRedeem"
-        :job-offer-id="props.currentJobOfferId"
+        :job-offer-id="props.currentJobOfferId!"
         :plan-bundle="props.planBundle"
         @redeem-bundle="redeemBundle"/>
       <JobOfferPaymentForm
         v-else
-        :job-offer-id="props.currentJobOfferId"
+        :job-offer-id="props.currentJobOfferId!"
         @pay="payForJob"
         @mount-card-input="mountCardInput"
         @unmount-card-input="unmountCardInput"/>
@@ -40,7 +40,7 @@
       @edit="editJob"/>
     <JobOfferEdit
       v-if="props.screen === 'edit'"
-      :id="currentJobOffer.id"
+      :id="props.currentJobOfferId!"
       :job-offer="currentJobOffer"
       :upload="props.upload!"
       @update="updateJob"
