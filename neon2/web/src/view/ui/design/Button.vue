@@ -2,7 +2,7 @@
   <button
     @click="click"
     class="cursor-pointer rounded-lg"
-    :class="[variantClass, sizeClass]"
+    :class="[variantClass, sizeClass, {'w-full': props.fullWidth}]"
     :data-testid="props.testId">
     <Icon v-if="props.icon" :name="props.icon"/>
     <slot/>
@@ -22,6 +22,7 @@ interface Props {
   primaryOutline?: boolean;
   outline?: boolean;
   square?: boolean;
+  fullWidth?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -40,7 +41,7 @@ const variantClass = computed(() => {
   if (props.outline) {
     return 'text-neutral-600 dark:text-neutral-050 border border-current';
   }
-  return '';
+  return 'bg-tile';
 });
 
 const sizeClass = computed(() => {

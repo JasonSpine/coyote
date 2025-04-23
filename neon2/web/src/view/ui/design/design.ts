@@ -8,6 +8,7 @@ import Dropdown from "./Dropdown.vue";
 import FieldGroup from "./FieldGroup.vue";
 import FieldHelp from "./FieldHelp.vue";
 import FieldLabel from "./FieldLabel.vue";
+import Image from "./Image.vue";
 import ImageUpload from "./ImageUpload.vue";
 import JobOfferBadge from "./JobOffer/JobOfferBadge.vue";
 import JobOfferFavouriteButton from "./JobOffer/JobOfferFavouriteButton.vue";
@@ -41,6 +42,7 @@ export const Design = {
   FieldGroup,
   FieldLabel,
   FieldHelp,
+  Image,
   ImageUpload,
   JobOfferBadge,
   JobOfferFavouriteButton,

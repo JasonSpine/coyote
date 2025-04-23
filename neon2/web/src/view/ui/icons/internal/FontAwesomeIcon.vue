@@ -154,4 +154,16 @@ interface Props {
 .fa-circle-plus:before {
   content: "\f055";
 }
+
+.fa-link:before {
+  content: "\f0c1";
+}
+
+.fa-calendar:before {
+  content: "\f133";
+}
+
+.fa-users:before {
+  content: "\f0c0";
+}
 </style>

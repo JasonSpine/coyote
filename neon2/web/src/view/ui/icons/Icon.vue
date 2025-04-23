@@ -17,20 +17,24 @@ interface Props {
   monospace?: boolean;
 }
 
+const iconCheck = 'fa-light fa-check';
+const iconPlus = 'fa-light fa-plus';
+const iconClose = 'fa-light fa-close';
+const iconSuitcase = 'fa-light fa-suitcase';
+
 const jobOfferLocation = 'fa-light fa-location-dot';
-const jobOfferWorkModeStationary = 'fa-light fa-suitcase';
+const jobOfferLegalForm = iconSuitcase;
+const jobOfferWorkModeStationary = iconSuitcase;
 const jobOfferWorkModeHybrid = 'fa-light fa-globe-wifi';
 const jobOfferWorkModeRemote = 'fa-solid fa-wifi';
-const check = 'fa-light fa-check';
-const plus = 'fa-light fa-plus';
-const close = 'fa-light fa-close';
+const jobOfferWorkExperience = 'fa-light fa-chart-line';
 
 const icons = {
   dropdownClosed: 'fa-light fa-chevron-down',
-  dropdownOptionSelected: check,
-  checkboxChecked: check,
-  add: plus,
-  toastClose: close,
+  dropdownOptionSelected: iconCheck,
+  checkboxChecked: iconCheck,
+  add: iconPlus,
+  toastClose: iconClose,
   toastInfo: 'fa-light fa-circle-info',
   jobOfferFavourite: 'fa-light fa-star',
   jobOfferFavouriteChecked: 'fa-solid fa-star',
@@ -40,20 +44,25 @@ const icons = {
   jobOfferComments: 'fa-light fa-comment',
   jobOfferLocation,
   jobOfferCompany: 'fa-light fa-building',
+  jobOfferCompanyWebsite: 'fa-light fa-link',
+  jobOfferCompanyFundingYear: 'fa-light fa-calendar',
+  jobOfferCompanySize: 'fa-light fa-users',
   jobOfferLogoPlaceholder: 'fa-light fa-laptop-code',
   jobOfferSearch: 'fa-regular fa-magnifying-glass',
+  jobOfferWorkExperience,
+  jobOfferLegalForm,
   jobOfferFilter: 'fa-light fa-filter',
-  jobOfferFilterClose: close,
+  jobOfferFilterClose: iconClose,
   jobOfferFilterTechnology: 'fa-light fa-code',
   jobOfferFilterLocation: jobOfferLocation,
   jobOfferFilterWorkMode: 'fa-light fa-globe',
   jobOfferFilterSalary: 'fa-light fa-sack-dollar',
   jobOfferFilterCurrency: 'fa-light fa-coins',
   jobOfferFilterSort: 'fa-light fa-bars-sort',
-  jobOfferFilterLegalForm: 'fa-light fa-suitcase',
-  jobOfferFilterWorkExperience: 'fa-light fa-chart-line',
+  jobOfferFilterLegalForm: jobOfferLegalForm,
+  jobOfferFilterWorkExperience: jobOfferWorkExperience,
   jobOfferUploadCompanyLogo: 'fa-light fa-circle-plus',
-  jobOfferStepperStepFinished: check,
+  jobOfferStepperStepFinished: iconCheck,
 };
 
 const fontAwesomeClasses = computed<string>((): string => icons[props.name]);

@@ -68,7 +68,7 @@ export class Dsl {
     return pricingType === 'paid' ? 'premium' : 'free';
   }
 
-  private cardPaymentFor(payment?: Payment): None {
+  private cardPaymentFor(payment?: Payment): string {
     if (payment === 'failed') {
       return this.cardNumber('declined');
     }

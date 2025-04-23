@@ -144,7 +144,8 @@ export class Driver {
 
   async findJobOfferExpiryInDays(jobOfferTitle: string): Promise<number> {
     await this.web.click(jobOfferTitle);
-    return await this.web.readNumberByTestId('jobOfferExpiresInDays');
+    const expiresInDaysTitle = await this.web.readStringByTestId('jobOfferExpiresInDays');
+    return parseInt(expiresInDaysTitle.replace('za ', '').replace(' dni', ''));
   }
 
   async readPaymentNotification(): Promise<PaymentNotification> {

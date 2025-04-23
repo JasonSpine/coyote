@@ -2,11 +2,11 @@
   <Design.Stepper
     v-model="step"
     :steps="[
-        {title:'Informacje o firmie', value:'company'},
-        {title:'Kreator oferty pracy', value:'jobOffer'},
-        {title:'Podgląd oferty', value:'preview'},
-        {title:'Publikacja ogłoszenia', value:'publish'},
-      ]"/>
+      {title:'Informacje o firmie', value:'company'},
+      {title:'Kreator oferty pracy', value:'jobOffer'},
+      {title:'Podgląd oferty', value:'preview'},
+      {title:'Publikacja ogłoszenia', value:'publish'},
+    ]"/>
   <div class="max-w-170 space-y-4 mx-auto">
     <Design.Card space title="O firmie">
       <Design.FieldLabel title="Logo firmy"/>
@@ -52,12 +52,14 @@
           v-model="jobOffer.companySizeLevel"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Opis firmy">
-        <Design.TextField placeholder="Miejsce na szczegółowy opis firmy. Pole nie jest wymagane."
-                          v-model="jobOffer.companyDescription"/>
+        <Design.TextField
+          placeholder="Miejsce na szczegółowy opis firmy. Pole nie jest wymagane."
+          v-model="jobOffer.companyDescription"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Nagranie wideo">
-        <Design.TextField placeholder="Podaj link do filmu o firmie w serwisie YouTube"
-                          v-model="jobOffer.companyVideoUrl"/>
+        <Design.TextField
+          placeholder="Podaj link do filmu o firmie w serwisie YouTube"
+          v-model="jobOffer.companyVideoUrl"/>
         <Design.FieldHelp>
           Film promujący firmę będzie wyświetlany pod ogłoszeniem o pracę.
         </Design.FieldHelp>
@@ -72,8 +74,10 @@
         <Design.TextField placeholder="np. Senior Java Developer" v-model="jobOffer.title"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Staż pracy">
-        <Design.Dropdown icon="jobOfferFilterWorkExperience" :options="workExperienceOptions"
-                         v-model="jobOffer.experience"/>
+        <Design.Dropdown
+          icon="jobOfferFilterWorkExperience"
+          :options="workExperienceOptions"
+          v-model="jobOffer.experience"/>
       </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Technologie">
@@ -133,8 +137,8 @@
             :selected="jobOffer.applicationMode==='4programmers'"
             @select="jobOffer.applicationMode='4programmers'"/>
           <Design.FieldHelp>
-            Zezwól na wysyłanie CV poprzez 4Programmers na Twój adres email. Adres e-mail nie będzie widoczny dla osób
-            postronnych.
+            Zezwól na wysyłanie CV poprzez 4Programmers na Twój adres email. Adres e-mail nie 
+            będzie widoczny dla osób postronnych.
           </Design.FieldHelp>
           <Design.FieldGroup label="E-mail">
             <Design.TextField placeholder="kontakt@twoja.firma.com" v-model="jobOffer.applicationEmail"/>
@@ -176,6 +180,7 @@ import {computed, reactive, ref} from 'vue';
 import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, UploadAssets, WorkExperience, WorkMode} from "../../../main";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
+import {formatCompanySizeLevel, formatHiringType, formatLegalForm, formatWorkExperience, formatWorkMode} from "../format";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
@@ -201,28 +206,28 @@ const buttonTitle = computed<string>(() => {
 });
 
 const workExperienceOptions: DrawerOption<WorkExperience>[] = [
-  {value: 'intern', title: 'Stażysta'},
-  {value: 'junior', title: 'Junior'},
-  {value: 'mid-level', title: 'Mid/Regular'},
-  {value: 'senior', title: 'Senior'},
-  {value: 'lead', title: 'Lead'},
-  {value: 'manager', title: 'Manager'},
-  {value: 'not-provided', title: 'Wybierz...'},
+  {value: 'intern', title: formatWorkExperience('intern')},
+  {value: 'junior', title: formatWorkExperience('junior')},
+  {value: 'mid-level', title: formatWorkExperience('mid-level')},
+  {value: 'senior', title: formatWorkExperience('senior')},
+  {value: 'lead', title: formatWorkExperience('lead')},
+  {value: 'manager', title: formatWorkExperience('manager')},
+  {value: 'not-provided', title: formatWorkExperience('not-provided')},
 ];
 const legalFormOptions: DrawerOption<LegalForm>[] = [
-  {value: 'employment', title: 'Umowa o pracę'},
-  {value: 'of-mandate', title: 'Umowa zlecenie'},
-  {value: 'specific-task', title: 'Umowa o dzieło'},
-  {value: 'b2b', title: 'B2B'},
+  {value: 'employment', title: formatLegalForm('employment')},
+  {value: 'of-mandate', title: formatLegalForm('of-mandate')},
+  {value: 'specific-task', title: formatLegalForm('specific-task')},
+  {value: 'b2b', title: formatLegalForm('b2b')},
 ];
 const workModeOptions: DrawerOption<WorkMode>[] = [
-  {value: 'stationary', title: 'Praca stacjonarna'},
-  {value: 'fullyRemote', title: 'Praca zdalna 100%'},
-  {value: 'hybrid', title: 'Praca hybrydowa'},
+  {value: 'stationary', title: formatWorkMode('stationary')},
+  {value: 'fullyRemote', title: formatWorkMode('fullyRemote')},
+  {value: 'hybrid', title: formatWorkMode('hybrid')},
 ];
 const hiringTypeOptions: DrawerOption<HiringType>[] = [
-  {value: 'direct', title: 'Bezpośredni pracodawca'},
-  {value: 'agency', title: 'Agencja pośrednictwa'},
+  {value: 'direct', title: formatHiringType('direct')},
+  {value: 'agency', title: formatHiringType('agency')},
 ];
 const salaryRangeOptions: DrawerOption<number|null>[] = [
   {value: null, title: 'Wybierz...'},
@@ -245,18 +250,18 @@ const salaryRateOptions: DrawerOption<Rate>[] = [
   {value: 'yearly', title: 'rocznie'},
 ];
 const companySizeOptions: DrawerOption<number|null>[] = [
-  {value: null, title: 'Wybierz...'},
-  {value: 1, title: '1-5'},
-  {value: 2, title: '6-10'},
-  {value: 3, title: '11-20'},
-  {value: 4, title: '21-30'},
-  {value: 5, title: '31-50'},
-  {value: 6, title: '51-100'},
-  {value: 7, title: '101-200'},
-  {value: 8, title: '201-500'},
-  {value: 9, title: '501-1000'},
-  {value: 10, title: '1001-5000'},
-  {value: 11, title: '5000+'},
+  {value: null, title: formatCompanySizeLevel(null)},
+  {value: 1, title: formatCompanySizeLevel(1)},
+  {value: 2, title: formatCompanySizeLevel(2)},
+  {value: 3, title: formatCompanySizeLevel(3)},
+  {value: 4, title: formatCompanySizeLevel(4)},
+  {value: 5, title: formatCompanySizeLevel(5)},
+  {value: 6, title: formatCompanySizeLevel(6)},
+  {value: 7, title: formatCompanySizeLevel(7)},
+  {value: 8, title: formatCompanySizeLevel(8)},
+  {value: 9, title: formatCompanySizeLevel(9)},
+  {value: 10, title: formatCompanySizeLevel(10)},
+  {value: 11, title: formatCompanySizeLevel(11)},
 ];
 
 function range(items: number): number[] {

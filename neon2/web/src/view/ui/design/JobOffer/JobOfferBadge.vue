@@ -1,7 +1,10 @@
 <template>
-  <div class="p-1.5 rounded-lg" :class="[colorClass, textClass]">
+  <span class="p-1.5 rounded-lg" :class="[
+    colorClass, 
+    {'text-sm':props.textSmall}, 
+    {'whitespace-nowrap': props.nowrap}]">
     <slot/>
-  </div>
+  </span>
 </template>
 
 <script setup lang="ts">
@@ -12,6 +15,7 @@ const props = defineProps<Props>();
 interface Props {
   color: BadgeColor;
   textSmall?: boolean;
+  nowrap?: boolean;
 }
 
 type BadgeColor = 'primary'|'pink'|'gray';
@@ -23,9 +27,5 @@ const colorClass = computed((): string => {
     'pink': 'bg-pink-accent-back text-pink-accent-front',
   };
   return classes[props.color];
-});
-
-const textClass = computed((): string => {
-  return props.textSmall ? 'text-sm' : '';
 });
 </script>

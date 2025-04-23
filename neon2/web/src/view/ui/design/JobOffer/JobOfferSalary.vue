@@ -1,5 +1,5 @@
 <template>
-  <Design.JobOfferBadge color="primary">
+  <Design.JobOfferBadge color="primary" :nowrap="props.nowrap">
     {{salaryRange}}
     {{props.salary.salaryCurrency}}
     {{props.salary.salaryIsNet ? 'netto' : ''}}
@@ -12,7 +12,7 @@ import {computed} from "vue";
 import {Currency, Rate} from "../../../../main";
 import {Design} from "../design";
 
-interface SalaryJobOffer {
+export interface SalaryJobOffer {
   salaryRangeFrom: number;
   salaryRangeTo: number;
   salaryIsNet: boolean;
@@ -22,6 +22,7 @@ interface SalaryJobOffer {
 
 interface Props {
   salary: SalaryJobOffer;
+  nowrap?: boolean;
 }
 
 const props = defineProps<Props>();

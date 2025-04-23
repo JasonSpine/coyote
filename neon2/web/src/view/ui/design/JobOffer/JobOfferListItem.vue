@@ -11,12 +11,7 @@
     </Design.Row>
     <Design.Tile nested desktop-space>
       <Design.Row vertical-center>
-        <div class="size-14 rounded-lg overflow-hidden">
-          <img v-if="props.jobOffer.companyLogoUrl" :src="props.jobOffer.companyLogoUrl"/>
-          <div v-else class="size-14 rounded flex-shrink-0 flex items-center justify-center bg-accent-back text-accent-front">
-            <Icon name="jobOfferLogoPlaceholder"/>
-          </div>
-        </div>
+        <Design.Image :src="props.jobOffer.companyLogoUrl" placeholder-icon="jobOfferLogoPlaceholder"/>
         <div class="flex-grow-1">
           <Design.Row vertical-center apart>
             <p
@@ -66,7 +61,7 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {JobOffer} from "../../../../jobBoard";
-import {LegalForm, WorkMode} from "../../../../main";
+import {formatLegalForm, formatWorkMode} from "../../format";
 import Icon, {IconName} from "../../icons/Icon.vue";
 import {Design} from "../design";
 
@@ -94,14 +89,7 @@ const badges = computed<Badge[]>((): Badge[] => {
   ];
 });
 
-const workModeBadge = computed<Badge>((): Badge => {
-  const badges: Record<WorkMode, Badge> = {
-    'stationary': {title: 'Praca stacjonarna'},
-    'fullyRemote': {title: 'Praca zdalna'},
-    'hybrid': {title: 'Praca hybrydowa'},
-  };
-  return badges[props.jobOffer.workMode];
-});
+const workModeBadge = computed<Badge>((): Badge => ({title: formatWorkMode(props.jobOffer.workMode)}));
 
 const locationBadges = computed<Badge[]>((): Badge[] => {
   return props.jobOffer.locations.map(location => ({
@@ -110,15 +98,7 @@ const locationBadges = computed<Badge[]>((): Badge[] => {
   }));
 });
 
-const legalFormTitle = computed((): string => {
-  const titles: Record<LegalForm, string> = {
-    'b2b': 'B2B',
-    'employment': 'Umowa o pracę',
-    'of-mandate': 'Umowa zlecenie',
-    'specific-task': 'Umowa o dzieło',
-  };
-  return titles[props.jobOffer.legalForm];
-});
+const legalFormTitle = computed((): string => formatLegalForm(props.jobOffer.legalForm));
 
 interface Badge {
   title: string;

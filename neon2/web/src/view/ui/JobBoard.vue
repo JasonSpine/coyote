@@ -117,8 +117,8 @@ function updateJob(id: number, jobOffer: SubmitJobOffer): void {
   emit('update', id, jobOffer);
 }
 
-function editJob(id: number): void {
-  navigate('edit', id);
+function editJob(): void {
+  navigate('edit', props.currentJobOfferId!);
 }
 
 function showJob(id: number): void {
