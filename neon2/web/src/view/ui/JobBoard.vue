@@ -131,7 +131,7 @@ function redeemBundle(jobOfferId: number): void {
   emit('redeem-bundle', jobOfferId);
 }
 
-function selectPlan(bundleName: PlanBundleName, pricingPlan: PricingPlan): void {
+function selectPlan(pricingPlan: PricingPlan): void {
   emit('select-plan', pricingPlan);
   navigate('form');
 }
