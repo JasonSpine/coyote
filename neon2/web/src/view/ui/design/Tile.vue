@@ -27,9 +27,10 @@ interface Props {
   desktopSpace?: boolean;
   vertical?: boolean;
   text?: string;
+  shadow?: boolean;
 }
 
-const tileClass = computed(() => [padding(), verticalSpacing(), fontSize(), wrapping()]);
+const tileClass = computed(() => [padding(), verticalSpacing(), fontSize(), wrapping(), shadow()]);
 
 const rounded = computed((): MaterialRound => {
   if (props.nestedPill) {
@@ -67,5 +68,9 @@ function fontSize(): string {
 
 function wrapping(): string {
   return props.nestedPill ? 'whitespace-nowrap' : '';
+}
+
+function shadow(): string {
+  return props.shadow ? 'shadow-2xl' : '';
 }
 </script>

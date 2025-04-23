@@ -68,18 +68,20 @@
       <Design.TextField placeholder="Miejsce na szczegółowy opis oferty" v-model="jobOffer.description"/>
     </Design.FieldGroup>
   </Design.Card>
-  <Design.Tile>
-    <Design.Row>
-      <Design.RowEnd>
-        <span @click="emit('abort')" class="mr-8 cursor-pointer">
-          Porzuć formularz
-        </span>
-        <Design.Button primary @click="emit('submit', jobOffer)">
-          {{buttonTitle}}
-        </Design.Button>
-      </Design.RowEnd>
-    </Design.Row>
-  </Design.Tile>
+  <div class="sticky bottom-0 mt-3">
+    <Design.Tile space shadow>
+      <Design.Row>
+        <Design.RowEnd>
+          <span @click="emit('abort')" class="mr-8 cursor-pointer">
+            Porzuć formularz
+          </span>
+          <Design.Button primary @click="emit('submit', jobOffer)">
+            {{buttonTitle}}
+          </Design.Button>
+        </Design.RowEnd>
+      </Design.Row>
+    </Design.Tile>
+  </div>
 </template>
 
 <script setup lang="ts">
