@@ -15,7 +15,8 @@
         Format: JPEG, PNG. Max size 5MB
       </div>
       <Design.FieldGroup label="Nazwa firmy">
-        <Design.TextField placeholder="Podaj nazwę firmy dla której chcesz dodać ogłoszenie" v-model="jobOffer.companyName"/>
+        <Design.TextField placeholder="Podaj nazwę firmy dla której chcesz dodać ogłoszenie"
+                          v-model="jobOffer.companyName"/>
       </Design.FieldGroup>
     </Design.Row>
   </Design.Card>
@@ -24,7 +25,8 @@
       <Design.TextField placeholder="np. Senior Java Developer" v-model="jobOffer.title"/>
     </Design.FieldGroup>
     <Design.FieldGroup label="Staż pracy">
-      <Design.Dropdown icon="jobOfferFilterWorkExperience" :options="workExperienceOptions" v-model="jobOffer.experience"/>
+      <Design.Dropdown icon="jobOfferFilterWorkExperience" :options="workExperienceOptions"
+                       v-model="jobOffer.experience"/>
     </Design.FieldGroup>
   </Design.Card>
   <Design.Card title="Technologie">
@@ -38,13 +40,15 @@
         <Design.Dropdown icon="jobOfferFilterLegalForm" :options="legalFormOptions" v-model="jobOffer.legalForm"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Wynagrodzenie od (netto)">
-        <Design.Dropdown icon="jobOfferFilterCurrency" :options="salaryRangeOptions" v-model="jobOffer.salaryRangeFrom"/>
+        <Design.Dropdown icon="jobOfferFilterCurrency" :options="salaryRangeOptions"
+                         v-model="jobOffer.salaryRangeFrom"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Wynagrodzenie do (netto)">
         <Design.Dropdown icon="jobOfferFilterCurrency" :options="salaryRangeOptions" v-model="jobOffer.salaryRangeTo"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Waluta">
-        <Design.Dropdown icon="jobOfferFilterCurrency" :options="salaryCurrencyOptions" v-model="jobOffer.salaryCurrency"/>
+        <Design.Dropdown icon="jobOfferFilterCurrency" :options="salaryCurrencyOptions"
+                         v-model="jobOffer.salaryCurrency"/>
       </Design.FieldGroup>
     </Design.Row>
     <Design.FieldGroup label="Częstotliwość wynagrodzenia">
@@ -67,6 +71,9 @@
   <Design.Tile>
     <Design.Row>
       <Design.RowEnd>
+        <span @click="emit('abort')" class="mr-8 cursor-pointer">
+          Porzuć formularz
+        </span>
         <Design.Button primary @click="emit('submit', jobOffer)">
           {{buttonTitle}}
         </Design.Button>
@@ -93,6 +100,7 @@ interface Props {
 interface Emit {
   (event: 'change', jobOffer: SubmitJobOffer): void;
   (event: 'submit', jobOffer: SubmitJobOffer): void;
+  (event: 'abort'): void;
 }
 
 const jobOffer: SubmitJobOffer = reactive<SubmitJobOffer>({...props.jobOffer});

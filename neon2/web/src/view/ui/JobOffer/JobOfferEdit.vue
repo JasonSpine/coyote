@@ -3,7 +3,8 @@
     mode="update"
     :job-offer="props.jobOffer"
     :upload="props.upload"
-    @submit="update"/>
+    @submit="update"
+    @abort="emit('abort')"/>
 </template>
 
 <script setup lang="ts">
@@ -21,6 +22,7 @@ interface Props {
 
 interface Emit {
   (event: 'update', id: number, jobOffer: SubmitJobOffer): void;
+  (event: 'abort'): void;
 }
 
 function update(jobOffer: SubmitJobOffer): void {

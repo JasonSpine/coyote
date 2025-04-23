@@ -3,7 +3,8 @@
     mode="create"
     :job-offer="newJobOffer"
     :upload="props.upload"
-    @submit="create"/>
+    @submit="create"
+    @abort="emit('abort')"/>
 </template>
 
 <script setup lang="ts">
@@ -16,6 +17,7 @@ interface Props {
 
 interface Emit {
   (event: 'create', jobOffer: SubmitJobOffer): void;
+  (event: 'abort'): void;
 }
 
 const props = defineProps<Props>();

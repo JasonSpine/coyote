@@ -18,7 +18,8 @@
     <JobOfferCreate
       v-if="props.screen === 'form'"
       :upload="props.upload!"
-      @create="createJob"/>
+      @create="createJob"
+      @abort="abortCreate"/>
     <template v-if="props.screen === 'payment' && props.currentJobOfferId">
       <p>Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność.</p>
       <JobOfferRedeemBundle
@@ -42,7 +43,8 @@
       :id="currentJobOffer.id"
       :job-offer="currentJobOffer"
       :upload="props.upload!"
-      @update="updateJob"/>
+      @update="updateJob"
+      @abort="abortEdit"/>
     <JobOfferHome
       v-if="props.screen === 'home'"
       :job-offers="props.jobOffers"
@@ -55,7 +57,7 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {InvoiceInformation, PlanBundleName, PricingPlan, SubmitJobOffer, UploadImage} from "../../main";
+import {InvoiceInformation, PricingPlan, SubmitJobOffer, UploadImage} from "../../main";
 import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
@@ -121,6 +123,14 @@ function editJob(id: number): void {
 
 function showJob(id: number): void {
   navigate('show', id);
+}
+
+function abortCreate(): void {
+  navigate('home');
+}
+
+function abortEdit(): void {
+  showJob(props.currentJobOfferId!);
 }
 
 function payForJob(jobOfferId: number, invoiceInfo: InvoiceInformation): void {
