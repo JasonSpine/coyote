@@ -26,7 +26,7 @@
       </Design.FieldGroup>
     </Design.Row>
   </Design.Card>
-  <Design.Tile>
+  <Design.Tile space>
     <Design.Row>
       <Design.RowEnd>
         <Design.Button primary @click="pay">

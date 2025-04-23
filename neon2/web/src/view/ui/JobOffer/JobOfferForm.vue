@@ -7,7 +7,7 @@
         {title:'Podgląd oferty', value:'preview'},
         {title:'Publikacja ogłoszenia', value:'publish'},
       ]"/>
-  <Design.Card title="O firmie">
+  <Design.Card space title="O firmie">
     <Design.Row>
       <div>
         <Design.FieldLabel title="Logo firmy"/>
@@ -15,73 +15,78 @@
         Format: JPEG, PNG. Max size 5MB
       </div>
       <Design.FieldGroup label="Nazwa firmy">
-        <Design.TextField placeholder="Podaj nazwę firmy dla której chcesz dodać ogłoszenie"
-                          v-model="jobOffer.companyName"/>
+        <Design.TextField
+          placeholder="Podaj nazwę firmy dla której chcesz dodać ogłoszenie"
+          v-model="jobOffer.companyName"/>
       </Design.FieldGroup>
     </Design.Row>
   </Design.Card>
-  <Design.Card title="Podstawowe informacje">
+  <Design.Card space title="Podstawowe informacje">
     <Design.FieldGroup label="Tytuł ogłoszenia">
       <Design.TextField placeholder="np. Senior Java Developer" v-model="jobOffer.title"/>
     </Design.FieldGroup>
     <Design.FieldGroup label="Staż pracy">
-      <Design.Dropdown icon="jobOfferFilterWorkExperience" :options="workExperienceOptions"
-                       v-model="jobOffer.experience"/>
+      <Design.Dropdown
+        icon="jobOfferFilterWorkExperience"
+        :options="workExperienceOptions"
+        v-model="jobOffer.experience"/>
     </Design.FieldGroup>
   </Design.Card>
-  <Design.Card title="Technologie">
+  <Design.Card space title="Technologie">
     <Design.FieldGroup label="Wymagane technologie">
       <Design.TextField placeholder="Np. java, python, kotlin, c#, etc." v-model="jobOffer.tagNames[0]"/>
     </Design.FieldGroup>
   </Design.Card>
-  <Design.Card title="Forma zatrudnienia i wynagrodzenie">
+  <Design.Card space title="Forma zatrudnienia i wynagrodzenie">
     <Design.Row>
       <Design.FieldGroup label="Rodzaj umowy">
         <Design.Dropdown icon="jobOfferFilterLegalForm" :options="legalFormOptions" v-model="jobOffer.legalForm"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Wynagrodzenie od (netto)">
-        <Design.Dropdown icon="jobOfferFilterCurrency" :options="salaryRangeOptions"
-                         v-model="jobOffer.salaryRangeFrom"/>
+        <Design.Dropdown
+          icon="jobOfferFilterCurrency"
+          :options="salaryRangeOptions"
+          v-model="jobOffer.salaryRangeFrom"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Wynagrodzenie do (netto)">
         <Design.Dropdown icon="jobOfferFilterCurrency" :options="salaryRangeOptions" v-model="jobOffer.salaryRangeTo"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Waluta">
-        <Design.Dropdown icon="jobOfferFilterCurrency" :options="salaryCurrencyOptions"
-                         v-model="jobOffer.salaryCurrency"/>
+        <Design.Dropdown
+          icon="jobOfferFilterCurrency"
+          :options="salaryCurrencyOptions"
+          v-model="jobOffer.salaryCurrency"/>
       </Design.FieldGroup>
     </Design.Row>
     <Design.FieldGroup label="Częstotliwość wynagrodzenia">
       <Design.Dropdown icon="jobOfferFilterSalary" :options="salaryRateOptions" v-model="jobOffer.salaryRate"/>
     </Design.FieldGroup>
   </Design.Card>
-  <Design.Card title="Tryb pracy">
+  <Design.Card space title="Tryb pracy">
     <Design.RadioGroup :options="workModeOptions" v-model="jobOffer.workMode"/>
   </Design.Card>
-  <Design.Card title="Lokalizacja">
+  <Design.Card space title="Lokalizacja">
     <Design.FieldGroup label="Lokalizacja">
       <Design.TextField placeholder="np. Warszawa, al. Jerozolimskie 3" v-model="jobOffer.locations[0]"/>
     </Design.FieldGroup>
   </Design.Card>
-  <Design.Card title="Opis ogłoszenia">
+  <Design.Card space title="Opis ogłoszenia">
     <Design.FieldGroup label="Szczegółowe informacje">
       <Design.TextField placeholder="Miejsce na szczegółowy opis oferty" v-model="jobOffer.description"/>
     </Design.FieldGroup>
   </Design.Card>
-  <div class="sticky bottom-0 mt-3">
-    <Design.Tile space shadow>
-      <Design.Row>
-        <Design.RowEnd>
-          <span @click="emit('abort')" class="mr-8 cursor-pointer">
-            Porzuć formularz
-          </span>
-          <Design.Button primary @click="emit('submit', jobOffer)">
-            {{buttonTitle}}
-          </Design.Button>
-        </Design.RowEnd>
-      </Design.Row>
-    </Design.Tile>
-  </div>
+  <Design.Tile space shadow class="sticky bottom-0 mt-3">
+    <Design.Row>
+      <Design.RowEnd>
+        <span @click="emit('abort')" class="mr-8 cursor-pointer">
+          Porzuć formularz
+        </span>
+        <Design.Button primary @click="emit('submit', jobOffer)">
+          {{buttonTitle}}
+        </Design.Button>
+      </Design.RowEnd>
+    </Design.Row>
+  </Design.Tile>
 </template>
 
 <script setup lang="ts">

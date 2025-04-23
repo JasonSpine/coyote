@@ -24,6 +24,7 @@ interface Props {
   testId?: string;
   nestedPill?: boolean;
   space?: boolean;
+  bigSpace?: boolean;
   desktopSpace?: boolean;
   vertical?: boolean;
   text?: string;
@@ -49,6 +50,9 @@ function padding(): string {
   if (props.desktopSpace) {
     return 'p-2 md:p-4';
   }
+  if (props.bigSpace) {
+    return 'p-4 md:p-6';
+  }
   if (props.space) {
     return 'p-4';
   }
@@ -57,6 +61,9 @@ function padding(): string {
 
 function verticalSpacing(): string {
   if (props.vertical) {
+    if (props.bigSpace) {
+      return 'space-y-6';
+    }
     return props.space ? 'space-y-4' : 'space-y-2';
   }
   return '';

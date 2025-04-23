@@ -1,5 +1,5 @@
 <template>
-  <Design.Tile vertical space>
+  <Design.Tile vertical space :big-space="props.space">
     <p v-text="props.title" class="text-lg font-semibold text-neutral-800"/>
     <slot/>
   </Design.Tile>
@@ -12,5 +12,6 @@ const props = defineProps<Props>();
 
 interface Props {
   title: string;
+  space?: boolean;
 }
 </script>

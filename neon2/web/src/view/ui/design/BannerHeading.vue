@@ -1,5 +1,5 @@
 <template>
-  <Design.Tile space class="tile-highlight-long dark:tile-highlight">
+  <Design.Tile big-space class="tile-highlight-long dark:tile-highlight">
     <p class="mb-1 text-sm text-word-accent">
       4programmers
       <span @click="emit('back')" class="cursor-pointer">
@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import {Design} from './design.ts';
+import {Design} from './design';
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
