@@ -15,7 +15,7 @@ describe('JobBoard View', () => {
   });
   describe('Job offer state state is announced with a toast.', () => {
     test('Job offer creation is announced with a toast.', () => {
-      view.jobOfferCreatedFree();
+      view.jobOfferCreatedFree(1);
       assertEquals('created', ui.lastToast());
     });
     test('Job offer edit is announced with a toast.', async () => {
@@ -26,7 +26,7 @@ describe('JobBoard View', () => {
 
   describe('The toast disappears after navigating to other screen', () => {
     test('Given a toast visible in screen, when interface is navigated to other screen, the toast is not visible.', () => {
-      view.jobOfferCreatedFree();
+      view.jobOfferCreatedFree(1);
       ui.navigate();
       assertEquals(null, ui.lastToast());
     });
@@ -67,10 +67,10 @@ describe('JobBoard View', () => {
   });
 
   describe('Changing state of a job navigates to appropriate screen.', () => {
-    test('Creating a free job, changes screen to home.', () => {
+    test('Creating a free job, changes screen to payment not needed.', () => {
       ui.setScreen('pricing');
-      view.jobOfferCreatedFree();
-      assertEquals('home', ui.screen());
+      view.jobOfferCreatedFree(1);
+      assertEquals('payment-not-needed', ui.screen());
     });
     test('Creating a paid job, changes screen to payment.', () => {
       ui.setScreen('pricing');
@@ -153,9 +153,11 @@ class MemoryUi implements UserInterface {
   setCurrentJobOfferId(jobOfferId: number): void {
   }
 
-  setPaymentNotification(notification: PaymentNotification): void {}
+  setPaymentNotification(notification: PaymentNotification): void {
+  }
 
-  setPaymentStatus(status: PaymentStatus): void {}
+  setPaymentStatus(status: PaymentStatus): void {
+  }
 
   setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
     this._planBundleCanRedeem = canRedeem;

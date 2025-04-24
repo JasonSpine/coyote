@@ -35,7 +35,7 @@ export class Driver {
     await this.createJobOffer(title, pricingPlan, payment, description, companyName);
     if (pricingPlan === 'free') {
       await this.web.waitForText('Dodano ogłoszenie!');
-      await this.web.click('Zobacz');
+      await this.web.click('Zobacz pozostałe');
     } else {
       await this.finalizeJobOfferPayment(payment, paymentCardNumber);
     }

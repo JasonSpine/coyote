@@ -71,7 +71,7 @@ view.addEventListener({
     backend.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
       board.jobOfferCreated(toJobOffer(jobOffer));
       if (pricingPlan === 'free') {
-        view.jobOfferCreatedFree();
+        view.jobOfferCreatedFree(jobOffer.id);
       } else {
         payments.addJobOffer({jobOfferId: jobOffer.id, paymentId: jobOffer.paymentId!, pricingPlan});
         view.jobOfferCreatedRequirePayment(jobOffer.id);

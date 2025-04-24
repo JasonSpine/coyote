@@ -1,6 +1,6 @@
 <template>
   <Design.Layout class="bg-body">
-    <Design.BannerHeading :back="showHomeLink" @back="navigate('home')"/>
+    <Design.BannerHeading :back="showHomeLink" @back="navigateHome"/>
     <Design.Toast v-if="toastTitle" :title="toastTitle"/>
     <Design.Toast v-if="planBundleToast"
                   :title="planBundleToast"
@@ -19,7 +19,7 @@
       v-if="props.screen === 'form'"
       :upload="props.upload!"
       @create="createJob"
-      @abort="abortCreate"/>
+      @abort="navigateHome"/>
     <template v-if="props.screen === 'payment'">
       <p>Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność.</p>
       <JobOfferRedeemBundle
@@ -34,6 +34,11 @@
         @mount-card-input="mountCardInput"
         @unmount-card-input="unmountCardInput"/>
     </template>
+    <JobOfferPaymentNotNeeded
+      v-if="props.screen === 'payment-not-needed'"
+      :job-offer-id="props.currentJobOfferId!"
+      @show="showJob"
+      @show-all="navigateHome"/>
     <JobOfferShow
       v-if="props.screen === 'show'"
       :job-offer="currentJobOffer"
@@ -66,6 +71,7 @@ import JobOfferCreate from "./JobOffer/JobOfferCreate.vue";
 import JobOfferEdit from './JobOffer/JobOfferEdit.vue';
 import JobOfferHome from './JobOffer/JobOfferHome.vue';
 import JobOfferPaymentForm from './JobOffer/JobOfferPaymentForm.vue';
+import JobOfferPaymentNotNeeded from './JobOffer/JobOfferPaymentNotNeeded.vue';
 import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
 import JobOfferRedeemBundle from "./JobOffer/JobOfferRedeemBundle.vue";
 import JobOfferShow from './JobOffer/JobOfferShow.vue';
@@ -99,7 +105,7 @@ interface Emit {
   (event: 'unmount-card-input'): void;
 }
 
-export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
+export type Screen = 'home'|'edit'|'form'|'payment'|'payment-not-needed'|'pricing'|'show';
 
 function navigate(newScreen: Screen, id?: number): void {
   emit('navigate', newScreen, id || null);
@@ -125,7 +131,7 @@ function showJob(id: number): void {
   navigate('show', id);
 }
 
-function abortCreate(): void {
+function navigateHome(): void {
   navigate('home');
 }
 

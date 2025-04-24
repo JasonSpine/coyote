@@ -60,9 +60,10 @@ export class View {
     return jobOffer.title.toLowerCase().includes(this.searchPhrase.toLowerCase());
   }
 
-  jobOfferCreatedFree(): void {
+  jobOfferCreatedFree(jobOfferId: number): void {
     this.ui.setToast('created');
-    this.ui.setScreen('home');
+    this.ui.setCurrentJobOfferId(jobOfferId);
+    this.ui.setScreen('payment-not-needed');
   }
 
   jobOfferCreatedRequirePayment(jobOfferId: number): void {
