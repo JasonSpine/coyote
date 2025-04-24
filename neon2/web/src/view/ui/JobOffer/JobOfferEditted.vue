@@ -1,13 +1,16 @@
 <template>
   <JobOfferStepper step="publish"/>
-  <Design.Card title="Wykorzystaj swój pakiet">
-    {{props.planBundle}}
+  <Design.Card title="Wszystko gotowe">
+    Ogłoszenie zostało zaktualizowane.
   </Design.Card>
-  <Design.Tile>
+  <Design.Tile space>
     <Design.Row>
       <Design.RowEnd>
-        <Design.Button primary @click="redeemBundle">
-          Skorzystaj z pakietu by Opublikować
+        <span @click="emit('show-all')" class="mr-8 cursor-pointer">
+          Zobacz pozostałe
+        </span>
+        <Design.Button primary @click="show">
+          Zobacz
         </Design.Button>
       </Design.RowEnd>
     </Design.Row>
@@ -17,21 +20,20 @@
 <script setup lang="ts">
 import {Design} from "../design/design";
 import JobOfferStepper from '../design/JobOffer/JobOfferStepper.vue';
-import {PlanBundle} from "../ui";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
 interface Props {
   jobOfferId: number;
-  planBundle: PlanBundle|null;
 }
 
 interface Emit {
-  (event: 'redeem-bundle', jobOfferId: number): void;
+  (event: 'show', jobOfferId: number): void;
+  (event: 'show-all'): void;
 }
 
-function redeemBundle(): void {
-  emit('redeem-bundle', props.jobOfferId);
+function show(): void {
+  emit('show', props.jobOfferId);
 }
 </script>

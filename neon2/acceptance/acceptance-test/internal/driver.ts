@@ -69,14 +69,16 @@ export class Driver {
 
   private async submitJobOfferForm(title: string, description: string, companyName: string): None {
     await this.fillJobOfferForm(title, description, companyName);
-    await this.web.click('Dodaj');
+    await this.web.click('Dodaj ogłoszenie');
     await this.web.waitForText('Dodano ogłoszenie!');
   }
 
   private async fillJobOfferForm(title: string, description: string, companyName: string) {
-    await this.web.fillByLabel('Tytuł ogłoszenia', title);
     await this.web.fillByLabel('Nazwa firmy', companyName);
+    await this.web.click('Dalej');
+    await this.web.fillByLabel('Tytuł ogłoszenia', title);
     await this.web.fillByLabel('Szczegółowe informacje', description);
+    await this.web.click('Dalej');
   }
 
   private async selectPricingPlan(pricingPlan: PricingPlan): None {
@@ -131,6 +133,7 @@ export class Driver {
     await this.fillJobOfferForm(targetTitle, targetDescription, 'Company name');
     await this.web.click('Zapisz');
     await this.web.waitForText('Zaktualizowano ogłoszenie!');
+    await this.web.click('Zobacz pozostałe');
   }
 
   async searchJobOffers(searchPhrase: string): None {

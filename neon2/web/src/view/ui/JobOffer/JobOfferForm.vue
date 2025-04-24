@@ -1,6 +1,6 @@
 <template>
   <JobOfferStepper :step="step"/>
-  <div class="max-w-170 space-y-4 mx-auto">
+  <div class="max-w-170 space-y-4 mx-auto" v-if="step === 'company'">
     <Design.Card space title="O firmie">
       <Design.FieldLabel title="Logo firmy"/>
       <Design.Row>
@@ -62,6 +62,8 @@
         <Design.FieldHelp>Format: JPEG, PNG. Maksymalny rozmiar 5MB</Design.FieldHelp>
       </Design.FieldGroup>
     </Design.Card>
+  </div>
+  <div class="max-w-170 space-y-4 mx-auto" v-if="step === 'jobOffer'">
     <Design.Card space title="Podstawowe informacje">
       <Design.FieldGroup required label="Tytuł ogłoszenia">
         <Design.TextField placeholder="np. Senior Java Developer" v-model="jobOffer.title"/>
@@ -152,16 +154,32 @@
       </div>
     </Design.Card>
   </div>
+  <template v-if="step === 'preview'">
+    <JobOfferShow :job-offer="{
+        expiresInDays: 365,
+        ...fromFormModel(jobOffer)
+      }"/>
+  </template>
   <div class="sticky bottom-0 mt-3 max-w-210 mx-auto">
     <Design.Tile space shadow>
-      <Design.Row>
+      <Design.Row vertical-center>
+        <span @click="emit('abort')" class="mr-8 cursor-pointer">
+          Porzuć formularz
+        </span>
         <Design.RowEnd>
-          <span @click="emit('abort')" class="mr-8 cursor-pointer">
-            Porzuć formularz
-          </span>
-          <Design.Button primary @click="emit('submit', fromFormModel(jobOffer))">
-            {{buttonTitle}}
-          </Design.Button>
+          <div class="flex items-center">
+            <Design.Button outline icon="jobOfferCreatorStepBack" @click="previousStep" v-if="hasPreviousStep" class="mr-2">
+              Wróć
+            </Design.Button>
+            <div>
+              <Design.Button primary @click="emit('submit', fromFormModel(jobOffer))" v-if="step === 'preview'">
+                {{buttonTitle}}
+              </Design.Button>
+              <Design.Button primary @click="nextStep" v-else>
+                Dalej
+              </Design.Button>
+            </div>
+          </div>
         </Design.RowEnd>
       </Design.Row>
     </Design.Tile>
@@ -173,8 +191,9 @@ import {computed, reactive, ref} from 'vue';
 import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, UploadAssets, WorkExperience, WorkMode} from "../../../main";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
-import JobOfferStepper, {JobOfferStep} from "../design/JobOffer/JobOfferStepper.vue";
+import JobOfferStepper, {JobOfferCreatorStep} from "../design/JobOffer/JobOfferStepper.vue";
 import {formatCompanySizeLevel, formatHiringType, formatLegalForm, formatWorkExperience, formatWorkMode} from "../format";
+import JobOfferShow from "./JobOfferShow.vue";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
@@ -191,10 +210,35 @@ interface Emit {
   (event: 'abort'): void;
 }
 
+const step = ref<JobOfferCreatorStep>('company');
+
+function nextStep(): void {
+  if (step.value === 'company') {
+    changeStep('jobOffer');
+  } else if (step.value === 'jobOffer') {
+    changeStep('preview');
+  }
+}
+
+const hasPreviousStep = computed<boolean>(() => step.value !== 'company');
+
+function previousStep(): void {
+  if (step.value === 'preview') {
+    changeStep('jobOffer');
+  } else if (step.value === 'jobOffer') {
+    changeStep('company');
+  }
+}
+
+function changeStep(newStep: JobOfferCreatorStep): void {
+  step.value = newStep;
+  window.scrollTo(0, 0);
+}
+
 const jobOffer: FormModel = reactive<FormModel>(toFormModel(props.jobOffer));
 const buttonTitle = computed<string>(() => {
   if (props.mode === 'create') {
-    return 'Dodaj';
+    return 'Dodaj ogłoszenie';
   }
   return 'Zapisz';
 });
@@ -261,8 +305,6 @@ const companySizeOptions: DrawerOption<number|null>[] = [
 function range(items: number): number[] {
   return [...Array(items).keys()];
 }
-
-const step = ref<JobOfferStep>('company');
 
 interface FormModel {
   title: string;

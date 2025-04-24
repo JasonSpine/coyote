@@ -39,10 +39,15 @@
       :job-offer-id="props.currentJobOfferId!"
       @show="showJob"
       @show-all="navigateHome"/>
-    <JobOfferShow
-      v-if="props.screen === 'show'"
-      :job-offer="currentJobOffer"
-      @edit="editJob"/>
+    <JobOfferEdited
+      v-if="props.screen === 'edited'"
+      :job-offer-id="props.currentJobOfferId!"
+      @show="showJob"
+      @show-all="navigateHome"/>
+    <template v-if="props.screen === 'show'">
+      <JobOfferButtonPill @click="navigateHome">Wróć do ogłoszeń</JobOfferButtonPill>
+      <JobOfferShow :job-offer="currentJobOffer" @edit="editJob"/>
+    </template>
     <JobOfferEdit
       v-if="props.screen === 'edit'"
       :id="props.currentJobOfferId!"
@@ -67,8 +72,10 @@ import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
 import {Design} from "./design/design";
+import JobOfferButtonPill from "./design/JobOffer/JobOfferButtonPill.vue";
 import JobOfferCreate from "./JobOffer/JobOfferCreate.vue";
 import JobOfferEdit from './JobOffer/JobOfferEdit.vue';
+import JobOfferEdited from "./JobOffer/JobOfferEditted.vue";
 import JobOfferHome from './JobOffer/JobOfferHome.vue';
 import JobOfferPaymentForm from './JobOffer/JobOfferPaymentForm.vue';
 import JobOfferPaymentNotNeeded from './JobOffer/JobOfferPaymentNotNeeded.vue';
@@ -105,7 +112,7 @@ interface Emit {
   (event: 'unmount-card-input'): void;
 }
 
-export type Screen = 'home'|'edit'|'form'|'payment'|'payment-not-needed'|'pricing'|'show';
+export type Screen = 'home'|'edit'|'form'|'payment'|'payment-not-needed'|'edited'|'pricing'|'show';
 
 function navigate(newScreen: Screen, id?: number): void {
   emit('navigate', newScreen, id || null);

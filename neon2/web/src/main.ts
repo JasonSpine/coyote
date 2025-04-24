@@ -81,7 +81,7 @@ view.addEventListener({
   updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void {
     backend.updateJobOffer(jobOfferId, jobOffer, (): void => {
       board.jobOfferUpdated(jobOfferId, jobOffer);
-      view.jobOfferEdited();
+      view.jobOfferEdited(jobOfferId);
     });
   },
   payForJob(jobOfferId: number, invoiceInfo: InvoiceInformation): void {

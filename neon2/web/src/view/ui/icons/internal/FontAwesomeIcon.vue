@@ -166,4 +166,8 @@ interface Props {
 .fa-users:before {
   content: "\f0c0";
 }
+
+.fa-arrow-left:before {
+  content: "\f060";
+}
 </style>

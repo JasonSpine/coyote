@@ -4,7 +4,7 @@
     class="cursor-pointer rounded-lg"
     :class="[variantClass, sizeClass, {'w-full': props.fullWidth}]"
     :data-testid="props.testId">
-    <Icon v-if="props.icon" :name="props.icon"/>
+    <Icon v-if="props.icon" :name="props.icon" :class="{'mr-2': !props.square}"/>
     <slot/>
   </button>
 </template>
@@ -33,13 +33,13 @@ function click(): void {
 
 const variantClass = computed(() => {
   if (props.primary) {
-    return 'bg-primary text-on-primary';
+    return 'bg-primary text-on-primary border border-transparent';
   }
   if (props.primaryOutline) {
     return 'text-primary border border-primary';
   }
   if (props.outline) {
-    return 'text-neutral-600 dark:text-neutral-050 border border-current';
+    return 'text-neutral-800 dark:text-neutral-050 border border-navy-100';
   }
   return 'bg-tile';
 });

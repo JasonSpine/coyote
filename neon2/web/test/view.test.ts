@@ -1,5 +1,5 @@
 import {JobOffer} from '../src/jobBoard';
-import {PlanBundleName} from "../src/main";
+import {PlanBundleName, UploadAssets} from "../src/main";
 import {PaymentNotification} from "../src/paymentProvider";
 import {PaymentStatus} from "../src/paymentService";
 import {NavigationListener, Screen, SearchListener, UserInterface, ViewListener} from '../src/view/ui/ui';
@@ -19,7 +19,7 @@ describe('JobBoard View', () => {
       assertEquals('created', ui.lastToast());
     });
     test('Job offer edit is announced with a toast.', async () => {
-      view.jobOfferEdited();
+      view.jobOfferEdited(1);
       assertEquals('edited', ui.lastToast());
     });
   });
@@ -62,7 +62,7 @@ describe('JobBoard View', () => {
     });
 
     function jobOffer(title: string): JobOffer {
-      return {title, expiresInDays: 14, id: 1, status: 'published'};
+      return {title, expiresInDays: 14, id: 1, status: 'published'} as JobOffer;
     }
   });
 
@@ -77,10 +77,10 @@ describe('JobBoard View', () => {
       view.jobOfferCreatedRequirePayment(1);
       assertEquals('payment', ui.screen());
     });
-    test('Updating a job offer navigates back to home.', () => {
+    test('Updating a job offer shows publishing step.', () => {
       ui.setScreen('show');
-      view.jobOfferEdited();
-      assertEquals('home', ui.screen());
+      view.jobOfferEdited(1);
+      assertEquals('edited', ui.screen());
     });
     test('Paying for a job offer navigates to home.', () => {
       ui.setScreen('payment');
@@ -163,8 +163,10 @@ class MemoryUi implements UserInterface {
     this._planBundleCanRedeem = canRedeem;
   }
 
+  upload(upload: UploadAssets): void {}
+
   navigate(): void {
-    this.naviListeners.forEach(listener => listener.setScreen(''));
+    this.naviListeners.forEach(listener => listener.setScreen('home'));
   }
 
   showJobOfferForm(): void {
@@ -188,6 +190,6 @@ class MemoryUi implements UserInterface {
   }
 
   planBundleCanRedeem(): boolean {
-    return this._planBundleCanRedeem;
+    return this._planBundleCanRedeem!;
   }
 }

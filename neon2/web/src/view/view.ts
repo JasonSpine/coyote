@@ -72,9 +72,10 @@ export class View {
     this.ui.setScreen('payment');
   }
 
-  jobOfferEdited(): void {
-    this.ui.setToast('edited');
-    this.ui.setScreen('home');
+  jobOfferEdited(jobOfferId: number): void {
+    this.ui.setToast('edited')
+    this.ui.setCurrentJobOfferId(jobOfferId);
+    this.ui.setScreen('edited');
   }
 
   planBundleUsed(): void {

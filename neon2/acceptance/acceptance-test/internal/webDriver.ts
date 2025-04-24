@@ -10,7 +10,7 @@ export class WebDriver {
 
   queryParam(queryParam: string): string {
     const url = new URL(this.page.url());
-    return url.searchParams.get(queryParam);
+    return url.searchParams.get(queryParam)!;
   }
 
   async reload(): None {

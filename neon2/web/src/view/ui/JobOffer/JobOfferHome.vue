@@ -9,7 +9,7 @@
         v-model="searchPhrase"
         placeholder="Szukaj po tytule"
         @change="search">
-        <Design.Button test-id="search" icon="jobOfferSearch" primary square/>
+        <Design.Button primary test-id="search" icon="jobOfferSearch" square/>
       </Design.TextField>
     </Design.Tile>
     <Design.JobOfferListItem

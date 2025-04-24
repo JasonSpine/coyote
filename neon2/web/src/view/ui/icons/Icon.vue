@@ -63,6 +63,7 @@ const icons = {
   jobOfferFilterWorkExperience: jobOfferWorkExperience,
   jobOfferUploadCompanyLogo: 'fa-light fa-circle-plus',
   jobOfferStepperStepFinished: iconCheck,
+  jobOfferCreatorStepBack: 'fa-light fa-arrow-left',
 };
 
 const fontAwesomeClasses = computed<string>((): string => icons[props.name]);

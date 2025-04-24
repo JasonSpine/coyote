@@ -1,43 +1,47 @@
 <template>
   <JobOfferStepper step="publish"/>
-  <Design.Card title="Płatność poprzez bezpieczne połączenie">
-    <div id="creditCardInput"/>
-  </Design.Card>
-  <Design.Card title="Dane do faktury">
-    <Design.FieldGroup label="Nazwa firmy">
-      <Design.TextField
-        placeholder="Nazwa firmy na którą ma być wystawiona faktura"
-        v-model="invoiceInformation.companyName"/>
-    </Design.FieldGroup>
-    <Design.Row columns>
-      <Design.FieldGroup label="Kraj">
-        <Design.TextField placeholder="Np. Polska, etc." v-model="invoiceInformation.countryCode"/>
+  <div class="max-w-170 space-y-4 mx-auto">
+    <Design.Card title="Płatność poprzez bezpieczne połączenie">
+      <div id="creditCardInput"/>
+    </Design.Card>
+    <Design.Card title="Dane do faktury">
+      <Design.FieldGroup label="Nazwa firmy">
+        <Design.TextField
+          placeholder="Nazwa firmy na którą ma być wystawiona faktura"
+          v-model="invoiceInformation.companyName"/>
       </Design.FieldGroup>
-      <Design.FieldGroup label="NIP / VAT - ID">
-        <Design.TextField placeholder="Np. 1234123412" v-model="invoiceInformation.vatId"/>
+      <Design.Row columns>
+        <Design.FieldGroup label="Kraj">
+          <Design.TextField placeholder="Np. Polska, etc." v-model="invoiceInformation.countryCode"/>
+        </Design.FieldGroup>
+        <Design.FieldGroup label="NIP / VAT - ID">
+          <Design.TextField placeholder="Np. 1234123412" v-model="invoiceInformation.vatId"/>
+        </Design.FieldGroup>
+      </Design.Row>
+      <Design.FieldGroup label="Adres">
+        <Design.TextField placeholder="Np. al. Jerozolimskie 3" v-model="invoiceInformation.companyAddress"/>
       </Design.FieldGroup>
-    </Design.Row>
-    <Design.FieldGroup label="Adres">
-      <Design.TextField placeholder="Np. al. Jerozolimskie 3" v-model="invoiceInformation.companyAddress"/>
-    </Design.FieldGroup>
-    <Design.Row columns>
-      <Design.FieldGroup label="Kod pocztowy">
-        <Design.TextField placeholder="Np. 12-123" v-model="invoiceInformation.companyPostalCode"/>
-      </Design.FieldGroup>
-      <Design.FieldGroup label="Miasto">
-        <Design.TextField placeholder="Np. Warszawa, Kraków, etc." v-model="invoiceInformation.companyCity"/>
-      </Design.FieldGroup>
-    </Design.Row>
-  </Design.Card>
-  <Design.Tile space>
-    <Design.Row>
-      <Design.RowEnd>
-        <Design.Button primary @click="pay">
-          Zapłać i Publikuj
-        </Design.Button>
-      </Design.RowEnd>
-    </Design.Row>
-  </Design.Tile>
+      <Design.Row columns>
+        <Design.FieldGroup label="Kod pocztowy">
+          <Design.TextField placeholder="Np. 12-123" v-model="invoiceInformation.companyPostalCode"/>
+        </Design.FieldGroup>
+        <Design.FieldGroup label="Miasto">
+          <Design.TextField placeholder="Np. Warszawa, Kraków, etc." v-model="invoiceInformation.companyCity"/>
+        </Design.FieldGroup>
+      </Design.Row>
+    </Design.Card>
+  </div>
+  <div class="max-w-210 mx-auto">
+    <Design.Tile space>
+      <Design.Row>
+        <Design.RowEnd>
+          <Design.Button primary @click="pay">
+            Zapłać i Publikuj
+          </Design.Button>
+        </Design.RowEnd>
+      </Design.Row>
+    </Design.Tile>
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -60,7 +60,7 @@
             :value="formatExpiresInDays(props.jobOffer.expiresInDays)"
             v-if="props.jobOffer.expiresInDays"
             test-id="jobOfferExpiresInDays"/>
-          <Design.Button full-width primary>
+          <Design.Button primary full-width>
             Aplikuj
           </Design.Button>
         </Design.Card>

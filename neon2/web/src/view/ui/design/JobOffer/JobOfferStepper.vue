@@ -3,7 +3,7 @@
     :step="props.step"
     :steps="[
       {title:'Informacje o firmie', value:'company'},
-      {title:'Kreator oferty pracy', value:'jobOffer'},
+      {title:'Szczegóły ogłoszenia', value:'jobOffer'},
       {title:'Podgląd oferty', value:'preview'},
       {title:'Publikacja ogłoszenia', value:'publish'},
     ]"/>
@@ -12,7 +12,8 @@
 <script setup lang="ts">
 import {Design} from "../design";
 
-export type JobOfferStep = 'company'|'jobOffer'|'preview'|'publish';
+export type JobOfferCreatorStep = 'company'|'jobOffer'|'preview';
+export type JobOfferStep = JobOfferCreatorStep|'publish';
 
 interface Props {
   step: JobOfferStep;
