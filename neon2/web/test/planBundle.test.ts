@@ -2,7 +2,7 @@ import {PricingPlan} from "../src/main";
 import {PlanBundle} from "../src/planBundle";
 import {assertEquals, assertThrows, describe, test} from "./assertion";
 
-describe('x', () => {
+describe('Plan bundle.', () => {
   test('Adding a bundle updates the view.', () => {
     const bundle = new PlanBundle();
     let wasCalled = false;
