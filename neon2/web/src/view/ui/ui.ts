@@ -78,6 +78,7 @@ export class VueUi implements UserInterface {
 
   setScreen(screen: Screen): void {
     this.vueState.screen = screen;
+    window.scrollTo(0, 0);
   }
 
   setToast(toast: Toast|null): void {
