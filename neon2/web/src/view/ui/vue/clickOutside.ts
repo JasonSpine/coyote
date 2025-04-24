@@ -9,10 +9,11 @@ export function useClickOutside(once: boolean): ClickOutside {
   return clickOutside;
 }
 
+type Runnable = () => void;
 type Listener = () => void;
 
 class ClickOutside {
-  private removeLastHandler = null;
+  private removeLastHandler: Runnable|null = null;
 
   constructor(
     private once: boolean,
@@ -22,7 +23,7 @@ class ClickOutside {
   addClickListener(listener: Listener): void {
     this.removeLastHandler = this.onClickOutside(() => {
       listener();
-      this.once && this.removeLastHandler();
+      this.once && this.removeLastHandler && this.removeLastHandler();
     });
   }
 
@@ -34,14 +35,14 @@ class ClickOutside {
     const {element, rootElement} = this.current;
 
     function handler(event: Event): void {
-      if (!element.contains(event.target)) {
+      if (!element!.contains(event.target as Node)) {
         clickedOutside();
       }
     }
 
-    rootElement.addEventListener('click', handler);
+    rootElement!.addEventListener('click', handler);
     return function (): void {
-      rootElement.removeEventListener('click', handler);
+      rootElement!.removeEventListener('click', handler);
     };
   }
 }

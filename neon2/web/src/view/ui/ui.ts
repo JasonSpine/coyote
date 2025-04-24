@@ -4,9 +4,21 @@ import {InvoiceInformation, PlanBundleName, PricingPlan, SubmitJobOffer, UploadA
 import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
-import JobBoard, {JobBoardProps, Screen} from './JobBoard.vue';
+import JobBoard from './JobBoard.vue';
 
-export {Screen} from './JobBoard.vue';
+export type Screen = 'home'|'edit'|'form'|'payment'|'payment-not-needed'|'edited'|'pricing'|'show';
+
+export interface JobBoardProps {
+  jobOffers: JobOffer[];
+  screen: Screen;
+  toast: Toast|null;
+  currentJobOfferId: number|null;
+  paymentNotification: PaymentNotification|null;
+  paymentStatus: PaymentStatus|null;
+  planBundle: PlanBundle|null;
+  pricingPlan: PricingPlan|null;
+  upload: UploadAssets|null;
+}
 
 export interface ViewListener {
   createJob: (plan: PricingPlan, jobOffer: SubmitJobOffer) => void;

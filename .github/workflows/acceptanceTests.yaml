@@ -38,6 +38,9 @@ jobs:
       - name: Bundle the client
         run: task web:bundle
 
+      - name: Run client static type check
+        run: task web:typecheck
+
       - name: Install backend
         run: task app:install
 

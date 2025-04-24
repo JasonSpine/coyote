@@ -67,7 +67,7 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {InvoiceInformation, PricingPlan, SubmitJobOffer, UploadAssets} from "../../main";
+import {InvoiceInformation, PricingPlan, SubmitJobOffer} from "../../main";
 import {PaymentNotification} from "../../paymentProvider";
 import {PaymentStatus} from "../../paymentService";
 import {Toast} from '../view';
@@ -82,22 +82,10 @@ import JobOfferPaymentNotNeeded from './JobOffer/JobOfferPaymentNotNeeded.vue';
 import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
 import JobOfferRedeemBundle from "./JobOffer/JobOfferRedeemBundle.vue";
 import JobOfferShow from './JobOffer/JobOfferShow.vue';
-import {PlanBundle} from "./ui";
+import {JobBoardProps, Screen} from "./ui";
 
 const props = defineProps<JobBoardProps>();
 const emit = defineEmits<Emit>();
-
-export interface JobBoardProps {
-  jobOffers: JobOffer[];
-  screen: Screen;
-  toast: Toast|null;
-  currentJobOfferId: number|null;
-  paymentNotification: PaymentNotification|null;
-  paymentStatus: PaymentStatus|null;
-  planBundle: PlanBundle|null;
-  pricingPlan: PricingPlan|null;
-  upload: UploadAssets|null;
-}
 
 interface Emit {
   (event: 'show-form'): void;
@@ -111,8 +99,6 @@ interface Emit {
   (event: 'mount-card-input', cssSelector: string): void;
   (event: 'unmount-card-input'): void;
 }
-
-export type Screen = 'home'|'edit'|'form'|'payment'|'payment-not-needed'|'edited'|'pricing'|'show';
 
 function navigate(newScreen: Screen, id?: number): void {
   emit('navigate', newScreen, id || null);

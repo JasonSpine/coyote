@@ -10,8 +10,8 @@ export function useCurrent(): CurrentInstance {
 }
 
 export class CurrentInstance {
-  public rootElement: HTMLElement|null;
-  public element: HTMLElement|null;
+  public rootElement: HTMLElement|null = null;
+  public element: HTMLElement|null = null;
 
   set(instance: ComponentInternalInstance): void {
     this.rootElement = instance.root.vnode.el as HTMLElement;

@@ -42,7 +42,7 @@ export class Stripe implements PaymentProvider {
 
   private parsePaymentResponse(response: stripe.PaymentIntentResponse): PaymentNotification {
     if (response.error) {
-      return this.parseErrorResponse(response);
+      return this.parseErrorResponse(response.error);
     }
     if (response.paymentIntent) {
       if (response.paymentIntent.status === 'succeeded') {
@@ -52,15 +52,15 @@ export class Stripe implements PaymentProvider {
     return 'unexpectedProviderResponse';
   }
 
-  private parseErrorResponse(response: stripe.PaymentIntentResponse): PaymentNotification {
-    if (response.error.code === 'expired_card') {
+  private parseErrorResponse(error: stripe.Error): PaymentNotification {
+    if (error.code === 'expired_card') {
       return 'declinedCardExpired';
     }
-    if (response.error.code === 'card_declined') {
-      if (response.error.decline_code === 'generic_decline') {
+    if (error.code === 'card_declined') {
+      if (error.decline_code === 'generic_decline') {
         return 'declinedCard';
       }
-      if (response.error.decline_code === 'insufficient_funds') {
+      if (error.decline_code === 'insufficient_funds') {
         return 'declinedInsufficientFunds';
       }
     }
@@ -108,11 +108,14 @@ export class TestPaymentProvider implements PaymentProvider {
   }
 
   private cardNumber(): string {
-    return this.input.value;
+    return this.input!.value;
   }
 }
 
-async function callTestPaymentWebhook(body: {paymentToken: string, paymentStatus: 'completed'|'failed'}): Promise<void> {
+async function callTestPaymentWebhook(body: {
+  paymentToken: string,
+  paymentStatus: 'completed'|'failed'
+}): Promise<void> {
   await fetch('/neon2/webhook', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},

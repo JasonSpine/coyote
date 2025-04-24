@@ -31,7 +31,15 @@ function jobOfferFields(jobOffer: SubmitJobOffer): object {
   };
 }
 
+declare global {
+  interface Window {
+    backendInput: BackendInput;
+  }
+}
+
 export class JobBoardBackend {
+  private backendInput: BackendInput = window.backendInput;
+
   addJobOffer(
     pricingPlan: PricingPlan,
     jobOffer: SubmitJobOffer,
@@ -72,28 +80,23 @@ export class JobBoardBackend {
   }
 
   initialJobOffers(): BackendJobOffer[] {
-    const backendInput = window['backendInput'] as BackendInput;
-    return backendInput.jobOffers;
+    return this.backendInput.jobOffers;
   }
 
   initialPlanBundle(): BackendPlanBundle {
-    const backendInput = window['backendInput'] as BackendInput;
-    return backendInput.planBundle;
+    return this.backendInput.planBundle;
   }
 
   private userId(): number {
-    const backendInput = window['backendInput'] as BackendInput;
-    return backendInput.userId;
+    return this.backendInput.userId;
   }
 
   private csrfToken(): string {
-    const backendInput = window['backendInput'] as BackendInput;
-    return backendInput.csrfToken;
+    return this.backendInput.csrfToken;
   }
 
   testMode(): boolean {
-    const backendInput = window['backendInput'] as BackendInput;
-    return backendInput.testMode;
+    return this.backendInput.testMode;
   }
 
   async uploadLogoReturnUrl(file: File): Promise<string> {
@@ -129,7 +132,7 @@ function request(method: string, url: string, body: object) {
   });
 }
 
-interface BackendInput {
+export interface BackendInput {
   jobOffers: BackendJobOffer[];
   testMode: boolean;
   planBundle: BackendPlanBundle;
