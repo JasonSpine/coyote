@@ -1,10 +1,13 @@
 <template>
+  <JobOfferStepper step="publish"/>
   <Design.Card title="Płatność poprzez bezpieczne połączenie">
     <div id="creditCardInput"/>
   </Design.Card>
   <Design.Card title="Dane do faktury">
     <Design.FieldGroup label="Nazwa firmy">
-      <Design.TextField placeholder="Nazwa firmy na którą ma być wystawiona faktura" v-model="invoiceInformation.companyName"/>
+      <Design.TextField
+        placeholder="Nazwa firmy na którą ma być wystawiona faktura"
+        v-model="invoiceInformation.companyName"/>
     </Design.FieldGroup>
     <Design.Row columns>
       <Design.FieldGroup label="Kraj">
@@ -41,6 +44,7 @@
 import {onBeforeUnmount, onMounted, reactive} from "vue";
 import {InvoiceInformation} from "../../../main";
 import {Design} from "../design/design";
+import JobOfferStepper from '../design/JobOffer/JobOfferStepper.vue';
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();

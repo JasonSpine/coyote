@@ -4,8 +4,7 @@
       <Step
         :title="step.title"
         :mode="stepMode(index)"
-        :counter="index+1"
-        @select="select(step)"/>
+        :counter="index+1"/>
       <div class="w-9.5 h-px bg-navy-200" v-if="index < props.steps.length - 1"/>
     </template>
   </div>
@@ -20,13 +19,8 @@ const props = defineProps<Props>();
 
 interface Props {
   steps: DrawerOption<U>[];
+  step: U;
 }
-
-function select(option: DrawerOption<U>): void {
-  selected.value = option.value;
-}
-
-const selected = defineModel<U, U, U>();
 
 function stepMode(index: number): StepMode {
   if (index === currentIndex.value) {
@@ -39,6 +33,6 @@ function stepMode(index: number): StepMode {
 }
 
 const currentIndex = computed<number>(() => {
-  return props.steps.findIndex(step => step.value === selected.value);
+  return props.steps.findIndex(step => step.value === props.step);
 });
 </script>

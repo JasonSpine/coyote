@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center cursor-pointer" @click="select">
+  <div class="flex items-center" @click="select">
     <div class="size-8 flex-shrink-0 rounded-lg mr-3 flex items-center justify-center font-semibold" :class="iconClass">
       <Icon name="jobOfferStepperStepFinished" v-if="mode==='previous'"/>
       <template v-else>{{props.counter}}</template>

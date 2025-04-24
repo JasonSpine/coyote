@@ -1,12 +1,5 @@
 <template>
-  <Design.Stepper
-    v-model="step"
-    :steps="[
-      {title:'Informacje o firmie', value:'company'},
-      {title:'Kreator oferty pracy', value:'jobOffer'},
-      {title:'Podgląd oferty', value:'preview'},
-      {title:'Publikacja ogłoszenia', value:'publish'},
-    ]"/>
+  <JobOfferStepper :step="step"/>
   <div class="max-w-170 space-y-4 mx-auto">
     <Design.Card space title="O firmie">
       <Design.FieldLabel title="Logo firmy"/>
@@ -137,7 +130,7 @@
             :selected="jobOffer.applicationMode==='4programmers'"
             @select="jobOffer.applicationMode='4programmers'"/>
           <Design.FieldHelp>
-            Zezwól na wysyłanie CV poprzez 4Programmers na Twój adres email. Adres e-mail nie 
+            Zezwól na wysyłanie CV poprzez 4Programmers na Twój adres email. Adres e-mail nie
             będzie widoczny dla osób postronnych.
           </Design.FieldHelp>
           <Design.FieldGroup label="E-mail">
@@ -180,6 +173,7 @@ import {computed, reactive, ref} from 'vue';
 import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, UploadAssets, WorkExperience, WorkMode} from "../../../main";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
+import JobOfferStepper, {JobOfferStep} from "../design/JobOffer/JobOfferStepper.vue";
 import {formatCompanySizeLevel, formatHiringType, formatLegalForm, formatWorkExperience, formatWorkMode} from "../format";
 
 const props = defineProps<Props>();
@@ -268,7 +262,7 @@ function range(items: number): number[] {
   return [...Array(items).keys()];
 }
 
-const step = ref<string>('company');
+const step = ref<JobOfferStep>('company');
 
 interface FormModel {
   title: string;
