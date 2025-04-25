@@ -9,55 +9,55 @@
           @favourite-change="toggleFavourite"/>
       </Design.RowEnd>
     </Design.Row>
-    <Design.Tile nested desktop-space>
-      <Design.Row vertical-center>
-        <div class="size-14 rounded-lg overflow-hidden flex-shrink-0">
-          <img v-if="props.jobOffer.companyLogoUrl" :src="props.jobOffer.companyLogoUrl"/>
-          <div v-else class="size-14 rounded flex-shrink-0 flex items-center justify-center bg-accent-back text-accent-front">
-            <Icon name="jobOfferLogoPlaceholder"/>
-          </div>
-        </div>
-        <div class="flex-grow-1">
-          <Design.Row vertical-center apart>
-            <p class="text-lg leading-6" data-testid="jobOfferTitle">
-              <a :href="jobOffer.url" v-text="jobOffer.title"/>
-            </p>
-            <div class="max-md:hidden">
-              <Design.Salary :salary="jobOffer.salary" v-if="jobOffer.salary"/>
-              <Design.SalaryNotProvided v-else/>
+    <a :href="jobOffer.url">
+      <Design.Tile nested desktop-space>
+        <Design.Row vertical-center>
+          <div class="size-14 rounded-lg overflow-hidden flex-shrink-0">
+            <img v-if="props.jobOffer.companyLogoUrl" :src="props.jobOffer.companyLogoUrl"/>
+            <div v-else class="size-14 rounded flex-shrink-0 flex items-center justify-center bg-accent-back text-accent-front">
+              <Icon name="jobOfferLogoPlaceholder"/>
             </div>
-          </Design.Row>
-          <Design.Row apart class="max-md:hidden mt-2" vertical-center>
-            <Design.Row vertical-center class="space-x-2">
-              <span v-if="jobOffer.companyName" v-text="jobOffer.companyName"/>
-              <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
-            </Design.Row>
-            <Design.Row class="space-x-2 text-sm">
-              <div v-for="badge in badges" :class="{'text-word-standout': badge.standout}">
-                <Icon :name="badge.icon" v-if="badge.icon"/>
-                {{ badge.title }}
+          </div>
+          <div class="flex-grow-1">
+            <Design.Row vertical-center apart>
+              <p class="text-lg leading-6" data-testid="jobOfferTitle" v-text="jobOffer.title"/>
+              <div class="max-md:hidden">
+                <Design.Salary :salary="jobOffer.salary" v-if="jobOffer.salary"/>
+                <Design.SalaryNotProvided v-else/>
               </div>
             </Design.Row>
-          </Design.Row>
-        </div>
-      </Design.Row>
-      <div class="md:hidden">
-        <Design.Divider/>
-        <Design.Row wrap vertical-center>
-          <span>{{ jobOffer.companyName }}</span>
-          <Design.RowEnd>
-            <Design.Salary v-if="jobOffer.salary" :salary="jobOffer.salary"/>
-            <Design.SalaryNotProvided v-else/>
-          </Design.RowEnd>
+            <Design.Row apart class="max-md:hidden mt-2" vertical-center>
+              <Design.Row vertical-center class="space-x-2">
+                <span v-if="jobOffer.companyName" v-text="jobOffer.companyName"/>
+                <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
+              </Design.Row>
+              <Design.Row class="space-x-2 text-sm">
+                <div v-for="badge in badges" :class="{'text-word-standout': badge.standout}">
+                  <Icon :name="badge.icon" v-if="badge.icon"/>
+                  {{badge.title}}
+                </div>
+              </Design.Row>
+            </Design.Row>
+          </div>
         </Design.Row>
-        <template v-if="jobOffer.tagNames.length">
+        <div class="md:hidden">
           <Design.Divider/>
-          <Design.Row>
-            <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
+          <Design.Row wrap vertical-center>
+            <span>{{jobOffer.companyName}}</span>
+            <Design.RowEnd>
+              <Design.Salary v-if="jobOffer.salary" :salary="jobOffer.salary"/>
+              <Design.SalaryNotProvided v-else/>
+            </Design.RowEnd>
           </Design.Row>
-        </template>
-      </div>
-    </Design.Tile>
+          <template v-if="jobOffer.tagNames.length">
+            <Design.Divider/>
+            <Design.Row>
+              <Design.TagList :tag-names="jobOffer.tagNames" :max="5"/>
+            </Design.Row>
+          </template>
+        </div>
+      </Design.Tile>
+    </a>
   </Design.Tile>
 </template>
 

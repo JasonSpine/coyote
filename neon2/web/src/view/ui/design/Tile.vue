@@ -29,9 +29,10 @@ interface Props {
   vertical?: boolean;
   text?: string;
   shadow?: boolean;
+  clickable?: boolean;
 }
 
-const tileClass = computed(() => [padding(), verticalSpacing(), fontSize(), wrapping(), shadow()]);
+const tileClass = computed(() => [padding(), verticalSpacing(), fontSize(), wrapping(), shadow(), cursor()]);
 
 const rounded = computed((): MaterialRound => {
   if (props.nestedPill) {
@@ -79,5 +80,9 @@ function wrapping(): string {
 
 function shadow(): string {
   return props.shadow ? 'shadow-2xl' : '';
+}
+
+function cursor(): string {
+  return props.clickable ? 'cursor-pointer' : '';
 }
 </script>

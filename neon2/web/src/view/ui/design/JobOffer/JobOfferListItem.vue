@@ -9,16 +9,12 @@
           @favourite-change="toggleFavourite"/>
       </Design.RowEnd>
     </Design.Row>
-    <Design.Tile nested desktop-space>
+    <Design.Tile nested desktop-space clickable @click="emit('select')">
       <Design.Row vertical-center>
         <Design.Image :src="props.jobOffer.companyLogoUrl" placeholder-icon="jobOfferLogoPlaceholder"/>
         <div class="flex-grow-1">
           <Design.Row vertical-center apart>
-            <p
-              class="text-lg leading-6 cursor-pointer"
-              v-text="jobOffer.title"
-              data-testid="jobOfferTitle"
-              @click="emit('select')"/>
+            <p class="text-lg leading-6" v-text="jobOffer.title" data-testid="jobOfferTitle"/>
             <div class="max-md:hidden">
               <Design.JobOfferSalary :salary="jobOffer" v-if="jobOffer.salaryRangeFrom"/>
               <Design.JobOfferSalaryNotProvided v-else/>
