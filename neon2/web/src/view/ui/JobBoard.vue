@@ -18,6 +18,7 @@
     <JobOfferCreate
       v-if="props.screen === 'form'"
       :upload="props.upload!"
+      :pricing-plan="props.pricingPlan!"
       @create="createJob"
       @abort="navigateHome"/>
     <template v-if="props.screen === 'payment'">
@@ -52,6 +53,7 @@
       v-if="props.screen === 'edit'"
       :id="props.currentJobOfferId!"
       :job-offer="currentJobOffer"
+      :job-offer-expires-in-days="currentJobOffer.expiresInDays"
       :upload="props.upload!"
       @update="updateJob"
       @abort="abortEdit"/>
@@ -93,7 +95,7 @@ interface Emit {
   (event: 'create', plan: PricingPlan, jobOffer: SubmitJobOffer): void;
   (event: 'update', jobOfferId: number, jobOffer: SubmitJobOffer): void;
   (event: 'navigate', screen: Screen, id: number|null): void;
-  (event: 'search', searchPhrase: string);
+  (event: 'search', searchPhrase: string): void;
   (event: 'pay', payment: InitiatePayment): void;
   (event: 'redeem-bundle', jobOfferId: number): void;
   (event: 'mount-card-input', cssSelector: string): void;

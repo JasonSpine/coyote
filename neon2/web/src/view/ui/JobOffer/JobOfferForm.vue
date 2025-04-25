@@ -155,7 +155,7 @@
   <template v-if="step === 'preview'">
     <JobOfferShow
       @edit="previousStep"
-      :job-offer="{ expiresInDays: 365, ...fromFormModel(jobOffer) }"/>
+      :job-offer="{expiresInDays: props.jobOfferExpiresInDays, ...fromFormModel(jobOffer)}"/>
   </template>
   <div class="sticky bottom-0 mt-3 max-w-210 mx-auto">
     <Design.Tile space shadow>
@@ -165,7 +165,11 @@
         </span>
         <Design.RowEnd>
           <div class="flex items-center">
-            <Design.Button outline icon="jobOfferCreatorStepBack" @click="previousStep" v-if="hasPreviousStep" class="mr-2">
+            <Design.Button
+              outline icon="jobOfferCreatorStepBack"
+              @click="previousStep"
+              v-if="hasPreviousStep"
+              class="mr-2">
               Wróć
             </Design.Button>
             <div>
@@ -185,11 +189,27 @@
 
 <script setup lang="ts">
 import {computed, reactive, ref} from 'vue';
-import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, UploadAssets, WorkExperience, WorkMode} from "../../../main";
+import {
+  ApplicationMode,
+  Currency,
+  HiringType,
+  LegalForm,
+  Rate,
+  SubmitJobOffer,
+  UploadAssets,
+  WorkExperience,
+  WorkMode,
+} from "../../../main";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
 import JobOfferStepper, {JobOfferCreatorStep} from "../design/JobOffer/JobOfferStepper.vue";
-import {formatCompanySizeLevel, formatHiringType, formatLegalForm, formatWorkExperience, formatWorkMode} from "../format";
+import {
+  formatCompanySizeLevel,
+  formatHiringType,
+  formatLegalForm,
+  formatWorkExperience,
+  formatWorkMode,
+} from "../format";
 import JobOfferShow from "./JobOfferShow.vue";
 
 const props = defineProps<Props>();
@@ -197,6 +217,7 @@ const emit = defineEmits<Emit>();
 
 interface Props {
   jobOffer: SubmitJobOffer;
+  jobOfferExpiresInDays: number;
   mode: 'create'|'update';
   upload: UploadAssets;
 }

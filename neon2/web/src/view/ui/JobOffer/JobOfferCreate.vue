@@ -2,17 +2,20 @@
   <JobOfferForm
     mode="create"
     :job-offer="newJobOffer"
+    :job-offer-expires-in-days="expiresInDays"
     :upload="props.upload"
     @submit="create"
     @abort="emit('abort')"/>
 </template>
 
 <script setup lang="ts">
-import {SubmitJobOffer, UploadAssets} from "../../../main";
+import {computed} from 'vue';
+import {PricingPlan, SubmitJobOffer, UploadAssets} from "../../../main";
 import JobOfferForm from "./JobOfferForm.vue";
 
 interface Props {
   upload: UploadAssets;
+  pricingPlan: PricingPlan;
 }
 
 interface Emit {
@@ -26,6 +29,8 @@ const emit = defineEmits<Emit>();
 function create(jobOffer: SubmitJobOffer): void {
   emit('create', jobOffer);
 }
+
+const expiresInDays = computed(() => props.pricingPlan === 'free' ? 14 : 30);
 
 const newJobOffer: SubmitJobOffer = {
   title: '',

@@ -2,6 +2,7 @@
   <JobOfferForm
     mode="update"
     :job-offer="props.jobOffer"
+    :job-offer-expires-in-days="props.jobOfferExpiresInDays"
     :upload="props.upload"
     @submit="update"
     @abort="emit('abort')"/>
@@ -17,6 +18,7 @@ const emit = defineEmits<Emit>();
 interface Props {
   id: number;
   jobOffer: SubmitJobOffer;
+  jobOfferExpiresInDays: number;
   upload: UploadAssets;
 }
 
