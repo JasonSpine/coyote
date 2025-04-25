@@ -2,11 +2,13 @@
   <JobOfferStepper step="publish"/>
   <div class="max-w-170 space-y-4 mx-auto">
     <Design.Card title="Płatność poprzez bezpieczne połączenie">
-      <Design.FieldGroup required label="Numer karty">
+      <Design.PaymentMethod :options="paymentMethods" v-model="method"/>
+      <Design.FieldGroup required label="Numer karty" v-show="method === 'card'">
         <div id="creditCardInput" class="border border-neutral-100 px-2 py-3 rounded-lg">
           Wczytywanie...
         </div>
       </Design.FieldGroup>
+      <Design.Toast :subtitle="paymentP24Information" v-if="method === 'p24'"/>
     </Design.Card>
     <Design.Card title="Dane do faktury">
       <Design.FieldGroup required label="Nazwa firmy" :error="errors.companyName">
@@ -49,9 +51,11 @@
 </template>
 
 <script setup lang="ts">
-import {onBeforeUnmount, onMounted, reactive} from "vue";
-import {InvoiceInformation} from "../../../main";
+import {onBeforeUnmount, onMounted, reactive, ref} from "vue";
+import {InitiatePayment, InvoiceInformation} from "../../../main";
+import {PaymentMethod} from "../../../paymentProvider/PaymentProvider";
 import {Design} from "../design/design";
+import {DrawerOption} from "../design/Dropdown.vue";
 import JobOfferStepper from '../design/JobOffer/JobOfferStepper.vue';
 
 const props = defineProps<Props>();
@@ -62,7 +66,7 @@ interface Props {
 }
 
 interface Emit {
-  (event: 'pay', jobOfferId: number, invoiceInfo: InvoiceInformation): void;
+  (event: 'pay', payment: InitiatePayment): void;
   (event: 'mountCardInput', cssSelector: string): void;
   (event: 'unmountCardInput'): void;
 }
@@ -70,12 +74,18 @@ interface Emit {
 function pay(): void {
   const validationError = populateErrorsAndReturn();
   if (!validationError) {
-    emit('pay', props.jobOfferId, {...invoiceInformation});
+    emit('pay', {
+      jobOfferId: props.jobOfferId,
+      invoiceInfo: {...invoiceInformation},
+      paymentMethod: method.value,
+    });
   }
 }
 
 onMounted(() => emit('mountCardInput', '#creditCardInput'));
 onBeforeUnmount(() => emit('unmountCardInput'));
+
+const method = ref<PaymentMethod>('card');
 
 const invoiceInformation: InvoiceInformation = reactive<InvoiceInformation>({
   companyName: '',
@@ -85,6 +95,13 @@ const invoiceInformation: InvoiceInformation = reactive<InvoiceInformation>({
   companyPostalCode: '',
   companyCity: '',
 });
+
+const paymentMethods: DrawerOption<PaymentMethod>[] = [
+  {value: 'card', title: 'Karta kredytowa / debetowa'},
+  {value: 'p24', title: 'BLIK lub przelew'},
+];
+
+const paymentP24Information = 'Po kliknięciu "Zapłać i zapisz", zostaniesz przekierowany do formularza płatności online.';
 
 type Field = keyof InvoiceInformation;
 

@@ -1,5 +1,5 @@
 import {Page} from '@playwright/test';
-import {JobOfferSubmitAttemptMode, Payment, PricingBundleName, PricingPlan} from './dsl';
+import {JobOfferSubmitAttemptMode, Payment, PaymentMethod, PricingBundleName, PricingPlan} from './dsl';
 import {WebDriver} from './webDriver';
 
 export type PaymentNotification = string;
@@ -59,13 +59,23 @@ export class Driver {
     await this.submitJobOfferForm(title, description, companyName);
   }
 
-  async initiatePayment(jobOfferTitle: string, cardNumber: string): None {
+  async initiateCardPayment(jobOfferTitle: string, cardNumber: string): None {
     await this.web.click('Dodaj ogłoszenie');
     await this.selectPricingPlan('premium');
     await this.submitJobOfferForm(jobOfferTitle, 'description', 'companyName');
+    await this.selectPaymentMethod('card');
     await this.fillCardDetails(cardNumber);
     await this.fillInvoiceInformation();
-    await this.proceedCardPayment();
+    await this.proceedPayment();
+  }
+
+  async initiateP24Payment(jobOfferTitle: string): None {
+    await this.web.click('Dodaj ogłoszenie');
+    await this.selectPricingPlan('premium');
+    await this.submitJobOfferForm(jobOfferTitle, 'description', 'companyName');
+    await this.selectPaymentMethod('p24');
+    await this.fillInvoiceInformation();
+    await this.proceedPayment();
   }
 
   private async submitJobOfferForm(title: string, description: string, companyName: string): None {
@@ -106,12 +116,21 @@ export class Driver {
     }
   }
 
+  private async selectPaymentMethod(paymentMethod: PaymentMethod): None {
+    if (paymentMethod === 'card') {
+      await this.web.click('Karta kredytowa / debetowa');
+    }
+    if (paymentMethod === 'p24') {
+      await this.web.click('BLIK lub przelew');
+    }
+  }
+
   private async finalizeJobOfferPayment(payment: Payment, paymentCardNumber: string): None {
     await this.web.waitForText('Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność.');
     if (payment === 'completed') {
       await this.fillCardDetails(paymentCardNumber);
       await this.fillInvoiceInformation();
-      await this.proceedCardPayment();
+      await this.proceedPayment();
       await this.web.waitForText('Płatność zaksięgowana!');
     }
     if (payment === 'redeem-bundle') {
@@ -121,7 +140,7 @@ export class Driver {
     if (payment === 'failed') {
       await this.fillCardDetails(paymentCardNumber);
       await this.fillInvoiceInformation();
-      await this.proceedCardPayment();
+      await this.proceedPayment();
       await this.web.waitForText('Płatność odrzucona.');
     }
   }
@@ -143,7 +162,7 @@ export class Driver {
     await this.web.click("Skorzystaj z pakietu by Opublikować");
   }
 
-  private async proceedCardPayment(): None {
+  private async proceedPayment(): None {
     await this.web.click('Zapłać i Publikuj');
   }
 

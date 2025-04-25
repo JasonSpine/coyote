@@ -1,6 +1,6 @@
 import {PaymentIntentResult, Stripe, StripeCardElement, StripeError} from '@stripe/stripe-js';
 import {loadStripe} from '@stripe/stripe-js/pure';
-import {PaymentNotification, PaymentProvider} from './PaymentProvider';
+import {PaymentMethod, PaymentNotification, PaymentProvider} from './PaymentProvider';
 
 export class StripePaymentProvider implements PaymentProvider {
   private readonly _runtime: Promise<PaymentProvider>;
@@ -21,8 +21,8 @@ export class StripePaymentProvider implements PaymentProvider {
     this._runtime.then(runtime => runtime.unmountCardInput());
   }
 
-  performPayment(paymentToken: string): Promise<PaymentNotification> {
-    return this._runtime.then(runtime => runtime.performPayment(paymentToken));
+  performPayment(paymentToken: string, paymentMethod: PaymentMethod): Promise<PaymentNotification> {
+    return this._runtime.then(runtime => runtime.performPayment(paymentToken, paymentMethod));
   }
 }
 
@@ -41,13 +41,27 @@ class StripeRuntime implements PaymentProvider {
     this.cardElement.unmount();
   }
 
-  public async performPayment(paymentToken: string): Promise<PaymentNotification> {
-    return this.parsePaymentResponse(await this.confirmCardPayment(paymentToken));
+  public async performPayment(paymentToken: string, paymentMethod: PaymentMethod): Promise<PaymentNotification> {
+    return this.parsePaymentResponse(await this.confirmPayment(paymentToken, paymentMethod));
+  }
+
+  private async confirmPayment(paymentToken: string, paymentMethod: PaymentMethod): Promise<PaymentIntentResult> {
+    if (paymentMethod === 'card') {
+      return await this.confirmCardPayment(paymentToken);
+    }
+    return await this.confirmP24Payment(paymentToken, 'wilkowski.kontakt@gmail.com');
   }
 
   private confirmCardPayment(paymentToken: string): Promise<PaymentIntentResult> {
     return this.stripe.confirmCardPayment(paymentToken, {
       payment_method: {card: this.cardElement},
+    });
+  }
+
+  private confirmP24Payment(paymentToken: string, billingAddressEmail: string): Promise<PaymentIntentResult> {
+    return this.stripe.confirmP24Payment(paymentToken, {
+      payment_method: {billing_details: {email: billingAddressEmail}},
+      return_url: window.location.href,
     });
   }
 

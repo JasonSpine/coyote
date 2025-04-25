@@ -8,6 +8,7 @@ export type Payment = 'completed'|'ignored'|'redeem-bundle'|'failed';
 export type Card = 'valid'|'declined'|'expired'|'insufficientFunds';
 export type PricingBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|'premium'|PricingBundleName;
+export type PaymentMethod = 'card'|'p24';
 export type JobOfferSubmitAttemptMode = 'empty-title'|'empty-company-name';
 
 export class Dsl {
@@ -125,10 +126,14 @@ export class Dsl {
     return this.mangler.encoded(name);
   }
 
-  async initiatePayment(payment: {card: Card}): None {
-    await this.driver.initiatePayment(
-      this.enc('Job offer'),
-      this.cardNumber(payment.card || 'valid'));
+  async initiatePayment(payment: {paymentMethod?: PaymentMethod, card?: Card}): None {
+    if (payment.paymentMethod === 'p24') {
+      await this.driver.initiateP24Payment(this.enc('Job offer'));
+    } else {
+      await this.driver.initiateCardPayment(
+        this.enc('Job offer'),
+        this.cardNumber(payment.card || 'valid'));
+    }
   }
 
   private cardNumber(card: Card): string {

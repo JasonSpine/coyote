@@ -19,6 +19,7 @@ import JobOfferSalaryNotProvided from "./JobOffer/JobOfferSalaryNotProvided.vue"
 import JobOfferTagList from "./JobOffer/JobOfferTagList.vue";
 import Layout from "./Layout.vue";
 import Material from "./Material.vue";
+import PaymentMethod from "./PaymentMethod.vue";
 import RadioButton from "./RadioButton.vue";
 import RadioGroup from "./RadioGroup.vue";
 import Row from "./Row.vue";
@@ -54,6 +55,7 @@ export const Design = {
   JobOfferTagList,
   Layout,
   Material,
+  PaymentMethod,
   RadioButton,
   RadioGroup,
   Row,

@@ -67,7 +67,7 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {InvoiceInformation, PricingPlan, SubmitJobOffer} from "../../main";
+import {InitiatePayment, PricingPlan, SubmitJobOffer} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
@@ -94,7 +94,7 @@ interface Emit {
   (event: 'update', jobOfferId: number, jobOffer: SubmitJobOffer): void;
   (event: 'navigate', screen: Screen, id: number|null): void;
   (event: 'search', searchPhrase: string);
-  (event: 'pay', id: number, invoiceInfo: InvoiceInformation): void;
+  (event: 'pay', payment: InitiatePayment): void;
   (event: 'redeem-bundle', jobOfferId: number): void;
   (event: 'mount-card-input', cssSelector: string): void;
   (event: 'unmount-card-input'): void;
@@ -132,8 +132,8 @@ function abortEdit(): void {
   showJob(props.currentJobOfferId!);
 }
 
-function payForJob(jobOfferId: number, invoiceInfo: InvoiceInformation): void {
-  emit('pay', jobOfferId, invoiceInfo);
+function payForJob(payment: InitiatePayment): void {
+  emit('pay', payment);
 }
 
 function redeemBundle(jobOfferId: number): void {

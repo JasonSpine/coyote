@@ -34,4 +34,9 @@ describe('Payment processing.', () => {
       await dsl.assertPaymentNotification({expectedPaymentNotification: 'declinedCard'});
     });
   });
+
+  test('Payment can be made with p24.', async (dsl: Dsl) => {
+    await dsl.initiatePayment({paymentMethod: 'p24'});
+    await dsl.assertPaymentStatus({expectedPaymentStatus: 'paymentComplete'});
+  });
 });

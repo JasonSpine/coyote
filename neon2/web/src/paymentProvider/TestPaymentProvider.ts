@@ -1,4 +1,5 @@
-import {PaymentNotification, PaymentProvider} from './PaymentProvider';
+
+import {PaymentMethod, PaymentNotification, PaymentProvider} from './PaymentProvider';
 
 export class TestPaymentProvider implements PaymentProvider {
   private input: HTMLInputElement|null = null;
@@ -7,7 +8,9 @@ export class TestPaymentProvider implements PaymentProvider {
     this.input = document.createElement('input');
     this.input.dataset.testid = 'paymentProviderCard';
     this.input.maxLength = 16;
+    this.input.placeholder = 'Podaj numer karty';
     const parent = document.querySelector(cssSelector)!;
+    parent.innerHTML = '';
     parent.appendChild(this.input);
   }
 
@@ -15,7 +18,18 @@ export class TestPaymentProvider implements PaymentProvider {
     this.input!.remove();
   }
 
-  async performPayment(paymentToken: string): Promise<PaymentNotification> {
+  async performPayment(paymentToken: string, paymentMethod: PaymentMethod): Promise<PaymentNotification> {
+    if (paymentMethod === 'card') {
+      return await this.performCardPayment(paymentToken);
+    }
+    if (paymentMethod === 'p24') {
+      await callTestPaymentWebhook({paymentToken, paymentStatus: 'completed'});
+      return 'accepted';
+    }
+    throw new Error('Failed to perform payment with given payment method.');
+  }
+
+  private async performCardPayment(paymentToken: string) {
     const cardNumber = this.cardNumber();
     const notification = this.paymentResultBasedOnCardNumber(cardNumber);
     const paymentStatus = notification === 'accepted' ? 'completed' : 'failed';

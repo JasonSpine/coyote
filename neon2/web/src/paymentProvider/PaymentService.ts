@@ -1,6 +1,6 @@
 import {BackendPaymentStatus, BackendPreparedPayment, JobBoardBackend} from "../backend";
 import {InvoiceInformation} from "../main";
-import {PaymentNotification, PaymentProvider} from "./PaymentProvider";
+import {PaymentMethod, PaymentNotification, PaymentProvider} from "./PaymentProvider";
 
 interface PaymentListener {
   notificationReceived(notification: string): void;
@@ -18,9 +18,9 @@ export class PaymentService {
     this.listeners.push(listener);
   }
 
-  async initiatePayment(paymentId: string, invoiceInfo: InvoiceInformation): Promise<void> {
+  async initiatePayment(paymentId: string, invoiceInfo: InvoiceInformation, paymentMethod: PaymentMethod): Promise<void> {
     const payment = await this.backend.preparePayment(paymentId, invoiceInfo);
-    this.updatePaymentNotification(await this.performPayment(payment));
+    this.updatePaymentNotification(await this.performPayment(payment, paymentMethod));
     this.updatePaymentStatus(paymentId, await this.readPaymentStatus(payment.paymentId));
   }
 
@@ -40,9 +40,9 @@ export class PaymentService {
     return 'paymentFailed';
   }
 
-  private performPayment(payment: BackendPreparedPayment): Promise<PaymentNotification> {
+  private performPayment(payment: BackendPreparedPayment, paymentMethod: PaymentMethod): Promise<PaymentNotification> {
     if (payment.providerReady) {
-      return this.provider.performPayment(payment.paymentToken);
+      return this.provider.performPayment(payment.paymentToken, paymentMethod);
     }
     return Promise.resolve('unexpectedProviderResponse');
   }

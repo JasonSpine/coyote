@@ -28,7 +28,7 @@ class Stripe implements PaymentProvider {
             'amount'               => $amount,
             'currency'             => 'pln',
             'metadata'             => $metadata,
-            'payment_method_types' => ['card'], // or p24
+            'payment_method_types' => ['card', 'p24'],
         ]);
     }
 }

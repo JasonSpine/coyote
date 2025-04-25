@@ -1,7 +1,7 @@
 import {BackendJobOffer, JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard, JobOffer} from './jobBoard';
 import {JobOfferPayments} from "./jobOfferPayments";
-import {PaymentNotification, PaymentProvider} from "./paymentProvider/PaymentProvider";
+import {PaymentMethod, PaymentNotification, PaymentProvider} from "./paymentProvider/PaymentProvider";
 import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
 import {StripePaymentProvider} from './paymentProvider/StripePaymentProvider';
 import {TestPaymentProvider} from './paymentProvider/TestPaymentProvider';
@@ -15,13 +15,19 @@ const backend = new JobBoardBackend();
 const paymentProvider: PaymentProvider = backend.testMode()
   ? new TestPaymentProvider()
   : new StripePaymentProvider(backend.stripeKey()!);
-const payment = new PaymentService(backend, paymentProvider);
-const payments = new JobOfferPayments();
+const payments = new PaymentService(backend, paymentProvider);
+const jobOfferPayments = new JobOfferPayments();
 const planBundle = new PlanBundle();
 
 export type PlanBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|PaidPricingPlan;
 export type PaidPricingPlan = 'premium'|PlanBundleName;
+
+export interface InitiatePayment {
+  jobOfferId: number;
+  invoiceInfo: InvoiceInformation;
+  paymentMethod: PaymentMethod;
+}
 
 export interface SubmitJobOffer {
   title: string;
@@ -75,7 +81,7 @@ view.addEventListener({
       if (pricingPlan === 'free') {
         view.jobOfferCreatedFree(jobOffer.id);
       } else {
-        payments.addJobOffer({jobOfferId: jobOffer.id, paymentId: jobOffer.paymentId!, pricingPlan});
+        jobOfferPayments.addJobOffer({jobOfferId: jobOffer.id, paymentId: jobOffer.paymentId!, pricingPlan});
         view.jobOfferCreatedRequirePayment(jobOffer.id);
       }
     });
@@ -86,8 +92,11 @@ view.addEventListener({
       view.jobOfferEdited(jobOfferId);
     });
   },
-  payForJob(jobOfferId: number, invoiceInfo: InvoiceInformation): void {
-    payment.initiatePayment(payments.paymentId(jobOfferId), invoiceInfo);
+  payForJob(initiatePayment: InitiatePayment): void {
+    payments.initiatePayment(
+      jobOfferPayments.paymentId(initiatePayment.jobOfferId),
+      initiatePayment.invoiceInfo,
+      initiatePayment.paymentMethod);
   },
   redeemBundle(jobOfferId: number): void {
     backend.publishJobOfferUsingBundle(jobOfferId).then(() => {
@@ -106,15 +115,15 @@ view.addEventListener({
   },
 });
 
-payment.addEventListener({
+payments.addEventListener({
   notificationReceived(notification: PaymentNotification): void {
     view.setPaymentNotification(notification);
   },
   statusChanged(paymentId: string, status: PaymentStatus): void {
     view.setPaymentStatus(status);
     if (status === 'paymentComplete') {
-      board.jobOfferPaid(payments.jobOfferId(paymentId));
-      const pricingPlan = payments.pricingPlan(paymentId);
+      board.jobOfferPaid(jobOfferPayments.jobOfferId(paymentId));
+      const pricingPlan = jobOfferPayments.pricingPlan(paymentId);
       if (pricingPlan !== 'premium') {
         planBundle.set(pricingPlan, remainingJobOffers(pricingPlan));
       }
