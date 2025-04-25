@@ -19,9 +19,7 @@ readonly class JobBoardView {
         if ($isTestMode) {
             $resources = null;
         } else {
-            $resources =
-                '<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter:400,500,700">
-                <script src="https://js.stripe.com/v3/"></script>';
+            $resources = '<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter:400,500,700">';
         }
         $faLightUrl = "/neon2/static/{$this->vite->fontAwesomeLightUrl()}";
         $faRegularUrl = "/neon2/static/{$this->vite->fontAwesomeRegularUrl()}";

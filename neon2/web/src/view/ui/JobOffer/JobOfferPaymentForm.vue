@@ -2,7 +2,11 @@
   <JobOfferStepper step="publish"/>
   <div class="max-w-170 space-y-4 mx-auto">
     <Design.Card title="Płatność poprzez bezpieczne połączenie">
-      <div id="creditCardInput"/>
+      <Design.FieldGroup required label="Numer karty">
+        <div id="creditCardInput" class="border border-neutral-100 px-2 py-3 rounded-lg">
+          Wczytywanie...
+        </div>
+      </Design.FieldGroup>
     </Design.Card>
     <Design.Card title="Dane do faktury">
       <Design.FieldGroup required label="Nazwa firmy" :error="errors.companyName">
