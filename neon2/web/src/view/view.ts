@@ -1,7 +1,7 @@
 import {JobOffer} from '../jobBoard';
 import {PlanBundleName, UploadAssets} from "../main";
-import {PaymentNotification} from "../paymentProvider";
-import {PaymentStatus} from "../paymentService";
+import {PaymentNotification} from "../paymentProvider/PaymentProvider";
+import {PaymentStatus} from "../paymentProvider/PaymentService";
 import {Screen, UserInterface, ViewListener} from './ui/ui';
 
 export type Toast = 'created'|'edited'|'bundle-used';

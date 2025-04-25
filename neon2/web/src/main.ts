@@ -1,8 +1,10 @@
 import {BackendJobOffer, JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard, JobOffer} from './jobBoard';
 import {JobOfferPayments} from "./jobOfferPayments";
-import {PaymentNotification, PaymentProvider, Stripe, TestPaymentProvider} from "./paymentProvider";
-import {PaymentService, PaymentStatus} from "./paymentService";
+import {PaymentNotification, PaymentProvider} from "./paymentProvider/PaymentProvider";
+import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
+import {StripePaymentProvider} from './paymentProvider/StripePaymentProvider';
+import {TestPaymentProvider} from './paymentProvider/TestPaymentProvider';
 import {PlanBundle} from "./planBundle";
 import {VueUi} from './view/ui/ui';
 import {View} from "./view/view";
@@ -12,7 +14,7 @@ const board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jo
 const backend = new JobBoardBackend();
 const paymentProvider: PaymentProvider = backend.testMode()
   ? new TestPaymentProvider()
-  : new Stripe(backend.stripeKey()!);
+  : new StripePaymentProvider(backend.stripeKey()!);
 const payment = new PaymentService(backend, paymentProvider);
 const payments = new JobOfferPayments();
 const planBundle = new PlanBundle();

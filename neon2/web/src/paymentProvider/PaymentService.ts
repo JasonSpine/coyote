@@ -1,17 +1,18 @@
-import {BackendPaymentStatus, BackendPreparedPayment, JobBoardBackend} from "./backend";
-import {InvoiceInformation} from "./main";
-import {PaymentNotification, PaymentProvider} from "./paymentProvider";
+import {BackendPaymentStatus, BackendPreparedPayment, JobBoardBackend} from "../backend";
+import {InvoiceInformation} from "../main";
+import {PaymentNotification, PaymentProvider} from "./PaymentProvider";
+
+interface PaymentListener {
+  notificationReceived(notification: string): void;
+  statusChanged(paymentId: string, status: PaymentStatus): void;
+}
 
 export type PaymentStatus = 'paymentComplete'|'paymentFailed';
 
 export class PaymentService {
   private listeners: PaymentListener[] = [];
 
-  constructor(
-    private backend: JobBoardBackend,
-    private provider: PaymentProvider,
-  ) {
-  }
+  constructor(private backend: JobBoardBackend, private provider: PaymentProvider) {}
 
   addEventListener(listener: PaymentListener) {
     this.listeners.push(listener);
@@ -53,9 +54,4 @@ export class PaymentService {
   private updatePaymentStatus(paymentId: string, status: PaymentStatus): void {
     this.listeners.forEach(listener => listener.statusChanged(paymentId, status));
   }
-}
-
-interface PaymentListener {
-  notificationReceived(notification: string): void;
-  statusChanged(paymentId: string, status: PaymentStatus): void;
 }

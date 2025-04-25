@@ -1,8 +1,8 @@
 import {createApp, h, Reactive, reactive, VNode} from 'vue';
 import {JobOffer} from '../../jobBoard';
 import {InvoiceInformation, PlanBundleName, PricingPlan, SubmitJobOffer, UploadAssets} from "../../main";
-import {PaymentNotification} from "../../paymentProvider";
-import {PaymentStatus} from "../../paymentService";
+import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
+import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
 import JobBoard from './JobBoard.vue';
 

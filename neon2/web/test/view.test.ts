@@ -1,7 +1,7 @@
 import {JobOffer} from '../src/jobBoard';
 import {PlanBundleName, UploadAssets} from "../src/main";
-import {PaymentNotification} from "../src/paymentProvider";
-import {PaymentStatus} from "../src/paymentService";
+import {PaymentNotification} from "../src/paymentProvider/PaymentProvider";
+import {PaymentStatus} from "../src/paymentProvider/PaymentService";
 import {NavigationListener, Screen, SearchListener, UserInterface, ViewListener} from '../src/view/ui/ui';
 import {Toast, View} from '../src/view/view';
 import {assertEquals, beforeEach, describe, test} from './assertion';

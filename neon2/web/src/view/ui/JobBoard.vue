@@ -68,8 +68,8 @@
 import {computed} from 'vue';
 import {JobOffer} from '../../jobBoard';
 import {InvoiceInformation, PricingPlan, SubmitJobOffer} from "../../main";
-import {PaymentNotification} from "../../paymentProvider";
-import {PaymentStatus} from "../../paymentService";
+import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
+import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
 import {Design} from "./design/design";
 import JobOfferButtonPill from "./design/JobOffer/JobOfferButtonPill.vue";
