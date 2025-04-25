@@ -12,13 +12,15 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from "vue";
+import {computed, inject} from "vue";
 
 interface Props {
   placeholder: string;
   testId?: string;
   nested?: boolean;
 }
+
+const hasError = inject('fieldHasError', computed(() => false));
 
 interface Emit {
   (event: 'submit', value: string): void;
@@ -37,9 +39,15 @@ function change(): void {
   emit('change', text.value);
 }
 
-const inputClass = computed(() => {
+const inputClass = computed<string>(() => {
   if (props.nested) {
+    if (hasError.value) {
+      throw new Error('Nested inputs do not have errors.');
+    }
     return 'bg-tile-nested';
+  }
+  if (hasError.value) {
+    return 'border border-red-500';
   }
   return 'border border-neutral-100';
 });

@@ -12,10 +12,8 @@
           <div class="mb-8">
             <Design.RadioGroup vertical :options="hiringTypeOptions" v-model="jobOffer.companyHiringType"/>
           </div>
-          <Design.FieldGroup required label="Nazwa firmy">
-            <Design.TextField
-              placeholder="Wpisz nazwę firmy"
-              v-model="jobOffer.companyName"/>
+          <Design.FieldGroup required label="Nazwa firmy" :error="errors.companyName">
+            <Design.TextField placeholder="Wpisz nazwę firmy" v-model="jobOffer.companyName"/>
             <Design.FieldHelp>
               Podając nazwę firmy, oferta staje się bardziej wiarygodna i wartościowa.
             </Design.FieldHelp>
@@ -65,7 +63,7 @@
   </div>
   <div class="max-w-170 space-y-4 mx-auto" v-if="step === 'jobOffer'">
     <Design.Card space title="Podstawowe informacje">
-      <Design.FieldGroup required label="Tytuł ogłoszenia">
+      <Design.FieldGroup required label="Tytuł ogłoszenia" :error="errors.title">
         <Design.TextField placeholder="np. Senior Java Developer" v-model="jobOffer.title"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Staż pracy">
@@ -212,12 +210,33 @@ interface Emit {
 
 const step = ref<JobOfferCreatorStep>('company');
 
+const errors = reactive({
+  title: null as string|null,
+  companyName: null as string|null,
+});
+
 function nextStep(): void {
   if (step.value === 'company') {
-    changeStep('jobOffer');
+    if (stringProvided(jobOffer.companyName)) {
+      errors.companyName = null;
+      changeStep('jobOffer');
+    } else {
+      errors.companyName = 'Podaj nazwę firmy.';
+      window.scrollTo(0, 0);
+    }
   } else if (step.value === 'jobOffer') {
-    changeStep('preview');
+    if (stringProvided(jobOffer.title)) {
+      errors.title = null;
+      changeStep('preview');
+    } else {
+      errors.title = 'Podaj tytuł ogłoszenia.';
+      window.scrollTo(0, 0);
+    }
   }
+}
+
+function stringProvided(string: string): boolean {
+  return string.trim().length > 0;
 }
 
 const hasPreviousStep = computed<boolean>(() => step.value !== 'company');

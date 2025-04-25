@@ -5,6 +5,7 @@ import CheckBox from "./CheckBox.vue";
 import Divider from "./Divider.vue";
 import Drawer from "./Drawer.vue";
 import Dropdown from "./Dropdown.vue";
+import FieldError from "./FieldError.vue";
 import FieldGroup from "./FieldGroup.vue";
 import FieldHelp from "./FieldHelp.vue";
 import FieldLabel from "./FieldLabel.vue";
@@ -39,6 +40,7 @@ export const Design = {
   Divider,
   Drawer,
   Dropdown,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldHelp,

@@ -1,5 +1,5 @@
 import {Page} from '@playwright/test';
-import {Payment, PricingBundleName, PricingPlan} from './dsl';
+import {JobOfferSubmitAttemptMode, Payment, PricingBundleName, PricingPlan} from './dsl';
 import {WebDriver} from './webDriver';
 
 export type PaymentNotification = string;
@@ -73,9 +73,17 @@ export class Driver {
     await this.web.waitForText('Dodano ogłoszenie!');
   }
 
-  private async fillJobOfferForm(title: string, description: string, companyName: string) {
+  private async fillJobOfferForm(title: string, description: string, companyName: string): None {
+    await this.fillJobOfferCompanyName(companyName);
+    await this.fillJobOfferDetails(title, description);
+  }
+
+  private async fillJobOfferCompanyName(companyName: string): None {
     await this.web.fillByLabel('Nazwa firmy', companyName);
     await this.web.click('Dalej');
+  }
+
+  private async fillJobOfferDetails(title: string, description: string): None {
     await this.web.fillByLabel('Tytuł ogłoszenia', title);
     await this.web.fillByLabel('Szczegółowe informacje', description);
     await this.web.click('Dalej');
@@ -159,7 +167,7 @@ export class Driver {
 
   async readPaymentStatus(): Promise<PaymentStatus> {
     await this.web.waitUntilVisible('paymentStatus');
-    const status = await this.web.read('paymentStatus');
+    const status = await this.web.readStringByTestId('paymentStatus');
     if (status === 'Płatność zaksięgowana!') {
       return 'paymentComplete';
     }
@@ -170,7 +178,7 @@ export class Driver {
   }
 
   async findPlanBundle(): Promise<PlanBundle> {
-    return this.parsePlanBundle(await this.web.read('planBundle'));
+    return this.parsePlanBundle(await this.web.readStringByTestId('planBundle'));
   }
 
   private parsePlanBundle(planBundle: string): PlanBundle {
@@ -197,6 +205,29 @@ export class Driver {
       return await this.web.readStringByTestId('jobOfferCompanyName');
     }
     throw new Error('Failed to find job offer field.');
+  }
+
+  async tryPublishJobOffer(mode: JobOfferSubmitAttemptMode): Promise<void> {
+    await this.web.click('Dodaj ogłoszenie');
+    await this.selectPricingPlan('free');
+    if (mode === 'empty-title') {
+      await this.fillJobOfferCompanyName('company name');
+      await this.fillJobOfferDetails('', 'description');
+    }
+    if (mode === 'empty-company-name') {
+      await this.fillJobOfferCompanyName('');
+    }
+  }
+
+  async findErrorMessage(): Promise<string> {
+    const errorMessage = await this.web.readStringByTestId('errorMessage');
+    if (errorMessage === 'Podaj nazwę firmy.') {
+      return 'provide-company-name';
+    }
+    if (errorMessage === 'Podaj tytuł ogłoszenia.') {
+      return 'provide-offer-title';
+    }
+    throw new Error('Failed to parse error message.');
   }
 }
 

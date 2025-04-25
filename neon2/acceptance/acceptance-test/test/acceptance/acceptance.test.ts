@@ -108,3 +108,14 @@ describe('A failed payment can be retried.', () => {
     await dsl.assertJobOfferIsListed({jobOfferTitle: 'Job offer'});
   });
 });
+
+describe('Job offer validation.', () => {
+  test('Job offer title is required.', async (dsl: Dsl) => {
+    await dsl.tryPublishJobOffer({mode: 'empty-title'});
+    await dsl.assertErrorMessage({expectedErrorMessage: 'provide-offer-title'});
+  });
+  test('Job offer company name is required.', async (dsl: Dsl) => {
+    await dsl.tryPublishJobOffer({mode: 'empty-company-name'});
+    await dsl.assertErrorMessage({expectedErrorMessage: 'provide-company-name'});
+  });
+});

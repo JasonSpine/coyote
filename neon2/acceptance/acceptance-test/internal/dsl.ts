@@ -8,6 +8,7 @@ export type Payment = 'completed'|'ignored'|'redeem-bundle'|'failed';
 export type Card = 'valid'|'declined'|'expired'|'insufficientFunds';
 export type PricingBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|'premium'|PricingBundleName;
+export type JobOfferSubmitAttemptMode = 'empty-title'|'empty-company-name';
 
 export class Dsl {
   private mangler: Mangler;
@@ -178,6 +179,16 @@ export class Dsl {
         assertion.expectedCompanyName,
         await this.driver.findJobOfferField(this.enc(assertion.jobOfferTitle), 'companyName'));
     }
+  }
+
+  async tryPublishJobOffer(jobOffer: {mode: JobOfferSubmitAttemptMode}): None {
+    await this.driver.tryPublishJobOffer(jobOffer.mode);
+  }
+
+  async assertErrorMessage(assertion: {expectedErrorMessage: string}): None {
+    assertEquals(
+      assertion.expectedErrorMessage,
+      await this.driver.findErrorMessage());
   }
 }
 

@@ -33,14 +33,6 @@ export class WebDriver {
     await this.page.getByPlaceholder(placeholder).fill(value);
   }
 
-  async readNumberByTestId(testId: string): Promise<number> {
-    const text = await this.page.getByTestId(testId).textContent();
-    if (text) {
-      return parseInt(text);
-    }
-    throw new Error(`Failed to read a number by test id: ${testId}`);
-  }
-
   async readStringByTestId(testId: string): Promise<string> {
     const text = await this.page.getByTestId(testId).textContent();
     if (text) {
@@ -62,11 +54,6 @@ export class WebDriver {
 
   async waitUntilVisible(testId: string): None {
     await this.page.getByTestId(testId).waitFor({state: 'visible', timeout: 7500});
-  }
-
-  async read(testId: string): Promise<string> {
-    const string = await this.page.getByTestId(testId).textContent();
-    return string!;
   }
 
   async isVisible(testId: string): Promise<boolean> {
