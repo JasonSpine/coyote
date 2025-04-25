@@ -64,6 +64,7 @@ export class Driver {
     await this.selectPricingPlan('premium');
     await this.submitJobOfferForm(jobOfferTitle, 'description', 'companyName');
     await this.fillCardDetails(cardNumber);
+    await this.fillInvoiceInformation();
     await this.proceedCardPayment();
   }
 
@@ -105,14 +106,11 @@ export class Driver {
     }
   }
 
-  private async fillCardDetails(cardNumber: string): None {
-    await this.web.fill('paymentProviderCard', cardNumber);
-  }
-
   private async finalizeJobOfferPayment(payment: Payment, paymentCardNumber: string): None {
     await this.web.waitForText('Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność.');
     if (payment === 'completed') {
       await this.fillCardDetails(paymentCardNumber);
+      await this.fillInvoiceInformation();
       await this.proceedCardPayment();
       await this.web.waitForText('Płatność zaksięgowana!');
     }
@@ -122,9 +120,23 @@ export class Driver {
     }
     if (payment === 'failed') {
       await this.fillCardDetails(paymentCardNumber);
+      await this.fillInvoiceInformation();
       await this.proceedCardPayment();
       await this.web.waitForText('Płatność odrzucona.');
     }
+  }
+
+  private async fillInvoiceInformation(): None {
+    await this.web.fillByLabel('Nazwa firmy', 'company name');
+    await this.web.fillByLabel('Kraj', 'country');
+    await this.web.fillByLabel('NIP / VAT - ID', '5555666677');
+    await this.web.fillByLabel('Adres', 'company address');
+    await this.web.fillByLabel('Kod pocztowy', '11-222');
+    await this.web.fillByLabel('Miasto', 'company city');
+  }
+
+  private async fillCardDetails(cardNumber: string): None {
+    await this.web.fill('paymentProviderCard', cardNumber);
   }
 
   async finalizePaymentByUsingBundle(): None {

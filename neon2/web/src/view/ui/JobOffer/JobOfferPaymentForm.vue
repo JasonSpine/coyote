@@ -5,27 +5,27 @@
       <div id="creditCardInput"/>
     </Design.Card>
     <Design.Card title="Dane do faktury">
-      <Design.FieldGroup required label="Nazwa firmy">
+      <Design.FieldGroup required label="Nazwa firmy" :error="errors.companyName">
         <Design.TextField
           placeholder="Nazwa firmy na którą ma być wystawiona faktura"
           v-model="invoiceInformation.companyName"/>
       </Design.FieldGroup>
       <Design.Row columns>
-        <Design.FieldGroup required label="Kraj">
+        <Design.FieldGroup required label="Kraj" :error="errors.countryCode">
           <Design.TextField placeholder="Np. Polska, etc." v-model="invoiceInformation.countryCode"/>
         </Design.FieldGroup>
-        <Design.FieldGroup required label="NIP / VAT - ID">
+        <Design.FieldGroup required label="NIP / VAT - ID" :error="errors.vatId">
           <Design.TextField placeholder="Np. 1234123412" v-model="invoiceInformation.vatId"/>
         </Design.FieldGroup>
       </Design.Row>
-      <Design.FieldGroup required label="Adres">
+      <Design.FieldGroup required label="Adres" :error="errors.companyAddress">
         <Design.TextField placeholder="Np. al. Jerozolimskie 3" v-model="invoiceInformation.companyAddress"/>
       </Design.FieldGroup>
       <Design.Row columns>
-        <Design.FieldGroup required label="Kod pocztowy">
+        <Design.FieldGroup required label="Kod pocztowy" :error="errors.companyPostalCode">
           <Design.TextField placeholder="Np. 12-123" v-model="invoiceInformation.companyPostalCode"/>
         </Design.FieldGroup>
-        <Design.FieldGroup required label="Miasto">
+        <Design.FieldGroup required label="Miasto" :error="errors.companyCity">
           <Design.TextField placeholder="Np. Warszawa, Kraków, etc." v-model="invoiceInformation.companyCity"/>
         </Design.FieldGroup>
       </Design.Row>
@@ -64,7 +64,10 @@ interface Emit {
 }
 
 function pay(): void {
-  emit('pay', props.jobOfferId, {...invoiceInformation});
+  const validationError = populateErrorsAndReturn();
+  if (!validationError) {
+    emit('pay', props.jobOfferId, {...invoiceInformation});
+  }
 }
 
 onMounted(() => emit('mountCardInput', '#creditCardInput'));
@@ -78,4 +81,32 @@ const invoiceInformation: InvoiceInformation = reactive<InvoiceInformation>({
   companyPostalCode: '',
   companyCity: '',
 });
+
+type Field = keyof InvoiceInformation;
+
+const errors = reactive<Record<Field, string|null>>({
+  companyName: null as string|null,
+  countryCode: null as string|null,
+  vatId: null as string|null,
+  companyAddress: null as string|null,
+  companyPostalCode: null as string|null,
+  companyCity: null as string|null,
+});
+
+function populateErrorsAndReturn(): boolean {
+  let validationError = false;
+  for (const field of Object.keys(invoiceInformation) as Field[]) {
+    if (!stringProvided(invoiceInformation[field])) {
+      errors[field] = 'Uzupełnij pole.';
+      validationError = true;
+    } else {
+      errors[field] = null;
+    }
+  }
+  return validationError;
+}
+
+function stringProvided(string: string): boolean {
+  return string.trim().length > 0;
+}
 </script>
