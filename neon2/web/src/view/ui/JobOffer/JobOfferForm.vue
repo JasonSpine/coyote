@@ -153,10 +153,9 @@
     </Design.Card>
   </div>
   <template v-if="step === 'preview'">
-    <JobOfferShow :job-offer="{
-        expiresInDays: 365,
-        ...fromFormModel(jobOffer)
-      }"/>
+    <JobOfferShow
+      @edit="previousStep"
+      :job-offer="{ expiresInDays: 365, ...fromFormModel(jobOffer) }"/>
   </template>
   <div class="sticky bottom-0 mt-3 max-w-210 mx-auto">
     <Design.Tile space shadow>
