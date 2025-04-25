@@ -13,13 +13,18 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Neon;
 use Neon2\JobBoardInteractor;
+use Neon2\StripeSecrets;
 
 class ServiceProvider extends RouteServiceProvider {
     public function register(): void {
         parent::register();
         $this->app->instance(
             JobBoardInteractor::class,
-            new \Neon2\JobBoardInteractor(testMode:false));
+            new \Neon2\JobBoardInteractor(testMode:false, stripeSecrets:new StripeSecrets(
+                config('services.stripe.key'),
+                config('services.stripe.secret'),
+                config('services.stripe.endpoint_secret'),
+            )));
     }
 
     public function loadRoutes(): void {

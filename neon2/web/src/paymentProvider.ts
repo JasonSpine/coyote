@@ -16,9 +16,9 @@ export class Stripe implements PaymentProvider {
   private readonly stripe: stripe.Stripe;
   private readonly cardElement: stripe.elements.Element;
 
-  constructor(private publicKey: string) {
+  constructor(private publishableKey: string) {
     const stripe: stripe.StripeStatic = window['Stripe'];
-    this.stripe = stripe(this.publicKey);
+    this.stripe = stripe(this.publishableKey);
     this.cardElement = this.stripe.elements().create('card');
   }
 

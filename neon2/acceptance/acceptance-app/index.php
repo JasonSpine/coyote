@@ -40,5 +40,6 @@ $application = Application::configure(__DIR__ . '/laravel')
     })
     ->withExceptions()
     ->create();
-$application->instance(JobBoardInteractor::class, new Neon2\JobBoardInteractor(testMode:true));
+$application->instance(JobBoardInteractor::class,
+    new Neon2\JobBoardInteractor(testMode:true, stripeSecrets:null));
 $application->handleRequest(Request::capture());

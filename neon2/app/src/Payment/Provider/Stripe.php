@@ -7,8 +7,8 @@ use Stripe as StripeApi;
 class Stripe implements PaymentProvider {
     private StripeApi\StripeClient $client;
 
-    public function __construct(string $privateKey) {
-        $this->client = new StripeApi\StripeClient($privateKey);
+    public function __construct(string $secretKey) {
+        $this->client = new StripeApi\StripeClient($secretKey);
     }
 
     public function prepareCardPayment(int $amount, string $paymentId): PreparedPayment {

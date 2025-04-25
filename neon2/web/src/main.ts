@@ -12,7 +12,7 @@ const board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jo
 const backend = new JobBoardBackend();
 const paymentProvider: PaymentProvider = backend.testMode()
   ? new TestPaymentProvider()
-  : new Stripe('pk_test_51RBWn0Rf5n1iRahJpeSAwkiae2lwuhS2BCH18TKWUOsE9WIn5SA6kojudAolQEcKuFjUTOwNBFNuzM89bQqctAnz00ciq6x7UN');
+  : new Stripe(backend.stripeKey()!);
 const payment = new PaymentService(backend, paymentProvider);
 const payments = new JobOfferPayments();
 const planBundle = new PlanBundle();

@@ -23,18 +23,20 @@ readonly class JobBoardInteractor {
     private PaymentWebhook $paymentWebhook;
     private PaymentGate $gate;
 
-    public function __construct(bool $testMode) {
+    public function __construct(bool $testMode, ?StripeSecrets $stripeSecrets) {
         $this->gate = new PaymentGate();
         $this->jobBoardGate = new JobBoardGate();
         $planBundle = new JobBoard\PlanBundleGate();
-        $this->jobBoardView = new JobBoardView($this->jobBoardGate, $planBundle);
+        $this->jobBoardView = new JobBoardView($this->jobBoardGate,
+            $planBundle,
+            $stripeSecrets?->publishableKey);
         $this->board = new JobBoard($this->gate, $this->jobBoardGate, $planBundle, $testMode);
         if ($this->board->testMode()) {
             $paymentProvider = new TestPaymentProvider();
             $this->paymentWebhook = new TestPaymentWebhook($paymentProvider);
         } else {
-            $paymentProvider = new Stripe('sk_test_51RBWn0Rf5n1iRahJzOJ6tJvWNO6fwKBaN7O2uVdhSGxVFVAsCeBTDgL13UWJ3VEGGLJc1ntyC5oDq5QQbVByEY8j00aluGGN0L');
-            $this->paymentWebhook = new StripeWebhook('whsec_W5t2VrjF8hVHk3Fp6bM4scZ5HyX9y4xB');
+            $paymentProvider = new Stripe($stripeSecrets->secretKey);
+            $this->paymentWebhook = new StripeWebhook($stripeSecrets->webhookSigningSecret);
         }
         $this->paymentService = new PaymentService($this->gate, $paymentProvider);
     }

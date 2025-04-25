@@ -7,6 +7,7 @@ readonly class JobBoardView {
     public function __construct(
         private \Neon2\JobBoard\JobBoardGate   $jobBoard,
         private \Neon2\JobBoard\PlanBundleGate $planBundles,
+        private ?string                        $stripePublishableKey,
     ) {
         $this->vite = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/');
     }
@@ -50,11 +51,12 @@ readonly class JobBoardView {
 
     private function backendInput(bool $isTestMode, int $userId, string $csrfToken): string {
         return $this->encodeBackendInput([
-            'jobOffers'  => $this->jobBoard->listJobOffers(),
-            'testMode'   => $isTestMode,
-            'planBundle' => $this->planBundle($userId),
-            'userId'     => $userId,
-            'csrfToken'  => $csrfToken,
+            'jobOffers'            => $this->jobBoard->listJobOffers(),
+            'testMode'             => $isTestMode,
+            'planBundle'           => $this->planBundle($userId),
+            'userId'               => $userId,
+            'csrfToken'            => $csrfToken,
+            'stripePublishableKey' => $this->stripePublishableKey,
         ]);
     }
 

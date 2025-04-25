@@ -91,12 +91,12 @@ export class JobBoardBackend {
     return this.backendInput.userId;
   }
 
-  private csrfToken(): string {
-    return this.backendInput.csrfToken;
-  }
-
   testMode(): boolean {
     return this.backendInput.testMode;
+  }
+
+  stripeKey(): string|null {
+    return this.backendInput.stripePublishableKey;
   }
 
   async uploadLogoReturnUrl(file: File): Promise<string> {
@@ -105,7 +105,7 @@ export class JobBoardBackend {
     return fetch('/Firma/Logo', {
       method: 'POST',
       body: formData,
-      headers: {'X-CSRF-TOKEN': this.csrfToken()},
+      headers: {'X-CSRF-TOKEN': this.backendInput.csrfToken},
     })
       .then(response => response.json())
       .then(uploadedImage => uploadedImage.url);
@@ -117,7 +117,7 @@ export class JobBoardBackend {
     return fetch('/assets', {
       method: 'POST',
       body: formData,
-      headers: {'X-CSRF-TOKEN': this.csrfToken()},
+      headers: {'X-CSRF-TOKEN': this.backendInput.csrfToken},
     })
       .then(response => response.json())
       .then(uploadedImage => uploadedImage.url);
@@ -138,6 +138,7 @@ export interface BackendInput {
   planBundle: BackendPlanBundle;
   userId: number;
   csrfToken: string;
+  stripePublishableKey: string|null;
 }
 
 export interface BackendJobOffer {

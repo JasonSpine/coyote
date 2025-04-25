@@ -7,7 +7,7 @@ use Stripe as StripeApi;
 use Stripe\Exception\SignatureVerificationException;
 
 readonly class StripeWebhook implements PaymentWebhook {
-    public function __construct(private string $signingPrivateKey) {}
+    public function __construct(private string $signingSecretKey) {}
 
     public function acceptPaymentUpdate(string $payload, string $signature): ?PaymentUpdate {
         try {
@@ -37,6 +37,6 @@ readonly class StripeWebhook implements PaymentWebhook {
      * @throws SignatureVerificationException
      */
     private function webhookEvent(string $payload, string $signature): StripeApi\Event {
-        return StripeApi\Webhook::constructEvent($payload, $signature, $this->signingPrivateKey);
+        return StripeApi\Webhook::constructEvent($payload, $signature, $this->signingSecretKey);
     }
 }
