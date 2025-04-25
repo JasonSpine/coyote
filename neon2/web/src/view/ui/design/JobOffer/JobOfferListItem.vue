@@ -16,7 +16,7 @@
           <Design.Row vertical-center apart>
             <p class="text-lg leading-6" v-text="jobOffer.title" data-testid="jobOfferTitle"/>
             <div class="max-md:hidden">
-              <Design.JobOfferSalary :salary="jobOffer" v-if="jobOffer.salaryRangeFrom"/>
+              <Design.JobOfferSalary :salary="jobOfferSalary" v-if="jobOfferSalary"/>
               <Design.JobOfferSalaryNotProvided v-else/>
             </div>
           </Design.Row>
@@ -39,7 +39,7 @@
         <Design.Row wrap vertical-center>
           <span>{{jobOffer.companyName}}</span>
           <Design.RowEnd>
-            <Design.JobOfferSalary :salary="jobOffer" v-if="jobOffer.salaryRangeFrom"/>
+            <Design.JobOfferSalary :salary="jobOfferSalary" v-if="jobOfferSalary"/>
             <Design.JobOfferSalaryNotProvided v-else/>
           </Design.RowEnd>
         </Design.Row>
@@ -60,6 +60,7 @@ import {JobOffer} from "../../../../jobBoard";
 import {formatLegalForm, formatWorkMode} from "../../format";
 import Icon, {IconName} from "../../icons/Icon.vue";
 import {Design} from "../design";
+import {SalaryJobOffer} from "./JobOfferSalary.vue";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
@@ -70,7 +71,7 @@ interface Props {
 
 interface Emit {
   (event: 'favouriteChange', favourite: boolean): void;
-  (event: 'select');
+  (event: 'select'): void;
 }
 
 function toggleFavourite(newValue: boolean): void {
@@ -101,4 +102,15 @@ interface Badge {
   icon?: IconName;
   standout?: boolean;
 }
+
+const jobOfferSalary = computed<SalaryJobOffer|null>((): SalaryJobOffer|null => {
+  if (props.jobOffer.salaryRangeFrom && props.jobOffer.salaryRangeTo) {
+    return {
+      ...props.jobOffer,
+      salaryRangeFrom: props.jobOffer.salaryRangeFrom,
+      salaryRangeTo: props.jobOffer.salaryRangeTo,
+    };
+  }
+  return null;
+});
 </script>
