@@ -11,7 +11,7 @@
     </Design.Row>
     <Design.Tile nested desktop-space>
       <Design.Row vertical-center>
-        <div class="size-14 rounded-lg overflow-hidden">
+        <div class="size-14 rounded-lg overflow-hidden flex-shrink-0">
           <img v-if="props.jobOffer.companyLogoUrl" :src="props.jobOffer.companyLogoUrl"/>
           <div v-else class="size-14 rounded flex-shrink-0 flex items-center justify-center bg-accent-back text-accent-front">
             <Icon name="jobOfferLogoPlaceholder"/>

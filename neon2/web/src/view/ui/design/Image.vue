@@ -1,7 +1,7 @@
 <template>
   <div
     class="size-14 rounded-lg overflow-hidden"
-    :class="[{'border border-4 border-tile box-content': props.border}]">
+    :class="[{'border-4 border-tile box-content': props.border}]">
     <img v-if="props.src" :src="props.src" class="bg-tile"/>
     <div v-else :class="[
       'size-14 rounded flex-shrink-0',
