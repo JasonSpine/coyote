@@ -5,27 +5,27 @@
       <div id="creditCardInput"/>
     </Design.Card>
     <Design.Card title="Dane do faktury">
-      <Design.FieldGroup label="Nazwa firmy">
+      <Design.FieldGroup required label="Nazwa firmy">
         <Design.TextField
           placeholder="Nazwa firmy na którą ma być wystawiona faktura"
           v-model="invoiceInformation.companyName"/>
       </Design.FieldGroup>
       <Design.Row columns>
-        <Design.FieldGroup label="Kraj">
+        <Design.FieldGroup required label="Kraj">
           <Design.TextField placeholder="Np. Polska, etc." v-model="invoiceInformation.countryCode"/>
         </Design.FieldGroup>
-        <Design.FieldGroup label="NIP / VAT - ID">
+        <Design.FieldGroup required label="NIP / VAT - ID">
           <Design.TextField placeholder="Np. 1234123412" v-model="invoiceInformation.vatId"/>
         </Design.FieldGroup>
       </Design.Row>
-      <Design.FieldGroup label="Adres">
+      <Design.FieldGroup required label="Adres">
         <Design.TextField placeholder="Np. al. Jerozolimskie 3" v-model="invoiceInformation.companyAddress"/>
       </Design.FieldGroup>
       <Design.Row columns>
-        <Design.FieldGroup label="Kod pocztowy">
+        <Design.FieldGroup required label="Kod pocztowy">
           <Design.TextField placeholder="Np. 12-123" v-model="invoiceInformation.companyPostalCode"/>
         </Design.FieldGroup>
-        <Design.FieldGroup label="Miasto">
+        <Design.FieldGroup required label="Miasto">
           <Design.TextField placeholder="Np. Warszawa, Kraków, etc." v-model="invoiceInformation.companyCity"/>
         </Design.FieldGroup>
       </Design.Row>
