@@ -21,7 +21,7 @@
       @create="createJob"
       @abort="navigateHome"/>
     <template v-if="props.screen === 'payment'">
-      <p>Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność.</p>
+      <Design.Toast title="Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność."/>
       <JobOfferRedeemBundle
         v-if="props.planBundle?.canRedeem"
         :job-offer-id="props.currentJobOfferId!"

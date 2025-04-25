@@ -61,6 +61,9 @@
   --color-green-800: #014718;
   --color-green-950: #001407;
   --color-red-500: #e11d48;
+  --color-blue-050: #eff5ff;
+  --color-blue-200: #bfdbfe;
+  --color-blue-600: #2563eb;
 
   --color-body: var(--color-body);
 
