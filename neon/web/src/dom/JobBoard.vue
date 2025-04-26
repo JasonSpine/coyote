@@ -56,14 +56,14 @@
             <span @click="clearFilters" class="cursor-pointer" data-testid="jobOfferClearFilters">
               Wyczyść filtry
               <span v-if="filtersCount">
-                ({{ filtersCount }})
+                ({{filtersCount}})
               </span>
             </span>
           </Design.RowEnd>
         </Design.Row>
         <Design.Button class="md:hidden w-full" @click="openMobileFilters" primary-outline>
           <Icon name="jobOfferFilter" class="mr-2"/>
-          {{ mobileFilterButtonText }}
+          {{mobileFilterButtonText}}
         </Design.Button>
       </div>
     </Design.Tile>
@@ -86,7 +86,7 @@
           @favourite-change="favourite => favouriteChange(jobOffer, favourite)"/>
       </li>
     </ul>
-    <div class="bg-tile md:hidden fixed z-[1031] top-0 left-0 w-screen h-screen" v-if="mobileFiltersVisible">
+    <div class="bg-tile md:hidden fixed z-[1031] top-0 left-0 w-screen h-dvh" v-if="mobileFiltersVisible">
       <Design.Tile space class="flex flex-col h-full">
         <Design.Row vertical-center class="mt-2">
           <h1 class="text-xl">Filtruj oferty</h1>
@@ -143,7 +143,7 @@
           <Design.Button @click="clearFilters" test-id="jobOfferClearFilters" outline>
             Wyczyść filtry
             <span v-if="filtersCount">
-              ({{ filtersCount }})
+              ({{filtersCount}})
             </span>
           </Design.Button>
           <Design.Button @click="closeMobileFilters" test-id="jobOfferSearch" primary class="flex-grow-1">
