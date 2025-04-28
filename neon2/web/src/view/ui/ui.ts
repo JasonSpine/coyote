@@ -18,6 +18,7 @@ export interface JobBoardProps {
   planBundle: PlanBundle|null;
   pricingPlan: PricingPlan|null;
   upload: UploadAssets|null;
+  applicationEmail: string|null;
 }
 
 export interface ViewListener {
@@ -41,6 +42,7 @@ export interface UserInterface {
   setPaymentStatus(status: PaymentStatus): void;
   setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void;
   upload(upload: UploadAssets): void;
+  setJobOfferApplicationEmail(applicationEmail: string): void;
 }
 
 export interface NavigationListener {
@@ -67,6 +69,7 @@ export class VueUi implements UserInterface {
     planBundle: null,
     pricingPlan: null,
     upload: null,
+    applicationEmail: null,
   });
   private viewListeners: ViewListener[] = [];
   private navigationListeners: NavigationListener[] = [];
@@ -112,6 +115,10 @@ export class VueUi implements UserInterface {
   setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
     this.vueState.planBundle = {bundleName, remainingJobOffers, canRedeem};
     this.vueState.pricingPlan = bundleName;
+  }
+
+  setJobOfferApplicationEmail(applicationEmail: string) {
+    this.vueState.applicationEmail = applicationEmail;
   }
 
   upload(upload: UploadAssets): void {

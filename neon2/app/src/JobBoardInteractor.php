@@ -41,10 +41,11 @@ readonly class JobBoardInteractor {
         $this->paymentService = new PaymentService($this->gate, $paymentProvider);
     }
 
-    public function jobBoardView(?int $userId, string $csrfToken): string {
+    public function jobBoardView(?int $userId, string $email, string $csrfToken): string {
         return $this->jobBoardView->jobBoardView(
             $this->board->testMode(),
             $userId ?? 1,
+            $email,
             $csrfToken);
     }
 

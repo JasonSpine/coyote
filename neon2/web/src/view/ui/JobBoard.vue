@@ -19,6 +19,7 @@
       v-if="props.screen === 'form'"
       :upload="props.upload!"
       :pricing-plan="props.pricingPlan!"
+      :application-email="props.applicationEmail!"
       @create="createJob"
       @abort="navigateHome"/>
     <template v-if="props.screen === 'payment'">

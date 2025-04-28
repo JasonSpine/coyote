@@ -53,6 +53,7 @@ class ServiceProvider extends RouteServiceProvider {
                 $session->token();
                 return $interactor->jobBoardView(
                     auth()->id(),
+                    auth()->user()?->email,
                     $session->token());
             });
         });

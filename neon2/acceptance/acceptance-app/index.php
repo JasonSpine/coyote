@@ -15,6 +15,7 @@ $application = Application::configure(__DIR__ . '/laravel')
         Facades\Route::get('/', function (JobBoardInteractor $interactor) {
             return $interactor->jobBoardView(
                 request()->query->get('userId'),
+                'user@email.com',
                 'csrf-token');
         });
         Facades\Route::get('/neon2/static/assets/{assetName}', function (string $assetName) {

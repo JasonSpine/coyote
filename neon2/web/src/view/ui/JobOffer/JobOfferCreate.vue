@@ -17,6 +17,7 @@ import JobOfferForm from "./JobOfferForm.vue";
 interface Props {
   upload: UploadAssets;
   pricingPlan: PricingPlan;
+  applicationEmail: string;
 }
 
 interface Emit {
@@ -51,7 +52,7 @@ const newJobOffer: SubmitJobOffer = {
   experience: 'not-provided',
   applicationMode: '4programmers',
   applicationExternalAts: null,
-  applicationEmail: null,
+  applicationEmail: props.applicationEmail,
   companyHiringType: 'direct',
   companyFundingYear: null,
   companySizeLevel: null,

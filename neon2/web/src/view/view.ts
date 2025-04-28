@@ -92,4 +92,8 @@ export class View {
   upload(upload: UploadAssets): void {
     this.ui.upload(upload);
   }
+
+  setJobOfferApplicationEmail(applicationEmail: string): void {
+    this.ui.setJobOfferApplicationEmail(applicationEmail);
+  }
 }

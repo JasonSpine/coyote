@@ -165,6 +165,8 @@ class MemoryUi implements UserInterface {
 
   upload(upload: UploadAssets): void {}
 
+  setJobOfferApplicationEmail(applicationEmail: string): void {}
+
   navigate(): void {
     this.naviListeners.forEach(listener => listener.setScreen('home'));
   }

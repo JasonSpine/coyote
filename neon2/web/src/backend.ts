@@ -1,5 +1,16 @@
 import {JobOffer} from "./jobBoard";
-import {ApplicationMode, Currency, HiringType, InvoiceInformation, LegalForm, PricingPlan, Rate, SubmitJobOffer, WorkExperience, WorkMode} from "./main";
+import {
+  ApplicationMode,
+  Currency,
+  HiringType,
+  InvoiceInformation,
+  LegalForm,
+  PricingPlan,
+  Rate,
+  SubmitJobOffer,
+  WorkExperience,
+  WorkMode,
+} from "./main";
 
 function jobOfferFields(jobOffer: SubmitJobOffer): object {
   return {
@@ -91,6 +102,10 @@ export class JobBoardBackend {
     return this.backendInput.userId;
   }
 
+  jobOfferApplicationEmail(): string {
+    return this.backendInput.jobOfferApplicationEmail;
+  }
+
   testMode(): boolean {
     return this.backendInput.testMode;
   }
@@ -137,6 +152,7 @@ export interface BackendInput {
   testMode: boolean;
   planBundle: BackendPlanBundle;
   userId: number;
+  jobOfferApplicationEmail: string;
   csrfToken: string;
   stripePublishableKey: string|null;
 }

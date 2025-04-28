@@ -12,8 +12,8 @@ readonly class JobBoardView {
         $this->vite = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/');
     }
 
-    public function jobBoardView(bool $isTestMode, int $userId, string $csrfToken): string {
-        $backendInput = $this->backendInput($isTestMode, $userId, $csrfToken);
+    public function jobBoardView(bool $isTestMode, int $userId, string $userEmail, string $csrfToken): string {
+        $backendInput = $this->backendInput($isTestMode, $userId, $userEmail, $csrfToken);
         $entryUrl = "/neon2/static/{$this->vite->scriptUrl()}";
         $styleUrl = "/neon2/static/{$this->vite->styleUrl()}";
         if ($isTestMode) {
@@ -47,14 +47,15 @@ readonly class JobBoardView {
         return \json_encode($arr, \JSON_THROW_ON_ERROR);
     }
 
-    private function backendInput(bool $isTestMode, int $userId, string $csrfToken): string {
+    private function backendInput(bool $isTestMode, int $userId, string $userEmail, string $csrfToken): string {
         return $this->encodeBackendInput([
-            'jobOffers'            => $this->jobBoard->listJobOffers(),
-            'testMode'             => $isTestMode,
-            'planBundle'           => $this->planBundle($userId),
-            'userId'               => $userId,
-            'csrfToken'            => $csrfToken,
-            'stripePublishableKey' => $this->stripePublishableKey,
+            'jobOffers'                => $this->jobBoard->listJobOffers(),
+            'testMode'                 => $isTestMode,
+            'planBundle'               => $this->planBundle($userId),
+            'userId'                   => $userId,
+            'jobOfferApplicationEmail' => $userEmail,
+            'csrfToken'                => $csrfToken,
+            'stripePublishableKey'     => $this->stripePublishableKey,
         ]);
     }
 

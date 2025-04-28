@@ -157,6 +157,8 @@ if (bundle.hasBundle) {
 backend.initialJobOffers()
   .forEach(offer => board.jobOfferCreated(toJobOffer(offer)));
 
+view.setJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
+
 view.upload({
   async uploadLogo(file: File): Promise<string> {
     return await backend.uploadLogoReturnUrl(file);
