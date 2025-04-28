@@ -2,12 +2,13 @@
   <div class="flex-1">
     <label>
       <Design.FieldLabel
-        :has-error="!!props.error"
+        :has-error="hasError"
         :title="props.label"
-        :required="props.required"/>
+        :required="props.required"
+        :disabled="props.disabled"/>
       <slot/>
     </label>
-    <Design.FieldError :message="props.error" v-if="props.error"/>
+    <Design.FieldError v-if="hasError" :message="props.error!"/>
   </div>
 </template>
 
@@ -19,9 +20,18 @@ interface Props {
   label: string;
   required?: boolean;
   error?: string|null;
+  disabled?: boolean;
 }
 
 const props = defineProps<Props>();
 
-provide('fieldHasError', computed(() => !!props.error));
+const hasError = computed((): boolean => {
+  if (props.disabled) {
+    return false;
+  }
+  return !!props.error;
+});
+
+provide('fieldHasError', hasError);
+provide('fieldDisabled', computed(() => props.disabled));
 </script>

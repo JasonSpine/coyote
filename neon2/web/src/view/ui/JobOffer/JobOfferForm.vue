@@ -130,10 +130,12 @@
             :selected="jobOffer.applicationMode==='4programmers'"
             @select="jobOffer.applicationMode='4programmers'"/>
           <Design.FieldHelp>
-            Zezwól na wysyłanie CV poprzez 4Programmers na Twój adres email. Adres e-mail nie
+            Zezwól na wysyłanie CV poprzez 4programmers na Twój adres email. Adres e-mail nie
             będzie widoczny dla osób postronnych.
           </Design.FieldHelp>
-          <Design.FieldGroup label="E-mail" :error="errors.applicationEmail">
+          <Design.FieldGroup label="E-mail"
+                             :error="errors.applicationEmail"
+                             :disabled="jobOffer.applicationMode==='external-ats'">
             <Design.TextField placeholder="kontakt@twoja.firma.com" v-model="jobOffer.applicationEmail"/>
           </Design.FieldGroup>
         </div>
@@ -145,8 +147,12 @@
           <Design.FieldHelp>
             Kandydaci zostaną przekierowani na wskazaną przez Ciebie stronę.
           </Design.FieldHelp>
-          <Design.FieldGroup label="Twój adres" :error="errors.applicationExternalAts">
-            <Design.TextField placeholder="Podaj adres formularza" v-model="jobOffer.applicationExternalAts"/>
+          <Design.FieldGroup label="Twój adres"
+                             :error="errors.applicationExternalAts"
+                             :disabled="jobOffer.applicationMode==='4programmers'">
+            <Design.TextField
+              placeholder="Podaj adres formularza"
+              v-model="jobOffer.applicationExternalAts"/>
           </Design.FieldGroup>
         </div>
       </div>
@@ -189,27 +195,11 @@
 
 <script setup lang="ts">
 import {computed, reactive, ref} from 'vue';
-import {
-  ApplicationMode,
-  Currency,
-  HiringType,
-  LegalForm,
-  Rate,
-  SubmitJobOffer,
-  UploadAssets,
-  WorkExperience,
-  WorkMode,
-} from "../../../main";
+import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, UploadAssets, WorkExperience, WorkMode} from "../../../main";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
 import JobOfferStepper, {JobOfferCreatorStep} from "../design/JobOffer/JobOfferStepper.vue";
-import {
-  formatCompanySizeLevel,
-  formatHiringType,
-  formatLegalForm,
-  formatWorkExperience,
-  formatWorkMode,
-} from "../format";
+import {formatCompanySizeLevel, formatHiringType, formatLegalForm, formatWorkExperience, formatWorkMode} from "../format";
 import {JobOfferFormErrors, JobOfferFormValidation} from './JobOfferFormValidation';
 import JobOfferShow from "./JobOfferShow.vue";
 

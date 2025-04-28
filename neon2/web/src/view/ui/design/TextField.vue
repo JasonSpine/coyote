@@ -4,6 +4,7 @@
       class="outline-none flex-grow-1"
       :data-testid="props.testId"
       :placeholder="props.placeholder"
+      :disabled="disabled"
       v-model="text"
       @keyup.enter="submit"
       @input="change">
@@ -18,9 +19,11 @@ interface Props {
   placeholder: string;
   testId?: string;
   nested?: boolean;
+  disabled?: boolean;
 }
 
 const hasError = inject('fieldHasError', computed(() => false));
+const disabled = inject('fieldDisabled', computed(() => props.disabled));
 
 interface Emit {
   (event: 'submit', value: string): void;
@@ -40,6 +43,9 @@ function change(): void {
 }
 
 const inputClass = computed<string>(() => {
+  if (disabled.value) {
+    return 'text-neutral-400 border border-neutral-100 bg-neutral-050';
+  }
   if (props.nested) {
     if (hasError.value) {
       throw new Error('Nested inputs do not have errors.');
