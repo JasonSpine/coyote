@@ -1,5 +1,5 @@
 <template>
-  <JobOfferStepper step="publish"/>
+  <JobOfferStepper four-steps step="publish"/>
   <div class="max-w-170 space-y-4 mx-auto">
     <Design.Card title="Płatność poprzez bezpieczne połączenie">
       <Design.PaymentMethod :options="paymentMethods" v-model="method"/>

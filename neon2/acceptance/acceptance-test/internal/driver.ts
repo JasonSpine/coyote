@@ -35,7 +35,6 @@ export class Driver {
     await this.createJobOffer(title, pricingPlan, payment, description, companyName);
     if (pricingPlan === 'free') {
       await this.web.waitForText('Dodano ogłoszenie!');
-      await this.web.click('Zobacz pozostałe');
     } else {
       await this.finalizeJobOfferPayment(payment, paymentCardNumber);
     }
@@ -56,13 +55,13 @@ export class Driver {
     if (payment !== 'redeem-bundle') {
       await this.selectPricingPlan(pricingPlan);
     }
-    await this.submitJobOfferForm(title, description, companyName);
+    await this.submitJobOfferForm(title, description, companyName, pricingPlan === 'free' ? 'free' : 'paid');
   }
 
   async initiateCardPayment(jobOfferTitle: string, cardNumber: string): None {
     await this.web.click('Dodaj ogłoszenie');
     await this.selectPricingPlan('premium');
-    await this.submitJobOfferForm(jobOfferTitle, 'description', 'companyName');
+    await this.submitJobOfferForm(jobOfferTitle, 'description', 'companyName', 'paid');
     await this.selectPaymentMethod('card');
     await this.fillCardDetails(cardNumber);
     await this.fillInvoiceInformation();
@@ -72,15 +71,19 @@ export class Driver {
   async initiateP24Payment(jobOfferTitle: string): None {
     await this.web.click('Dodaj ogłoszenie');
     await this.selectPricingPlan('premium');
-    await this.submitJobOfferForm(jobOfferTitle, 'description', 'companyName');
+    await this.submitJobOfferForm(jobOfferTitle, 'description', 'companyName', 'paid');
     await this.selectPaymentMethod('p24');
     await this.fillInvoiceInformation();
     await this.proceedPayment();
   }
 
-  private async submitJobOfferForm(title: string, description: string, companyName: string): None {
+  private async submitJobOfferForm(title: string, description: string, companyName: string, pricing: 'paid'|'free'): None {
     await this.fillJobOfferForm(title, description, companyName);
-    await this.web.click('Dodaj ogłoszenie');
+    if (pricing === 'free') {
+      await this.web.click('Publikuj ogłoszenie');
+    } else {
+      await this.web.click('Dodaj ogłoszenie');
+    }
     await this.web.waitForText('Dodano ogłoszenie!');
   }
 
@@ -159,7 +162,7 @@ export class Driver {
   }
 
   async finalizePaymentByUsingBundle(): None {
-    await this.web.click("Skorzystaj z pakietu by Opublikować");
+    await this.web.click('Publikuj korzystając z pakietu');
   }
 
   private async proceedPayment(): None {
@@ -172,7 +175,6 @@ export class Driver {
     await this.fillJobOfferForm(targetTitle, targetDescription, 'Company name');
     await this.web.click('Zapisz');
     await this.web.waitForText('Zaktualizowano ogłoszenie!');
-    await this.web.click('Zobacz pozostałe');
   }
 
   async searchJobOffers(searchPhrase: string): None {

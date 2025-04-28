@@ -4,6 +4,7 @@
     :job-offer="newJobOffer"
     :job-offer-expires-in-days="expiresInDays"
     :upload="props.upload"
+    :four-steps="fourSteps"
     @submit="create"
     @abort="emit('abort')"/>
 </template>
@@ -31,6 +32,7 @@ function create(jobOffer: SubmitJobOffer): void {
 }
 
 const expiresInDays = computed(() => props.pricingPlan === 'free' ? 14 : 30);
+const fourSteps = computed(() => props.pricingPlan !== 'free');
 
 const newJobOffer: SubmitJobOffer = {
   title: '',

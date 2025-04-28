@@ -1,5 +1,5 @@
 <template>
-  <JobOfferStepper step="publish"/>
+  <JobOfferStepper four-steps step="publish"/>
   <Design.Card title="Wykorzystaj swój pakiet">
     {{props.planBundle}}
   </Design.Card>

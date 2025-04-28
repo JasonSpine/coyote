@@ -6,7 +6,7 @@ import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
 import JobBoard from './JobBoard.vue';
 
-export type Screen = 'home'|'edit'|'form'|'payment'|'payment-not-needed'|'edited'|'pricing'|'show';
+export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
 export interface JobBoardProps {
   jobOffers: JobOffer[];

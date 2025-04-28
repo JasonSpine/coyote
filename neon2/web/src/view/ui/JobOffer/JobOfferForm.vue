@@ -1,5 +1,5 @@
 <template>
-  <JobOfferStepper :step="step"/>
+  <JobOfferStepper :four-steps="props.fourSteps" :step="step"/>
   <div class="max-w-170 space-y-4 mx-auto" v-if="step === 'company'">
     <Design.Card space title="O firmie">
       <Design.FieldLabel title="Logo firmy"/>
@@ -220,6 +220,7 @@ interface Props {
   jobOfferExpiresInDays: number;
   mode: 'create'|'update';
   upload: UploadAssets;
+  fourSteps: boolean;
 }
 
 interface Emit {
@@ -276,10 +277,13 @@ function changeStep(newStep: JobOfferCreatorStep): void {
 
 const jobOffer: FormModel = reactive<FormModel>(toFormModel(props.jobOffer));
 const buttonTitle = computed<string>(() => {
-  if (props.mode === 'create') {
+  if (props.mode === 'update') {
+    return 'Zapisz';
+  }
+  if (props.fourSteps) {
     return 'Dodaj ogłoszenie';
   }
-  return 'Zapisz';
+  return 'Publikuj ogłoszenie';
 });
 
 const workExperienceOptions: DrawerOption<WorkExperience>[] = [

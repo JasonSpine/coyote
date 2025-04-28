@@ -35,16 +35,6 @@
         @mount-card-input="mountCardInput"
         @unmount-card-input="unmountCardInput"/>
     </template>
-    <JobOfferPaymentNotNeeded
-      v-if="props.screen === 'payment-not-needed'"
-      :job-offer-id="props.currentJobOfferId!"
-      @show="showJob"
-      @show-all="navigateHome"/>
-    <JobOfferEdited
-      v-if="props.screen === 'edited'"
-      :job-offer-id="props.currentJobOfferId!"
-      @show="showJob"
-      @show-all="navigateHome"/>
     <template v-if="props.screen === 'show'">
       <JobOfferButtonPill @click="navigateHome">Wróć do ogłoszeń</JobOfferButtonPill>
       <JobOfferShow :job-offer="currentJobOffer" @edit="editJob"/>
@@ -77,10 +67,8 @@ import {Design} from "./design/design";
 import JobOfferButtonPill from "./design/JobOffer/JobOfferButtonPill.vue";
 import JobOfferCreate from "./JobOffer/JobOfferCreate.vue";
 import JobOfferEdit from './JobOffer/JobOfferEdit.vue';
-import JobOfferEdited from "./JobOffer/JobOfferEditted.vue";
 import JobOfferHome from './JobOffer/JobOfferHome.vue';
 import JobOfferPaymentForm from './JobOffer/JobOfferPaymentForm.vue';
-import JobOfferPaymentNotNeeded from './JobOffer/JobOfferPaymentNotNeeded.vue';
 import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
 import JobOfferRedeemBundle from "./JobOffer/JobOfferRedeemBundle.vue";
 import JobOfferShow from './JobOffer/JobOfferShow.vue';

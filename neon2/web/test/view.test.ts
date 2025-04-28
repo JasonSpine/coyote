@@ -67,20 +67,20 @@ describe('JobBoard View', () => {
   });
 
   describe('Changing state of a job navigates to appropriate screen.', () => {
-    test('Creating a free job, changes screen to payment not needed.', () => {
+    test('Creating a free job navigates to home.', () => {
       ui.setScreen('pricing');
       view.jobOfferCreatedFree(1);
-      assertEquals('payment-not-needed', ui.screen());
+      assertEquals('home', ui.screen());
     });
     test('Creating a paid job, changes screen to payment.', () => {
       ui.setScreen('pricing');
       view.jobOfferCreatedRequirePayment(1);
       assertEquals('payment', ui.screen());
     });
-    test('Updating a job offer shows publishing step.', () => {
+    test('Updating a job offer navigates to home.', () => {
       ui.setScreen('show');
       view.jobOfferEdited(1);
-      assertEquals('edited', ui.screen());
+      assertEquals('home', ui.screen());
     });
     test('Paying for a job offer navigates to home.', () => {
       ui.setScreen('payment');

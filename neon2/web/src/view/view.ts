@@ -62,8 +62,7 @@ export class View {
 
   jobOfferCreatedFree(jobOfferId: number): void {
     this.ui.setToast('created');
-    this.ui.setCurrentJobOfferId(jobOfferId);
-    this.ui.setScreen('payment-not-needed');
+    this.ui.setScreen('home');
   }
 
   jobOfferCreatedRequirePayment(jobOfferId: number): void {
@@ -73,9 +72,8 @@ export class View {
   }
 
   jobOfferEdited(jobOfferId: number): void {
-    this.ui.setToast('edited')
-    this.ui.setCurrentJobOfferId(jobOfferId);
-    this.ui.setScreen('edited');
+    this.ui.setToast('edited');
+    this.ui.setScreen('home');
   }
 
   planBundleUsed(): void {

@@ -4,6 +4,7 @@
     :job-offer="props.jobOffer"
     :job-offer-expires-in-days="props.jobOfferExpiresInDays"
     :upload="props.upload"
+    :four-steps="false"
     @submit="update"
     @abort="emit('abort')"/>
 </template>
