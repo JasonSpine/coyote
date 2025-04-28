@@ -6,6 +6,7 @@
       :model-value="photoUrl"
       @update:model-value="url => updatePhoto(url, index)"/>
     <Design.ImageUpload
+      v-for="placeholder in placeholders"
       :upload="props.upload"
       :model-value="null"
       @update:model-value="url => updatePhoto(url, photoUrls.length)"/>
@@ -13,12 +14,17 @@
 </template>
 
 <script setup lang="ts">
+import {computed} from 'vue';
 import {UploadImage} from '../../../main';
 import {Design} from "../design/design";
 
 const props = defineProps<Props>();
 
 const photoUrls = defineModel<string[]>({required: true});
+
+const placeholders = computed(() => {
+  return [...Array(Math.max(1, 3 - photoUrls.value.length)).keys()];
+});
 
 interface Props {
   upload: UploadImage;
