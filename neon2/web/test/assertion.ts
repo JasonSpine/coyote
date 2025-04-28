@@ -2,6 +2,14 @@ import {expect} from "vitest";
 
 export {test, beforeEach, describe} from "vitest";
 
+export function assertTrue(actual: any): void {
+  expect(actual).to.deep.equal(true);
+}
+
+export function assertFalse(actual: any): void {
+  expect(actual).to.deep.equal(false);
+}
+
 export function assertEquals(expected: any, actual: any): void {
   expect(actual).to.deep.equal(expected);
 }

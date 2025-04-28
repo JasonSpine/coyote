@@ -133,7 +133,7 @@
             Zezwól na wysyłanie CV poprzez 4Programmers na Twój adres email. Adres e-mail nie
             będzie widoczny dla osób postronnych.
           </Design.FieldHelp>
-          <Design.FieldGroup label="E-mail">
+          <Design.FieldGroup label="E-mail" :error="errors.applicationEmail">
             <Design.TextField placeholder="kontakt@twoja.firma.com" v-model="jobOffer.applicationEmail"/>
           </Design.FieldGroup>
         </div>
@@ -145,7 +145,7 @@
           <Design.FieldHelp>
             Kandydaci zostaną przekierowani na wskazaną przez Ciebie stronę.
           </Design.FieldHelp>
-          <Design.FieldGroup label="Twój adres">
+          <Design.FieldGroup label="Twój adres" :error="errors.applicationExternalAts">
             <Design.TextField placeholder="Podaj adres formularza" v-model="jobOffer.applicationExternalAts"/>
           </Design.FieldGroup>
         </div>
@@ -210,6 +210,7 @@ import {
   formatWorkExperience,
   formatWorkMode,
 } from "../format";
+import {JobOfferFormErrors, JobOfferFormValidation} from './JobOfferFormValidation';
 import JobOfferShow from "./JobOfferShow.vue";
 
 const props = defineProps<Props>();
@@ -234,30 +235,37 @@ const step = ref<JobOfferCreatorStep>('company');
 const errors = reactive({
   title: null as string|null,
   companyName: null as string|null,
+  applicationEmail: null as string|null,
+  applicationExternalAts: null as string|null,
 });
 
+const jobOffer: FormModel = reactive<FormModel>(toFormModel(props.jobOffer));
+const validation = new JobOfferFormValidation(jobOffer);
+
 function nextStep(): void {
-  if (step.value === 'company') {
-    if (stringProvided(jobOffer.companyName)) {
-      errors.companyName = null;
-      changeStep('jobOffer');
-    } else {
-      errors.companyName = 'Podaj nazwę firmy.';
+  if (step.value === 'preview') {
+    throw new Error('Unexpected step.');
+  }
+  const [success, failureErrors] = validate();
+  Object.assign(errors, failureErrors);
+  if (success) {
+    changeStep(step.value === 'company' ? 'jobOffer' : 'preview');
+  } else {
+    if (step.value === 'company') {
       window.scrollTo(0, 0);
-    }
-  } else if (step.value === 'jobOffer') {
-    if (stringProvided(jobOffer.title)) {
-      errors.title = null;
-      changeStep('preview');
-    } else {
-      errors.title = 'Podaj tytuł ogłoszenia.';
+    } else if (failureErrors!.title) {
       window.scrollTo(0, 0);
+    } else {
+      window.scrollTo(0, 1000);
     }
   }
 }
 
-function stringProvided(string: string): boolean {
-  return string.trim().length > 0;
+function validate(): [boolean, JobOfferFormErrors] {
+  if (step.value === 'company') {
+    return validation.validateCompanyStep();
+  }
+  return validation.validateJobOfferStep();
 }
 
 const hasPreviousStep = computed<boolean>(() => step.value !== 'company');
@@ -275,7 +283,6 @@ function changeStep(newStep: JobOfferCreatorStep): void {
   window.scrollTo(0, 0);
 }
 
-const jobOffer: FormModel = reactive<FormModel>(toFormModel(props.jobOffer));
 const buttonTitle = computed<string>(() => {
   if (props.mode === 'update') {
     return 'Zapisz';
