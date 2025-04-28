@@ -28,7 +28,7 @@ readonly class JobOfferSubmit {
         public ?string         $companyLogoUrl,
         public ?string         $companyWebsiteUrl,
         public ?string         $companyDescription,
-        public ?string         $companyPhotoUrl,
+        public array           $companyPhotoUrls,
         public ?string         $companyVideoUrl,
         public ?int            $companySizeLevel,
         public ?int            $companyFundingYear,

@@ -30,7 +30,7 @@ function jobOfferFields(jobOffer: SubmitJobOffer): object {
     jobOfferExperience: jobOffer.experience,
     jobOfferCompanyWebsiteUrl: jobOffer.companyWebsiteUrl,
     jobOfferCompanyDescription: jobOffer.companyDescription,
-    jobOfferCompanyPhotoUrl: jobOffer.companyPhotoUrl,
+    jobOfferCompanyPhotoUrls: jobOffer.companyPhotoUrls,
     jobOfferCompanyVideoUrl: jobOffer.companyVideoUrl,
     jobOfferCompanySizeLevel: jobOffer.companySizeLevel,
     jobOfferCompanyFundingYear: jobOffer.companyFundingYear,
@@ -182,7 +182,7 @@ export interface BackendJobOffer {
     companyLogoUrl: string|null;
     companyWebsiteUrl: string|null,
     companyDescription: string|null,
-    companyPhotoUrl: string|null,
+    companyPhotoUrls: string[],
     companyVideoUrl: string|null,
     companySizeLevel: number|null,
     companyFundingYear: number|null,
@@ -215,7 +215,12 @@ interface BackendPlanBundle {
 
 export function toJobOffer(jobOffer: BackendJobOffer): JobOffer {
   const {fields, ...operationalFields} = jobOffer;
-  return {...operationalFields, ...fields, isNew: true, isFavourite: true};
+  return {
+    ...operationalFields,
+    ...fields,
+    isNew: true,
+    isFavourite: true,
+  };
 }
 
 function invoiceInfoFields(invoiceInfo: InvoiceInformation): object {

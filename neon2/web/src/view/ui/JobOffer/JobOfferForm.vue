@@ -56,8 +56,10 @@
           Film promujący firmę będzie wyświetlany pod ogłoszeniem o pracę.
         </Design.FieldHelp>
       </Design.FieldGroup>
-      <Design.FieldGroup label="Dodaj zdjęcie">
-        <Design.ImageUpload v-model="jobOffer.companyPhotoUrl" :upload="props.upload.uploadAsset"/>
+      <Design.FieldGroup label="Dodaj zdjęcia firmowe">
+        <div class="flex space-x-2">
+          <JobOfferPhotoSet v-model="jobOffer.companyPhotoUrls" :upload="props.upload.uploadAsset"/>
+        </div>
         <Design.FieldHelp>Format: JPEG, PNG. Maksymalny rozmiar 5MB</Design.FieldHelp>
       </Design.FieldGroup>
     </Design.Card>
@@ -218,6 +220,7 @@ import {
   formatWorkMode,
 } from "../format";
 import {JobOfferFormValidation} from './JobOfferFormValidation';
+import JobOfferPhotoSet from './JobOfferPhotoSet.vue';
 import JobOfferShow from "./JobOfferShow.vue";
 
 const props = defineProps<Props>();
@@ -385,7 +388,7 @@ interface FormModel {
   companyLogoUrl: string|null;
   companyWebsiteUrl: string;
   companyDescription: string;
-  companyPhotoUrl: string|null;
+  companyPhotoUrls: string[];
   companyVideoUrl: string;
   companySizeLevel: number|null;
   companyFundingYear: string;
@@ -448,10 +451,6 @@ function parseNumber(value: string): number|null {
     throw new Error('Failed to parse number.');
   }
   return number;
-}
-
-function isValidNumber(value: string): boolean {
-  return !isNaN(parseInt(value, 10));
 }
 
 function parseString(string: string): string|null {

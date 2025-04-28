@@ -49,7 +49,7 @@ export interface SubmitJobOffer {
   companyLogoUrl: string|null;
   companyWebsiteUrl: string|null;
   companyDescription: string|null;
-  companyPhotoUrl: string|null;
+  companyPhotoUrls: string[];
   companyVideoUrl: string|null;
   companySizeLevel: number|null;
   companyFundingYear: number|null;

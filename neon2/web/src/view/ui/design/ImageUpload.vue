@@ -1,9 +1,9 @@
 <template>
-  <div v-if="hasImage" class="size-70 rounded-xl" @click="removeImage">
-    <img :src="imageUrl" alt="Uploaded image" class="object-cover size-full rounded-xl"/>
+  <div v-if="hasImage" class="size-35 rounded-xl" @click="removeImage">
+    <img :src="imageUrl!" alt="Uploaded image" class="object-cover size-full rounded-xl"/>
   </div>
   <div v-else :class="[
-      'size-70 rounded-xl cursor-pointer',
+      'size-35 rounded-xl cursor-pointer',
       'border border-dashed border-neutral-100',
       'flex justify-center items-center',
       'relative']">
@@ -49,7 +49,8 @@ function uploadFile(file: File): void {
     });
 }
 
-function removeImage(): void {
+function removeImage(event: Event): void {
   imageUrl.value = null;
+  event.preventDefault();
 }
 </script>

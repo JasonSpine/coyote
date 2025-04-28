@@ -60,6 +60,6 @@ const newJobOffer: SubmitJobOffer = {
   companyVideoUrl: null,
   companyDescription: null,
   companyWebsiteUrl: null,
-  companyPhotoUrl: null,
+  companyPhotoUrls: [],
 };
 </script>

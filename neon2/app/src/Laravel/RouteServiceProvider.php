@@ -75,7 +75,7 @@ class RouteServiceProvider extends ServiceProvider {
             $request->get('jobOfferCompanyLogoUrl'),
             $request->get('jobOfferCompanyWebsiteUrl'),
             $request->get('jobOfferCompanyDescription'),
-            $request->get('jobOfferCompanyPhotoUrl'),
+            $request->get('jobOfferCompanyPhotoUrls'),
             $request->get('jobOfferCompanyVideoUrl'),
             $request->get('jobOfferCompanySizeLevel'),
             $request->get('jobOfferCompanyFundingYear'),

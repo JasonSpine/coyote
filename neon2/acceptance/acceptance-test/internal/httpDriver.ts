@@ -24,7 +24,7 @@ export class HttpDriver {
       jobOfferWorkMode: 'stationary',
       jobOfferCompanyWebsiteUrl: 'http://website',
       jobOfferCompanyDescription: 'company description',
-      jobOfferCompanyPhotoUrl: 'http://photo',
+      jobOfferCompanyPhotoUrls: [],
       jobOfferCompanyVideoUrl: 'http://video',
       jobOfferCompanySizeLevel: 2,
       jobOfferCompanyFundingYear: 1994,
