@@ -124,12 +124,7 @@
       <Design.RadioGroup :options="workModeOptions" v-model="jobOffer.workMode"/>
     </Design.Card>
     <Design.Card space title="Lokalizacja">
-      <Design.FieldGroup label="Lokalizacja">
-        <Design.TextField
-          placeholder="np. Warszawa, al. Jerozolimskie 3"
-          icon="jobOfferLocation"
-          v-model="jobOffer.locations"/>
-      </Design.FieldGroup>
+      <JobOfferLocationSet v-model="jobOffer.locations"/>
     </Design.Card>
     <Design.Card space title="Opis ogłoszenia">
       <Design.FieldGroup label="Szczegółowe informacje">
@@ -232,6 +227,7 @@ import {
   formatWorkMode,
 } from "../format";
 import {JobOfferFormValidation} from './JobOfferFormValidation';
+import JobOfferLocationSet from './JobOfferLocationSet.vue';
 import JobOfferPhotoSet from './JobOfferPhotoSet.vue';
 import JobOfferShow from "./JobOfferShow.vue";
 
@@ -388,7 +384,7 @@ interface FormModel {
   salaryRangeTo: string;
   salaryCurrency: Currency;
   salaryRate: Rate;
-  locations: string;
+  locations: string[];
   tagNames: string;
   workMode: WorkMode;
   legalForm: LegalForm;
@@ -414,7 +410,6 @@ function toFormModel(jobOffer: SubmitJobOffer): FormModel {
     salaryRangeFrom: formatNumber(jobOffer.salaryRangeFrom),
     salaryRangeTo: formatNumber(jobOffer.salaryRangeFrom),
     tagNames: jobOffer.tagNames.join(', '),
-    locations: jobOffer.locations.join(', '),
     description: jobOffer.description || '',
     applicationEmail: jobOffer.applicationEmail || '',
     applicationExternalAts: jobOffer.applicationExternalAts || '',
@@ -435,7 +430,7 @@ function fromFormModel(formModel: FormModel): SubmitJobOffer {
     salaryRangeTo: parseNumber(formModel.salaryRangeTo),
     salaryIsNet: true,
     tagNames: jobOffer.tagNames.split(',').map(s => s.trim()).filter(t => t.length),
-    locations: jobOffer.locations.split(',').map(s => s.trim()).filter(l => l.length),
+    locations: jobOffer.locations.filter(l => l.length),
     description: parseString(formModel.description),
     applicationEmail: parseString(formModel.applicationEmail),
     applicationExternalAts: parseString(formModel.applicationExternalAts),

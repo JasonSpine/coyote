@@ -170,4 +170,8 @@ interface Props {
 .fa-arrow-left:before {
   content: "\f060";
 }
+
+.fa-trash:before {
+  content: "\f1f8";
+}
 </style>
