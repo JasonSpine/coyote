@@ -1,5 +1,8 @@
 <template>
   <div class="rounded-lg p-2 flex" :class="inputClass">
+    <Icon :name="props.icon"
+          v-if="props.icon"
+          :class="['mr-2', {'text-red-500': hasError}]"/>
     <TextInput
       class="outline-none flex-grow-1" :class="fieldClass"
       :component="props.multiline ? 'textarea' : 'input'"
@@ -15,6 +18,7 @@
 
 <script setup lang="ts">
 import {computed, inject} from "vue";
+import Icon, {IconName} from '../icons/Icon.vue';
 import TextInput from "./TextInput.vue";
 
 interface Props {
@@ -23,6 +27,7 @@ interface Props {
   nested?: boolean;
   disabled?: boolean;
   multiline?: boolean;
+  icon?: IconName;
 }
 
 const hasError = inject('fieldHasError', computed(() => false));

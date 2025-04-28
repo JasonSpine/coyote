@@ -33,7 +33,7 @@
       </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Dodatkowe informacje">
-      <Design.FieldGroup label="Rok powstania firmy">
+      <Design.FieldGroup label="Rok powstania firmy" :error="errors.companyFundingYear">
         <Design.TextField placeholder="Podaj rok powstania firmy" v-model="jobOffer.companyFundingYear"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Liczba pracowników">
@@ -92,16 +92,16 @@
         </Design.FieldGroup>
       </Design.Row>
       <Design.Row>
-        <Design.FieldGroup label="Wynagrodzenie od (netto)">
-          <Design.Dropdown
+        <Design.FieldGroup label="Wynagrodzenie od (netto)" :error="errors.salaryRangeFrom">
+          <Design.TextField
             icon="jobOfferFilterCurrency"
-            :options="salaryRangeOptions"
+            placeholder="Dolne widełki"
             v-model="jobOffer.salaryRangeFrom"/>
         </Design.FieldGroup>
-        <Design.FieldGroup label="Wynagrodzenie do (netto)">
-          <Design.Dropdown
+        <Design.FieldGroup label="Wynagrodzenie do (netto)" :error="errors.salaryRangeTo">
+          <Design.TextField
             icon="jobOfferFilterCurrency"
-            :options="salaryRangeOptions"
+            placeholder="Górne widełki"
             v-model="jobOffer.salaryRangeTo"/>
         </Design.FieldGroup>
       </Design.Row>
@@ -196,12 +196,28 @@
 
 <script setup lang="ts">
 import {computed, reactive, ref} from 'vue';
-import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, UploadAssets, WorkExperience, WorkMode} from "../../../main";
+import {
+  ApplicationMode,
+  Currency,
+  HiringType,
+  LegalForm,
+  Rate,
+  SubmitJobOffer,
+  UploadAssets,
+  WorkExperience,
+  WorkMode,
+} from "../../../main";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
 import JobOfferStepper, {JobOfferCreatorStep} from "../design/JobOffer/JobOfferStepper.vue";
-import {formatCompanySizeLevel, formatHiringType, formatLegalForm, formatWorkExperience, formatWorkMode} from "../format";
-import {JobOfferFormErrors, JobOfferFormValidation} from './JobOfferFormValidation';
+import {
+  formatCompanySizeLevel,
+  formatHiringType,
+  formatLegalForm,
+  formatWorkExperience,
+  formatWorkMode,
+} from "../format";
+import {JobOfferFormValidation} from './JobOfferFormValidation';
 import JobOfferShow from "./JobOfferShow.vue";
 
 const props = defineProps<Props>();
@@ -223,15 +239,14 @@ interface Emit {
 
 const step = ref<JobOfferCreatorStep>('company');
 
-const errors = reactive({
-  title: null as string|null,
-  companyName: null as string|null,
-  applicationEmail: null as string|null,
-  applicationExternalAts: null as string|null,
-});
-
 const jobOffer: FormModel = reactive<FormModel>(toFormModel(props.jobOffer));
-const validation = new JobOfferFormValidation(jobOffer);
+
+const validation = new JobOfferFormValidation(jobOffer, [
+  'title', 'companyName', 'applicationEmail', 'applicationExternalAts',
+  'salaryRangeFrom', 'salaryRangeTo', 'companyFundingYear',
+]);
+
+const errors = reactive(validation.emptyErrors());
 
 function nextStep(): void {
   if (step.value === 'preview') {
@@ -242,21 +257,36 @@ function nextStep(): void {
   if (success) {
     changeStep(step.value === 'company' ? 'jobOffer' : 'preview');
   } else {
-    if (step.value === 'company') {
+    if (failureErrors.companyName) {
       window.scrollTo(0, 0);
-    } else if (failureErrors!.title) {
+    } else if (failureErrors.title) {
       window.scrollTo(0, 0);
-    } else {
+    } else if (failureErrors.salaryRangeFrom || failureErrors.salaryRangeTo) {
+      window.scrollTo(0, 600);
+    } else if (failureErrors.applicationEmail || failureErrors.applicationExternalAts) {
       window.scrollTo(0, 1000);
     }
   }
 }
 
-function validate(): [boolean, JobOfferFormErrors] {
+function validate() {
   if (step.value === 'company') {
-    return validation.validateCompanyStep();
+    return validation.validate(v => {
+      v.nonEmpty('companyName', 'Podaj nazwę firmy.');
+      v.optionalNumeric('companyFundingYear', 'Podaj poprawny rok założenia firmy.');
+    });
   }
-  return validation.validateJobOfferStep();
+  return validation.validate(v => {
+    v.nonEmpty('title', 'Podaj tytuł ogłoszenia.');
+    v.optionalNumeric('salaryRangeFrom', 'Podaj poprawne wynagrodzenie.');
+    v.optionalNumeric('salaryRangeTo', 'Podaj poprawne wynagrodzenie.');
+    if (jobOffer.applicationMode === '4programmers') {
+      v.nonEmpty('applicationEmail', 'Podaj adres e-mail do otrzymania aplikacji.');
+    }
+    if (jobOffer.applicationMode === 'external-ats') {
+      v.nonEmpty('applicationExternalAts', 'Podaj adres Twojego systemu ATS.');
+    }
+  });
 }
 
 const hasPreviousStep = computed<boolean>(() => step.value !== 'company');
@@ -308,13 +338,6 @@ const hiringTypeOptions: DrawerOption<HiringType>[] = [
   {value: 'direct', title: formatHiringType('direct')},
   {value: 'agency', title: formatHiringType('agency')},
 ];
-const salaryRangeOptions: DrawerOption<number|null>[] = [
-  {value: null, title: 'Wybierz...'},
-  ...range(11).map(i => {
-    const value = i * 5000;
-    return {value, title: value.toString()};
-  }),
-];
 const salaryCurrencyOptions: DrawerOption<Currency>[] = [
   {value: 'PLN', title: 'PLN'},
   {value: 'EUR', title: 'EUR'},
@@ -343,15 +366,11 @@ const companySizeOptions: DrawerOption<number|null>[] = [
   {value: 11, title: formatCompanySizeLevel(11)},
 ];
 
-function range(items: number): number[] {
-  return [...Array(items).keys()];
-}
-
 interface FormModel {
   title: string;
   description: string;
-  salaryRangeFrom: number|null;
-  salaryRangeTo: number|null;
+  salaryRangeFrom: string;
+  salaryRangeTo: string;
   salaryCurrency: Currency;
   salaryRate: Rate;
   locations: string;
@@ -377,6 +396,8 @@ interface FormModel {
 function toFormModel(jobOffer: SubmitJobOffer): FormModel {
   return {
     ...jobOffer,
+    salaryRangeFrom: formatNumber(jobOffer.salaryRangeFrom),
+    salaryRangeTo: formatNumber(jobOffer.salaryRangeFrom),
     tagNames: jobOffer.tagNames.join(', '),
     locations: jobOffer.locations.join(', '),
     description: jobOffer.description || '',
@@ -395,6 +416,8 @@ function toFormModel(jobOffer: SubmitJobOffer): FormModel {
 function fromFormModel(formModel: FormModel): SubmitJobOffer {
   return {
     ...formModel,
+    salaryRangeFrom: parseNumber(formModel.salaryRangeFrom),
+    salaryRangeTo: parseNumber(formModel.salaryRangeTo),
     salaryIsNet: true,
     tagNames: jobOffer.tagNames.split(',').map(s => s.trim()).filter(t => t.length),
     locations: jobOffer.locations.split(',').map(s => s.trim()).filter(l => l.length),
@@ -409,16 +432,31 @@ function fromFormModel(formModel: FormModel): SubmitJobOffer {
   };
 }
 
+function formatNumber(value: number|null): string {
+  if (value === null) {
+    return '';
+  }
+  return value.toString(10);
+}
+
+function parseNumber(value: string): number|null {
+  if (value.trim() === '') {
+    return null;
+  }
+  const number = parseInt(value, 10);
+  if (isNaN(number)) {
+    throw new Error('Failed to parse number.');
+  }
+  return number;
+}
+
+function isValidNumber(value: string): boolean {
+  return !isNaN(parseInt(value, 10));
+}
+
 function parseString(string: string): string|null {
   if (string.length) {
     return string.trim();
-  }
-  return null;
-}
-
-function parseNumber(number: string): number|null {
-  if (number.trim().length) {
-    return parseInt(number.trim());
   }
   return null;
 }
