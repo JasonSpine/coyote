@@ -19,7 +19,10 @@
             </Design.FieldHelp>
           </Design.FieldGroup>
           <Design.FieldGroup label="Strona WWW">
-            <Design.TextField placeholder="Podaj stronę www firmy" v-model="jobOffer.companyWebsiteUrl"/>
+            <Design.TextField
+              placeholder="Podaj stronę www firmy"
+              icon="jobOfferCompanyWebsite"
+              v-model="jobOffer.companyWebsiteUrl"/>
             <Design.FieldHelp>
               Firmowa strona WWW. Będzie wyświetlana przy ofercie.
             </Design.FieldHelp>
@@ -29,12 +32,18 @@
     </Design.Card>
     <Design.Card space title="Lokalizacja firmy">
       <Design.FieldGroup label="Adres siedziby firmy">
-        <Design.TextField placeholder="np. Warszawa, al. Jerozolimskie 3" v-model="jobOffer.companyAddress"/>
+        <Design.TextField
+          placeholder="np. Warszawa, al. Jerozolimskie 3"
+          icon="jobOfferLocation"
+          v-model="jobOffer.companyAddress"/>
       </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Dodatkowe informacje">
       <Design.FieldGroup label="Rok powstania firmy" :error="errors.companyFundingYear">
-        <Design.TextField placeholder="Podaj rok powstania firmy" v-model="jobOffer.companyFundingYear"/>
+        <Design.TextField
+          placeholder="Podaj rok powstania firmy"
+          icon="jobOfferCompanyFundingYear"
+          v-model="jobOffer.companyFundingYear"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Liczba pracowników">
         <Design.Dropdown
@@ -116,7 +125,10 @@
     </Design.Card>
     <Design.Card space title="Lokalizacja">
       <Design.FieldGroup label="Lokalizacja">
-        <Design.TextField placeholder="np. Warszawa, al. Jerozolimskie 3" v-model="jobOffer.locations"/>
+        <Design.TextField
+          placeholder="np. Warszawa, al. Jerozolimskie 3"
+          icon="jobOfferLocation"
+          v-model="jobOffer.locations"/>
       </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Opis ogłoszenia">

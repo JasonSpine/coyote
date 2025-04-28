@@ -44,7 +44,7 @@ const icons = {
   jobOfferComments: 'fa-light fa-comment',
   jobOfferLocation,
   jobOfferCompany: 'fa-light fa-building',
-  jobOfferCompanyWebsite: 'fa-light fa-link',
+  jobOfferCompanyWebsite: 'fa-light fa-globe',
   jobOfferCompanyFundingYear: 'fa-light fa-calendar',
   jobOfferCompanySize: 'fa-light fa-users',
   jobOfferLogoPlaceholder: 'fa-light fa-laptop-code',
