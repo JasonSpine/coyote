@@ -26,7 +26,7 @@
       <JobOfferRedeemBundle
         v-if="props.planBundle?.canRedeem"
         :job-offer-id="props.currentJobOfferId!"
-        :plan-bundle="props.planBundle"
+        :plan-bundle="props.planBundle!"
         @redeem-bundle="redeemBundle"/>
       <JobOfferPaymentForm
         v-else
