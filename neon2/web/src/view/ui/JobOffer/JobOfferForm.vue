@@ -44,6 +44,7 @@
       </Design.FieldGroup>
       <Design.FieldGroup label="Opis firmy">
         <Design.TextField
+          multiline
           placeholder="Miejsce na szczegółowy opis firmy. Pole nie jest wymagane."
           v-model="jobOffer.companyDescription"/>
       </Design.FieldGroup>
@@ -118,7 +119,7 @@
     </Design.Card>
     <Design.Card space title="Opis ogłoszenia">
       <Design.FieldGroup label="Szczegółowe informacje">
-        <Design.TextField placeholder="Miejsce na szczegółowy opis oferty" v-model="jobOffer.description"/>
+        <Design.TextField multiline placeholder="Miejsce na szczegółowy opis oferty" v-model="jobOffer.description"/>
       </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Sposób aplikacji">

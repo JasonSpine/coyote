@@ -1,25 +1,28 @@
 <template>
   <div class="rounded-lg p-2 flex" :class="inputClass">
-    <input
-      class="outline-none flex-grow-1"
-      :data-testid="props.testId"
+    <TextInput
+      class="outline-none flex-grow-1" :class="fieldClass"
+      :component="props.multiline ? 'textarea' : 'input'"
+      :test-id="props.testId"
       :placeholder="props.placeholder"
       :disabled="disabled"
       v-model="text"
-      @keyup.enter="submit"
-      @input="change">
+      @submit="submit"
+      @change="change"/>
     <slot/>
   </div>
 </template>
 
 <script setup lang="ts">
 import {computed, inject} from "vue";
+import TextInput from "./TextInput.vue";
 
 interface Props {
   placeholder: string;
   testId?: string;
   nested?: boolean;
   disabled?: boolean;
+  multiline?: boolean;
 }
 
 const hasError = inject('fieldHasError', computed(() => false));
@@ -56,5 +59,12 @@ const inputClass = computed<string>(() => {
     return 'border border-red-500';
   }
   return 'border border-neutral-100';
+});
+
+const fieldClass = computed<string>(() => {
+  if (props.multiline) {
+    return 'min-h-30 max-h-120';
+  }
+  return '';
 });
 </script>
