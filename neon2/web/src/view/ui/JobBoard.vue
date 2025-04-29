@@ -21,7 +21,7 @@
       :pricing-plan="props.pricingPlan!"
       :application-email="props.applicationEmail!"
       @create="createJob"
-      @abort="navigateHome"/>
+      @abort="navigate('pricing')"/>
     <template v-if="props.screen === 'payment'">
       <Design.Toast title="Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność."/>
       <JobOfferRedeemBundle
