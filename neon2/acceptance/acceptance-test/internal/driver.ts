@@ -76,7 +76,7 @@ export class Driver {
   private async submitJobOfferForm(title: string, description: string, companyName: string, pricing: 'paid'|'free'): None {
     await this.fillJobOfferForm(title, description, companyName);
     if (pricing === 'free') {
-      await this.web.click('Publikuj ogłoszenie');
+      await this.web.click('Publikuj');
     } else {
       await this.web.click('Dodaj ogłoszenie');
     }

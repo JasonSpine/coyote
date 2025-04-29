@@ -170,6 +170,7 @@
   </div>
   <template v-if="step === 'preview'">
     <JobOfferShow
+      preview
       @edit="previousStep"
       :job-offer="{expiresInDays: props.jobOfferExpiresInDays, ...fromFormModel(jobOffer)}"/>
   </template>
@@ -320,7 +321,7 @@ const buttonTitle = computed<string>(() => {
   if (props.fourSteps) {
     return 'Dodaj ogłoszenie';
   }
-  return 'Publikuj ogłoszenie';
+  return 'Publikuj';
 });
 
 const workExperienceOptions: DrawerOption<WorkExperience>[] = [

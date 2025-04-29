@@ -12,7 +12,9 @@
         class="mr-auto"/>
       <Design.Button square icon="jobOfferFavourite"/>
       <Design.Button @click="editJob">Edytuj</Design.Button>
-      <Design.Button primary>Aplikuj</Design.Button>
+      <Design.Button :primary="!props.preview" :primary-outline="props.preview">
+        Aplikuj
+      </Design.Button>
     </Design.Row>
     <div class="mb-8 md:flex md:justify-between md:items-start max-md:mb-4">
       <div>
@@ -60,7 +62,7 @@
             :value="formatExpiresInDays(props.jobOffer.expiresInDays)"
             v-if="props.jobOffer.expiresInDays"
             test-id="jobOfferExpiresInDays"/>
-          <Design.Button primary full-width>
+          <Design.Button :primary="!props.preview" :primary-outline="props.preview" full-width>
             Aplikuj
           </Design.Button>
         </Design.Card>
@@ -98,13 +100,20 @@ import {Design} from "../design/design";
 import JobOfferField from "../design/JobOffer/JobOfferField.vue";
 import {SalaryJobOffer} from "../design/JobOffer/JobOfferSalary.vue";
 import JobOfferTagList from "../design/JobOffer/JobOfferTagList.vue";
-import {formatCompanySizeLevel, formatExpiresInDays, formatLegalForm, formatWorkExperience, formatWorkMode} from "../format";
+import {
+  formatCompanySizeLevel,
+  formatExpiresInDays,
+  formatLegalForm,
+  formatWorkExperience,
+  formatWorkMode,
+} from "../format";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
 interface Props {
   jobOffer: JobOfferShow;
+  preview?: boolean;
 }
 
 export interface JobOfferShow {
