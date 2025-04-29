@@ -9,7 +9,7 @@ describe('Plan bundle.', () => {
     bundle.addListener(function () {
       wasCalled = true;
     });
-    bundle.set();
+    bundle.set('growth', 1);
     assertEquals(true, wasCalled);
   });
 

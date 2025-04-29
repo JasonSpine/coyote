@@ -7,6 +7,7 @@ describe('Job offers association with payments.', () => {
     const jobOffer: JobOfferPayment = {
       paymentId: 'payment',
       jobOfferId: 42,
+      pricingPlan: 'premium',
     };
     payments.addJobOffer(jobOffer);
     assertEquals(42, payments.jobOfferId('payment'));
@@ -16,6 +17,7 @@ describe('Job offers association with payments.', () => {
     const jobOffer: JobOfferPayment = {
       paymentId: 'payment',
       jobOfferId: 25,
+      pricingPlan: 'premium',
     };
     payments.addJobOffer(jobOffer);
     assertEquals('payment', payments.paymentId(25));

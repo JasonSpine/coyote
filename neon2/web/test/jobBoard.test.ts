@@ -15,27 +15,58 @@ describe('Job board', () => {
     return lastViewSnapshot!;
   }
 
-  function jobOffer(title: string): JobOffer {
-    return {id: 1, title, expiresInDays: 14, status: 'published'};
-  }
-
   function publishedOfferTitles(): string[] {
     return publishedOffers().map(offer => offer.title);
   }
 
   function jobOfferCreated(title: string): void {
-    board.jobOfferCreated(jobOffer(title));
+    board.jobOfferCreated(jobOffer({title}));
   }
 
   function addJobOfferWaitingPayment(jobOfferId: number, title: string): void {
-    board.jobOfferCreated({id: jobOfferId, title, expiresInDays: 14, status: 'awaitingPayment'});
+    board.jobOfferCreated(jobOffer({id: jobOfferId, title, status: 'awaitingPayment'}));
+  }
+
+  function jobOffer(offer: {title?: string, status?: 'published'|'awaitingPayment', id?: number}): JobOffer {
+    return {
+      id: offer.id || 1,
+      title: offer.title || 'Offer',
+      expiresInDays: 14,
+      status: offer.status || 'published',
+      isNew: false,
+      isFavourite: false,
+      description: null,
+      salaryRangeFrom: null,
+      salaryRangeTo: null,
+      salaryIsNet: false,
+      salaryCurrency: 'PLN',
+      salaryRate: 'monthly',
+      locations: [],
+      tagNames: [],
+      workMode: 'stationary',
+      legalForm: 'b2b',
+      experience: 'not-provided',
+      applicationMode: '4programmers',
+      applicationEmail: null,
+      applicationExternalAts: null,
+      companyName: 'company',
+      companyLogoUrl: null,
+      companyWebsiteUrl: null,
+      companyDescription: null,
+      companyPhotoUrls: [],
+      companyVideoUrl: null,
+      companySizeLevel: null,
+      companyFundingYear: null,
+      companyAddress: null,
+      companyHiringType: 'agency',
+    };
   }
 
   describe('Job board updates the view with job offers.', () => {
     test('When a new job offer is added, the job board updates the view.', () => {
       let wasCalled = false;
       const board = new JobBoard(() => wasCalled = true);
-      board.jobOfferCreated(jobOffer('Foo'));
+      board.jobOfferCreated(jobOffer({title: 'Foo'}));
       assertEquals(true, wasCalled);
     });
     test('When a new job offer is added, the job board passes the job offer title to the view.', () => {
@@ -59,8 +90,8 @@ describe('Job board', () => {
       test('Clearing an update model list does not decrease count.', () => {
         let view;
         const board = new JobBoard((v) => view = v);
-        board.jobOfferCreated(jobOffer('Foo'));
-        view.length = 0;
+        board.jobOfferCreated(jobOffer({}));
+        view!.length = 0;
         assertEquals(1, board.count());
       });
       test('Modifying an update model object does not pollute internal state.', () => {
@@ -76,25 +107,25 @@ describe('Job board', () => {
     test('Given a job offer, when its title is updated, the title is no longer passed to view.', () => {
       jobOfferCreated('Before');
       const [offer] = publishedOffers();
-      board.jobOfferUpdated(offer.id, {title: 'After'});
+      board.jobOfferUpdated(offer.id, jobOffer({title: 'After'}));
       assertNotContains('Before', publishedOfferTitles());
     });
     test('Given a job offer, when its title is updated, the new title is passed to view.', () => {
       jobOfferCreated('Before');
       const [offer] = publishedOffers();
-      board.jobOfferUpdated(offer.id, {title: 'After'});
+      board.jobOfferUpdated(offer.id, jobOffer({title: 'After'}));
       assertContains('After', publishedOfferTitles());
     });
     test('When a non-existing job offer is edited, an exception is thrown.', () => {
       const nonExistingId = 123;
       assertThrows(
-        () => board.jobOfferUpdated(nonExistingId, ''),
+        () => board.jobOfferUpdated(nonExistingId, jobOffer({})),
         'No such job offer.');
     });
     test('Updating an offer preserves its id.', () => {
       jobOfferCreated('Before');
       const [offer] = publishedOffers();
-      board.jobOfferUpdated(offer.id, 'First edit');
+      board.jobOfferUpdated(offer.id, jobOffer({}));
       const [afterEdit] = publishedOffers();
       assertEquals(offer.id, afterEdit.id);
     });
