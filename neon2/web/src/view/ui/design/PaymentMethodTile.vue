@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex-grow-1 text-center cursor-pointer rounded-lg py-8 border"
+    class="flex-grow-1 basis-1 text-center cursor-pointer rounded-lg py-8 border"
     :class="tileClass"
     v-text="props.title"
     @click="emit('select')"/>
@@ -13,7 +13,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
 interface Emit {
-  (event: 'select');
+  (event: 'select'): void;
 }
 
 interface Props {
