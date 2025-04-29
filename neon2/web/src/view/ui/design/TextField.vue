@@ -68,7 +68,7 @@ const inputClass = computed<string>(() => {
 
 const fieldClass = computed<string>(() => {
   if (props.multiline) {
-    return 'min-h-30 max-h-120';
+    return 'min-h-90 max-h-240';
   }
   return '';
 });

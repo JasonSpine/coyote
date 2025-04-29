@@ -91,7 +91,7 @@
       </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Forma zatrudnienia i wynagrodzenie">
-      <Design.Row>
+      <Design.Row space>
         <Design.FieldGroup label="Rodzaj umowy">
           <Design.Dropdown icon="jobOfferFilterLegalForm" :options="legalFormOptions" v-model="jobOffer.legalForm"/>
         </Design.FieldGroup>
@@ -102,7 +102,7 @@
             v-model="jobOffer.salaryCurrency"/>
         </Design.FieldGroup>
       </Design.Row>
-      <Design.Row>
+      <Design.Row space>
         <Design.FieldGroup label="Wynagrodzenie od (netto)" :error="errors.salaryRangeFrom">
           <Design.TextField
             icon="jobOfferFilterCurrency"
@@ -179,25 +179,23 @@
         <span @click="emit('abort')" class="mr-8 cursor-pointer">
           Porzuć formularz
         </span>
-        <Design.RowEnd>
-          <div class="flex items-center">
-            <Design.Button
-              outline icon="jobOfferCreatorStepBack"
-              @click="previousStep"
-              v-if="hasPreviousStep"
-              class="mr-2">
-              Wróć
+        <div class="ml-auto flex items-center">
+          <Design.Button
+            outline icon="jobOfferCreatorStepBack"
+            @click="previousStep"
+            v-if="hasPreviousStep"
+            class="mr-2">
+            Wróć
+          </Design.Button>
+          <div>
+            <Design.Button primary @click="emit('submit', fromFormModel(jobOffer))" v-if="step === 'preview'">
+              {{buttonTitle}}
             </Design.Button>
-            <div>
-              <Design.Button primary @click="emit('submit', fromFormModel(jobOffer))" v-if="step === 'preview'">
-                {{buttonTitle}}
-              </Design.Button>
-              <Design.Button primary @click="nextStep" v-else>
-                Dalej
-              </Design.Button>
-            </div>
+            <Design.Button primary @click="nextStep" v-else>
+              Dalej
+            </Design.Button>
           </div>
-        </Design.RowEnd>
+        </div>
       </Design.Row>
     </Design.Tile>
   </div>
