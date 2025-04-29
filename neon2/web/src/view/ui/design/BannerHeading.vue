@@ -1,6 +1,6 @@
 <template>
   <Design.Tile big-space class="tile-highlight-long dark:tile-highlight">
-    <p class="mb-1 text-sm text-word-accent">
+    <p class="mb-1 text-sm text-green-700 dark:text-green-050">
       4programmers
       <span @click="emit('back')" class="cursor-pointer">
         » Praca
@@ -9,15 +9,19 @@
         » Ogłoszenie
       </span>
     </p>
-    <h1 class="text-xl leading-6 font-semibold text-word-standout max-md:hidden">
-      Oferty Pracy w IT - Odwiedza nas ponad 150 tys. programistów miesięcznie
-    </h1>
-    <h1 class="mb-1 text-xl leading-6 font-semibold text-word-standout md:hidden">
-      Oferty Pracy w IT
-    </h1>
-    <h2 class="md:hidden">
-      Odwiedza nas ponad 150 tys. programistów miesięcznie
-    </h2>
+    <div class="text-neutral-700 dark:text-neutral-050">
+      <div class="text-xl leading-6 font-semibold">
+        <h1 class="max-md:hidden">
+          Oferty Pracy w IT - Odwiedza nas ponad 150 tys. programistów miesięcznie
+        </h1>
+        <h1 class="md:hidden mb-1">
+          Oferty Pracy w IT
+        </h1>
+      </div>
+      <h2 class="md:hidden">
+        Odwiedza nas ponad 150 tys. programistów miesięcznie
+      </h2>
+    </div>
   </Design.Tile>
 </template>
 

@@ -22,11 +22,13 @@
           </Design.Row>
           <Design.Row apart class="max-md:hidden mt-2" vertical-center>
             <Design.Row vertical-center class="space-x-2">
-              <span v-if="jobOffer.companyName" v-text="jobOffer.companyName" class="text-neutral-900 dark:text-neutral-050"/>
+              <span v-if="jobOffer.companyName"
+                    v-text="jobOffer.companyName"
+                    class="text-neutral-900 dark:text-neutral-050"/>
               <Design.JobOfferTagList :tag-names="jobOffer.tagNames" :max="5"/>
             </Design.Row>
             <Design.Row class="space-x-2 text-sm">
-              <div v-for="badge in badges" :class="{'text-word-standout': badge.standout}">
+              <div v-for="badge in badges">
                 <Icon :name="badge.icon" v-if="badge.icon"/>
                 {{badge.title}}
               </div>
@@ -82,7 +84,7 @@ const badges = computed<Badge[]>((): Badge[] => {
   return [
     ...locationBadges.value,
     workModeBadge.value,
-    {title: legalFormTitle.value, standout: true},
+    {title: legalFormTitle.value},
   ];
 });
 
@@ -100,7 +102,6 @@ const legalFormTitle = computed((): string => formatLegalForm(props.jobOffer.leg
 interface Badge {
   title: string;
   icon?: IconName;
-  standout?: boolean;
 }
 
 const jobOfferSalary = computed<SalaryJobOffer|null>((): SalaryJobOffer|null => {

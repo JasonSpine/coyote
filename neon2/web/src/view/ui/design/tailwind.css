@@ -5,15 +5,8 @@
   --color-on-primary: white;
   --color-accent-front: var(--color-green-800);
   --color-accent-back: var(--color-green-050);
-  --color-gray-accent-back: var(--color-navy-100);
-  --color-gray-accent-front: var(--color-neutral-600);
-  --color-pink-accent-back: #e2d2f9;
-  --color-pink-accent-front: #16062d;
   --color-tile: white;
   --color-tile-nested: var(--color-navy-025);
-  --color-tile-highlight: #bbe7ca;
-  --color-word-standout: var(--color-neutral-700);
-  --color-word-accent: var(--color-green-700);
   --color-divider: var(--color-neutral-050);
   --color-tag: var(--color-navy-100);
 
@@ -22,15 +15,8 @@
     --color-on-primary: var(--color-navy-950);
     --color-accent-front: var(--color-green-500);
     --color-accent-back: var(--color-green-950);
-    --color-gray-accent-back: var(--color-neutral-950);
-    --color-gray-accent-front: var(--color-neutral-400);
-    --color-pink-accent-back: #16062d;
-    --color-pink-accent-front: #b68cf6;
     --color-tile: var(--color-neutral-800);
     --color-tile-nested: var(--color-neutral-900);
-    --color-tile-highlight: #0d5c28;
-    --color-word-standout: var(--color-neutral-050);
-    --color-word-accent: var(--color-green-050);
     --color-divider: var(--color-neutral-700);
     --color-tag: var(--color-navy-950);
   }
@@ -72,20 +58,11 @@
   --color-on-primary: var(--color-on-primary);
   --color-accent-front: var(--color-accent-front);
   --color-accent-back: var(--color-accent-back);
-  --color-gray-accent-front: var(--color-gray-accent-front);
-  --color-gray-accent-back: var(--color-gray-accent-back);
-  --color-pink-accent-front: var(--color-pink-accent-front);
-  --color-pink-accent-back: var(--color-pink-accent-back);
   --color-divider: var(--color-divider);
   --color-tag: var(--color-tag);
 
   --color-tile: var(--color-tile);
   --color-tile-nested: var(--color-tile-nested);
-  --color-tile-highlight: var(--color-tile-highlight);
-
-  --color-word: var(--color-word);
-  --color-word-standout: var(--color-word-standout);
-  --color-word-accent: var(--color-word-accent);
 
   --text-*: initial;
   --text-xs: 0.625rem;
