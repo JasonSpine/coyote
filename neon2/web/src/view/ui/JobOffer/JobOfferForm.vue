@@ -173,7 +173,7 @@
       @edit="previousStep"
       :job-offer="{expiresInDays: props.jobOfferExpiresInDays, ...fromFormModel(jobOffer)}"/>
   </template>
-  <div class="sticky bottom-0 mt-3 max-w-210 mx-auto">
+  <div class="sticky bottom-2 mt-5">
     <Design.Tile space shadow>
       <Design.Row vertical-center>
         <span @click="emit('abort')" class="mr-8 cursor-pointer">
