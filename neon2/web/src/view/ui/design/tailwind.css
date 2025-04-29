@@ -7,7 +7,7 @@
   --color-accent-back: var(--color-green-050);
   --color-tile: white;
   --color-tile-nested: var(--color-navy-025);
-  --color-divider: var(--color-neutral-050);
+  --color-tile-border: var(--color-neutral-050);
   --color-tag: var(--color-navy-100);
 
   @variant dark {
@@ -17,7 +17,7 @@
     --color-accent-back: var(--color-green-950);
     --color-tile: var(--color-neutral-800);
     --color-tile-nested: var(--color-neutral-900);
-    --color-divider: var(--color-neutral-700);
+    --color-tile-border: var(--color-neutral-700);
     --color-tag: var(--color-navy-950);
   }
 }
@@ -58,7 +58,7 @@
   --color-on-primary: var(--color-on-primary);
   --color-accent-front: var(--color-accent-front);
   --color-accent-back: var(--color-accent-back);
-  --color-divider: var(--color-divider);
+  --color-tile-border: var(--color-tile-border);
   --color-tag: var(--color-tag);
 
   --color-tile: var(--color-tile);

@@ -13,7 +13,7 @@
       @click.stop
       v-if="open"
       :space="!props.noSpace"
-      class="absolute z-[1] min-w-full w-max border border-divider"
+      class="absolute z-[1] min-w-full w-max border border-tile-border"
       :class="props.openToLeft ? 'right-0' : 'left-0'">
       <div :class="{'space-y-4': !props.noSpace, 'max-h-96 overflow-y-auto pr-12 -mr-3': props.scrollable}">
         <slot/>
