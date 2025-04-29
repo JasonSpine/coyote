@@ -48,5 +48,9 @@ function numberMalformed(value: string|null): boolean {
   if (text === '') {
     return false;
   }
-  return isNaN(parseInt(text, 10));
+  const number = parseInt(text, 10);
+  if (isNaN(number)) {
+    return true;
+  }
+  return number < 0;
 }
