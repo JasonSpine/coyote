@@ -33,6 +33,8 @@ jobs:
             docker compose exec -T php php artisan route:cache
             docker compose exec -T php php artisan queue:restart
             docker compose exec -T php yarn install
+            docker compose exec -T php bash -c 'cd neon2/web/ && yarn install'
+            docker compose exec -T php bash -c 'cd neon2/web/ && yarn run vite build --mode production'
             docker compose exec -T php yarn run prod
             docker compose exec -T php bash -c 'cd neon/web/ && yarn install'
             docker compose exec -T php bash -c 'cd neon/web/ && yarn run build'
