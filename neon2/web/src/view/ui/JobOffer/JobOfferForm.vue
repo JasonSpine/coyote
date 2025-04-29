@@ -19,10 +19,7 @@
             </Design.FieldHelp>
           </Design.FieldGroup>
           <Design.FieldGroup label="Strona WWW">
-            <Design.TextField
-              placeholder="Podaj stronę www firmy"
-              icon="jobOfferCompanyWebsite"
-              v-model="jobOffer.companyWebsiteUrl"/>
+            <Design.TextField placeholder="Podaj stronę www firmy" v-model="jobOffer.companyWebsiteUrl"/>
             <Design.FieldHelp>
               Firmowa strona WWW. Będzie wyświetlana przy ofercie.
             </Design.FieldHelp>
@@ -32,18 +29,12 @@
     </Design.Card>
     <Design.Card space title="Lokalizacja firmy">
       <Design.FieldGroup label="Adres siedziby firmy">
-        <Design.TextField
-          placeholder="np. Warszawa, al. Jerozolimskie 3"
-          icon="jobOfferLocation"
-          v-model="jobOffer.companyAddress"/>
+        <Design.TextField placeholder="np. Warszawa, al. Jerozolimskie 3" v-model="jobOffer.companyAddress"/>
       </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Dodatkowe informacje">
       <Design.FieldGroup label="Rok powstania firmy" :error="errors.companyFundingYear">
-        <Design.TextField
-          placeholder="Podaj rok powstania firmy"
-          icon="jobOfferCompanyFundingYear"
-          v-model="jobOffer.companyFundingYear"/>
+        <Design.TextField placeholder="Podaj rok powstania firmy" v-model="jobOffer.companyFundingYear"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Liczba pracowników">
         <Design.Dropdown
@@ -79,10 +70,7 @@
         <Design.TextField placeholder="np. Senior Java Developer" v-model="jobOffer.title"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Staż pracy">
-        <Design.Dropdown
-          icon="jobOfferFilterWorkExperience"
-          :options="workExperienceOptions"
-          v-model="jobOffer.experience"/>
+        <Design.Dropdown :options="workExperienceOptions" v-model="jobOffer.experience"/>
       </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Technologie">
@@ -93,31 +81,22 @@
     <Design.Card space title="Forma zatrudnienia i wynagrodzenie">
       <Design.Row space>
         <Design.FieldGroup label="Rodzaj umowy">
-          <Design.Dropdown icon="jobOfferFilterLegalForm" :options="legalFormOptions" v-model="jobOffer.legalForm"/>
+          <Design.Dropdown :options="legalFormOptions" v-model="jobOffer.legalForm"/>
         </Design.FieldGroup>
         <Design.FieldGroup label="Waluta wynagrodzenia">
-          <Design.Dropdown
-            icon="jobOfferFilterCurrency"
-            :options="salaryCurrencyOptions"
-            v-model="jobOffer.salaryCurrency"/>
+          <Design.Dropdown :options="salaryCurrencyOptions" v-model="jobOffer.salaryCurrency"/>
         </Design.FieldGroup>
       </Design.Row>
       <Design.Row space>
         <Design.FieldGroup label="Wynagrodzenie od (netto)" :error="errors.salaryRangeFrom">
-          <Design.TextField
-            icon="jobOfferFilterCurrency"
-            placeholder="Dolne widełki"
-            v-model="jobOffer.salaryRangeFrom"/>
+          <Design.TextField placeholder="Dolne widełki" v-model="jobOffer.salaryRangeFrom"/>
         </Design.FieldGroup>
         <Design.FieldGroup label="Wynagrodzenie do (netto)" :error="errors.salaryRangeTo">
-          <Design.TextField
-            icon="jobOfferFilterCurrency"
-            placeholder="Górne widełki"
-            v-model="jobOffer.salaryRangeTo"/>
+          <Design.TextField placeholder="Górne widełki" v-model="jobOffer.salaryRangeTo"/>
         </Design.FieldGroup>
       </Design.Row>
       <Design.FieldGroup label="Częstotliwość wynagrodzenia">
-        <Design.Dropdown icon="jobOfferFilterSalary" :options="salaryRateOptions" v-model="jobOffer.salaryRate"/>
+        <Design.Dropdown :options="salaryRateOptions" v-model="jobOffer.salaryRate"/>
       </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Tryb pracy">
@@ -181,14 +160,10 @@
           Porzuć formularz
         </span>
         <div class="ml-auto flex items-center">
-          <Design.Button
-            outline icon="jobOfferCreatorStepBack"
-            @click="previousStep"
-            v-if="hasPreviousStep"
-            class="mr-2">
+          <Design.Button outline icon="jobOfferCreatorStepBack" @click="previousStep" v-if="hasPreviousStep">
             Wróć
           </Design.Button>
-          <div>
+          <div class="ml-2">
             <Design.Button primary @click="emit('submit', fromFormModel(jobOffer))" v-if="step === 'preview'">
               {{buttonTitle}}
             </Design.Button>
