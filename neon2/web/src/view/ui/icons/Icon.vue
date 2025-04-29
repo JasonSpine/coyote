@@ -22,6 +22,7 @@ const iconPlus = 'fa-light fa-plus';
 const iconClose = 'fa-light fa-close';
 const iconSuitcase = 'fa-light fa-suitcase';
 const iconRemove = 'fa-light fa-trash';
+const iconAsterisk = 'fa-light fa-asterisk';
 
 const jobOfferLocation = 'fa-light fa-location-dot';
 const jobOfferLegalForm = iconSuitcase;
@@ -66,6 +67,8 @@ const icons = {
   jobOfferUploadCompanyLogo: 'fa-light fa-circle-plus',
   jobOfferStepperStepFinished: iconCheck,
   jobOfferCreatorStepBack: 'fa-light fa-arrow-left',
+  jobOfferPricingPlanListBullet: iconCheck,
+  jobOfferPricingPlanListBulletSpecialCase: iconAsterisk,
 };
 
 const fontAwesomeClasses = computed<string>((): string => icons[props.name]);

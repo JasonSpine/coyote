@@ -174,4 +174,8 @@ interface Props {
 .fa-trash:before {
   content: "\f1f8";
 }
+
+.fa-asterisk:before {
+  content: "\2a";
+}
 </style>

@@ -108,14 +108,17 @@ export class Driver {
       await this.web.click('Publikuj ogłoszenie');
     } else if (pricingPlan === 'premium') {
       await this.web.click('Kup ogłoszenie');
-    } else if (pricingPlan === 'strategic') {
-      await this.web.click('Kup pakiet Strategic');
-    } else if (pricingPlan === 'growth') {
-      await this.web.click('Kup pakiet Growth');
-    } else if (pricingPlan === 'scale') {
-      await this.web.click('Kup pakiet Scale');
     } else {
-      throw new Error('Failed to select a pricing plan.');
+      await this.web.click('Pakiety -50%');
+      if (pricingPlan === 'strategic') {
+        await this.web.click('Kup pakiet Strategic');
+      } else if (pricingPlan === 'growth') {
+        await this.web.click('Kup pakiet Growth');
+      } else if (pricingPlan === 'scale') {
+        await this.web.click('Kup pakiet Scale');
+      } else {
+        throw new Error('Failed to select a pricing plan.');
+      }
     }
   }
 
