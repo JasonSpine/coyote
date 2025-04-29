@@ -1,7 +1,7 @@
 <template>
   <div
     class="size-8 rounded-lg flex items-center justify-center cursor-pointer"
-    :class="{'bg-accent-back text-accent-front': props.favourite}"
+    :class="{accent: props.favourite}"
     @click="toggle">
     <Icon name="jobOfferFavourite"/>
   </div>

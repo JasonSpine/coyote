@@ -3,8 +3,6 @@
 :root {
   --color-body: var(--color-navy-050);
   --color-on-primary: white;
-  --color-accent-front: var(--color-green-800);
-  --color-accent-back: var(--color-green-050);
   --color-tile: white;
   --color-tile-nested: var(--color-navy-025);
   --color-tile-border: var(--color-neutral-050);
@@ -13,8 +11,6 @@
   @variant dark {
     --color-body: var(--color-neutral-900);
     --color-on-primary: var(--color-navy-950);
-    --color-accent-front: var(--color-green-500);
-    --color-accent-back: var(--color-green-950);
     --color-tile: var(--color-neutral-800);
     --color-tile-nested: var(--color-neutral-900);
     --color-tile-border: var(--color-neutral-700);
@@ -56,8 +52,6 @@
 
   --color-primary: var(--color-green-500);
   --color-on-primary: var(--color-on-primary);
-  --color-accent-front: var(--color-accent-front);
-  --color-accent-back: var(--color-accent-back);
   --color-tile-border: var(--color-tile-border);
   --color-tag: var(--color-tag);
 
@@ -90,4 +84,14 @@
 
 @utility tile-highlight-long {
   background-image: linear-gradient(45deg, var(--color-tile) 0%, var(--color-tile) 70%, var(--color-tile-highlight) 140%);
+}
+
+@utility accent {
+  color: var(--color-green-800);
+  background: var(--color-green-050);
+
+  @variant dark {
+    color: var(--color-green-500);
+    background: var(--color-green-950);
+  }
 }

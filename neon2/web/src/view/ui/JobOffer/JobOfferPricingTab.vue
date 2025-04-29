@@ -3,9 +3,7 @@
     <span
       v-for="tab in tabs"
       class="inline-block p-3 rounded-full cursor-pointer"
-      :class="selected === tab.value
-        ? 'bg-accent-back text-accent-front'
-        : 'text-neutral-400'"
+      :class="selected === tab.value ? 'accent' : 'text-neutral-400'"
       @click="selected = tab.value"
     >
       {{tab.title}}

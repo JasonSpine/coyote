@@ -6,7 +6,7 @@
     <div v-else :class="[
       'size-14 rounded flex-shrink-0',
       'flex items-center justify-center',
-      'bg-accent-back text-accent-front'
+      'accent'
     ]">
       <Icon :name="props.placeholderIcon"/>
     </div>
