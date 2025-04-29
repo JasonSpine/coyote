@@ -1,5 +1,5 @@
 import {JobOffer} from '../jobBoard';
-import {PlanBundleName, UploadAssets} from "../main";
+import {PaymentSummary, PlanBundleName, UploadAssets} from "../main";
 import {PaymentNotification} from "../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../paymentProvider/PaymentService";
 import {Screen, UserInterface, ViewListener} from './ui/ui';
@@ -95,5 +95,9 @@ export class View {
 
   setJobOfferApplicationEmail(applicationEmail: string): void {
     this.ui.setJobOfferApplicationEmail(applicationEmail);
+  }
+
+  setPaymentSummary(summary: PaymentSummary): void {
+    this.ui.setPaymentSummary(summary);
   }
 }

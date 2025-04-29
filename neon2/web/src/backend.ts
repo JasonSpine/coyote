@@ -161,7 +161,7 @@ export interface BackendJobOffer {
   id: number;
   expiresInDays: number;
   status: BackendJobOfferStatus;
-  paymentId: string|null;
+  payment: BackendPaymentIntent|null;
   fields: {
     title: string;
     description: string|null;
@@ -189,6 +189,13 @@ export interface BackendJobOffer {
     companyAddress: string|null,
     companyHiringType: HiringType,
   };
+}
+
+export interface BackendPaymentIntent {
+  paymentId: string;
+  paymentPriceBase: number;
+  paymentPriceVat: number;
+  paymentPriceTotal: number;
 }
 
 export type BackendJobOfferStatus = 'published'|'awaitingPayment';

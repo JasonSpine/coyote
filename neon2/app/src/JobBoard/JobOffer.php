@@ -8,7 +8,7 @@ class JobOffer {
         public int            $id,
         public int            $expiresInDays,
         public JobOfferStatus $status,
-        public ?string        $paymentId,
         public JobOfferSubmit $fields,
+        public ?PaymentIntent $payment,
     ) {}
 }

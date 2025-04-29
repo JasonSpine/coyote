@@ -23,9 +23,10 @@ readonly class JobBoardGate {
         string         $pricingPlan,
         int            $expiresInDays,
         JobOfferStatus $status,
-        ?string        $paymentId,
+        ?PaymentIntent $paymentIntent,
     ): JobOffer {
-        $record = new JobOffer(0, $expiresInDays, $status, $paymentId, $jobOffer);
+        $record = new JobOffer(-1, $expiresInDays, $status,
+            $jobOffer, $paymentIntent);
         $id = $this->insertJobOffer($record, $pricingPlan);
         $record->id = $id;
         return $record;
@@ -53,9 +54,8 @@ readonly class JobBoardGate {
             $row['id'],
             $row['duration'],
             $this->parse($row['status']),
-            $row['paymentId'],
             \unserialize($row['fields']),
-        ),
+            null),
             $this->database->query('SELECT id, fields, duration, status, paymentId FROM job_offers;'));
     }
 
@@ -70,7 +70,7 @@ readonly class JobBoardGate {
             'duration'    => $jobOffer->expiresInDays,
             'pricingPlan' => $pricingPlan,
             'status'      => $this->format($jobOffer->status),
-            'paymentId'   => $jobOffer->paymentId,
+            'paymentId'   => $jobOffer->payment?->paymentId,
         ]);
     }
 

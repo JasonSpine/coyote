@@ -1,6 +1,6 @@
 import {createApp, h, Reactive, reactive, VNode} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {InitiatePayment, PlanBundleName, PricingPlan, SubmitJobOffer, UploadAssets} from "../../main";
+import {InitiatePayment, PaymentSummary, PlanBundleName, PricingPlan, SubmitJobOffer, UploadAssets} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
@@ -19,6 +19,7 @@ export interface JobBoardProps {
   pricingPlan: PricingPlan|null;
   upload: UploadAssets|null;
   applicationEmail: string|null;
+  paymentSummary: PaymentSummary|null;
 }
 
 export interface ViewListener {
@@ -43,6 +44,7 @@ export interface UserInterface {
   setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void;
   upload(upload: UploadAssets): void;
   setJobOfferApplicationEmail(applicationEmail: string): void;
+  setPaymentSummary(summary: PaymentSummary): void;
 }
 
 export interface NavigationListener {
@@ -70,6 +72,7 @@ export class VueUi implements UserInterface {
     pricingPlan: null,
     upload: null,
     applicationEmail: null,
+    paymentSummary: null,
   });
   private viewListeners: ViewListener[] = [];
   private navigationListeners: NavigationListener[] = [];
@@ -119,6 +122,10 @@ export class VueUi implements UserInterface {
 
   setJobOfferApplicationEmail(applicationEmail: string) {
     this.vueState.applicationEmail = applicationEmail;
+  }
+
+  setPaymentSummary(summary: PaymentSummary): void {
+    this.vueState.paymentSummary = summary;
   }
 
   upload(upload: UploadAssets): void {

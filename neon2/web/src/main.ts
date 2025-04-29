@@ -74,6 +74,16 @@ export interface InvoiceInformation {
   companyCity: string,
 }
 
+function bundleSize(pricingPlan: PaidPricingPlan): 1|3|5|20 {
+  const bundleSizes: Record<PaidPricingPlan, 1|3|5|20> = {
+    'premium': 1,
+    'strategic': 3,
+    'growth': 5,
+    'scale': 20,
+  };
+  return bundleSizes[pricingPlan];
+}
+
 view.addEventListener({
   createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {
     backend.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
@@ -81,7 +91,14 @@ view.addEventListener({
       if (pricingPlan === 'free') {
         view.jobOfferCreatedFree(jobOffer.id);
       } else {
-        jobOfferPayments.addJobOffer({jobOfferId: jobOffer.id, paymentId: jobOffer.paymentId!, pricingPlan});
+        const payment = jobOffer.payment!;
+        jobOfferPayments.addJobOffer({jobOfferId: jobOffer.id, paymentId: payment.paymentId, pricingPlan});
+        view.setPaymentSummary({
+          bundleSize: bundleSize(pricingPlan),
+          basePrice: payment.paymentPriceBase,
+          vat: payment.paymentPriceVat,
+          totalPrice: payment.paymentPriceTotal,
+        });
         view.jobOfferCreatedRequirePayment(jobOffer.id);
       }
     });
@@ -177,4 +194,11 @@ export interface UploadImage {
 export interface UploadAssets {
   uploadLogo: UploadImage;
   uploadAsset: UploadImage;
+}
+
+export interface PaymentSummary {
+  basePrice: number;
+  vat: number;
+  totalPrice: number;
+  bundleSize: 1|3|5|20;
 }

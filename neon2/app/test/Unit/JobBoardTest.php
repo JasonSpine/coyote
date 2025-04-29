@@ -8,6 +8,7 @@ use Neon\WorkExperience;
 use Neon\WorkMode;
 use Neon2\JobBoard;
 use Neon2\JobBoard\JobOfferStatus;
+use Neon2\JobBoard\PaymentIntent;
 use Neon2\Payment;
 use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
@@ -45,9 +46,9 @@ class JobBoardTest extends TestCase {
                 string         $pricingPlan,
                 int            $expiresInDays,
                 JobOfferStatus $status,
-                ?string        $paymentId)
+                ?PaymentIntent $paymentIntent)
             use ($expectedPaymentId): JobBoard\JobOffer {
-                $this->assertSame($expectedPaymentId, $paymentId);
+                $this->assertSame($expectedPaymentId, $paymentIntent?->paymentId);
                 return $this->createMock(JobBoard\JobOffer::class);
             });
     }

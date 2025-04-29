@@ -1,58 +1,82 @@
 <template>
   <JobOfferStepper four-steps step="publish"/>
-  <div class="max-w-170 space-y-4 mx-auto">
-    <Design.Card title="Płatność poprzez bezpieczne połączenie">
-      <Design.PaymentMethod :options="paymentMethods" v-model="method"/>
-      <Design.FieldGroup required label="Numer karty" v-show="method === 'card'">
-        <div id="creditCardInput" class="border border-neutral-100 px-2 py-3 rounded-lg">
-          Wczytywanie...
+  <div class="flex gap-4">
+    <div class="flex-grow-1 basis-2/3 space-y-4">
+      <Design.Card title="Płatność poprzez bezpieczne połączenie">
+        <Design.PaymentMethod :options="paymentMethods" v-model="method"/>
+        <Design.FieldGroup required label="Numer karty" v-show="method === 'card'">
+          <div id="creditCardInput" class="border border-neutral-100 px-2 py-3 rounded-lg">
+            Wczytywanie...
+          </div>
+        </Design.FieldGroup>
+        <Design.Toast :subtitle="paymentP24Information" v-if="method === 'p24'"/>
+      </Design.Card>
+      <Design.Card title="Dane do faktury">
+        <Design.FieldGroup required label="Nazwa firmy" :error="errors.companyName">
+          <Design.TextField
+            placeholder="Nazwa firmy na którą ma być wystawiona faktura"
+            v-model="invoiceInformation.companyName"/>
+        </Design.FieldGroup>
+        <Design.Row space>
+          <Design.FieldGroup required label="Kraj" :error="errors.countryCode">
+            <Design.TextField placeholder="Np. Polska, etc." v-model="invoiceInformation.countryCode"/>
+          </Design.FieldGroup>
+          <Design.FieldGroup required label="NIP / VAT - ID" :error="errors.vatId">
+            <Design.TextField placeholder="Np. 1234123412" v-model="invoiceInformation.vatId"/>
+          </Design.FieldGroup>
+        </Design.Row>
+        <Design.FieldGroup required label="Adres" :error="errors.companyAddress">
+          <Design.TextField placeholder="Np. al. Jerozolimskie 3" v-model="invoiceInformation.companyAddress"/>
+        </Design.FieldGroup>
+        <Design.Row space>
+          <Design.FieldGroup required label="Kod pocztowy" :error="errors.companyPostalCode">
+            <Design.TextField placeholder="Np. 12-123" v-model="invoiceInformation.companyPostalCode"/>
+          </Design.FieldGroup>
+          <Design.FieldGroup required label="Miasto" :error="errors.companyCity">
+            <Design.TextField placeholder="Np. Warszawa, Kraków, etc." v-model="invoiceInformation.companyCity"/>
+          </Design.FieldGroup>
+        </Design.Row>
+      </Design.Card>
+    </div>
+    <div class="flex-grow-1 basis-1/3">
+      <div class="rounded-xl p-4 border border-tile-border space-y-4">
+        <div class="text-lg font-semibold">
+          Twoja płatność obejmuje
         </div>
-      </Design.FieldGroup>
-      <Design.Toast :subtitle="paymentP24Information" v-if="method === 'p24'"/>
-    </Design.Card>
-    <Design.Card title="Dane do faktury">
-      <Design.FieldGroup required label="Nazwa firmy" :error="errors.companyName">
-        <Design.TextField
-          placeholder="Nazwa firmy na którą ma być wystawiona faktura"
-          v-model="invoiceInformation.companyName"/>
-      </Design.FieldGroup>
-      <Design.Row columns>
-        <Design.FieldGroup required label="Kraj" :error="errors.countryCode">
-          <Design.TextField placeholder="Np. Polska, etc." v-model="invoiceInformation.countryCode"/>
-        </Design.FieldGroup>
-        <Design.FieldGroup required label="NIP / VAT - ID" :error="errors.vatId">
-          <Design.TextField placeholder="Np. 1234123412" v-model="invoiceInformation.vatId"/>
-        </Design.FieldGroup>
-      </Design.Row>
-      <Design.FieldGroup required label="Adres" :error="errors.companyAddress">
-        <Design.TextField placeholder="Np. al. Jerozolimskie 3" v-model="invoiceInformation.companyAddress"/>
-      </Design.FieldGroup>
-      <Design.Row columns>
-        <Design.FieldGroup required label="Kod pocztowy" :error="errors.companyPostalCode">
-          <Design.TextField placeholder="Np. 12-123" v-model="invoiceInformation.companyPostalCode"/>
-        </Design.FieldGroup>
-        <Design.FieldGroup required label="Miasto" :error="errors.companyCity">
-          <Design.TextField placeholder="Np. Warszawa, Kraków, etc." v-model="invoiceInformation.companyCity"/>
-        </Design.FieldGroup>
-      </Design.Row>
-    </Design.Card>
+        <hr class="text-tile-border"/>
+        <div class="flex">
+          <span data-testid="paymentPricingPlan" v-text="formatPricingPlan(props.summary.bundleSize)"/>
+          <span class="ml-auto" data-testid="paymentPriceBase" v-text="formatMoney(props.summary.basePrice)"/>
+        </div>
+        <div class="flex">
+          <span>VAT (23%)</span>
+          <span class="ml-auto" data-testid="paymentPriceVat" v-text="formatMoney(props.summary.vat)"/>
+        </div>
+        <hr class="text-tile-border"/>
+        <div class="flex items-center">
+          <span class="text-lg font-semibold">Suma:</span>
+          <span
+            class="ml-auto accent p-2"
+            data-testid="paymentPriceTotal"
+            v-text="formatMoney(props.summary.totalPrice)"/>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="max-w-210 mx-auto">
-    <Design.Tile space>
-      <Design.Row>
-        <Design.RowEnd>
-          <Design.Button primary @click="pay">
-            Zapłać i Publikuj
-          </Design.Button>
-        </Design.RowEnd>
-      </Design.Row>
-    </Design.Tile>
-  </div>
+  <Design.Tile space>
+    <Design.Row>
+      <Design.RowEnd>
+        <Design.Button primary @click="pay">
+          Zapłać i Publikuj
+        </Design.Button>
+      </Design.RowEnd>
+    </Design.Row>
+  </Design.Tile>
 </template>
 
 <script setup lang="ts">
 import {onBeforeUnmount, onMounted, reactive, ref} from "vue";
-import {InitiatePayment, InvoiceInformation} from "../../../main";
+import {InitiatePayment, InvoiceInformation, PaidPricingPlan, PaymentSummary, PricingPlan} from "../../../main";
 import {PaymentMethod} from "../../../paymentProvider/PaymentProvider";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
@@ -63,6 +87,7 @@ const emit = defineEmits<Emit>();
 
 interface Props {
   jobOfferId: number;
+  summary: PaymentSummary;
 }
 
 interface Emit {
@@ -129,5 +154,23 @@ function populateErrorsAndReturn(): boolean {
 
 function stringProvided(string: string): boolean {
   return string.trim().length > 0;
+}
+
+function formatMoney(amount: number): string {
+  return insertedFromEnd(amount.toString(), 2, '.') + ' zł';
+}
+
+function insertedFromEnd(subject: string, index: number, infix: string): string {
+  return subject.slice(0, -index) + infix + subject.slice(-index);
+}
+
+function formatPricingPlan(bundleSize: 1|3|5|20): string {
+  const plans: Record<1|3|5|20, string> = {
+    1: 'Ogłoszenie (30 dni)',
+    3: 'Pakiet 3 ogłoszeń (30 dni)',
+    5: 'Pakiet 5 ogłoszeń (30 dni)',
+    20: 'Pakiet 20 ogłoszeń (30 dni)',
+  };
+  return plans[bundleSize];
 }
 </script>

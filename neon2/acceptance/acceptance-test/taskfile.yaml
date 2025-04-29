@@ -4,3 +4,4 @@ tasks:
   test: yarn playwright test
   install: yarn install
   playwright-ui: yarn playwright test --ui
+  filter: yarn playwright test -g {{.CLI_ARGS}}

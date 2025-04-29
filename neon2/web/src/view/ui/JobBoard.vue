@@ -32,6 +32,7 @@
       <JobOfferPaymentForm
         v-else
         :job-offer-id="props.currentJobOfferId!"
+        :summary="props.paymentSummary!"
         @pay="payForJob"
         @mount-card-input="mountCardInput"
         @unmount-card-input="unmountCardInput"/>

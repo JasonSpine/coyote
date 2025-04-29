@@ -1,5 +1,5 @@
 import {Page} from '@playwright/test';
-import {JobOfferSubmitAttemptMode, Payment, PaymentMethod, PricingBundleName, PricingPlan} from './dsl';
+import {JobOfferSubmitAttemptMode, Payment, PaymentMethod, PaymentSummary, PricingBundleName, PricingPlan} from './dsl';
 import {WebDriver} from './webDriver';
 
 export type PaymentNotification = string;
@@ -59,9 +59,7 @@ export class Driver {
   }
 
   async initiateCardPayment(jobOfferTitle: string, cardNumber: string): None {
-    await this.web.click('Dodaj ogłoszenie');
-    await this.selectPricingPlan('premium');
-    await this.submitJobOfferForm(jobOfferTitle, 'description', 'companyName', 'paid');
+    await this.createJobOffer(jobOfferTitle, 'premium', 'ignored', 'description', 'companyName');
     await this.selectPaymentMethod('card');
     await this.fillCardDetails(cardNumber);
     await this.fillInvoiceInformation();
@@ -69,9 +67,7 @@ export class Driver {
   }
 
   async initiateP24Payment(jobOfferTitle: string): None {
-    await this.web.click('Dodaj ogłoszenie');
-    await this.selectPricingPlan('premium');
-    await this.submitJobOfferForm(jobOfferTitle, 'description', 'companyName', 'paid');
+    await this.createJobOffer(jobOfferTitle, 'premium', 'ignored', 'description', 'companyName');
     await this.selectPaymentMethod('p24');
     await this.fillInvoiceInformation();
     await this.proceedPayment();
@@ -265,6 +261,27 @@ export class Driver {
     }
     throw new Error('Failed to parse error message.');
   }
+
+  async anticipatePayment(jobOfferTitle: string, plan: PricingPlan): Promise<void> {
+    await this.createJobOffer(jobOfferTitle, plan, 'ignored', 'description', 'companyName');
+  }
+
+  async findPaymentSummary(): Promise<PaymentSummary> {
+    return {
+      plan: parsePricingPlan(await this.web.readStringByTestId('paymentPricingPlan')),
+      base: await this.web.readStringByTestId('paymentPriceBase'),
+      vat: await this.web.readStringByTestId('paymentPriceVat'),
+      total: await this.web.readStringByTestId('paymentPriceTotal'),
+    };
+  }
+}
+
+function parsePricingPlan(pricingPlan: string): PricingPlan {
+  if (pricingPlan === 'Ogłoszenie (30 dni)') return 'premium';
+  if (pricingPlan === 'Pakiet 3 ogłoszeń (30 dni)') return 'strategic';
+  if (pricingPlan === 'Pakiet 5 ogłoszeń (30 dni)') return 'growth';
+  if (pricingPlan === 'Pakiet 20 ogłoszeń (30 dni)') return 'scale';
+  throw new Error('Failed to parse a pricing plan.');
 }
 
 interface PlanBundle {

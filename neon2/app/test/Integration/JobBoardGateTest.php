@@ -9,6 +9,7 @@ use Neon\WorkMode;
 use Neon2\JobBoard\JobBoardGate;
 use Neon2\JobBoard\JobOffer;
 use Neon2\JobBoard\JobOfferStatus;
+use Neon2\JobBoard\PaymentIntent;
 use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
 use Neon2\Request\JobOfferSubmit;
@@ -47,7 +48,7 @@ class JobBoardGateTest extends TestCase {
 
     #[Test]
     public function editJobOffer(): void {
-        $jobOffer = $this->board->createJobOffer($this->fields('Foo'), 'free', 1, JobOfferStatus::Published, '');
+        $jobOffer = $this->addFreeOffer('New title');
         $this->board->updateJobOffer($jobOffer->id, $this->fields('New title'));
         [$jobOffer] = $this->board->listJobOffers();
         $this->assertEquals('New title', $jobOffer->fields->title);
@@ -63,7 +64,7 @@ class JobBoardGateTest extends TestCase {
 
     #[Test]
     public function readJobOfferIdByPaymentId(): void {
-        $jobOffer = $this->board->createJobOffer($this->fields('Foo'), 'free', 1, JobOfferStatus::Published, 'payment-id');
+        $jobOffer = $this->addJobOfferWithPaymentId('', 'payment-id', 'premium');
         $this->assertEquals(
             $jobOffer->id,
             $this->board->jobOfferIdByPaymentId('payment-id'));
@@ -71,16 +72,27 @@ class JobBoardGateTest extends TestCase {
 
     #[Test]
     public function readPricingPlanByPaymentId(): void {
-        $this->board->createJobOffer($this->fields('Foo'), 'scale', 1, JobOfferStatus::Published, 'payment-id-123');
+        $this->addJobOfferWithPaymentId('', 'payment-id-123', 'scale');
         $this->assertSame('scale', $this->board->pricingPlanByPaymentId('payment-id-123'));
     }
 
-    private function addFreeOffer(string $title): void {
-        $this->board->createJobOffer($this->fields($title), 'free', 1, JobOfferStatus::Published, '');
+    private function addFreeOffer(string $title): JobOffer {
+        return $this->addJobOfferWithPaymentId($title, null, 'free');
     }
 
     private function addPaidOffer(string $title): JobOffer {
-        return $this->board->createJobOffer($this->fields($title), 'premium', 1, JobOfferStatus::Published, '');
+        return $this->addJobOfferWithPaymentId($title, 'payment-id', 'premium');
+    }
+
+    private function addJobOfferWithPaymentId(string $title, ?string $paymentId, string $pricingPlan): JobOffer {
+        return $this->board->createJobOffer(
+            $this->fields($title),
+            $pricingPlan,
+            1,
+            JobOfferStatus::Published,
+            $paymentId
+                ? new PaymentIntent($paymentId, 0, 0, 0)
+                : null);
     }
 
     private function fields(string $title): JobOfferSubmit {

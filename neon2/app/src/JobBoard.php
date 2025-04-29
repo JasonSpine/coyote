@@ -4,6 +4,7 @@ namespace Neon2;
 use Neon2\JobBoard\JobBoardGate;
 use Neon2\JobBoard\JobOffer;
 use Neon2\JobBoard\JobOfferStatus;
+use Neon2\JobBoard\PaymentIntent;
 use Neon2\JobBoard\PlanBundleGate;
 use Neon2\Payment\PaymentGate;
 use Neon2\Payment\PaymentStatus;
@@ -35,7 +36,9 @@ readonly class JobBoard {
             $jobOfferPlan,
             30,
             JobOfferStatus::AwaitingPayment,
-            $this->generatePaymentId());
+            $this->paymentWithPrice(
+                $this->generatePaymentId(),
+                $jobOfferPlan));
     }
 
     public function paymentUpdate(Payment\PaymentUpdate $paymentUpdate): void {
@@ -96,5 +99,22 @@ readonly class JobBoard {
         }
         $this->jobBoardGate->publishJobOffer($jobOfferId);
         $this->planBundle->decreaseRemainingJobOffers($userId);
+    }
+
+    private function paymentWithPrice(string $paymentId, string $jobOfferPlan): PaymentIntent {
+        $price = $this->planPrice($jobOfferPlan);
+        $priceBase = $price * 100;
+        $priceVat = $price * 23;
+        return new PaymentIntent($paymentId, $priceBase, $priceVat, $priceBase + $priceVat);
+    }
+
+    private function planPrice(string $jobOfferPlan): int {
+        return match ($jobOfferPlan) {
+            'premium'   => 159,
+            'strategic' => 357,
+            'growth'    => 495,
+            'scale'     => 1580,
+            default     => throw new \RuntimeException('Failed to get a price for a pricing plan.')
+        };
     }
 }

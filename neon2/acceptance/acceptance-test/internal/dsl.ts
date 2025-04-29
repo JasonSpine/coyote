@@ -11,6 +11,13 @@ export type PricingPlan = 'free'|'premium'|PricingBundleName;
 export type PaymentMethod = 'card'|'p24';
 export type JobOfferSubmitAttemptMode = 'empty-title'|'empty-company-name';
 
+export interface PaymentSummary {
+  plan: PricingPlan;
+  base: string;
+  vat: string;
+  total: string;
+}
+
 export class Dsl {
   private mangler: Mangler;
 
@@ -104,6 +111,34 @@ export class Dsl {
     }
   }
 
+  async initiatePayment(payment: {paymentMethod?: PaymentMethod, card?: Card}): None {
+    if (payment.paymentMethod === 'p24') {
+      await this.driver.initiateP24Payment(this.enc('Job offer'));
+    } else {
+      await this.driver.initiateCardPayment(
+        this.enc('Job offer'),
+        this.cardNumber(payment.card || 'valid'));
+    }
+  }
+
+  private cardNumber(card: Card): string {
+    const cardNumbers: Record<Card, string> = {
+      'valid': '4242424242424242',
+      'expired': '4000000000000069',
+      'insufficientFunds': '4000000000009995',
+      'declined': '4000000000000002',
+    };
+    return cardNumbers[card];
+  }
+
+  async tryPublishJobOffer(jobOffer: {mode: JobOfferSubmitAttemptMode}): None {
+    await this.driver.tryPublishJobOffer(jobOffer.mode);
+  }
+
+  async anticipatePayment(payment: {plan: PricingPlan}): None {
+    await this.driver.anticipatePayment(this.enc('Job offer'), payment.plan);
+  }
+
   async assertJobOfferIsListed(assertion: {jobOfferTitle: string}): None {
     assertContains(
       assertion.jobOfferTitle,
@@ -124,26 +159,6 @@ export class Dsl {
 
   private enc(name: string): string {
     return this.mangler.encoded(name);
-  }
-
-  async initiatePayment(payment: {paymentMethod?: PaymentMethod, card?: Card}): None {
-    if (payment.paymentMethod === 'p24') {
-      await this.driver.initiateP24Payment(this.enc('Job offer'));
-    } else {
-      await this.driver.initiateCardPayment(
-        this.enc('Job offer'),
-        this.cardNumber(payment.card || 'valid'));
-    }
-  }
-
-  private cardNumber(card: Card): string {
-    const cardNumbers: Record<Card, string> = {
-      'valid': '4242424242424242',
-      'expired': '4000000000000069',
-      'insufficientFunds': '4000000000009995',
-      'declined': '4000000000000002',
-    };
-    return cardNumbers[card];
   }
 
   async assertPaymentNotification(assertion: {expectedPaymentNotification: PaymentNotification}): None {
@@ -186,14 +201,25 @@ export class Dsl {
     }
   }
 
-  async tryPublishJobOffer(jobOffer: {mode: JobOfferSubmitAttemptMode}): None {
-    await this.driver.tryPublishJobOffer(jobOffer.mode);
-  }
-
   async assertErrorMessage(assertion: {expectedErrorMessage: string}): None {
     assertEquals(
       assertion.expectedErrorMessage,
       await this.driver.findErrorMessage());
+  }
+
+  async assertPricingPlanCost(assertion: {
+    expectedPlan: PricingPlan,
+    expectedBase: string,
+    expectedVat: string,
+    expectedTotal: string,
+  }): None {
+    const expected: PaymentSummary = {
+      plan: assertion.expectedPlan,
+      base: assertion.expectedBase,
+      vat: assertion.expectedVat,
+      total: assertion.expectedTotal,
+    };
+    assertEquals(expected, await this.driver.findPaymentSummary());
   }
 }
 
