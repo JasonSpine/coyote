@@ -3,6 +3,7 @@ namespace Neon2;
 
 use Neon2\JobBoard\JobBoardGate;
 use Neon2\JobBoard\JobOffer;
+use Neon2\JobBoard\JobOfferStatus;
 use Neon2\JobBoard\PlanBundleGate;
 use Neon2\Payment\PaymentGate;
 use Neon2\Payment\PaymentStatus;
@@ -22,11 +23,18 @@ readonly class JobBoard {
 
     public function createJobOffer(string $jobOfferPlan, JobOfferSubmit $jobOffer): JobOffer {
         if ($jobOfferPlan === 'free') {
-            return $this->jobBoardGate->createJobOffer($jobOffer, 'free', null);
+            return $this->jobBoardGate->createJobOffer(
+                $jobOffer,
+                'free',
+                14,
+                JobOfferStatus::Published,
+                null);
         }
         return $this->jobBoardGate->createJobOffer(
             $jobOffer,
             $jobOfferPlan,
+            30,
+            JobOfferStatus::AwaitingPayment,
             $this->generatePaymentId());
     }
 

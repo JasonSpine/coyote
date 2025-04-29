@@ -7,6 +7,7 @@ use Neon\Rate;
 use Neon\WorkExperience;
 use Neon\WorkMode;
 use Neon2\JobBoard;
+use Neon2\JobBoard\JobOfferStatus;
 use Neon2\Payment;
 use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
@@ -39,7 +40,12 @@ class JobBoardTest extends TestCase {
 
     private function expectPaymentId(?string $expectedPaymentId): void {
         $this->jobBoardGate->method('createJobOffer')
-            ->willReturnCallback(function (JobOfferSubmit $jobOffer, string $pricingPlan, ?string $paymentId)
+            ->willReturnCallback(function (
+                JobOfferSubmit $jobOffer,
+                string         $pricingPlan,
+                int            $expiresInDays,
+                JobOfferStatus $status,
+                ?string        $paymentId)
             use ($expectedPaymentId): JobBoard\JobOffer {
                 $this->assertSame($expectedPaymentId, $paymentId);
                 return $this->createMock(JobBoard\JobOffer::class);

@@ -46,39 +46,11 @@ class JobBoardGateTest extends TestCase {
     }
 
     #[Test]
-    public function freeOfferExpiresIn14Days(): void {
-        $this->addFreeOffer('Foo');
-        [$jobOffer] = $this->board->listJobOffers();
-        $this->assertSame(14, $jobOffer->expiresInDays);
-    }
-
-    #[Test]
-    public function paidOfferExpiresIn30Days(): void {
-        $this->addPaidOffer('Foo');
-        [$jobOffer] = $this->board->listJobOffers();
-        $this->assertSame(30, $jobOffer->expiresInDays);
-    }
-
-    #[Test]
     public function editJobOffer(): void {
-        $jobOffer = $this->board->createJobOffer($this->fields('Foo'), 'free', '');
+        $jobOffer = $this->board->createJobOffer($this->fields('Foo'), 'free', 1, JobOfferStatus::Published, '');
         $this->board->updateJobOffer($jobOffer->id, $this->fields('New title'));
         [$jobOffer] = $this->board->listJobOffers();
         $this->assertEquals('New title', $jobOffer->fields->title);
-    }
-
-    #[Test]
-    public function freeJobOfferIsInitiallyPublished(): void {
-        $this->addFreeOffer('Foo');
-        [$jobOffer] = $this->board->listJobOffers();
-        $this->assertEquals(JobOfferStatus::Published, $jobOffer->status);
-    }
-
-    #[Test]
-    public function paidJobOfferIsInitiallyAwaitingPayment(): void {
-        $this->addPaidOffer('Foo');
-        [$jobOffer] = $this->board->listJobOffers();
-        $this->assertEquals(JobOfferStatus::AwaitingPayment, $jobOffer->status);
     }
 
     #[Test]
@@ -91,7 +63,7 @@ class JobBoardGateTest extends TestCase {
 
     #[Test]
     public function readJobOfferIdByPaymentId(): void {
-        $jobOffer = $this->board->createJobOffer($this->fields('Foo'), 'free', 'payment-id');
+        $jobOffer = $this->board->createJobOffer($this->fields('Foo'), 'free', 1, JobOfferStatus::Published, 'payment-id');
         $this->assertEquals(
             $jobOffer->id,
             $this->board->jobOfferIdByPaymentId('payment-id'));
@@ -99,16 +71,16 @@ class JobBoardGateTest extends TestCase {
 
     #[Test]
     public function readPricingPlanByPaymentId(): void {
-        $this->board->createJobOffer($this->fields('Foo'), 'scale', 'payment-id-123');
+        $this->board->createJobOffer($this->fields('Foo'), 'scale', 1, JobOfferStatus::Published, 'payment-id-123');
         $this->assertSame('scale', $this->board->pricingPlanByPaymentId('payment-id-123'));
     }
 
     private function addFreeOffer(string $title): void {
-        $this->board->createJobOffer($this->fields($title), 'free', '');
+        $this->board->createJobOffer($this->fields($title), 'free', 1, JobOfferStatus::Published, '');
     }
 
     private function addPaidOffer(string $title): JobOffer {
-        return $this->board->createJobOffer($this->fields($title), 'premium', '');
+        return $this->board->createJobOffer($this->fields($title), 'premium', 1, JobOfferStatus::Published, '');
     }
 
     private function fields(string $title): JobOfferSubmit {

@@ -21,13 +21,11 @@ readonly class JobBoardGate {
     public function createJobOffer(
         JobOfferSubmit $jobOffer,
         string         $pricingPlan,
+        int            $expiresInDays,
+        JobOfferStatus $status,
         ?string        $paymentId,
     ): JobOffer {
-        $record = new JobOffer(0,
-            $pricingPlan === 'free' ? 14 : 30,
-            $pricingPlan === 'free' ? JobOfferStatus::Published : JobOfferStatus::AwaitingPayment,
-            $paymentId,
-            $jobOffer);
+        $record = new JobOffer(0, $expiresInDays, $status, $paymentId, $jobOffer);
         $id = $this->insertJobOffer($record, $pricingPlan);
         $record->id = $id;
         return $record;
