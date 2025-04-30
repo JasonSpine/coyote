@@ -5,6 +5,7 @@
     :test-id="props.testId"
     :nested="props.nested"
     :openToLeft="props.openToLeft"
+    :scrollable="props.scrollable"
     :has-error="hasError"
     no-space
     v-model:open="open">
@@ -40,6 +41,7 @@ interface Props {
   options: DrawerOption<U>[];
   openToLeft?: boolean;
   default?: string;
+  scrollable?: boolean;
 }
 
 const props = defineProps<Props>();

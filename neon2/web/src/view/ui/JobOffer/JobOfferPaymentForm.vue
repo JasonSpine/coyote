@@ -20,6 +20,7 @@
         <Design.Row space>
           <Design.FieldGroup required label="Kraj" :error="errors.countryCode">
             <Design.Dropdown
+              scrollable
               :options="countryCodeOptions"
               v-model="invoiceInformation.countryCode"/>
           </Design.FieldGroup>
