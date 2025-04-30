@@ -8,6 +8,7 @@ import {
   PricingPlan,
   SubmitJobOffer,
   UploadAssets,
+  VatIdState,
 } from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
@@ -28,6 +29,7 @@ export interface JobBoardProps {
   upload: UploadAssets|null;
   applicationEmail: string|null;
   paymentSummary: PaymentSummary|null;
+  paymentVatIdState: VatIdState;
   invoiceCountries: Country[]|null;
 }
 
@@ -57,6 +59,7 @@ export interface UserInterface {
   setPaymentSummary(summary: PaymentSummary): void;
   setPaymentInvoiceCountries(countries: Country[]): void;
   setVatIncluded(vatIncluded: boolean): void;
+  setVatIdState(state: VatIdState): void;
 }
 
 export interface NavigationListener {
@@ -85,6 +88,7 @@ export class VueUi implements UserInterface {
     upload: null,
     applicationEmail: null,
     paymentSummary: null,
+    paymentVatIdState: 'valid',
     invoiceCountries: null,
   });
   private viewListeners: ViewListener[] = [];
@@ -149,8 +153,12 @@ export class VueUi implements UserInterface {
     this.vueState.upload = upload;
   }
 
-  setVatIncluded(vatIncluded: boolean) {
+  setVatIncluded(vatIncluded: boolean): void {
     this.vueState.paymentSummary!.vatIncluded = vatIncluded;
+  }
+
+  setVatIdState(state: VatIdState): void {
+    this.vueState.paymentVatIdState = state;
   }
 
   mount(cssSelector: string): void {

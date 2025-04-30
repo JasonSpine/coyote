@@ -45,11 +45,6 @@ export class WebDriver {
     throw new Error(`Failed to read a string by test id: ${testId}`);
   }
 
-  async readStrings(testId: string): Promise<string[]> {
-    const texts = await this.page.getByTestId(testId).allTextContents();
-    return texts.map(text => text.trim());
-  }
-
   async listStringByTestId(testId: string): Promise<string[]> {
     return this.page.getByTestId(testId).allTextContents();
   }
@@ -58,15 +53,23 @@ export class WebDriver {
     // Locally, timeout of 400ms is sufficient, but occasionally
     // tests fail on github actions because of the timeout,
     // thus timeout of 1250ms is used.
-    await this.page.getByText(text).waitFor({timeout: 1250});
+    await this.page.getByText(text).waitFor({state: 'visible'});
+  }
+
+  async waitForTextDisappears(text: string): None {
+    await this.page.getByText(text).waitFor({state: 'hidden'});
   }
 
   async waitUntilVisible(testId: string): None {
-    await this.page.getByTestId(testId).waitFor({state: 'visible', timeout: 7500});
+    await this.page.getByTestId(testId).waitFor({state: 'visible'});
   }
 
   async isVisible(testId: string): Promise<boolean> {
     return await this.page.getByTestId(testId).isVisible();
+  }
+
+  async isVisibleText(text: string): Promise<boolean> {
+    return await this.page.getByText(text).isVisible();
   }
 
   async readTestValue(testId: string): Promise<string|null> {

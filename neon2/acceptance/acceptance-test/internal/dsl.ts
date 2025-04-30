@@ -232,6 +232,10 @@ export class Dsl {
   async assertInvoiceVatTax(vat: 'included'|'free'): None {
     assertEquals(vat, await this.driver.findInvoiceVatTaxIncluded());
   }
+
+  async assertInvoiceVatId(state: 'valid'|'invalid'): None {
+    assertEquals(state, await this.driver.findInvoiceVatIdFieldState());
+  }
 }
 
 type None = Promise<void>;

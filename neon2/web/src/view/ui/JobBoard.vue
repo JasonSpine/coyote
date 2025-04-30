@@ -34,6 +34,7 @@
         :job-offer-id="props.currentJobOfferId!"
         :summary="props.paymentSummary!"
         :countries="props.invoiceCountries!"
+        :vat-id-state="props.paymentVatIdState"
         @pay="payForJob"
         @mount-card-input="mountCardInput"
         @unmount-card-input="unmountCardInput"

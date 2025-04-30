@@ -1,5 +1,5 @@
 import {JobOffer} from '../src/jobBoard';
-import {Country, PaymentSummary, PlanBundleName, UploadAssets} from "../src/main";
+import {Country, PaymentSummary, PlanBundleName, UploadAssets, VatIdState} from "../src/main";
 import {PaymentNotification} from "../src/paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../src/paymentProvider/PaymentService";
 import {NavigationListener, Screen, SearchListener, UserInterface, ViewListener} from '../src/view/ui/ui';
@@ -172,6 +172,8 @@ class MemoryUi implements UserInterface {
   setPaymentSummary(summary: PaymentSummary): void {}
 
   setVatIncluded(vatIncluded: boolean): void {}
+
+  setVatIdState(state: VatIdState): void {}
 
   navigate(): void {
     this.naviListeners.forEach(listener => listener.setScreen('home'));

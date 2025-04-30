@@ -1,5 +1,5 @@
 import {JobOffer} from '../jobBoard';
-import {Country, PaymentSummary, PlanBundleName, UploadAssets} from "../main";
+import {Country, PaymentSummary, PlanBundleName, UploadAssets, VatIdState} from "../main";
 import {PaymentNotification} from "../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../paymentProvider/PaymentService";
 import {Screen, UserInterface, ViewListener} from './ui/ui';
@@ -107,5 +107,9 @@ export class View {
 
   setVatIncluded(vatIncluded: boolean): void {
     this.ui.setVatIncluded(vatIncluded);
+  }
+
+  setPaymentInvoiceVatIdState(state: VatIdState): void {
+    this.ui.setVatIdState(state);
   }
 }

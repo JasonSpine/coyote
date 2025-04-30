@@ -15,6 +15,19 @@ use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
 use Neon2\Request\JobOfferSubmit;
 
+function valid(string $countryCode, ?string $vatId): bool {
+    if (in_array($countryCode, ['US', 'JP', 'UA', 'SG'])) {
+        return $vatId === null;
+    }
+    if ($countryCode === 'PL') {
+        return \strLen($vatId) === 10;
+    }
+    if ($countryCode === 'DE') {
+        return \strLen($vatId) === 9;
+    }
+    return false;
+}
+
 class RouteServiceProvider extends ServiceProvider {
     public function boot(): void {
         Facades\Route::post('/neon2/job-offers', function (JobBoardInteractor $listener) {
@@ -30,12 +43,19 @@ class RouteServiceProvider extends ServiceProvider {
             return response()->json([], status:201);
         });
         Facades\Route::post('/neon2/job-offers/payment', function (JobBoardInteractor $listener) {
+            $invoiceInfo = $this->requestInvoiceInfo(request());
+            if (!valid($invoiceInfo->countryCode, $invoiceInfo->vatId)) {
+                return response()->json(['status' => 'failedInvalidVatId'], status:422);
+            }
             $preparedPayment = $listener->preparePayment(
                 request()->get('userId'),
                 request()->get('paymentId'),
                 2000,
-                $this->requestInvoiceInfo(request()));
-            return response()->json($preparedPayment, status:201);
+                $invoiceInfo);
+            return response()->json([
+                'status'          => 'success',
+                'preparedPayment' => $preparedPayment,
+            ], status:201);
         });
         Facades\Route::post('/neon2/job-offers/redeem-bundle', function (JobBoardInteractor $listener) {
             $listener->redeemBundle(

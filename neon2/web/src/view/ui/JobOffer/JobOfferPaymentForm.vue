@@ -25,7 +25,7 @@
               v-model="invoiceInformation.countryCode"
               @update:model-value="vatDetailsChanged"/>
           </Design.FieldGroup>
-          <Design.FieldGroup label="NIP / VAT - ID" :error="errors.vatId">
+          <Design.FieldGroup label="NIP / VAT - ID" :error="errorVatId">
             <Design.TextField
               placeholder="Np. 1234123412"
               v-model="invoiceInformation.vatId"
@@ -73,9 +73,8 @@
   <Design.Tile space>
     <Design.Row>
       <Design.RowEnd>
-        <Design.Button primary @click="pay">
-          Zapłać i Publikuj
-        </Design.Button>
+        <Design.Button primary @click="pay" v-if="props.vatIdState === 'pending'">Przetwarzanie...</Design.Button>
+        <Design.Button primary @click="pay" v-else>Zapłać i Publikuj</Design.Button>
       </Design.RowEnd>
     </Design.Row>
   </Design.Tile>
@@ -83,7 +82,7 @@
 
 <script setup lang="ts">
 import {computed, onBeforeUnmount, onMounted, reactive, ref} from "vue";
-import {Country, InitiatePayment, InvoiceInformation, PaymentSummary} from "../../../main";
+import {Country, InitiatePayment, InvoiceInformation, PaymentSummary, VatIdState} from "../../../main";
 import {PaymentMethod} from "../../../paymentProvider/PaymentProvider";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
@@ -97,6 +96,7 @@ interface Props {
   jobOfferId: number;
   summary: PaymentSummary;
   countries: Country[];
+  vatIdState: VatIdState;
 }
 
 interface Emit {
@@ -112,7 +112,14 @@ function pay(): void {
   if (success) {
     emit('pay', {
       jobOfferId: props.jobOfferId,
-      invoiceInfo: {...invoiceInformation},
+      invoiceInfo: {
+        companyName: invoiceInformation.companyName.trim(),
+        countryCode: invoiceInformation.countryCode,
+        vatId: invoiceInformation.vatId.replaceAll(' ', ''),
+        companyAddress: invoiceInformation.companyAddress.trim(),
+        companyPostalCode: invoiceInformation.companyPostalCode.trim(),
+        companyCity: invoiceInformation.companyCity.trim(),
+      },
       paymentMethod: method.value,
     });
   }
@@ -132,21 +139,22 @@ const invoiceInformation: InvoiceInformation = reactive<InvoiceInformation>({
   companyCity: '',
 });
 
-type Field = keyof InvoiceInformation;
-
-const errors = reactive<Record<Field, string|null>>({
+const errors = reactive<Record<string, string|null>>({
   companyName: null as string|null,
   countryCode: null as string|null,
-  vatId: null as string|null,
   companyAddress: null as string|null,
   companyPostalCode: null as string|null,
   companyCity: null as string|null,
 });
 
-const validation = new JobOfferFormValidation(invoiceInformation, [
-  'companyName', 'countryCode', 'vatId', 'companyAddress',
-  'companyPostalCode', 'companyCity',
-]);
+const errorVatId = computed(() => {
+  if (props.vatIdState === 'invalid') {
+    return 'NIP / VAT - ID jest niepoprawny.';
+  }
+  return null;
+});
+
+const validation = new JobOfferFormValidation(invoiceInformation, Object.keys(errors));
 
 function validate() {
   return validation.validate(v => {

@@ -113,6 +113,7 @@ view.addEventListener({
     });
   },
   payForJob(initiatePayment: InitiatePayment): void {
+    view.setPaymentInvoiceVatIdState('pending');
     payments.initiatePayment(
       jobOfferPayments.paymentId(initiatePayment.jobOfferId),
       initiatePayment.invoiceInfo,
@@ -136,6 +137,9 @@ view.addEventListener({
 });
 
 payments.addEventListener({
+  paymentInitiationVatIdState(vatId: VatIdState): void {
+    view.setPaymentInvoiceVatIdState(vatId);
+  },
   notificationReceived(notification: PaymentNotification): void {
     view.setPaymentNotification(notification);
   },
@@ -218,3 +222,5 @@ function isVatIncluded(countryCode: string, vatId: string): boolean {
   }
   return vatId === '';
 }
+
+export type VatIdState = 'valid'|'invalid'|'pending';

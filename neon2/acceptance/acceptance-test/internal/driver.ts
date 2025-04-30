@@ -147,10 +147,10 @@ export class Driver {
     }
   }
 
-  private async fillInvoiceInformation(): None {
+  private async fillInvoiceInformation(invoiceInfo?: {countryCode: string, vatId: string}): None {
     await this.web.fillByLabel('Nazwa firmy', 'company name');
-    await this.fillInvoiceInformationCountryCode('PL');
-    await this.fillInvoiceInformationVatId('5555666677');
+    await this.fillInvoiceInformationCountryCode(invoiceInfo?.countryCode ?? 'PL');
+    await this.fillInvoiceInformationVatId(invoiceInfo?.vatId ?? '5555666677');
     await this.web.fillByLabel('Adres', 'company address');
     await this.web.fillByLabel('Kod pocztowy', '11-222');
     await this.web.fillByLabel('Miasto', 'company city');
@@ -285,14 +285,14 @@ export class Driver {
 
   async anticipatePaymentFillInvoice(jobOfferTitle: string, countryCode: string, vatId: string): Promise<void> {
     await this.anticipatePayment(jobOfferTitle, 'premium');
-    await this.fillInvoiceInformationCountryCode(countryCode);
-    await this.fillInvoiceInformationVatId(vatId);
+    await this.fillInvoiceInformation({countryCode, vatId});
     // We intentionally didn't fill payment information, in hopes
     // that submitting the payment will yield error messages, that
     // will allow us to assert vat-id. Otherwise, instead of reading
     // the error message, we'd have to assert the validation based
     // on the payment actually being processed, which is more complex.
     await this.submitPayment();
+    await this.web.waitForTextDisappears('Przetwarzanie...');
   }
 
   async findInvoiceVatTaxIncluded(): Promise<'included'|'free'> {
@@ -304,6 +304,13 @@ export class Driver {
       return 'free';
     }
     throw new Error('Failed to parse payment summary vat.');
+  }
+
+  async findInvoiceVatIdFieldState(): Promise<'valid'|'invalid'> {
+    if (await this.web.isVisibleText('NIP / VAT - ID jest niepoprawny.')) {
+      return 'invalid';
+    }
+    return 'valid';
   }
 }
 

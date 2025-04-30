@@ -73,7 +73,7 @@ export class JobBoardBackend {
       .then(() => updated());
   }
 
-  preparePayment(paymentId: string, invoiceInfo: InvoiceInformation): Promise<BackendPreparedPayment> {
+  preparePayment(paymentId: string, invoiceInfo: InvoiceInformation): Promise<PreparePaymentResponse> {
     return request('POST', '/neon2/job-offers/payment', {
       paymentId,
       userId: this.userId(),
@@ -237,11 +237,16 @@ export function toJobOffer(jobOffer: BackendJobOffer): JobOffer {
 
 function invoiceInfoFields(invoiceInfo: InvoiceInformation): object {
   return {
-    invoiceVatId: invoiceInfo.vatId,
+    invoiceVatId: invoiceInfo.vatId || null,
     invoiceCountryCode: invoiceInfo.countryCode,
     invoiceCompanyName: invoiceInfo.companyName,
     invoiceCompanyAddress: invoiceInfo.companyAddress,
     invoiceCompanyPostalCode: invoiceInfo.companyPostalCode,
     invoiceCompanyCity: invoiceInfo.companyCity,
   };
+}
+
+export interface PreparePaymentResponse {
+  status: 'success'|'failedInvalidVatId';
+  preparedPayment?: BackendPreparedPayment;
 }
