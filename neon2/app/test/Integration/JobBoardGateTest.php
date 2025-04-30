@@ -91,7 +91,7 @@ class JobBoardGateTest extends TestCase {
             1,
             JobOfferStatus::Published,
             $paymentId
-                ? new PaymentIntent($paymentId, 0, 0, 0)
+                ? new PaymentIntent($paymentId, 0, 0)
                 : null);
     }
 

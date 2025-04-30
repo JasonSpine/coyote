@@ -221,6 +221,17 @@ export class Dsl {
     };
     assertEquals(expected, await this.driver.findPaymentSummary());
   }
+
+  async fillInvoice(invoice: {countryCode: string, vatId: string,}): None {
+    await this.driver.anticipatePaymentFillInvoice(
+      this.enc('Job offer'),
+      invoice.countryCode,
+      invoice.vatId);
+  }
+
+  async assertInvoiceVatTax(vat: 'included'|'free'): None {
+    assertEquals(vat, await this.driver.findInvoiceVatTaxIncluded());
+  }
 }
 
 type None = Promise<void>;

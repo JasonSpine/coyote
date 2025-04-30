@@ -37,12 +37,17 @@ export class WebDriver {
     await this.page.getByPlaceholder(placeholder).fill(value);
   }
 
-  async readStringByTestId(testId: string): Promise<string> {
+  async read(testId: string): Promise<string> {
     const text = await this.page.getByTestId(testId).textContent();
     if (text) {
       return text.trim();
     }
     throw new Error(`Failed to read a string by test id: ${testId}`);
+  }
+
+  async readStrings(testId: string): Promise<string[]> {
+    const texts = await this.page.getByTestId(testId).allTextContents();
+    return texts.map(text => text.trim());
   }
 
   async listStringByTestId(testId: string): Promise<string[]> {

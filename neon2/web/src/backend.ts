@@ -201,7 +201,6 @@ export interface BackendPaymentIntent {
   paymentId: string;
   paymentPriceBase: number;
   paymentPriceVat: number;
-  paymentPriceTotal: number;
 }
 
 export type BackendJobOfferStatus = 'published'|'awaitingPayment';

@@ -103,9 +103,9 @@ readonly class JobBoard {
 
     private function paymentWithPrice(string $paymentId, string $jobOfferPlan): PaymentIntent {
         $price = $this->planPrice($jobOfferPlan);
-        $priceBase = $price * 100;
-        $priceVat = $price * 23;
-        return new PaymentIntent($paymentId, $priceBase, $priceVat, $priceBase + $priceVat);
+        return new PaymentIntent($paymentId,
+            $price * 100,
+            $price * 23);
     }
 
     private function planPrice(string $jobOfferPlan): int {

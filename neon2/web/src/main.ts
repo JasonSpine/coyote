@@ -97,11 +97,14 @@ view.addEventListener({
           bundleSize: bundleSize(pricingPlan),
           basePrice: payment.paymentPriceBase,
           vat: payment.paymentPriceVat,
-          totalPrice: payment.paymentPriceTotal,
+          vatIncluded: true,
         });
         view.jobOfferCreatedRequirePayment(jobOffer.id);
       }
     });
+  },
+  vatDetailsChanged(countryCode: string, vatId: string): void {
+    view.setVatIncluded(isVatIncluded(countryCode, vatId));
   },
   updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void {
     backend.updateJobOffer(jobOfferId, jobOffer, (): void => {
@@ -200,11 +203,18 @@ export interface UploadAssets {
 export interface PaymentSummary {
   basePrice: number;
   vat: number;
-  totalPrice: number;
   bundleSize: 1|3|5|20;
+  vatIncluded: boolean;
 }
 
 export interface Country {
   countryCode: string;
   countryName: string;
+}
+
+function isVatIncluded(countryCode: string, vatId: string): boolean {
+  if (['PL', 'UA', 'US', 'JP', 'SG'].includes(countryCode)) {
+    return true;
+  }
+  return vatId === '';
 }

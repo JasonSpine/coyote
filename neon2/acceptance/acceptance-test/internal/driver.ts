@@ -63,14 +63,14 @@ export class Driver {
     await this.selectPaymentMethod('card');
     await this.fillCardDetails(cardNumber);
     await this.fillInvoiceInformation();
-    await this.proceedPayment();
+    await this.submitPayment();
   }
 
   async initiateP24Payment(jobOfferTitle: string): None {
     await this.createJobOffer(jobOfferTitle, 'premium', 'ignored', 'description', 'companyName');
     await this.selectPaymentMethod('p24');
     await this.fillInvoiceInformation();
-    await this.proceedPayment();
+    await this.submitPayment();
   }
 
   private async submitJobOfferForm(title: string, description: string, companyName: string, pricing: 'paid'|'free'): None {
@@ -132,7 +132,7 @@ export class Driver {
     if (payment === 'completed') {
       await this.fillCardDetails(paymentCardNumber);
       await this.fillInvoiceInformation();
-      await this.proceedPayment();
+      await this.submitPayment();
       await this.web.waitForText('Płatność zaksięgowana!');
     }
     if (payment === 'redeem-bundle') {
@@ -142,18 +142,26 @@ export class Driver {
     if (payment === 'failed') {
       await this.fillCardDetails(paymentCardNumber);
       await this.fillInvoiceInformation();
-      await this.proceedPayment();
+      await this.submitPayment();
       await this.web.waitForText('Płatność odrzucona.');
     }
   }
 
   private async fillInvoiceInformation(): None {
     await this.web.fillByLabel('Nazwa firmy', 'company name');
-    await this.web.selectByLabel('Kraj', 'PL');
-    await this.web.fillByLabel('NIP / VAT - ID', '5555666677');
+    await this.fillInvoiceInformationCountryCode('PL');
+    await this.fillInvoiceInformationVatId('5555666677');
     await this.web.fillByLabel('Adres', 'company address');
     await this.web.fillByLabel('Kod pocztowy', '11-222');
     await this.web.fillByLabel('Miasto', 'company city');
+  }
+
+  private async fillInvoiceInformationCountryCode(countryCode: string): None {
+    await this.web.selectByLabel('Kraj', countryCode);
+  }
+
+  private async fillInvoiceInformationVatId(value: string): None {
+    await this.web.fillByLabel('NIP / VAT - ID', value);
   }
 
   private async fillCardDetails(cardNumber: string): None {
@@ -164,7 +172,7 @@ export class Driver {
     await this.web.click('Publikuj korzystając z pakietu');
   }
 
-  private async proceedPayment(): None {
+  private async submitPayment(): None {
     await this.web.click('Zapłać i Publikuj');
   }
 
@@ -187,7 +195,7 @@ export class Driver {
 
   async findJobOfferExpiryInDays(jobOfferTitle: string): Promise<number> {
     await this.web.click(jobOfferTitle);
-    const expiresInDaysTitle = await this.web.readStringByTestId('jobOfferExpiresInDays');
+    const expiresInDaysTitle = await this.web.read('jobOfferExpiresInDays');
     return parseInt(expiresInDaysTitle.replace('za ', '').replace(' dni', ''));
   }
 
@@ -199,7 +207,7 @@ export class Driver {
 
   async readPaymentStatus(): Promise<PaymentStatus> {
     await this.web.waitUntilVisible('paymentStatus');
-    const status = await this.web.readStringByTestId('paymentStatus');
+    const status = await this.web.read('paymentStatus');
     if (status === 'Płatność zaksięgowana!') {
       return 'paymentComplete';
     }
@@ -210,7 +218,7 @@ export class Driver {
   }
 
   async findPlanBundle(): Promise<PlanBundle> {
-    return this.parsePlanBundle(await this.web.readStringByTestId('planBundle'));
+    return this.parsePlanBundle(await this.web.read('planBundle'));
   }
 
   private parsePlanBundle(planBundle: string): PlanBundle {
@@ -231,10 +239,10 @@ export class Driver {
   async findJobOfferField(jobOfferTitle: string, field: 'description'|'companyName'): Promise<string> {
     await this.web.click(jobOfferTitle);
     if (field === 'description') {
-      return await this.web.readStringByTestId('jobOfferDescription');
+      return await this.web.read('jobOfferDescription');
     }
     if (field === 'companyName') {
-      return await this.web.readStringByTestId('jobOfferCompanyName');
+      return await this.web.read('jobOfferCompanyName');
     }
     throw new Error('Failed to find job offer field.');
   }
@@ -252,7 +260,7 @@ export class Driver {
   }
 
   async findErrorMessage(): Promise<string> {
-    const errorMessage = await this.web.readStringByTestId('errorMessage');
+    const errorMessage = await this.web.read('errorMessage');
     if (errorMessage === 'Podaj nazwę firmy.') {
       return 'provide-company-name';
     }
@@ -268,11 +276,34 @@ export class Driver {
 
   async findPaymentSummary(): Promise<PaymentSummary> {
     return {
-      plan: parsePricingPlan(await this.web.readStringByTestId('paymentPricingPlan')),
-      base: await this.web.readStringByTestId('paymentPriceBase'),
-      vat: await this.web.readStringByTestId('paymentPriceVat'),
-      total: await this.web.readStringByTestId('paymentPriceTotal'),
+      plan: parsePricingPlan(await this.web.read('paymentPricingPlan')),
+      base: await this.web.read('paymentPriceBase'),
+      vat: await this.web.read('paymentPriceVat'),
+      total: await this.web.read('paymentPriceTotal'),
     };
+  }
+
+  async anticipatePaymentFillInvoice(jobOfferTitle: string, countryCode: string, vatId: string): Promise<void> {
+    await this.anticipatePayment(jobOfferTitle, 'premium');
+    await this.fillInvoiceInformationCountryCode(countryCode);
+    await this.fillInvoiceInformationVatId(vatId);
+    // We intentionally didn't fill payment information, in hopes
+    // that submitting the payment will yield error messages, that
+    // will allow us to assert vat-id. Otherwise, instead of reading
+    // the error message, we'd have to assert the validation based
+    // on the payment actually being processed, which is more complex.
+    await this.submitPayment();
+  }
+
+  async findInvoiceVatTaxIncluded(): Promise<'included'|'free'> {
+    const priceVat = await this.web.read('paymentPriceVat');
+    if (priceVat === '36.57 zł') {
+      return 'included';
+    }
+    if (priceVat === '0 zł') {
+      return 'free';
+    }
+    throw new Error('Failed to parse payment summary vat.');
   }
 }
 

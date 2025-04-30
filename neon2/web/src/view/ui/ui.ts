@@ -37,6 +37,7 @@ export interface ViewListener {
   payForJob: (payment: InitiatePayment) => void;
   redeemBundle: (jobOfferId: number) => void;
   managePaymentMethod: (action: 'mount'|'unmount', cssSelector?: string) => void;
+  vatDetailsChanged: (countryCode: string, vatId: string) => void;
 }
 
 export interface UserInterface {
@@ -55,6 +56,7 @@ export interface UserInterface {
   setJobOfferApplicationEmail(applicationEmail: string): void;
   setPaymentSummary(summary: PaymentSummary): void;
   setPaymentInvoiceCountries(countries: Country[]): void;
+  setVatIncluded(vatIncluded: boolean): void;
 }
 
 export interface NavigationListener {
@@ -147,6 +149,10 @@ export class VueUi implements UserInterface {
     this.vueState.upload = upload;
   }
 
+  setVatIncluded(vatIncluded: boolean) {
+    this.vueState.paymentSummary!.vatIncluded = vatIncluded;
+  }
+
   mount(cssSelector: string): void {
     const render = this.vueRender.bind(this);
     createApp({render}).mount(cssSelector);
@@ -186,6 +192,9 @@ export class VueUi implements UserInterface {
       },
       onUnmountCardInput(): void {
         that.viewListeners.forEach(listener => listener.managePaymentMethod('unmount'));
+      },
+      onVatDetailsChanged(countryCode: string, vatId: string): void {
+        that.viewListeners.forEach(listener => listener.vatDetailsChanged(countryCode, vatId));
       },
     });
   }

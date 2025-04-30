@@ -104,4 +104,8 @@ export class View {
   setPaymentInvoiceCountries(countries: Country[]): void {
     this.ui.setPaymentInvoiceCountries(countries);
   }
+
+  setVatIncluded(vatIncluded: boolean): void {
+    this.ui.setVatIncluded(vatIncluded);
+  }
 }

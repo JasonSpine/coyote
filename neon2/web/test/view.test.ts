@@ -171,6 +171,8 @@ class MemoryUi implements UserInterface {
 
   setPaymentSummary(summary: PaymentSummary): void {}
 
+  setVatIncluded(vatIncluded: boolean): void {}
+
   navigate(): void {
     this.naviListeners.forEach(listener => listener.setScreen('home'));
   }

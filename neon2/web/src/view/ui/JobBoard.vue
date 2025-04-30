@@ -36,7 +36,8 @@
         :countries="props.invoiceCountries!"
         @pay="payForJob"
         @mount-card-input="mountCardInput"
-        @unmount-card-input="unmountCardInput"/>
+        @unmount-card-input="unmountCardInput"
+        @vat-details-changed="vatDetailsChanged"/>
     </template>
     <template v-if="props.screen === 'show'">
       <JobOfferButtonPill @click="navigateHome">Wróć do ogłoszeń</JobOfferButtonPill>
@@ -91,6 +92,7 @@ interface Emit {
   (event: 'redeem-bundle', jobOfferId: number): void;
   (event: 'mount-card-input', cssSelector: string): void;
   (event: 'unmount-card-input'): void;
+  (event: 'vat-details-changed', countryCode: string, vatId: string): void;
 }
 
 function navigate(newScreen: Screen, id?: number): void {
@@ -204,4 +206,8 @@ const paymentNotificationTitle = computed<string|null>(() => {
   };
   return titles[props.paymentNotification];
 });
+
+function vatDetailsChanged(countryCode: string, vatId: string): void {
+  emit('vat-details-changed', countryCode, vatId);
+}
 </script>

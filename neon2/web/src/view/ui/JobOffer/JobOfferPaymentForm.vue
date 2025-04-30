@@ -22,10 +22,14 @@
             <Design.Dropdown
               scrollable
               :options="countryCodeOptions"
-              v-model="invoiceInformation.countryCode"/>
+              v-model="invoiceInformation.countryCode"
+              @update:model-value="vatDetailsChanged"/>
           </Design.FieldGroup>
-          <Design.FieldGroup required label="NIP / VAT - ID" :error="errors.vatId">
-            <Design.TextField placeholder="Np. 1234123412" v-model="invoiceInformation.vatId"/>
+          <Design.FieldGroup label="NIP / VAT - ID" :error="errors.vatId">
+            <Design.TextField
+              placeholder="Np. 1234123412"
+              v-model="invoiceInformation.vatId"
+              @update:model-value="vatDetailsChanged"/>
           </Design.FieldGroup>
         </Design.Row>
         <Design.FieldGroup required label="Adres" :error="errors.companyAddress">
@@ -53,7 +57,7 @@
         </div>
         <div class="flex">
           <span>VAT (23%)</span>
-          <span class="ml-auto" data-testid="paymentPriceVat" v-text="formatMoney(props.summary.vat)"/>
+          <span class="ml-auto" data-testid="paymentPriceVat" v-text="formatMoney(effectiveVat)"/>
         </div>
         <hr class="text-tile-border"/>
         <div class="flex items-center">
@@ -61,7 +65,7 @@
           <span
             class="ml-auto accent p-2"
             data-testid="paymentPriceTotal"
-            v-text="formatMoney(props.summary.totalPrice)"/>
+            v-text="formatMoney(props.summary.basePrice + effectiveVat)"/>
         </div>
       </div>
     </div>
@@ -99,6 +103,7 @@ interface Emit {
   (event: 'pay', payment: InitiatePayment): void;
   (event: 'mountCardInput', cssSelector: string): void;
   (event: 'unmountCardInput'): void;
+  (event: 'vat-details-changed', countryCode: string, vatId: string): void;
 }
 
 function pay(): void {
@@ -147,7 +152,6 @@ function validate() {
   return validation.validate(v => {
     v.nonEmpty('companyName', 'Podaj nazwę firmy.');
     v.notEqual('countryCode', 'not-provided', 'Wybierz kraj.');
-    v.nonEmpty('vatId', 'Podaj NIP / VAT - ID');
     v.nonEmpty('companyAddress', 'Podaj adres firmy.');
     v.nonEmpty('companyPostalCode', 'Podaj kod pocztowy firmy.');
     v.nonEmpty('companyCity', 'Podaj miasto firmy.');
@@ -162,6 +166,9 @@ const paymentMethods: DrawerOption<PaymentMethod>[] = [
 const paymentP24Information = 'Po kliknięciu "Zapłać i Publikuj", zostaniesz przekierowany do formularza płatności online.';
 
 function formatMoney(amount: number): string {
+  if (amount === 0) {
+    return '0 zł';
+  }
   return insertedFromEnd(amount.toString(), 2, '.') + ' zł';
 }
 
@@ -186,4 +193,17 @@ const countryCodeOptions = computed<DrawerOption<string|null>[]>(() => [
     title: `${country.countryName} (${country.countryCode})`,
   })),
 ]);
+
+const effectiveVat = computed(() => {
+  if (props.summary.vatIncluded) {
+    return props.summary.vat;
+  }
+  return 0;
+});
+
+function vatDetailsChanged(): void {
+  emit('vat-details-changed',
+    invoiceInformation.countryCode,
+    invoiceInformation.vatId.trim());
+}
 </script>
