@@ -18,13 +18,15 @@ use Neon2\StripeSecrets;
 class ServiceProvider extends RouteServiceProvider {
     public function register(): void {
         parent::register();
-        $this->app->instance(
-            JobBoardInteractor::class,
-            new \Neon2\JobBoardInteractor(testMode:false, stripeSecrets:new StripeSecrets(
-                config('services.stripe.key'),
-                config('services.stripe.secret'),
-                config('services.stripe.endpoint_secret'),
-            )));
+        $this->app->instance(JobBoardInteractor::class,
+            new \Neon2\JobBoardInteractor(
+                countryGate:new EloquentCountryGate(),
+                stripeSecrets:new StripeSecrets(
+                    config('services.stripe.key'),
+                    config('services.stripe.secret'),
+                    config('services.stripe.endpoint_secret'),
+                ),
+                testMode:false));
     }
 
     public function loadRoutes(): void {

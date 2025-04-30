@@ -2,7 +2,7 @@
   <Design.Material
     :nested="props.nested"
     class="cursor-pointer relative"
-    :class="{'border border-neutral-100': !props.nested}"
+    :class="borderClass"
     @click="toggle">
     <div class="flex" :data-testid="props.testId">
       <Icon :name="props.icon" v-if="props.icon" class="mr-2"/>
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import {watch} from 'vue';
+import {computed, watch} from 'vue';
 import Icon, {IconName} from "../icons/Icon.vue";
 import {useClickOutside} from "../vue/clickOutside";
 import {Design} from "./design";
@@ -42,6 +42,7 @@ interface Props {
   scrollable?: boolean;
   blip?: string;
   openToLeft?: boolean;
+  hasError?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -58,5 +59,18 @@ watch(open, (newValue: boolean): void => {
   } else {
     clickOutside.removeAll();
   }
+});
+
+const borderClass = computed(() => {
+  if (props.nested) {
+    if (props.hasError) {
+      throw new Error('Nested inputs do not have errors.');
+    }
+    return '';
+  }
+  if (props.hasError) {
+    return 'border border-red-500';
+  }
+  return 'border border-neutral-100';
 });
 </script>

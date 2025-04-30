@@ -7,6 +7,7 @@ readonly class JobBoardView {
     public function __construct(
         private \Neon2\JobBoard\JobBoardGate   $jobBoard,
         private \Neon2\JobBoard\PlanBundleGate $planBundles,
+        private \Neon2\Invoice\CountryGate     $countries,
         private ?string                        $stripePublishableKey,
     ) {
         $this->vite = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/');
@@ -56,6 +57,7 @@ readonly class JobBoardView {
             'jobOfferApplicationEmail' => $userEmail,
             'csrfToken'                => $csrfToken,
             'stripePublishableKey'     => $this->stripePublishableKey,
+            'paymentInvoiceCountries'  => $this->countries->invoiceCountries(),
         ]);
     }
 
@@ -67,8 +69,6 @@ readonly class JobBoardView {
                 'planBundleName'     => $this->planBundles->planBundleName($userId),
             ];
         }
-        return [
-            'hasBundle' => false,
-        ];
+        return ['hasBundle' => false];
     }
 }

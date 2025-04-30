@@ -1,5 +1,5 @@
 import {JobOffer} from '../jobBoard';
-import {PaymentSummary, PlanBundleName, UploadAssets} from "../main";
+import {Country, PaymentSummary, PlanBundleName, UploadAssets} from "../main";
 import {PaymentNotification} from "../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../paymentProvider/PaymentService";
 import {Screen, UserInterface, ViewListener} from './ui/ui';
@@ -99,5 +99,9 @@ export class View {
 
   setPaymentSummary(summary: PaymentSummary): void {
     this.ui.setPaymentSummary(summary);
+  }
+
+  setPaymentInvoiceCountries(countries: Country[]): void {
+    this.ui.setPaymentInvoiceCountries(countries);
   }
 }

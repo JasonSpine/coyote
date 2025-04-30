@@ -33,6 +33,7 @@
         v-else
         :job-offer-id="props.currentJobOfferId!"
         :summary="props.paymentSummary!"
+        :countries="props.invoiceCountries!"
         @pay="payForJob"
         @mount-card-input="mountCardInput"
         @unmount-card-input="unmountCardInput"/>

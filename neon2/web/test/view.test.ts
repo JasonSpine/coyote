@@ -1,5 +1,5 @@
 import {JobOffer} from '../src/jobBoard';
-import {PaymentSummary, PlanBundleName, UploadAssets} from "../src/main";
+import {Country, PaymentSummary, PlanBundleName, UploadAssets} from "../src/main";
 import {PaymentNotification} from "../src/paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../src/paymentProvider/PaymentService";
 import {NavigationListener, Screen, SearchListener, UserInterface, ViewListener} from '../src/view/ui/ui';
@@ -162,6 +162,8 @@ class MemoryUi implements UserInterface {
   setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void {
     this._planBundleCanRedeem = canRedeem;
   }
+
+  setPaymentInvoiceCountries(countries: Country[]): void {}
 
   upload(upload: UploadAssets): void {}
 

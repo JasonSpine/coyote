@@ -1,6 +1,7 @@
 <?php
 namespace Neon2;
 
+use Neon2\Invoice\CountryGate;
 use Neon2\JobBoard\InvoiceInformation;
 use Neon2\JobBoard\JobBoardGate;
 use Neon2\JobBoard\JobOffer;
@@ -23,13 +24,15 @@ readonly class JobBoardInteractor {
     private PaymentWebhook $paymentWebhook;
     private PaymentGate $gate;
 
-    public function __construct(bool $testMode, ?StripeSecrets $stripeSecrets) {
+    public function __construct(
+        CountryGate    $countryGate,
+        ?StripeSecrets $stripeSecrets,
+        bool           $testMode,
+    ) {
         $this->gate = new PaymentGate();
         $this->jobBoardGate = new JobBoardGate();
         $planBundle = new JobBoard\PlanBundleGate();
-        $this->jobBoardView = new JobBoardView($this->jobBoardGate,
-            $planBundle,
-            $stripeSecrets?->publishableKey);
+        $this->jobBoardView = new JobBoardView($this->jobBoardGate, $planBundle, $countryGate, $stripeSecrets?->publishableKey);
         $this->board = new JobBoard($this->gate, $this->jobBoardGate, $planBundle, $testMode);
         if ($this->board->testMode()) {
             $paymentProvider = new TestPaymentProvider();

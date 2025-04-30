@@ -175,6 +175,7 @@ backend.initialJobOffers()
   .forEach(offer => board.jobOfferCreated(toJobOffer(offer)));
 
 view.setJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
+view.setPaymentInvoiceCountries(backend.paymentInvoiceCountries());
 
 view.upload({
   async uploadLogo(file: File): Promise<string> {
@@ -201,4 +202,9 @@ export interface PaymentSummary {
   vat: number;
   totalPrice: number;
   bundleSize: 1|3|5|20;
+}
+
+export interface Country {
+  countryCode: string;
+  countryName: string;
 }

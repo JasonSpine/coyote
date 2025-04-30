@@ -19,7 +19,9 @@
         </Design.FieldGroup>
         <Design.Row space>
           <Design.FieldGroup required label="Kraj" :error="errors.countryCode">
-            <Design.TextField placeholder="Np. Polska, etc." v-model="invoiceInformation.countryCode"/>
+            <Design.Dropdown
+              :options="countryCodeOptions"
+              v-model="invoiceInformation.countryCode"/>
           </Design.FieldGroup>
           <Design.FieldGroup required label="NIP / VAT - ID" :error="errors.vatId">
             <Design.TextField placeholder="Np. 1234123412" v-model="invoiceInformation.vatId"/>
@@ -75,12 +77,13 @@
 </template>
 
 <script setup lang="ts">
-import {onBeforeUnmount, onMounted, reactive, ref} from "vue";
-import {InitiatePayment, InvoiceInformation, PaidPricingPlan, PaymentSummary, PricingPlan} from "../../../main";
+import {computed, onBeforeUnmount, onMounted, reactive, ref} from "vue";
+import {Country, InitiatePayment, InvoiceInformation, PaymentSummary} from "../../../main";
 import {PaymentMethod} from "../../../paymentProvider/PaymentProvider";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
 import JobOfferStepper from '../design/JobOffer/JobOfferStepper.vue';
+import {JobOfferFormValidation} from "./JobOfferFormValidation";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
@@ -88,6 +91,7 @@ const emit = defineEmits<Emit>();
 interface Props {
   jobOfferId: number;
   summary: PaymentSummary;
+  countries: Country[];
 }
 
 interface Emit {
@@ -97,8 +101,9 @@ interface Emit {
 }
 
 function pay(): void {
-  const validationError = populateErrorsAndReturn();
-  if (!validationError) {
+  const [success, failureErrors] = validate();
+  Object.assign(errors, failureErrors);
+  if (success) {
     emit('pay', {
       jobOfferId: props.jobOfferId,
       invoiceInfo: {...invoiceInformation},
@@ -114,19 +119,12 @@ const method = ref<PaymentMethod>('card');
 
 const invoiceInformation: InvoiceInformation = reactive<InvoiceInformation>({
   companyName: '',
-  countryCode: '',
+  countryCode: 'not-provided',
   vatId: '',
   companyAddress: '',
   companyPostalCode: '',
   companyCity: '',
 });
-
-const paymentMethods: DrawerOption<PaymentMethod>[] = [
-  {value: 'card', title: 'Karta kredytowa / debetowa'},
-  {value: 'p24', title: 'BLIK lub przelew'},
-];
-
-const paymentP24Information = 'Po kliknięciu "Zapłać i zapisz", zostaniesz przekierowany do formularza płatności online.';
 
 type Field = keyof InvoiceInformation;
 
@@ -139,22 +137,28 @@ const errors = reactive<Record<Field, string|null>>({
   companyCity: null as string|null,
 });
 
-function populateErrorsAndReturn(): boolean {
-  let validationError = false;
-  for (const field of Object.keys(invoiceInformation) as Field[]) {
-    if (!stringProvided(invoiceInformation[field])) {
-      errors[field] = 'Uzupełnij pole.';
-      validationError = true;
-    } else {
-      errors[field] = null;
-    }
-  }
-  return validationError;
+const validation = new JobOfferFormValidation(invoiceInformation, [
+  'companyName', 'countryCode', 'vatId', 'companyAddress',
+  'companyPostalCode', 'companyCity',
+]);
+
+function validate() {
+  return validation.validate(v => {
+    v.nonEmpty('companyName', 'Podaj nazwę firmy.');
+    v.notEqual('countryCode', 'not-provided', 'Wybierz kraj.');
+    v.nonEmpty('vatId', 'Podaj NIP / VAT - ID');
+    v.nonEmpty('companyAddress', 'Podaj adres firmy.');
+    v.nonEmpty('companyPostalCode', 'Podaj kod pocztowy firmy.');
+    v.nonEmpty('companyCity', 'Podaj miasto firmy.');
+  });
 }
 
-function stringProvided(string: string): boolean {
-  return string.trim().length > 0;
-}
+const paymentMethods: DrawerOption<PaymentMethod>[] = [
+  {value: 'card', title: 'Karta kredytowa / debetowa'},
+  {value: 'p24', title: 'BLIK lub przelew'},
+];
+
+const paymentP24Information = 'Po kliknięciu "Zapłać i Publikuj", zostaniesz przekierowany do formularza płatności online.';
 
 function formatMoney(amount: number): string {
   return insertedFromEnd(amount.toString(), 2, '.') + ' zł';
@@ -173,4 +177,12 @@ function formatPricingPlan(bundleSize: 1|3|5|20): string {
   };
   return plans[bundleSize];
 }
+
+const countryCodeOptions = computed<DrawerOption<string|null>[]>(() => [
+  {value: 'not-provided', title: 'Wybierz kraj...'},
+  ...props.countries.map(country => ({
+    value: country.countryCode,
+    title: `${country.countryName} (${country.countryCode})`,
+  })),
+]);
 </script>

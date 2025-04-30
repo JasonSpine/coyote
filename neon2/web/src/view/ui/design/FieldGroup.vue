@@ -1,13 +1,13 @@
 <template>
   <div class="flex-1">
-    <label>
+    <label :for="fieldLabelId">
       <Design.FieldLabel
         :has-error="hasError"
         :title="props.label"
         :required="props.required"
         :disabled="props.disabled"/>
-      <slot/>
     </label>
+    <slot/>
     <Design.FieldError v-if="hasError" :message="props.error!"/>
   </div>
 </template>
@@ -32,6 +32,8 @@ const hasError = computed((): boolean => {
   return !!props.error;
 });
 
+const fieldLabelId = Math.random().toString().substring(2);
+provide('fieldLabelId', fieldLabelId);
 provide('fieldHasError', hasError);
 provide('fieldDisabled', computed(() => props.disabled));
 </script>

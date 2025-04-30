@@ -7,7 +7,7 @@ export const describe = playwrightTest.describe;
 
 export function test(title: string, test: Test): void {
   playwrightTest(title, async function ({page, request}): Promise<void> {
-    await test(new Dsl(new Driver(page), new HttpDriver(request)), request);
+    await test(new Dsl(new Driver(page), new HttpDriver(request)));
   });
 }
 

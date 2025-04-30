@@ -29,6 +29,10 @@ export class WebDriver {
     await this.page.getByLabel(label).fill(value);
   }
 
+  async selectByLabel(label: string, option: string): None {
+    await this.page.getByLabel(label).selectOption(option);
+  }
+
   async fillByPlaceholder(placeholder: string, value: string): None {
     await this.page.getByPlaceholder(placeholder).fill(value);
   }

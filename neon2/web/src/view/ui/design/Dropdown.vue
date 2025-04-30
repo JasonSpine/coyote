@@ -5,6 +5,7 @@
     :test-id="props.testId"
     :nested="props.nested"
     :openToLeft="props.openToLeft"
+    :has-error="hasError"
     no-space
     v-model:open="open">
     <div
@@ -16,10 +17,13 @@
       {{option.title}}
     </div>
   </Design.Drawer>
+  <select class="absolute opacity-0 pointer-events-none" v-model="selected" :id="fieldLabelId">
+    <option v-for="option in props.options" :value="option.value" v-text="option.title"/>
+  </select>
 </template>
 
 <script setup lang="ts" generic="U extends string|number|null">
-import {computed, ref} from "vue";
+import {computed, inject, ref} from "vue";
 import Icon, {IconName} from "../icons/Icon.vue";
 import {Design} from "./design";
 
@@ -41,6 +45,9 @@ interface Props {
 const props = defineProps<Props>();
 const selected = defineModel<U>({required: true});
 const open = ref<boolean>(false);
+
+const hasError = inject('fieldHasError', computed(() => false));
+const fieldLabelId = inject('fieldLabelId', undefined);
 
 function select(value: U): void {
   selected.value = value;

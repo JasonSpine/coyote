@@ -13,8 +13,11 @@ export class JobOfferFormValidation<T extends string> {
     const errors = this.emptyErrors();
     let success = true;
     validation({
-      nonEmpty: (field: T, errorMessage: string): void => {
-        if (this.fields[field]?.trim() === '') {
+      nonEmpty(field: T, errorMessage: string): void {
+        this.notEqual(field, '', errorMessage);
+      },
+      notEqual: (field: T, value: string, errorMessage: string): void => {
+        if (this.fields[field]?.trim() === value) {
           errors[field] = errorMessage;
           success = false;
         }
@@ -37,6 +40,7 @@ export type ValidationResult<T extends string> = [
 
 interface Validator<T> {
   nonEmpty(field: T, errorMessage: string): void;
+  notEqual(field: T, value: string, errorMessage: string): void;
   optionalNumeric(field: T, errorMessage: string): void;
 }
 

@@ -6,6 +6,7 @@
     <TextInput
       class="outline-none flex-grow-1" :class="fieldClass"
       :component="props.multiline ? 'textarea' : 'input'"
+      :label-id="fieldLabelId"
       :test-id="props.testId"
       :placeholder="props.placeholder"
       :disabled="disabled"
@@ -32,6 +33,7 @@ interface Props {
 
 const hasError = inject('fieldHasError', computed(() => false));
 const disabled = inject('fieldDisabled', computed(() => props.disabled));
+const fieldLabelId = inject('fieldLabelId', undefined);
 
 interface Emit {
   (event: 'submit', value: string): void;

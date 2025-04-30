@@ -1,6 +1,7 @@
 import {JobOffer} from "./jobBoard";
 import {
   ApplicationMode,
+  Country,
   Currency,
   HiringType,
   InvoiceInformation,
@@ -114,6 +115,10 @@ export class JobBoardBackend {
     return this.backendInput.stripePublishableKey;
   }
 
+  paymentInvoiceCountries(): Country[] {
+    return this.backendInput.paymentInvoiceCountries;
+  }
+
   async uploadLogoReturnUrl(file: File): Promise<string> {
     const formData = new FormData();
     formData.append('logo', file);
@@ -155,6 +160,7 @@ export interface BackendInput {
   jobOfferApplicationEmail: string;
   csrfToken: string;
   stripePublishableKey: string|null;
+  paymentInvoiceCountries: Array<{countryCode: string; countryName: string}>;
 }
 
 export interface BackendJobOffer {

@@ -5,6 +5,7 @@
     :placeholder="props.placeholder"
     :data-testid="props.testId"
     :disabled="props.disabled"
+    :id="props.labelId"
     @keyup.enter="submit"
     @input="change"/>
   <textarea
@@ -13,6 +14,7 @@
     :placeholder="props.placeholder"
     :data-testid="props.testId"
     :disabled="props.disabled"
+    :id="props.labelId"
     @keyup.enter="submit"
     @input="change"/>
 </template>
@@ -27,6 +29,7 @@ interface Props {
   placeholder: string;
   testId?: string;
   disabled?: boolean;
+  labelId?: string;
 }
 
 interface Emit {

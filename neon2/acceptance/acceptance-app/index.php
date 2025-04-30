@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades;
+use Neon2\Invoice;
 use Neon2\JobBoardInteractor;
 use Neon2\Laravel\RouteServiceProvider;
 
@@ -42,5 +43,8 @@ $application = Application::configure(__DIR__ . '/laravel')
     ->withExceptions()
     ->create();
 $application->instance(JobBoardInteractor::class,
-    new Neon2\JobBoardInteractor(testMode:true, stripeSecrets:null));
+    new Neon2\JobBoardInteractor(
+        countryGate:new Invoice\TestCountryGate(),
+        stripeSecrets:null,
+        testMode:true));
 $application->handleRequest(Request::capture());

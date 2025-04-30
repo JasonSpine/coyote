@@ -149,7 +149,7 @@ export class Driver {
 
   private async fillInvoiceInformation(): None {
     await this.web.fillByLabel('Nazwa firmy', 'company name');
-    await this.web.fillByLabel('Kraj', 'country');
+    await this.web.selectByLabel('Kraj', 'PL');
     await this.web.fillByLabel('NIP / VAT - ID', '5555666677');
     await this.web.fillByLabel('Adres', 'company address');
     await this.web.fillByLabel('Kod pocztowy', '11-222');

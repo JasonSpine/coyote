@@ -1,6 +1,14 @@
 import {createApp, h, Reactive, reactive, VNode} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {InitiatePayment, PaymentSummary, PlanBundleName, PricingPlan, SubmitJobOffer, UploadAssets} from "../../main";
+import {
+  Country,
+  InitiatePayment,
+  PaymentSummary,
+  PlanBundleName,
+  PricingPlan,
+  SubmitJobOffer,
+  UploadAssets,
+} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
@@ -20,6 +28,7 @@ export interface JobBoardProps {
   upload: UploadAssets|null;
   applicationEmail: string|null;
   paymentSummary: PaymentSummary|null;
+  invoiceCountries: Country[]|null;
 }
 
 export interface ViewListener {
@@ -45,6 +54,7 @@ export interface UserInterface {
   upload(upload: UploadAssets): void;
   setJobOfferApplicationEmail(applicationEmail: string): void;
   setPaymentSummary(summary: PaymentSummary): void;
+  setPaymentInvoiceCountries(countries: Country[]): void;
 }
 
 export interface NavigationListener {
@@ -73,6 +83,7 @@ export class VueUi implements UserInterface {
     upload: null,
     applicationEmail: null,
     paymentSummary: null,
+    invoiceCountries: null,
   });
   private viewListeners: ViewListener[] = [];
   private navigationListeners: NavigationListener[] = [];
@@ -126,6 +137,10 @@ export class VueUi implements UserInterface {
 
   setPaymentSummary(summary: PaymentSummary): void {
     this.vueState.paymentSummary = summary;
+  }
+
+  setPaymentInvoiceCountries(countries: Country[]): void {
+    this.vueState.invoiceCountries = countries;
   }
 
   upload(upload: UploadAssets): void {
