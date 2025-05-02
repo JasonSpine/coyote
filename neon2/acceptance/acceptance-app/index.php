@@ -44,6 +44,7 @@ $application = Application::configure(__DIR__ . '/laravel')
     ->create();
 $application->instance(JobBoardInteractor::class,
     new Neon2\JobBoardInteractor(
+        integration:new \Neon2\Coyote\NeonIntegration(new \Neon2\JobBoard\JobBoardGate()),
         countryGate:new Invoice\TestCountryGate(),
         stripeSecrets:null,
         testMode:true));

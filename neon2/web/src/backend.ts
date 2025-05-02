@@ -221,8 +221,8 @@ interface ProviderNotReady {
 
 interface BackendPlanBundle {
   hasBundle: boolean;
-  remainingJobOffers?: number;
-  planBundleName?: 'strategic'|'growth'|'scale';
+  remainingJobOffers: number|null;
+  planBundleName: 'strategic'|'growth'|'scale'|null;
 }
 
 export function toJobOffer(jobOffer: BackendJobOffer): JobOffer {

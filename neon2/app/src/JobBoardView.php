@@ -5,10 +5,9 @@ readonly class JobBoardView {
     private Web\ViteManifest $vite;
 
     public function __construct(
-        private \Neon2\JobBoard\JobBoardGate   $jobBoard,
-        private \Neon2\JobBoard\PlanBundleGate $planBundles,
-        private \Neon2\Invoice\CountryGate     $countries,
-        private ?string                        $stripePublishableKey,
+        private \Neon2\Coyote\Integration  $integration,
+        private \Neon2\Invoice\CountryGate $countries,
+        private ?string                    $stripePublishableKey,
     ) {
         $this->vite = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/');
     }
@@ -50,25 +49,14 @@ readonly class JobBoardView {
 
     private function backendInput(bool $isTestMode, int $userId, string $userEmail, string $csrfToken): string {
         return $this->encodeBackendInput([
-            'jobOffers'                => $this->jobBoard->listJobOffers(),
+            'jobOffers'                => $this->integration->listJobOffers(),
             'testMode'                 => $isTestMode,
-            'planBundle'               => $this->planBundle($userId),
+            'planBundle'               => $this->integration->planBundle($userId),
             'userId'                   => $userId,
             'jobOfferApplicationEmail' => $userEmail,
             'csrfToken'                => $csrfToken,
             'stripePublishableKey'     => $this->stripePublishableKey,
             'paymentInvoiceCountries'  => $this->countries->invoiceCountries(),
         ]);
-    }
-
-    private function planBundle(int $userId): array {
-        if ($this->planBundles->hasBundle($userId)) {
-            return [
-                'hasBundle'          => true,
-                'remainingJobOffers' => $this->planBundles->remainingJobOffers($userId),
-                'planBundleName'     => $this->planBundles->planBundleName($userId),
-            ];
-        }
-        return ['hasBundle' => false];
     }
 }

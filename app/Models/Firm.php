@@ -29,9 +29,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $vat_id
  * @property int $country_id
  * @property Benefit[]|Eloquent\Collection $benefits
- * @property Asset[] $assets
+ * @property Asset[]|Eloquent\Collection $assets
  * @property Logo $logo
  * @property Country $country
+ * @property int $founded
+ * @property string $youtube_url
+ * @property int $employees
  */
 class Firm extends Model
 {

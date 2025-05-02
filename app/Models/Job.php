@@ -19,6 +19,7 @@ use Illuminate\Notifications\RoutesNotifications;
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
  * @property \Carbon\Carbon $deadline_at
+ * @property int $deadline
  * @property \Carbon\Carbon $boost_at
  * @property bool $is_expired
  * @property int $salary_from

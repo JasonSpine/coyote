@@ -10,7 +10,6 @@ use Coyote\Job\Location;
 use Coyote\Services\UrlBuilder;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\View\View;
 use Neon;
 use Neon2\JobBoardInteractor;
 use Neon2\StripeSecrets;
@@ -18,14 +17,14 @@ use Neon2\StripeSecrets;
 class ServiceProvider extends RouteServiceProvider {
     public function register(): void {
         parent::register();
-        $this->app->instance(JobBoardInteractor::class,
-            new \Neon2\JobBoardInteractor(
+        $this->app->bind(JobBoardInteractor::class,
+            fn() => new \Neon2\JobBoardInteractor(
+                integration:$this->app->get(CoyoteIntegration::class),
                 countryGate:new EloquentCountryGate(),
                 stripeSecrets:new StripeSecrets(
                     config('services.stripe.key'),
                     config('services.stripe.secret'),
-                    config('services.stripe.endpoint_secret'),
-                ),
+                    config('services.stripe.endpoint_secret')),
                 testMode:false));
     }
 
@@ -36,7 +35,7 @@ class ServiceProvider extends RouteServiceProvider {
         $this->middleware(['web', 'geocode'])->group(function () {
             $this
                 ->name('neon.jobOffer.list')
-                ->get('/Praca', function (UserTheme $theme): View {
+                ->get('/Praca', function (UserTheme $theme) {
                     $neon = new Neon\NeonApplication('/neon');
                     $repository = app(JobElasticSearchRepository::class);
                     foreach ($repository->jobOffers() as $jobOffer) {
@@ -44,19 +43,18 @@ class ServiceProvider extends RouteServiceProvider {
                     }
                     return view('job.home_modern', [
                         'neonHead' => new StringHtml($neon->htmlMarkupHead()),
-                        'neonBody' => new StringHtml($neon->htmlMarkupBody($theme->isThemeDark() ? Neon\Theme::Dark : Neon\Theme::Light)),
+                        'neonBody' => new StringHtml($neon->htmlMarkupBody(
+                            $theme->isThemeDark() ? Neon\Theme::Dark : Neon\Theme::Light)),
                     ]);
                 });
         });
         $this->middleware(['web'])->group(function () {
-            $this->get('/Neon', function (JobBoardInteractor $interactor): string {
+            $this->get('/Neon', function (JobBoardInteractor $interactor, CoyoteIntegration $integration): string {
                 Gate::authorize('alpha-access');
-                $session = app('session');
-                $session->token();
                 return $interactor->jobBoardView(
                     auth()->id(),
                     auth()->user()?->email,
-                    $session->token());
+                    app('session')->token());
             });
         });
     }
