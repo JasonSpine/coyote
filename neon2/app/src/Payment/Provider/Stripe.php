@@ -13,7 +13,10 @@ class Stripe implements PaymentProvider {
 
     public function prepareCardPayment(int $amount, string $paymentId): PreparedPayment {
         try {
-            $intent = $this->createPaymentIntent($amount, ['paymentId' => $paymentId]);
+            $intent = $this->createPaymentIntent($amount, [
+                'paymentId' => $paymentId,
+                'id'        => $paymentId, // TODO remove usages of this
+            ]);
             return new PreparedPayment(true, $paymentId, $intent->client_secret);
         } catch (StripeApi\Exception\ApiErrorException) {
             return new PreparedPayment(false, $paymentId, null);

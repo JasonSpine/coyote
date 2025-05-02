@@ -10,23 +10,32 @@ use Coyote\Repositories\Criteria\EagerLoading;
 use Coyote\Repositories\Criteria\Job\IncludeSubscribers;
 use Coyote\Repositories\Eloquent\JobRepository;
 use Coyote\Services\Elasticsearch\Builders\Job\SearchBuilder;
+use Coyote\Services\Invoice;
 use Coyote\Services\Invoice\CalculatorFactory;
+use Coyote\Services\Invoice\VatRateCalculator;
 use Coyote\Services\SubmitJobService;
+use Illuminate\Database;
 use Illuminate\Support;
 use Neon2\Coyote\Integration;
 use Neon2\JobBoard;
+use Neon2\JobBoard\InvoiceInformation;
 use Neon2\JobBoard\JobOffer;
 use Neon2\JobBoard\PaymentIntent;
 use Neon2\JobBoard\PlanBundle;
+use Neon2\Payment\PreparedPayment;
+use Neon2\Payment\Provider\PaymentProvider;
 use Neon2\Request\JobOfferSubmit;
 
 readonly class CoyoteIntegration implements Integration {
     public function __construct(
-        private JobOfferMapper   $mapper,
-        private JobOfferUnmapper $unmapper,
-        private JobRepository    $job,
-        private SearchBuilder    $builder,
-        private SubmitJobService $submitJob,
+        private JobOfferMapper      $mapper,
+        private JobOfferUnmapper    $unmapper,
+        private JobRepository       $job,
+        private SearchBuilder       $builder,
+        private SubmitJobService    $submitJob,
+        private Invoice\Generator   $invoice,
+        private Database\Connection $database,
+        private PaymentProvider     $provider,
     ) {}
 
     /**
@@ -132,5 +141,44 @@ readonly class CoyoteIntegration implements Integration {
         $job->firm->fill($this->unmapper->companyInput($user, $jobOffer));
         $job->firm->save();
         $this->submitJob->submitJobOffer($user, $job);
+    }
+
+    public function preparePayment(int $userId, int $amount, string $paymentId, InvoiceInformation $invoiceInfo): PreparedPayment {
+        $payment = Coyote\Payment::query()->find($paymentId);
+        $calculator = CalculatorFactory::payment($payment);
+        $country = Coyote\Country::query()
+            ->where('code', $invoiceInfo->countryCode)
+            ->first();
+        $calculator->vatRate = new VatRateCalculator()->vatRate($country, $invoiceInfo->vatId);
+        if ($payment->job->firm_id) {
+            $payment->job->firm->update([
+                'invoice.vat_id'     => $invoiceInfo->vatId,
+                'invoice.country_id' => $country->id,
+            ]);
+        }
+        $this->database->transaction(function () use ($invoiceInfo, $userId, $payment, $calculator) {
+            $invoice = $this->invoice->create([
+                'name'        => $invoiceInfo->companyName,
+                'address'     => $invoiceInfo->companyAddress,
+                'postal_code' => $invoiceInfo->companyPostalCode,
+                'city'        => $invoiceInfo->companyCity,
+                'vat_id'      => $invoiceInfo->vatId,
+                'country_id'  => $this->coyoteCountryId($invoiceInfo->countryCode),
+                'user_id'     => $userId,
+            ], $payment, $calculator);
+            $payment->invoice()->associate($invoice);
+            $payment->save();
+        });
+        if (!$calculator->grossPrice()) {
+            abort(400);
+        }
+        return $this->provider->prepareCardPayment($payment->invoice->grossPrice() * 100, $payment->id);
+    }
+
+    private function coyoteCountryId(string $countryCode): int {
+        return Coyote\Country::query()
+            ->where('code', $countryCode)
+            ->first('id')
+            ->id;
     }
 }

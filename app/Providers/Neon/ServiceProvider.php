@@ -11,11 +11,15 @@ use Coyote\Services\UrlBuilder;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Neon;
 use Neon2\JobBoardInteractor;
+use Neon2\Payment\Provider\PaymentProvider;
+use Neon2\Payment\Provider\Stripe;
 use Neon2\StripeSecrets;
 
 class ServiceProvider extends RouteServiceProvider {
     public function register(): void {
         parent::register();
+        $this->app->instance(PaymentProvider::class,
+            new Stripe(config('services.stripe.secret')));
         $this->app->bind(JobBoardInteractor::class,
             fn() => new \Neon2\JobBoardInteractor(
                 integration:$this->app->get(CoyoteIntegration::class),

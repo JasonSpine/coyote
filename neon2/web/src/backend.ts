@@ -212,18 +212,11 @@ export interface BackendPaymentIntent {
 
 export type BackendJobOfferStatus = 'published'|'awaitingPayment';
 export type BackendPaymentStatus = 'awaitingPayment'|'paymentComplete'|'paymentFailed';
-export type BackendPreparedPayment = ProviderReady|ProviderNotReady;
 
-interface ProviderReady {
-  providerReady: true;
+export interface BackendPreparedPayment {
   paymentId: string;
-  paymentToken: string;
-}
-
-interface ProviderNotReady {
-  providerReady: false;
-  paymentId: string;
-  paymentToken: null;
+  providerReady: boolean;
+  paymentToken: string|null;
 }
 
 interface BackendPlanBundle {

@@ -49,6 +49,9 @@ $application->instance(JobBoardInteractor::class,
         integration:new \Neon2\Coyote\NeonIntegration(
             gate:new \Neon2\JobBoard\JobBoardGate(),
             planBundles:new \Neon2\JobBoard\PlanBundleGate(),
+            paymentService:new \Neon2\Payment\PaymentService(
+                new \Neon2\Payment\PaymentGate(),
+                new \Neon2\Payment\Provider\TestPaymentProvider()),
             testMode:true),
         countryGate:new Invoice\TestCountryGate(),
         stripeSecrets:null,

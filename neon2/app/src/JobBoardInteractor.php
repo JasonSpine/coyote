@@ -64,7 +64,7 @@ readonly class JobBoardInteractor {
         int                $amount,
         InvoiceInformation $invoiceInfo,
     ): PreparedPayment {
-        return $this->paymentService->preparePayment($userId, $amount, $paymentId);
+        return $this->integration->preparePayment($userId, $amount, $paymentId, $invoiceInfo);
     }
 
     public function redeemBundle(int $jobOfferId, int $userId): void {

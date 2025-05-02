@@ -50,7 +50,7 @@ export class PaymentService {
 
   private performPayment(payment: BackendPreparedPayment, paymentMethod: PaymentMethod): Promise<PaymentNotification> {
     if (payment.providerReady) {
-      return this.provider.performPayment(payment.paymentToken, paymentMethod);
+      return this.provider.performPayment(payment.paymentToken!, paymentMethod);
     }
     return Promise.resolve('unexpectedProviderResponse');
   }
