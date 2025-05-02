@@ -12,10 +12,9 @@ use Neon2\Request\HiringType;
 use Neon2\Request\JobOfferSubmit;
 
 class JobOfferUnmapper {
-    public function jobOfferInput(User $owner, JobOfferSubmit $jobOffer, string $jobOfferPlan): array {
+    public function jobOfferInput(User $owner, JobOfferSubmit $jobOffer): array {
         return [
             'user_id'         => $owner->id,
-            'plan_id'         => $this->planId($jobOfferPlan),
             'title'           => $jobOffer->title,
             'description'     => $jobOffer->description,
             'salary_from'     => $jobOffer->salaryRangeFrom,
@@ -64,7 +63,7 @@ class JobOfferUnmapper {
         ];
     }
 
-    private function planId(string $jobOfferPlan): int {
+    public function planId(string $jobOfferPlan): int {
         return Coyote\Plan::query()
             ->where('is_active', true)
             ->where('name', \ucFirst($jobOfferPlan))

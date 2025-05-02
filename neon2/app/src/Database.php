@@ -23,7 +23,9 @@ class Database {
         return (int)$this->pdo->lastInsertId();
     }
 
-    public function execute(string $query, array $arguments = []): void {
-        $this->pdo->prepare($query)->execute($arguments);
+    public function execute(string $query, array $arguments = []): int {
+        $statement = $this->pdo->prepare($query);
+        $statement->execute($arguments);
+        return $statement->rowCount();
     }
 }

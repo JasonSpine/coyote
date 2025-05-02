@@ -33,10 +33,13 @@ readonly class JobBoardGate {
     }
 
     public function updateJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void {
-        $this->database->execute('UPDATE job_offers SET fields = :fields WHERE id = :id;', [
+        $updated = $this->database->execute('UPDATE job_offers SET fields = :fields WHERE id = :id;', [
             'id'     => $jobOfferId,
             'fields' => \serialize($jobOffer),
         ]);
+        if ($updated !== 1) {
+            throw new \RuntimeException('Failed to update a job offer.');
+        }
     }
 
     public function publishJobOffer(int $jobOfferId): void {

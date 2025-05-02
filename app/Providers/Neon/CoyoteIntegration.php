@@ -89,7 +89,8 @@ readonly class CoyoteIntegration implements Integration {
     public function createJobOffer(string $jobOfferPlan, JobOfferSubmit $jobOffer): JobOffer {
         $user = $this->loggedUser();
         $job = new Job();
-        $job->fill($this->unmapper->jobOfferInput($user, $jobOffer, $jobOfferPlan));
+        $job->plan_id = $this->unmapper->planId($jobOfferPlan);
+        $job->fill($this->unmapper->jobOfferInput($user, $jobOffer));
         $job->firm->fill($this->unmapper->companyInput($user, $jobOffer));
         $job->firm->user_id = $user->id;
         $this->submitJob->submitJobOffer($user, $job);
@@ -118,5 +119,18 @@ readonly class CoyoteIntegration implements Integration {
             $payment->id,
             (int)($calculator->netPrice() * 100),
             (int)($calculator->vatPrice() * 100));
+    }
+
+    public function updateJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void {
+        $user = $this->loggedUser();
+        $job = Job::query()->find($jobOfferId);
+        if (!$user->can('update', $job)) {
+            abort(403);
+        }
+        $job->fill($this->unmapper->jobOfferInput($user, $jobOffer));
+        $job->firm->user_id = $user->id;
+        $job->firm->fill($this->unmapper->companyInput($user, $jobOffer));
+        $job->firm->save();
+        $this->submitJob->submitJobOffer($user, $job);
     }
 }

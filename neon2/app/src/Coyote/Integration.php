@@ -14,4 +14,6 @@ interface Integration {
     public function planBundle(?int $userId): PlanBundle;
 
     public function createJobOffer(string $jobOfferPlan, JobOfferSubmit $jobOffer): JobOffer;
+
+    public function updateJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void;
 }

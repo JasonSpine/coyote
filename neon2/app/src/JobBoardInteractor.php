@@ -55,7 +55,7 @@ readonly class JobBoardInteractor {
     }
 
     public function updateJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void {
-        $this->jobBoardGate->updateJobOffer($jobOfferId, $jobOffer);
+        $this->integration->updateJobOffer($jobOfferId, $jobOffer);
     }
 
     public function preparePayment(

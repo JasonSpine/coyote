@@ -42,4 +42,8 @@ readonly class NeonIntegration implements Integration {
     public function createJobOffer(string $jobOfferPlan, JobOfferSubmit $jobOffer): JobOffer {
         return $this->board->createJobOffer($jobOfferPlan, $jobOffer);
     }
+
+    public function updateJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void {
+        $this->gate->updateJobOffer($jobOfferId, $jobOffer);
+    }
 }
