@@ -1,16 +1,24 @@
 <?php
 namespace Neon2\Coyote;
 
+use Neon2\JobBoard;
 use Neon2\JobBoard\JobBoardGate;
 use Neon2\JobBoard\JobOffer;
 use Neon2\JobBoard\PlanBundle;
 use Neon2\JobBoard\PlanBundleGate;
+use Neon2\Payment\PaymentGate;
+use Neon2\Request\JobOfferSubmit;
 
 readonly class NeonIntegration implements Integration {
+    private JobBoard $board;
+
     public function __construct(
         private JobBoardGate   $gate,
         private PlanBundleGate $planBundles,
-    ) {}
+        bool                   $testMode,
+    ) {
+        $this->board = new JobBoard(new PaymentGate(), $gate, new JobBoard\PlanBundleGate(), $testMode);
+    }
 
     /**
      * @return JobOffer[]
@@ -29,5 +37,9 @@ readonly class NeonIntegration implements Integration {
                 $this->planBundles->planBundleName($userId));
         }
         return PlanBundle::notOwned();
+    }
+
+    public function createJobOffer(string $jobOfferPlan, JobOfferSubmit $jobOffer): JobOffer {
+        return $this->board->createJobOffer($jobOfferPlan, $jobOffer);
     }
 }

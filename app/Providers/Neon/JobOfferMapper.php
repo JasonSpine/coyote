@@ -9,22 +9,12 @@ use Neon\LegalForm;
 use Neon\Rate;
 use Neon\WorkExperience;
 use Neon\WorkMode;
-use Neon2\JobBoard;
 use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
 use Neon2\Request\JobOfferSubmit;
 
 readonly class JobOfferMapper {
-    public function neonJobOffer(Coyote\Job $jobOffer): JobBoard\JobOffer {
-        return new JobBoard\JobOffer(
-            $jobOffer->id,
-            $jobOffer->deadline + 1,
-            JobBoard\JobOfferStatus::Published,
-            $this->jobOfferFields($jobOffer),
-            null);
-    }
-
-    private function jobOfferFields(Coyote\Job $jobOffer): JobOfferSubmit {
+    public function jobOfferFields(Coyote\Job $jobOffer): JobOfferSubmit {
         return new JobOfferSubmit(
             $jobOffer->title,
             $jobOffer->description,
@@ -33,11 +23,11 @@ readonly class JobOfferMapper {
             !$jobOffer->is_gross,
             Currency::from($jobOffer->currency->name),
             Rate::from($jobOffer->rate),
-            $this->locations($jobOffer),
-            $this->tagNames($jobOffer),
-            $this->workMode($jobOffer),
-            $this->legalForm($jobOffer),
-            $this->workExperience($jobOffer),
+            $this->neonLocations($jobOffer),
+            $this->neonTagNames($jobOffer),
+            $this->neonWorkMode($jobOffer),
+            $this->neonLegalForm($jobOffer),
+            $this->neonWorkExperience($jobOffer),
             $jobOffer->enable_apply ? ApplicationMode::_4programmers : ApplicationMode::ExternalAts,
             $jobOffer->email,
             $jobOffer->application_url,
@@ -68,7 +58,7 @@ readonly class JobOfferMapper {
             ->toArray();
     }
 
-    private function workExperience(Coyote\Job $jobOffer): ?WorkExperience {
+    private function neonWorkExperience(Coyote\Job $jobOffer): ?WorkExperience {
         return match ($jobOffer->seniority) {
             'student' => WorkExperience::Intern,
             'junior'  => WorkExperience::Junior,
@@ -80,7 +70,7 @@ readonly class JobOfferMapper {
         };
     }
 
-    private function legalForm(Coyote\Job $jobOffer): LegalForm {
+    private function neonLegalForm(Coyote\Job $jobOffer): LegalForm {
         return match ($jobOffer->employment) {
             'employment' => LegalForm::EmploymentContract,
             'mandatory'  => LegalForm::ContractOfMandate,
@@ -92,13 +82,11 @@ readonly class JobOfferMapper {
     /**
      * @return string[]
      */
-    private function tagNames(Coyote\Job $jobOffer): array {
-        return $jobOffer->tags
-            ->map(fn(Coyote\Tag $tag) => $tag->real_name ?? $tag->name)
-            ->toArray();
+    private function neonTagNames(Coyote\Job $jobOffer): array {
+        return $jobOffer->tags->pluck('name')->toArray();
     }
 
-    private function workMode(Job $jobOffer): WorkMode {
+    private function neonWorkMode(Job $jobOffer): WorkMode {
         if (!$jobOffer->is_remote) {
             return WorkMode::Stationary;
         }
@@ -108,7 +96,7 @@ readonly class JobOfferMapper {
         return WorkMode::Hybrid;
     }
 
-    private function locations(Job $jobOffer): array {
+    private function neonLocations(Job $jobOffer): array {
         return $jobOffer->locations
             ->map(fn(Location $location): string => $location->city)
             ->filter(fn(string $city) => !empty($city))

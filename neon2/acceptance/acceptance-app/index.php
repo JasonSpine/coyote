@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades;
 use Neon2\Invoice;
@@ -12,6 +13,7 @@ require __DIR__ . '/../../app/vendor/autoload.php';
 
 $application = Application::configure(__DIR__ . '/laravel')
     ->withProviders([RouteServiceProvider::class])
+    ->withMiddleware(fn(Middleware $middleware) => $middleware->group('web', []))
     ->withRouting(function () {
         Facades\Route::get('/', function (JobBoardInteractor $interactor) {
             return $interactor->jobBoardView(
@@ -44,7 +46,10 @@ $application = Application::configure(__DIR__ . '/laravel')
     ->create();
 $application->instance(JobBoardInteractor::class,
     new Neon2\JobBoardInteractor(
-        integration:new \Neon2\Coyote\NeonIntegration(new \Neon2\JobBoard\JobBoardGate()),
+        integration:new \Neon2\Coyote\NeonIntegration(
+            gate:new \Neon2\JobBoard\JobBoardGate(),
+            planBundles:new \Neon2\JobBoard\PlanBundleGate(),
+            testMode:true),
         countryGate:new Invoice\TestCountryGate(),
         stripeSecrets:null,
         testMode:true));

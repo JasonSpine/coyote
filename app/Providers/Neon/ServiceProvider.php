@@ -47,7 +47,7 @@ class ServiceProvider extends RouteServiceProvider {
                     ]);
                 });
         });
-        $this->middleware(['web'])->group(function () {
+        $this->middleware(['web', 'geocode'])->group(function () {
             $this->get('/Neon', function (JobBoardInteractor $interactor, CoyoteIntegration $integration): string {
                 return $interactor->jobBoardView(
                     auth()->id(),

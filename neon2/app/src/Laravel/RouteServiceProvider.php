@@ -30,47 +30,49 @@ function valid(string $countryCode, ?string $vatId): bool {
 
 class RouteServiceProvider extends ServiceProvider {
     public function boot(): void {
-        Facades\Route::post('/neon2/job-offers', function (JobBoardInteractor $listener) {
-            $createdJobOffer = $listener->createJobOffer(
-                request()->get('jobOfferPlan'),
-                $this->requestJobOfferSubmit(request()));
-            return response()->json($createdJobOffer, status:201);
-        });
-        Facades\Route::patch('/neon2/job-offers', function (JobBoardInteractor $listener) {
-            $listener->updateJobOffer(
-                request()->get('jobOfferId'),
-                $this->requestJobOfferSubmit(request()));
-            return response()->json([], status:201);
-        });
-        Facades\Route::post('/neon2/job-offers/payment', function (JobBoardInteractor $listener) {
-            $invoiceInfo = $this->requestInvoiceInfo(request());
-            if (!valid($invoiceInfo->countryCode, $invoiceInfo->vatId)) {
-                return response()->json(['status' => 'failedInvalidVatId'], status:422);
-            }
-            $preparedPayment = $listener->preparePayment(
-                request()->get('userId'),
-                request()->get('paymentId'),
-                2000,
-                $invoiceInfo);
-            return response()->json([
-                'status'          => 'success',
-                'preparedPayment' => $preparedPayment,
-            ], status:201);
-        });
-        Facades\Route::post('/neon2/job-offers/redeem-bundle', function (JobBoardInteractor $listener) {
-            $listener->redeemBundle(
-                request()->get('jobOfferId'),
-                request()->get('userId'));
-            return response()->json([], status:201);
-        });
-        Facades\Route::post('/neon2/webhook', function (JobBoardInteractor $listener) {
-            $listener->paymentWebhook(
-                \file_get_contents('php://input'),
-                $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '');
-        });
-        Facades\Route::get('/neon2/status', function (JobBoardInteractor $listener) {
-            $status = $listener->paymentStatus(request()->query->get('paymentId'));
-            return response()->json($status);
+        Facades\Route::middleware(['web'])->group(function () {
+            Facades\Route::post('/neon2/job-offers', function (JobBoardInteractor $listener) {
+                $createdJobOffer = $listener->createJobOffer(
+                    request()->get('jobOfferPlan'),
+                    $this->requestJobOfferSubmit(request()));
+                return response()->json($createdJobOffer, status:201);
+            });
+            Facades\Route::patch('/neon2/job-offers', function (JobBoardInteractor $listener) {
+                $listener->updateJobOffer(
+                    request()->get('jobOfferId'),
+                    $this->requestJobOfferSubmit(request()));
+                return response()->json([], status:201);
+            });
+            Facades\Route::post('/neon2/job-offers/payment', function (JobBoardInteractor $listener) {
+                $invoiceInfo = $this->requestInvoiceInfo(request());
+                if (!valid($invoiceInfo->countryCode, $invoiceInfo->vatId)) {
+                    return response()->json(['status' => 'failedInvalidVatId'], status:422);
+                }
+                $preparedPayment = $listener->preparePayment(
+                    request()->get('userId'),
+                    request()->get('paymentId'),
+                    2000,
+                    $invoiceInfo);
+                return response()->json([
+                    'status'          => 'success',
+                    'preparedPayment' => $preparedPayment,
+                ], status:201);
+            });
+            Facades\Route::post('/neon2/job-offers/redeem-bundle', function (JobBoardInteractor $listener) {
+                $listener->redeemBundle(
+                    request()->get('jobOfferId'),
+                    request()->get('userId'));
+                return response()->json([], status:201);
+            });
+            Facades\Route::post('/neon2/webhook', function (JobBoardInteractor $listener) {
+                $listener->paymentWebhook(
+                    \file_get_contents('php://input'),
+                    $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '');
+            });
+            Facades\Route::get('/neon2/status', function (JobBoardInteractor $listener) {
+                $status = $listener->paymentStatus(request()->query->get('paymentId'));
+                return response()->json($status);
+            });
         });
     }
 

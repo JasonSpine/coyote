@@ -26,10 +26,10 @@ readonly class JobBoardInteractor {
     private PaymentGate $gate;
 
     public function __construct(
-        Integration    $integration,
-        CountryGate    $countryGate,
-        ?StripeSecrets $stripeSecrets,
-        bool           $testMode,
+        private Integration $integration,
+        CountryGate         $countryGate,
+        ?StripeSecrets      $stripeSecrets,
+        bool                $testMode,
     ) {
         $this->gate = new PaymentGate();
         $this->jobBoardGate = new JobBoardGate();
@@ -51,7 +51,7 @@ readonly class JobBoardInteractor {
     }
 
     public function createJobOffer(string $jobOfferPlan, JobOfferSubmit $jobOffer): JobOffer {
-        return $this->board->createJobOffer($jobOfferPlan, $jobOffer);
+        return $this->integration->createJobOffer($jobOfferPlan, $jobOffer);
     }
 
     public function updateJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void {
