@@ -138,7 +138,6 @@ function redeemBundle(jobOfferId: number): void {
 
 function selectPlan(pricingPlan: PricingPlan): void {
   emit('select-plan', pricingPlan);
-  navigate('form');
 }
 
 function showJobOfferForm(): void {

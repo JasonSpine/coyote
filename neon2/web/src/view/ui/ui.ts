@@ -40,6 +40,7 @@ export interface ViewListener {
   redeemBundle: (jobOfferId: number) => void;
   managePaymentMethod: (action: 'mount'|'unmount', cssSelector?: string) => void;
   vatDetailsChanged: (countryCode: string, vatId: string) => void;
+  assertUserAuthenticated: () => boolean;
 }
 
 export interface UserInterface {
@@ -174,7 +175,16 @@ export class VueUi implements UserInterface {
         that.navigationListeners.forEach(listener => listener.showJobOfferForm());
       },
       onSelectPlan(plan: PricingPlan): void {
-        that.vueState.pricingPlan = plan;
+        let preventAction = false;
+        that.viewListeners.forEach(listener => {
+          if (!listener.assertUserAuthenticated()) {
+            preventAction = true;
+          }
+        });
+        if (!preventAction) {
+          that.vueState.pricingPlan = plan;
+          that.setScreen('form');
+        }
       },
       onCreate(plan: PricingPlan, jobOffer: SubmitJobOffer): void {
         that.viewListeners.forEach(listener => listener.createJob(plan, jobOffer));

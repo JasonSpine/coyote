@@ -12,7 +12,7 @@ readonly class JobBoardView {
         $this->vite = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/');
     }
 
-    public function jobBoardView(bool $isTestMode, int $userId, string $userEmail, string $csrfToken): string {
+    public function jobBoardView(bool $isTestMode, ?int $userId, ?string $userEmail, string $csrfToken): string {
         $backendInput = $this->backendInput($isTestMode, $userId, $userEmail, $csrfToken);
         $entryUrl = "/neon2/static/{$this->vite->scriptUrl()}";
         $styleUrl = "/neon2/static/{$this->vite->styleUrl()}";
@@ -47,7 +47,7 @@ readonly class JobBoardView {
         return \json_encode($arr, \JSON_THROW_ON_ERROR);
     }
 
-    private function backendInput(bool $isTestMode, int $userId, string $userEmail, string $csrfToken): string {
+    private function backendInput(bool $isTestMode, ?int $userId, ?string $userEmail, string $csrfToken): string {
         return $this->encodeBackendInput([
             'jobOffers'                => $this->integration->listJobOffers(),
             'testMode'                 => $isTestMode,

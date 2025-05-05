@@ -100,11 +100,14 @@ export class JobBoardBackend {
   }
 
   private userId(): number {
+    if (!this.backendInput.userId) {
+      throw new Error('Failed to retrieve userId of an unauthenticated user.');
+    }
     return this.backendInput.userId;
   }
 
   jobOfferApplicationEmail(): string {
-    return this.backendInput.jobOfferApplicationEmail;
+    return this.backendInput.jobOfferApplicationEmail ?? '';
   }
 
   testMode(): boolean {
@@ -142,6 +145,10 @@ export class JobBoardBackend {
       .then(response => response.json())
       .then(uploadedImage => uploadedImage.url);
   }
+
+  isAuthenticated(): boolean {
+    return this.backendInput.userId !== null;
+  }
 }
 
 function request(method: string, url: string, body: object) {
@@ -156,8 +163,8 @@ export interface BackendInput {
   jobOffers: BackendJobOffer[];
   testMode: boolean;
   planBundle: BackendPlanBundle;
-  userId: number;
-  jobOfferApplicationEmail: string;
+  userId: number|null;
+  jobOfferApplicationEmail: string|null;
   csrfToken: string;
   stripePublishableKey: string|null;
   paymentInvoiceCountries: Array<{countryCode: string; countryName: string}>;

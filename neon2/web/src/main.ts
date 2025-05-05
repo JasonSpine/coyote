@@ -134,6 +134,13 @@ view.addEventListener({
       paymentProvider.unmountCardInput();
     }
   },
+  assertUserAuthenticated(): boolean {
+    if (backend.isAuthenticated()) {
+      return true;
+    }
+    window.location.href = '/Login';
+    return false;
+  },
 });
 
 payments.addEventListener({

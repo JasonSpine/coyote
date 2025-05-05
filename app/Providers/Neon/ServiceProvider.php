@@ -9,7 +9,6 @@ use Coyote\Job;
 use Coyote\Job\Location;
 use Coyote\Services\UrlBuilder;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
-use Illuminate\Support\Facades\Gate;
 use Neon;
 use Neon2\JobBoardInteractor;
 use Neon2\StripeSecrets;
@@ -50,7 +49,6 @@ class ServiceProvider extends RouteServiceProvider {
         });
         $this->middleware(['web'])->group(function () {
             $this->get('/Neon', function (JobBoardInteractor $interactor, CoyoteIntegration $integration): string {
-                Gate::authorize('alpha-access');
                 return $interactor->jobBoardView(
                     auth()->id(),
                     auth()->user()?->email,
