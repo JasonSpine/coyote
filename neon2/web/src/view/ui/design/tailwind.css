@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(html[data-theme=dark], html[data-theme=dark] *));
+
 :root {
   --color-body: var(--color-navy-050);
   --color-on-primary: white;

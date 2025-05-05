@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue';
+import {computed, onMounted, watch} from 'vue';
 import {JobOffer} from '../../jobBoard';
 import {InitiatePayment, PricingPlan, SubmitJobOffer} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
@@ -98,6 +98,23 @@ interface Emit {
 
 function navigate(newScreen: Screen, id?: number): void {
   emit('navigate', newScreen, id || null);
+}
+
+const darkModePreference = window.matchMedia('(prefers-color-scheme: dark)');
+onMounted(() => changeThemeIfApplicable(darkModePreference.matches));
+darkModePreference.addEventListener('change', (event) => changeThemeIfApplicable(event.matches));
+watch(() => props.screen, () => changeThemeIfApplicable(darkModePreference.matches));
+
+function screenHasDarkTheme(): boolean {
+  return ['edit', 'form', 'payment', 'pricing'].indexOf(props.screen) === -1;
+}
+
+function changeThemeIfApplicable(darkTheme: boolean): void {
+  changeTheme(screenHasDarkTheme() && darkTheme);
+}
+
+function changeTheme(darkTheme: boolean): void {
+  document.documentElement.dataset.theme = darkTheme ? 'dark' : 'light';
 }
 
 const currentJobOffer = computed<JobOffer>(() => {
