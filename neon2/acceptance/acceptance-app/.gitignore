@@ -1,7 +1,0 @@
-# Composer
-composer.lock
-composer.phar
-vendor/
-
-# Acceptance app logs
-ERROR.*.log

@@ -1,6 +1,7 @@
 <?php
 namespace Neon2\Laravel;
 
+use Coyote\Rules\VatIdRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades;
 use Illuminate\Support\ServiceProvider;
@@ -9,69 +10,63 @@ use Neon\LegalForm;
 use Neon\Rate;
 use Neon\WorkExperience;
 use Neon\WorkMode;
+use Neon2\Coyote\Integration;
 use Neon2\JobBoard\InvoiceInformation;
-use Neon2\JobBoardInteractor;
+use Neon2\Payment\PaymentStatus;
 use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
 use Neon2\Request\JobOfferSubmit;
 
-function valid(string $countryCode, ?string $vatId): bool {
-    if (in_array($countryCode, ['US', 'JP', 'UA', 'SG'])) {
-        return $vatId === null;
-    }
-    if ($countryCode === 'PL') {
-        return \strLen($vatId) === 10;
-    }
-    if ($countryCode === 'DE') {
-        return \strLen($vatId) === 9;
-    }
-    return false;
-}
-
 class RouteServiceProvider extends ServiceProvider {
     public function boot(): void {
         Facades\Route::middleware(['web'])->group(function () {
-            Facades\Route::post('/neon2/job-offers', function (JobBoardInteractor $listener) {
-                $createdJobOffer = $listener->createJobOffer(
+            Facades\Route::post('/neon2/job-offers', function (Integration $integration) {
+                $createdJobOffer = $integration->createJobOffer(
                     request()->get('jobOfferPlan'),
                     $this->requestJobOfferSubmit(request()));
                 return response()->json($createdJobOffer, status:201);
             });
-            Facades\Route::patch('/neon2/job-offers', function (JobBoardInteractor $listener) {
-                $listener->updateJobOffer(
+            Facades\Route::patch('/neon2/job-offers', function (Integration $integration) {
+                $integration->updateJobOffer(
                     request()->get('jobOfferId'),
                     $this->requestJobOfferSubmit(request()));
                 return response()->json([], status:201);
             });
-            Facades\Route::post('/neon2/job-offers/payment', function (JobBoardInteractor $listener) {
+            Facades\Route::post('/neon2/job-offers/payment', function (Integration $integration) {
                 $invoiceInfo = $this->requestInvoiceInfo(request());
-                if (!valid($invoiceInfo->countryCode, $invoiceInfo->vatId)) {
-                    return response()->json(['status' => 'failedInvalidVatId'], status:422);
+                $rule = new VatIdRule($invoiceInfo->countryCode);
+                if ($invoiceInfo->vatId) {
+                    if (!$rule->passes('', $invoiceInfo->vatId)) {
+                        return response()->json(['status' => 'failedInvalidVatId'], status:422);
+                    }
                 }
-                $preparedPayment = $listener->preparePayment(
-                    request()->get('userId'),
+                $preparedPayment = $integration->preparePayment(
+                    auth()->id(),
                     request()->get('paymentId'),
-                    2000,
                     $invoiceInfo);
                 return response()->json([
                     'status'          => 'success',
                     'preparedPayment' => $preparedPayment,
                 ], status:201);
             });
-            Facades\Route::post('/neon2/job-offers/redeem-bundle', function (JobBoardInteractor $listener) {
-                $listener->redeemBundle(
-                    request()->get('jobOfferId'),
-                    request()->get('userId'));
+            Facades\Route::post('/neon2/job-offers/redeem-bundle', function (Integration $integration) {
+                $integration->redeemBundle(
+                    auth()->id(),
+                    request()->get('jobOfferId'));
                 return response()->json([], status:201);
             });
-            Facades\Route::post('/neon2/webhook', function (JobBoardInteractor $listener) {
-                $listener->paymentWebhook(
+            Facades\Route::post('/neon2/webhook', function (Integration $integration) {
+                $integration->paymentWebhook(
                     \file_get_contents('php://input'),
                     $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '');
             });
-            Facades\Route::get('/neon2/status', function (JobBoardInteractor $listener) {
-                $status = $listener->paymentStatus(request()->query->get('paymentId'));
-                return response()->json($status);
+            Facades\Route::get('/neon2/status', function (Integration $integration) {
+                $paymentId = request()->query->get('paymentId');
+                return response()->json(match ($integration->paymentStatus($paymentId)) {
+                    PaymentStatus::Completed => 'paymentComplete',
+                    PaymentStatus::Failed    => 'paymentFailed',
+                    PaymentStatus::Awaiting  => 'awaitingPayment',
+                });
             });
         });
     }

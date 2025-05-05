@@ -1,4 +1,3 @@
-
 import {PaymentMethod, PaymentNotification, PaymentProvider} from './PaymentProvider';
 
 export class TestPaymentProvider implements PaymentProvider {
@@ -58,13 +57,29 @@ export class TestPaymentProvider implements PaymentProvider {
   }
 }
 
-async function callTestPaymentWebhook(body: {
-  paymentToken: string,
-  paymentStatus: 'completed'|'failed'
-}): Promise<void> {
-  await fetch('/neon2/webhook', {
+type PaymentStatus = 'completed'|'failed';
+
+async function callTestPaymentWebhook(body: {paymentToken: string, paymentStatus: PaymentStatus}): Promise<void> {
+  for (let i = 0; i < 10; i++) {
+    const responseOk = await tryRequestTestPaymentWebhook(body);
+    if (responseOk) {
+      return;
+    }
+    await wait(500);
+  }
+}
+
+async function tryRequestTestPaymentWebhook(body: object): Promise<boolean> {
+  const result = await fetch('/neon2/webhook', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(body),
+  });
+  return result.ok;
+}
+
+function wait(timeout: number): Promise<void> {
+  return new Promise(resolve => {
+    setTimeout(() => resolve(), timeout);
   });
 }

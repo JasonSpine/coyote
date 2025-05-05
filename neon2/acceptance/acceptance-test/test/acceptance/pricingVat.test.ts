@@ -21,7 +21,7 @@ describe('Payment includes VAT.', () => {
       });
     });
     test('Given a country outside of EU, VAT is included.', async (dsl: Dsl) => {
-      await dsl.fillInvoice({countryCode: 'UA', vatId: ''});
+      await dsl.fillInvoice({countryCode: 'SG', vatId: ''});
       await dsl.assertInvoiceVatTax('included');
     });
   });

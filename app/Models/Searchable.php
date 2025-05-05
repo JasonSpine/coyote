@@ -8,15 +8,18 @@ use Elasticsearch;
 /**
  * @deprecated
  */
-trait Searchable
-{
-    public function search(QueryBuilderInterface $queryBuilder): ResultSet
-    {
+trait Searchable {
+    /**
+     * @deprecated
+     */
+    public function search(QueryBuilderInterface $queryBuilder): ResultSet {
         return $this->searchBody($queryBuilder->build());
     }
 
-    private function searchBody(array $body): ResultSet
-    {
+    /**
+     * @deprecated
+     */
+    public function searchBody(array $body): ResultSet {
         return new ResultSet($this->elasticsearchClient()->search([
             'index' => config('elasticsearch.default_index'),
             'type'  => '_doc',
@@ -25,16 +28,14 @@ trait Searchable
         ]));
     }
 
-    private function modelId(): array
-    {
+    private function modelId(): array {
         if ($this->getKey()) {
             return ['id' => str_singular($this->getTable()) . '_' . $this->getKey()];
         }
         return [];
     }
 
-    private function elasticsearchClient(): Elasticsearch\Client
-    {
+    private function elasticsearchClient(): Elasticsearch\Client {
         return app('elasticsearch');
     }
 

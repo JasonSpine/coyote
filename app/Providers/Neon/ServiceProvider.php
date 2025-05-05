@@ -9,26 +9,38 @@ use Coyote\Job;
 use Coyote\Job\Location;
 use Coyote\Services\UrlBuilder;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use Neon;
-use Neon2\JobBoardInteractor;
+use Neon2\Coyote\Integration;
+use Neon2\Invoice\CountryGate;
+use Neon2\JobBoardView;
 use Neon2\Payment\Provider\PaymentProvider;
+use Neon2\Payment\Provider\PaymentWebhook;
 use Neon2\Payment\Provider\Stripe;
+use Neon2\Payment\Provider\StripeWebhook;
+use Neon2\Payment\Provider\TestPaymentProvider;
+use Neon2\Payment\Provider\TestPaymentWebhook;
+use Neon2\StripePublicKey;
 use Neon2\StripeSecrets;
 
 class ServiceProvider extends RouteServiceProvider {
     public function register(): void {
         parent::register();
-        $this->app->instance(PaymentProvider::class,
-            new Stripe(config('services.stripe.secret')));
-        $this->app->bind(JobBoardInteractor::class,
-            fn() => new \Neon2\JobBoardInteractor(
-                integration:$this->app->get(CoyoteIntegration::class),
-                countryGate:new EloquentCountryGate(),
-                stripeSecrets:new StripeSecrets(
-                    config('services.stripe.key'),
-                    config('services.stripe.secret'),
-                    config('services.stripe.endpoint_secret')),
-                testMode:false));
+        $this->app->bind(CountryGate::class, EloquentCountryGate::class);
+        $this->app->bind(Integration::class, CoyoteIntegration::class);
+        if ($this->isTestMode()) {
+            $this->app->bind(PaymentProvider::class, TestPaymentProvider::class);
+            $this->app->bind(PaymentWebhook::class, TestPaymentWebhook::class);
+            $this->app->instance(StripePublicKey::class, new StripePublicKey(null));
+        } else {
+            $secrets = new StripeSecrets(
+                config('services.stripe.key'),
+                config('services.stripe.secret'),
+                config('services.stripe.endpoint_secret'));
+            $this->app->instance(PaymentProvider::class, new Stripe($secrets->secretKey));
+            $this->app->instance(PaymentWebhook::class, new StripeWebhook($secrets->webhookSigningSecret));
+            $this->app->instance(StripePublicKey::class, new StripePublicKey($secrets->publishableKey));
+        }
     }
 
     public function loadRoutes(): void {
@@ -52,8 +64,16 @@ class ServiceProvider extends RouteServiceProvider {
                 });
         });
         $this->middleware(['web', 'geocode'])->group(function () {
-            $this->get('/Neon', function (JobBoardInteractor $interactor, CoyoteIntegration $integration): string {
-                return $interactor->jobBoardView(
+            $this->get('/Neon', function (Integration $integration, CountryGate $countries, StripePublicKey $stripePublicKey): string {
+                Gate::authorize('alpha-access');
+                if ($this->isTestMode()) {
+                    if (\request()->query->has('revoke-bundle')) {
+                        $integration->revokePlanBundle(auth()->id());
+                    }
+                }
+                $jobBoardView = new JobBoardView($integration, $countries, $stripePublicKey->publishableKey);
+                return $jobBoardView->jobBoardView(
+                    $this->isTestMode(),
                     auth()->id(),
                     auth()->user()?->email,
                     app('session')->token());
@@ -162,5 +182,9 @@ class ServiceProvider extends RouteServiceProvider {
 
     private function isNew(Job $jobOffer): bool {
         return new \Carbon\Carbon($jobOffer->boost_at)->diffInDays(Carbon::now()) <= 2;
+    }
+
+    private function isTestMode(): bool {
+        return env('ACCEPTANCE_TEST', 'production') === 'acceptance';
     }
 }

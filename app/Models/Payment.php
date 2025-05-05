@@ -21,11 +21,11 @@ use Ramsey\Uuid;
  * @property Coupon $coupon
  * @property string $session_id
  */
-class Payment extends Model
-{
+class Payment extends Model {
     const NEW = 1;
     const PENDING = 2;
     const PAID = 3;
+    const FAILED = 4;
 
     /**
      * @var bool
@@ -43,8 +43,8 @@ class Payment extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'starts_at' => 'datetime',
-        'ends_at' => 'datetime',
+        'starts_at'  => 'datetime',
+        'ends_at'    => 'datetime',
     ];
 
     /**
@@ -57,8 +57,7 @@ class Payment extends Model
      */
     protected $attributes = ['status_id' => self::NEW];
 
-    public static function boot()
-    {
+    public static function boot() {
         parent::boot();
 
         static::creating(function (Payment $payment) {
@@ -66,43 +65,40 @@ class Payment extends Model
         });
     }
 
-    /**
-     * @return array
-     */
-    public static function getPaymentStatusesList()
-    {
-        return [Payment::NEW => 'Nowy', Payment::PENDING => 'W trakcie realizacji', Payment::PAID => 'Zapłacono'];
+    public static function getPaymentStatusesList(): array {
+        return [
+            Payment::NEW     => 'Nowy',
+            Payment::PENDING => 'W trakcie realizacji',
+            Payment::PAID    => 'Zapłacono',
+            Payment::FAILED  => 'Usiłowana',
+        ];
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function job()
-    {
+    public function job() {
         return $this->belongsTo(Job::class)->withTrashed();
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function plan()
-    {
+    public function plan() {
         return $this->belongsTo(Plan::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function invoice()
-    {
+    public function invoice() {
         return $this->belongsTo(Invoice::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function coupon()
-    {
+    public function coupon() {
         return $this->belongsTo(Coupon::class);
     }
 }

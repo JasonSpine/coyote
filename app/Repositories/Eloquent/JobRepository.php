@@ -10,6 +10,7 @@ use Illuminate\Database\Query\JoinClause;
 
 /**
  * @method mixed search(\Coyote\Services\Elasticsearch\QueryBuilderInterface $queryBuilder)
+ * @method mixed searchBody(array $body)
  * @method $this withTrashed()
  */
 class JobRepository extends Repository implements JobRepositoryInterface

@@ -504,7 +504,10 @@ class Job extends Model
      */
     public function getUnpaidPayment()
     {
-        return $this->payments()->where('status_id', Payment::NEW)->orderBy('created_at', 'DESC')->first();
+        return $this->payments()
+            ->where('status_id', Payment::NEW)
+            ->orderBy('created_at', 'DESC')
+            ->first();
     }
 
     /**

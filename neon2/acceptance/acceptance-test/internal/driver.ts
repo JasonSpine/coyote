@@ -12,10 +12,6 @@ export class Driver {
     this.web = new WebDriver(page);
   }
 
-  async loadApplication(userId: number): None {
-    await this.web.navigate('/?userId=' + userId.toString());
-  }
-
   userId(): number {
     return parseInt(this.web.queryParam('userId'));
   }

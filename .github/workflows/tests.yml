@@ -20,12 +20,13 @@ jobs:
         run: cp .env.default .env
 
       - name: Run docker containers
-        run: docker compose -f docker-compose.yaml -f docker-compose.testing.yaml up -d
+        run: docker compose -f docker-compose.yaml -f docker-compose.acceptance.yaml up -d
         env:
           STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
           STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
           STRIPE_ENDPOINT_SECRET: ${{ secrets.STRIPE_ENDPOINT_SECRET }}
           GOOGLE_MAPS_KEY: ${{ secrets.GOOGLE_MAPS_KEY }}
+          ACCEPTANCE_TEST: acceptance
 
       - name: Cache composer dependencies
         uses: actions/cache@v4
@@ -45,8 +46,14 @@ jobs:
       - name: Install packages
         run: make install
 
-      - name: Run server unit and legacy tests
-        run: docker compose exec -T -u nginx php php vendor/bin/phpunit --testsuite Unit,Legacy
-
       - name: Run client unit tests
-        run: docker compose exec -T php bash -c 'cd neon/web/ && yarn run test'
+        run: docker compose exec -T php bash -c 'cd neon2/web/ && yarn run vitest'
+
+      - name: Run client static type check
+        run: docker compose exec -T php bash -c 'cd neon2/web/ && yarn tsc --noEmit'
+
+      - name: Bundle the client
+        run: docker compose exec -T php bash -c 'cd neon2/web/ && yarn install && yarn vite build --mode production'
+
+      - name: Run acceptance tests
+        run: docker compose exec -T php bash -c 'cd neon2/acceptance/acceptance-test/ && yarn install && yarn run playwright install chrome && yarn run playwright test'

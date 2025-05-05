@@ -1,14 +1,19 @@
 <?php
 namespace Coyote\Providers\Neon;
 
+use Carbon\Carbon;
 use Coyote;
+use Coyote\Events\JobWasSaved;
 use Coyote\Events\PaymentPaid;
 use Coyote\Job;
+use Coyote\Listeners\BoostJobOffer;
 use Coyote\Models\UserPlanBundle;
 use Coyote\Notifications\Job\CreatedNotification;
+use Coyote\Payment;
 use Coyote\Repositories\Criteria\EagerLoading;
 use Coyote\Repositories\Criteria\Job\IncludeSubscribers;
 use Coyote\Repositories\Eloquent\JobRepository;
+use Coyote\Repositories\Eloquent\PaymentRepository;
 use Coyote\Services\Elasticsearch\Builders\Job\SearchBuilder;
 use Coyote\Services\Invoice;
 use Coyote\Services\Invoice\CalculatorFactory;
@@ -22,8 +27,10 @@ use Neon2\JobBoard\InvoiceInformation;
 use Neon2\JobBoard\JobOffer;
 use Neon2\JobBoard\PaymentIntent;
 use Neon2\JobBoard\PlanBundle;
+use Neon2\Payment\PaymentStatus;
 use Neon2\Payment\PreparedPayment;
 use Neon2\Payment\Provider\PaymentProvider;
+use Neon2\Payment\Provider\PaymentWebhook;
 use Neon2\Request\JobOfferSubmit;
 
 readonly class CoyoteIntegration implements Integration {
@@ -36,14 +43,18 @@ readonly class CoyoteIntegration implements Integration {
         private Invoice\Generator   $invoice,
         private Database\Connection $database,
         private PaymentProvider     $provider,
+        private PaymentWebhook      $paymentWebhook,
+        private PaymentRepository   $repository,
     ) {}
 
     /**
      * @return JobOffer[]
      */
     public function listJobOffers(): array {
-        $userId = auth()->id() ?? null;
-        return $this->job->findManyWithOrder($this->elasticSearchFetchJobOfferIds($userId))
+        $ids = $this->elasticSearchFetchJobOfferIds();
+        $this->job->pushCriteria(new EagerLoading(['firm', 'firm.assets', 'locations', 'tags', 'currency']));
+        $this->job->pushCriteria(new IncludeSubscribers(auth()->id()));
+        return $this->job->findManyWithOrder($ids)
             ->map(fn(Coyote\Job $job) => $this->neonJobOffer($job, true, null))
             ->toArray();
     }
@@ -61,14 +72,12 @@ readonly class CoyoteIntegration implements Integration {
             $intent);
     }
 
-    private function elasticSearchFetchJobOfferIds(?int $userId): array {
+    private function elasticSearchFetchJobOfferIds(): array {
         $this->builder->boostLocation(request()->attributes->get('geocode'));
         $this->builder->setSort(SearchBuilder::DEFAULT_SORT);
-        $result = $this->job->search($this->builder);
+        $result = $this->job->searchBody($this->builder->buildUnlimited(0, 1000));
         /** @var Support\Collection $source */
         $source = $result->getSource();
-        $this->job->pushCriteria(new EagerLoading(['firm', 'firm.assets', 'locations', 'tags', 'currency']));
-        $this->job->pushCriteria(new IncludeSubscribers($userId));
         if (count($source)) {
             $allPremium = $result->getAggregationHits('premium_listing', true);
             $premium = array_first($allPremium); // only one premium at the top
@@ -95,6 +104,29 @@ readonly class CoyoteIntegration implements Integration {
         return PlanBundle::notOwned();
     }
 
+    public function redeemBundle(int $userId, int $jobOfferId): void {
+        /** @var Coyote\User $user */
+        $user = Coyote\User::query()->find($userId);
+        /** @var Coyote\Job $job */
+        $job = Coyote\Job::query()->find($jobOfferId);
+        /** @var UserPlanBundle|null $bundle */
+        $bundle = $user->planBundles()->where('plan_id', $job->plan_id)->first();
+        if ($bundle) {
+            if ($bundle->remaining > 0) {
+                $bundle->remaining--;
+                $bundle->save();
+                BoostJobOffer::publishJob($job, $bundle->plan, Carbon::now()->addDays($bundle->plan->length));
+                BoostJobOffer::indexJobOffer($job);
+                return;
+            }
+            $bundle->delete();
+        }
+    }
+
+    public function revokePlanBundle(int $userId): void {
+        UserPlanBundle::query()->where('user_id', '=', $userId)->delete();
+    }
+
     public function createJobOffer(string $jobOfferPlan, JobOfferSubmit $jobOffer): JobOffer {
         $user = $this->loggedUser();
         $job = new Job();
@@ -102,7 +134,11 @@ readonly class CoyoteIntegration implements Integration {
         $job->fill($this->unmapper->jobOfferInput($user, $jobOffer));
         $job->firm->fill($this->unmapper->companyInput($user, $jobOffer));
         $job->firm->user_id = $user->id;
-        $this->submitJob->submitJobOffer($user, $job);
+        $this->submitJob->connection->transaction(function () use ($user, $job) {
+            $this->submitJob->saveRelations($job, $user);
+            $this->submitJob->createJobPayment($user, $job);
+            event(new JobWasSaved($job)); // we don't queue listeners for this event
+        });
         $job->firm->assets()->saveMany($this->unmapper->coyoteCompanyPhotoAssets($jobOffer));
         $job->user->notify(new CreatedNotification($job));
         $payment = $job->getUnpaidPayment();
@@ -143,8 +179,8 @@ readonly class CoyoteIntegration implements Integration {
         $this->submitJob->submitJobOffer($user, $job);
     }
 
-    public function preparePayment(int $userId, int $amount, string $paymentId, InvoiceInformation $invoiceInfo): PreparedPayment {
-        $payment = Coyote\Payment::query()->find($paymentId);
+    public function preparePayment(int $userId, string $paymentId, InvoiceInformation $invoiceInfo): PreparedPayment {
+        $payment = $this->findPaymentById($paymentId);
         $calculator = CalculatorFactory::payment($payment);
         $country = Coyote\Country::query()
             ->where('code', $invoiceInfo->countryCode)
@@ -180,5 +216,34 @@ readonly class CoyoteIntegration implements Integration {
             ->where('code', $countryCode)
             ->first('id')
             ->id;
+    }
+
+    public function paymentWebhook(string $webhookPayload, string $stripeSignature): void {
+        $paymentUpdate = $this->paymentWebhook->acceptPaymentUpdate($webhookPayload, $stripeSignature);
+        if ($paymentUpdate) {
+            /** @var Coyote\Payment $payment */
+            $payment = $this->repository->findOrFail($paymentUpdate->paymentId);
+            if ($paymentUpdate->type === PaymentStatus::Completed) {
+                event(new PaymentPaid($payment));
+            }
+            if ($paymentUpdate->type === PaymentStatus::Failed) {
+                $payment->update(['status_id' => Payment::FAILED]);
+            }
+        }
+    }
+
+    public function paymentStatus(string $paymentId): PaymentStatus {
+        $payment = $this->findPaymentById($paymentId);
+        if ($payment->status_id === Coyote\Payment::PAID) {
+            return PaymentStatus::Completed;
+        }
+        if ($payment->status_id === Coyote\Payment::FAILED) {
+            return PaymentStatus::Failed;
+        }
+        return PaymentStatus::Awaiting;
+    }
+
+    private function findPaymentById(string $paymentId): Coyote\Payment {
+        return Coyote\Payment::query()->find($paymentId);
     }
 }

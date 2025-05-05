@@ -19,18 +19,16 @@ use Coyote\User;
 use Illuminate\Database\Connection;
 use Illuminate\Http\Request;
 
-readonly class SubmitJobService
-{
+readonly class SubmitJobService {
     public function __construct(
         private JobRepository    $job,
         private FirmRepository   $firm,
         private Request          $request,
-        private Connection       $connection,
+        public Connection        $connection,
         private CouponRepository $coupons,
     ) {}
 
-    public function submitJobOffer(User $user, Job $job): void
-    {
+    public function submitJobOffer(User $user, Job $job): void {
         $this->connection->transaction(function () use ($user, $job) {
             $this->saveRelations($job, $user);
             if ($job->wasRecentlyCreated || !$job->is_publish) {
@@ -40,8 +38,7 @@ readonly class SubmitJobService
         });
     }
 
-    private function redeemPlanBundleOrCreatePayment(User $user, Job $job): void
-    {
+    public function redeemPlanBundleOrCreatePayment(User $user, Job $job): void {
         /** @var UserPlanBundle|null $bundle */
         $bundle = $user->planBundles()->where('plan_id', $job->plan_id)->first();
         if ($bundle) {
@@ -54,6 +51,10 @@ readonly class SubmitJobService
             }
             $bundle->delete();
         }
+        $this->createJobPayment($user, $job);
+    }
+
+    public function createJobPayment(User $user, Job $job): void {
         $coupon = $this->coupons->findCoupon($user->id, $job->plan->price);
         $job->payments()->create([
             'plan_id'   => $job->plan->id,
@@ -62,13 +63,11 @@ readonly class SubmitJobService
         ]);
     }
 
-    public function getUnpaidPayment(Job $job): ?Payment
-    {
+    public function getUnpaidPayment(Job $job): ?Payment {
         return !$job->is_publish ? $job->getUnpaidPayment() : null;
     }
 
-    public function loadDefaults(Job $job, User $user): Job
-    {
+    public function loadDefaults(Job $job, User $user): Job {
         $firm = $this->firm->loadDefaultFirm($user->id);
         $job->firm()->associate($firm);
         $job->firm->load(['benefits', 'assets']);
@@ -79,8 +78,7 @@ readonly class SubmitJobService
         return $job;
     }
 
-    public function saveRelations(Job $job, User $user): Job
-    {
+    public function saveRelations(Job $job, User $user): Job {
         $activity = $job->id ? Stream_Update::class : Stream_Create::class;
         if ($job->firm) {
             if (!$job->firm->exists) {
@@ -103,8 +101,7 @@ readonly class SubmitJobService
         return $job;
     }
 
-    private function getDefaultFeatures(Job $job, User $user): array
-    {
+    private function getDefaultFeatures(Job $job, User $user): array {
         $features = $this->job->getDefaultFeatures($user->id);
         $models = [];
         foreach ($features as $feature) {
@@ -118,8 +115,7 @@ readonly class SubmitJobService
         return $models;
     }
 
-    private function features(Request $request): array
-    {
+    private function features(Request $request): array {
         $features = [];
         foreach ($request->input('features', []) as $feature) {
             $checked = (int)$feature['checked'];
@@ -128,8 +124,7 @@ readonly class SubmitJobService
         return $features;
     }
 
-    private function tags(Request $request): array
-    {
+    private function tags(Request $request): array {
         $tags = [];
         $order = 0;
         foreach ($request->input('tags', []) as $tag) {

@@ -14,7 +14,7 @@ export class WebDriver {
   }
 
   async reload(): None {
-    await this.page.reload();
+    await this.page.goto('/Neon');
   }
 
   async click(text: string): None {
@@ -50,9 +50,6 @@ export class WebDriver {
   }
 
   async waitForText(text: string): None {
-    // Locally, timeout of 400ms is sufficient, but occasionally
-    // tests fail on github actions because of the timeout,
-    // thus timeout of 1250ms is used.
     await this.page.getByText(text).waitFor({state: 'visible'});
   }
 

@@ -26,12 +26,7 @@ export class Dsl {
   }
 
   async beforeEach(): None {
-    await this.driver.loadApplication(this.newUserId());
     this.mangler.reset();
-  }
-
-  private newUserId(): number {
-    return parseInt(Math.random().toString().substring(2));
   }
 
   userId(): number {
@@ -39,11 +34,13 @@ export class Dsl {
   }
 
   async resetClient(): None {
+    await new Promise<void>(resolve => {
+      // The only reason for this, is that job offer is taking a little while
+      // to actually appear in search. The user should be notified of the added
+      // job offer somehow, probably via websocket, but that's not implemented.
+      setTimeout(() => resolve(), 15000); 
+    });
     await this.driver.reloadApplication();
-  }
-
-  encodeName(name: string): string {
-    return this.mangler.encoded(name);
   }
 
   async publishJobOffer(jobOffer: {
