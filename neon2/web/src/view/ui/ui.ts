@@ -1,8 +1,10 @@
 import {createApp, h, Reactive, reactive, VNode} from 'vue';
 import {JobOffer} from '../../jobBoard';
+import {JobOfferFilter} from "../../jobOfferFilter";
 import {
   Country,
   InitiatePayment,
+  JobOfferFilters,
   PaymentSummary,
   PlanBundleName,
   PricingPlan,
@@ -19,6 +21,7 @@ export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
 export interface JobBoardProps {
   jobOffers: JobOffer[];
+  jobOfferFilters: JobOfferFilters;
   screen: Screen;
   toast: Toast|null;
   currentJobOfferId: number|null;
@@ -46,10 +49,11 @@ export interface ViewListener {
 export interface UserInterface {
   mount(cssSelector: string): void;
   setJobOffers(jobOffers: JobOffer[]): void;
+  setJobOfferFilters(filters: JobOfferFilters): void;
   setToast(toast: Toast|null): void;
   addViewListener(listener: ViewListener): void;
   addNavigationListener(listener: NavigationListener): void;
-  addSearchListener(listener: SearchListener): void;
+  addFilterListener(listener: FilterListener): void;
   setScreen(screen: Screen): void;
   setCurrentJobOfferId(jobOfferId: number): void;
   setPaymentNotification(notification: PaymentNotification): void;
@@ -68,7 +72,7 @@ export interface NavigationListener {
   showJobOfferForm(): void;
 }
 
-export type SearchListener = (searchPhrase: string) => void;
+export type FilterListener = (filter: JobOfferFilter) => void;
 
 export interface PlanBundle {
   bundleName: PlanBundleName;
@@ -79,6 +83,10 @@ export interface PlanBundle {
 export class VueUi implements UserInterface {
   private vueState: Reactive<JobBoardProps> = reactive<JobBoardProps>({
     jobOffers: [],
+    jobOfferFilters: {
+      tags: [],
+      locations: [],
+    },
     toast: null,
     screen: 'home',
     currentJobOfferId: null,
@@ -94,7 +102,7 @@ export class VueUi implements UserInterface {
   });
   private viewListeners: ViewListener[] = [];
   private navigationListeners: NavigationListener[] = [];
-  private searchListeners: SearchListener[] = [];
+  private searchListeners: FilterListener[] = [];
 
   addViewListener(viewListener: ViewListener): void {
     this.viewListeners.push(viewListener);
@@ -104,12 +112,16 @@ export class VueUi implements UserInterface {
     this.navigationListeners.push(navigationListener);
   }
 
-  addSearchListener(listener: SearchListener): void {
+  addFilterListener(listener: FilterListener): void {
     this.searchListeners.push(listener);
   }
 
   setJobOffers(jobOffers: JobOffer[]): void {
     this.vueState.jobOffers = jobOffers;
+  }
+
+  setJobOfferFilters(filters: JobOfferFilters): void {
+    this.vueState.jobOfferFilters = filters;
   }
 
   setScreen(screen: Screen): void {
@@ -202,8 +214,8 @@ export class VueUi implements UserInterface {
         that.navigationListeners.forEach(listener => listener.setScreen(screen));
         that.setCurrentJobOfferId(jobOfferId);
       },
-      onSearch(searchPhrase: string): void {
-        that.searchListeners.forEach(listener => listener(searchPhrase));
+      onFilter(filter: JobOfferFilter): void {
+        that.searchListeners.forEach(listener => listener(filter));
       },
       onMountCardInput(cssSelector: string): void {
         that.viewListeners.forEach(listener => listener.managePaymentMethod('mount', cssSelector));

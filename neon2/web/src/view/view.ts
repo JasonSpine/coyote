@@ -1,5 +1,6 @@
 import {JobOffer} from '../jobBoard';
-import {Country, PaymentSummary, PlanBundleName, UploadAssets, VatIdState} from "../main";
+import {JobOfferFilter} from "../jobOfferFilter";
+import {Country, JobOfferFilters, PaymentSummary, PlanBundleName, UploadAssets, VatIdState} from "../main";
 import {PaymentNotification} from "../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../paymentProvider/PaymentService";
 import {Screen, UserInterface, ViewListener} from './ui/ui';
@@ -8,7 +9,7 @@ export type Toast = 'created'|'edited'|'bundle-used';
 
 export class View {
   private jobOffers: JobOffer[] = [];
-  private searchPhrase: string = '';
+  private filter: JobOfferFilter|null = null;
   private planBundleCanRedeem: boolean = false;
 
   constructor(private ui: UserInterface) {
@@ -25,8 +26,8 @@ export class View {
         }
       },
     });
-    this.ui.addSearchListener(searchPhrase => {
-      this.searchPhrase = searchPhrase;
+    this.ui.addFilterListener(filter => {
+      this.filter = filter;
       this.filterJobOffers();
     });
   }
@@ -44,6 +45,10 @@ export class View {
     this.filterJobOffers();
   }
 
+  setJobOfferFilters(filters: JobOfferFilters): void {
+    this.ui.setJobOfferFilters(filters);
+  }
+
   setPaymentNotification(notification: PaymentNotification): void {
     this.ui.setPaymentNotification(notification);
   }
@@ -57,7 +62,42 @@ export class View {
   }
 
   private jobOfferMatches(jobOffer: JobOffer): boolean {
-    return jobOffer.title.toLowerCase().includes(this.searchPhrase.toLowerCase());
+    if (this.filter === null) {
+      return true;
+    }
+    if (!jobOffer.title.toLowerCase().includes(this.filter.searchPhrase.toLowerCase())) {
+      return false;
+    }
+    if (this.filter.workModes.length) {
+      if (!this.filter.workModes.includes(jobOffer.workMode)) {
+        return false;
+      }
+    }
+    if (this.filter.legalForms.length) {
+      if (!this.filter.legalForms.includes(jobOffer.legalForm)) {
+        return false;
+      }
+    }
+    if (this.filter.workExperiences.length) {
+      if (!this.filter.workExperiences.includes(jobOffer.experience)) {
+        return false;
+      }
+    }
+    if (this.filter.tags.length) {
+      if (!this.haveCommonElement(this.filter.tags, jobOffer.tagNames)) {
+        return false;
+      }
+    }
+    if (this.filter.locations.length) {
+      if (!this.haveCommonElement(this.filter.locations, jobOffer.locations)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private haveCommonElement(array1: string[], array2: string[]): boolean {
+    return array1.some(item => array2.includes(item));
   }
 
   jobOfferCreatedFree(jobOfferId: number): void {

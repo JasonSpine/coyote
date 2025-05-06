@@ -4,6 +4,7 @@
     :icon="props.icon"
     :test-id="props.testId"
     :nested="props.nested"
+    :nested-flush="props.nestedFlush"
     :openToLeft="props.openToLeft"
     :scrollable="props.scrollable"
     :has-error="hasError"
@@ -38,6 +39,7 @@ interface Props {
   icon?: IconName;
   testId?: string;
   nested?: boolean;
+  nestedFlush?: boolean;
   options: DrawerOption<U>[];
   openToLeft?: boolean;
   default?: string;

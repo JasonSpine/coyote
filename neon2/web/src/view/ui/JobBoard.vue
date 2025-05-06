@@ -55,15 +55,17 @@
     <JobOfferHome
       v-if="props.screen === 'home'"
       :job-offers="props.jobOffers"
+      :filters="props.jobOfferFilters"
       @show="showJob"
       @add="showJobOfferForm"
-      @search="searchJobs"/>
+      @filter="filterJobs"/>
   </Design.Layout>
 </template>
 
 <script setup lang="ts">
 import {computed, onMounted, watch} from 'vue';
 import {JobOffer} from '../../jobBoard';
+import {JobOfferFilter} from "../../jobOfferFilter";
 import {InitiatePayment, PricingPlan, SubmitJobOffer} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
@@ -89,6 +91,7 @@ interface Emit {
   (event: 'update', jobOfferId: number, jobOffer: SubmitJobOffer): void;
   (event: 'navigate', screen: Screen, id: number|null): void;
   (event: 'search', searchPhrase: string): void;
+  (event: 'filter', filter: JobOfferFilter): void;
   (event: 'pay', payment: InitiatePayment): void;
   (event: 'redeem-bundle', jobOfferId: number): void;
   (event: 'mount-card-input', cssSelector: string): void;
@@ -161,8 +164,9 @@ function showJobOfferForm(): void {
   emit('show-form');
 }
 
-function searchJobs(searchPhrase: string): void {
-  emit('search', searchPhrase);
+function filterJobs(filter: JobOfferFilter): void {
+  emit('search', filter.searchPhrase);
+  emit('filter', filter);
 }
 
 function mountCardInput(cssSelector: string): void {

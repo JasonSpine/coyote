@@ -3,15 +3,9 @@
     <Design.Button primary-outline @click="emit('add')">
       Dodaj ogłoszenie
     </Design.Button>
-    <Design.Tile>
-      <Design.TextField
-        nested
-        v-model="searchPhrase"
-        placeholder="Szukaj po tytule"
-        @change="search">
-        <Design.Button primary test-id="search" icon="jobOfferSearch" square/>
-      </Design.TextField>
-    </Design.Tile>
+    <Design.JobOfferFilters
+      :filters="props.filters"
+      @filter="filter => emit('filter', filter)"/>
     <Design.JobOfferListItem
       v-for="jobOffer in props.jobOffers"
       :key="jobOffer.id"
@@ -25,27 +19,22 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
 import {JobOffer} from '../../../jobBoard';
+import {JobOfferFilter} from "../../../jobOfferFilter";
+import {JobOfferFilters} from "../../../main";
 import {Design} from "../design/design";
 
 const props = defineProps<Props>();
+const emit = defineEmits<Emit>();
 
 interface Props {
   jobOffers: JobOffer[];
+  filters: JobOfferFilters;
 }
-
-const emit = defineEmits<Emit>();
 
 interface Emit {
   (event: 'show', id: number): void;
   (event: 'add'): void;
-  (event: 'search', searchPhrase: string): void;
-}
-
-const searchPhrase = ref<string>('');
-
-function search(): void {
-  emit('search', searchPhrase.value);
+  (event: 'filter', filter: JobOfferFilter): void;
 }
 </script>

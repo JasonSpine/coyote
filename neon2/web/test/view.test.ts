@@ -1,8 +1,8 @@
 import {JobOffer} from '../src/jobBoard';
-import {Country, PaymentSummary, PlanBundleName, UploadAssets, VatIdState} from "../src/main";
+import {Country, JobOfferFilters, PaymentSummary, PlanBundleName, UploadAssets, VatIdState} from "../src/main";
 import {PaymentNotification} from "../src/paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../src/paymentProvider/PaymentService";
-import {NavigationListener, Screen, SearchListener, UserInterface, ViewListener} from '../src/view/ui/ui';
+import {FilterListener, NavigationListener, Screen, UserInterface, ViewListener} from '../src/view/ui/ui';
 import {Toast, View} from '../src/view/view';
 import {assertEquals, beforeEach, describe, test} from './assertion';
 
@@ -118,7 +118,7 @@ describe('JobBoard View', () => {
 
 class MemoryUi implements UserInterface {
   private naviListeners: NavigationListener[] = [];
-  private searchListeners: SearchListener[] = [];
+  private filterListeners: FilterListener[] = [];
   private toast: Toast|null = null;
   private _jobOffers: JobOffer[] = [];
   private _screen: Screen = 'home';
@@ -131,6 +131,8 @@ class MemoryUi implements UserInterface {
     this._jobOffers = jobOffers;
   }
 
+  setJobOfferFilters(filters: JobOfferFilters): void {}
+
   setToast(toast: Toast|null): void {
     this.toast = toast;
   }
@@ -139,8 +141,8 @@ class MemoryUi implements UserInterface {
     this.naviListeners.push(listener);
   }
 
-  addSearchListener(listener: SearchListener): void {
-    this.searchListeners.push(listener);
+  addFilterListener(listener: FilterListener): void {
+    this.filterListeners.push(listener);
   }
 
   addViewListener(listener: ViewListener): void {
@@ -184,7 +186,15 @@ class MemoryUi implements UserInterface {
   }
 
   search(searchPhrase: string): void {
-    this.searchListeners.forEach(listener => listener(searchPhrase));
+    this.filterListeners.forEach(listener => listener({
+      searchPhrase,
+      tags: [],
+      locations: [],
+      workModes: [],
+      legalForms: [],
+      workExperiences: [],
+      sort: 'promoted',
+    }));
   }
 
   lastToast(): Toast|null {

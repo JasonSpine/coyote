@@ -5,6 +5,8 @@ import CheckBox from "./CheckBox.vue";
 import Divider from "./Divider.vue";
 import Drawer from "./Drawer.vue";
 import Dropdown from "./Dropdown.vue";
+import DropdownLabel from "./DropdownLabel.vue";
+import DropdownMultiple from "./DropdownMultiple.vue";
 import FieldError from "./FieldError.vue";
 import FieldGroup from "./FieldGroup.vue";
 import FieldHelp from "./FieldHelp.vue";
@@ -17,6 +19,7 @@ import JobOfferListItem from "./JobOffer/JobOfferListItem.vue";
 import JobOfferSalary from "./JobOffer/JobOfferSalary.vue";
 import JobOfferSalaryNotProvided from "./JobOffer/JobOfferSalaryNotProvided.vue";
 import JobOfferTagList from "./JobOffer/JobOfferTagList.vue";
+import JobOfferFilters from "./JobOffer/JobOfferFilters.vue";
 import Layout from "./Layout.vue";
 import Material from "./Material.vue";
 import PaymentMethod from "./PaymentMethod.vue";
@@ -41,6 +44,8 @@ export const Design = {
   Divider,
   Drawer,
   Dropdown,
+  DropdownLabel,
+  DropdownMultiple,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -53,6 +58,7 @@ export const Design = {
   JobOfferSalary,
   JobOfferSalaryNotProvided,
   JobOfferTagList,
+  JobOfferFilters,
   Layout,
   Material,
   PaymentMethod,

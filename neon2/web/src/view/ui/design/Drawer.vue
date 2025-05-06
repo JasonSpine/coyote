@@ -38,6 +38,7 @@ interface Props {
   icon?: IconName;
   testId?: string;
   nested?: boolean;
+  nestedFlush?: boolean;
   noSpace?: boolean;
   scrollable?: boolean;
   blip?: string;
@@ -62,7 +63,7 @@ watch(open, (newValue: boolean): void => {
 });
 
 const borderClass = computed(() => {
-  if (props.nested) {
+  if (props.nested || props.nestedFlush) {
     if (props.hasError) {
       throw new Error('Nested inputs do not have errors.');
     }

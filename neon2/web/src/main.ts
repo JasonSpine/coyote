@@ -191,6 +191,8 @@ backend.initialJobOffers()
 view.setJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
 view.setPaymentInvoiceCountries(backend.paymentInvoiceCountries());
 
+view.setJobOfferFilters(board.jobOfferFilters());
+
 view.upload({
   async uploadLogo(file: File): Promise<string> {
     return await backend.uploadLogoReturnUrl(file);
@@ -231,3 +233,8 @@ function isVatIncluded(countryCode: string, vatId: string): boolean {
 }
 
 export type VatIdState = 'valid'|'invalid'|'pending';
+
+export interface JobOfferFilters {
+  tags: string[];
+  locations: string[];
+}

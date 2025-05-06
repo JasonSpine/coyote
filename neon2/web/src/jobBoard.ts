@@ -1,4 +1,14 @@
-import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, WorkExperience, WorkMode} from "./main";
+import {
+  ApplicationMode,
+  Currency,
+  HiringType,
+  JobOfferFilters,
+  LegalForm,
+  Rate,
+  SubmitJobOffer,
+  WorkExperience,
+  WorkMode,
+} from "./main";
 
 interface JobBoardObserver {
   (jobOffers: JobOffer[]): void;
@@ -41,6 +51,13 @@ export class JobBoard {
   jobOfferPaid(jobOfferId: number): void {
     this.findJobOffer(jobOfferId).status = 'published';
     this.updateView();
+  }
+
+  jobOfferFilters(): JobOfferFilters {
+    return {
+      locations: [...new Set(this.jobOffers.flatMap(offer => offer.locations))],
+      tags: [...new Set(this.jobOffers.flatMap(offer => offer.tagNames))],
+    };
   }
 }
 
