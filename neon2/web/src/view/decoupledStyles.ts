@@ -1,11 +1,3 @@
-export function transformToShadowRoot(element: HTMLElement): ShadowRoot {
-  const template = element.innerHTML;
-  element.innerHTML = '';
-  const shadowRoot = element.attachShadow({mode: 'open'});
-  shadowRoot.innerHTML = template;
-  return shadowRoot;
-}
-
 export function shadowRootCopyStyleSheets(root: ShadowRoot): void {
   const styleSheet = shadowRootStylesheet();
   styleSheet.disabled = true;

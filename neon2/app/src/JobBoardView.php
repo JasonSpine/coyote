@@ -39,9 +39,9 @@ readonly class JobBoardView {
 
     public function htmlMarkupBody(): string {
         return <<<html
-            <div id="neonApplication">
-                <div id="vueApplication"></div>
-            </div>
+            <custom-neon-application>
+                <div id="creditCardInput"></div>
+            </custom-neon-application>
             <script type="module" src="{$this->entryScriptUrl()}"></script>
             <script>var backendInput = {$this->backendInput()};</script>
             html;

@@ -6,7 +6,7 @@ import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
 import {StripePaymentProvider} from './paymentProvider/StripePaymentProvider';
 import {TestPaymentProvider} from './paymentProvider/TestPaymentProvider';
 import {PlanBundle} from "./planBundle";
-import {shadowRootCopyStyleSheets, transformToShadowRoot} from "./view/decoupledStyles";
+import {runInShadowDom, setDarkTheme} from "./view/shadowDom";
 import {VueUi} from './view/ui/ui';
 import {View} from "./view/view";
 
@@ -204,18 +204,8 @@ view.upload({
 });
 
 export type Theme = 'light'|'dark';
-backend.onChangeTheme((theme: Theme) => {
-  document.querySelector('#neonApplication')!.classList.toggle('dark', theme === 'dark');
-});
-
-view.mount(applicationElement('#neonApplication', '#vueApplication'));
-
-function applicationElement(rootSelector: string, elementSelector: string): Element {
-  const root = document.querySelector(rootSelector) as HTMLElement;
-  const shadowRoot = transformToShadowRoot(root);
-  shadowRootCopyStyleSheets(shadowRoot);
-  return shadowRoot.querySelector(elementSelector)!;
-}
+backend.onChangeTheme((theme: Theme) => setDarkTheme(theme === 'dark'));
+runInShadowDom(element => view.mount(element!));
 
 export interface UploadImage {
   (file: File): Promise<string>;
