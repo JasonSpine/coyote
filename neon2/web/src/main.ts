@@ -6,6 +6,7 @@ import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
 import {StripePaymentProvider} from './paymentProvider/StripePaymentProvider';
 import {TestPaymentProvider} from './paymentProvider/TestPaymentProvider';
 import {PlanBundle} from "./planBundle";
+import {shadowRootCopyStyleSheets, transformToShadowRoot} from "./view/decoupledStyles";
 import {VueUi} from './view/ui/ui';
 import {View} from "./view/view";
 
@@ -202,7 +203,14 @@ view.upload({
   },
 });
 
-view.mount('#neonApplication');
+view.mount(applicationElement('#neonApplication', '#vueApplication'));
+
+function applicationElement(rootSelector: string, elementSelector: string): Element {
+  const root = document.querySelector(rootSelector) as HTMLElement;
+  const shadowRoot = transformToShadowRoot(root);
+  shadowRootCopyStyleSheets(shadowRoot);
+  return shadowRoot.querySelector(elementSelector)!;
+}
 
 export interface UploadImage {
   (file: File): Promise<string>;

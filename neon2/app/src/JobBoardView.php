@@ -8,15 +8,17 @@ readonly class JobBoardView {
         private \Neon2\Coyote\Integration  $integration,
         private \Neon2\Invoice\CountryGate $countries,
         private ?string                    $stripePublishableKey,
+        private bool                       $isTestMode,
+        private ?int                       $userId,
+        private ?string                    $userEmail,
+        private string                     $csrfToken,
     ) {
         $this->vite = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/');
     }
 
-    public function jobBoardView(bool $isTestMode, ?int $userId, ?string $userEmail, string $csrfToken): string {
-        $backendInput = $this->backendInput($isTestMode, $userId, $userEmail, $csrfToken);
-        $entryUrl = "/neon2/static/{$this->vite->scriptUrl()}";
+    public function htmlMarkupHead(): string {
         $styleUrl = "/neon2/static/{$this->vite->styleUrl()}";
-        if ($isTestMode) {
+        if ($this->isTestMode) {
             $resources = null;
         } else {
             $resources = '<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter:400,500,700">';
@@ -25,38 +27,43 @@ readonly class JobBoardView {
         $faRegularUrl = "/neon2/static/{$this->vite->fontAwesomeRegularUrl()}";
         $faSolidUrl = "/neon2/static/{$this->vite->fontAwesomeSolidUrl()}";
         return <<<html
-            <html>
-            <head>
-              <meta name="viewport" content="width=device-width,initial-scale=1">
-              <link rel="stylesheet" type="text/css" href="$styleUrl">
-              <link rel="preload" as="font" type="font/woff2" crossorigin href="$faLightUrl">
-              <link rel="preload" as="font" type="font/woff2" crossorigin href="$faRegularUrl">
-              <link rel="preload" as="font" type="font/woff2" crossorigin href="$faSolidUrl">
-              $resources
-            </head>
-            <body class="bg-body">
-              <div id="neonApplication"></div>
-              <script type="module" src="$entryUrl"></script>
-              <script>var backendInput = $backendInput;</script>
-            </body>
-            <html>
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <link rel="stylesheet" type="text/css" href="$styleUrl" title="includeInShadowRoot">
+            <link rel="preload" as="font" type="font/woff2" crossorigin href="$faLightUrl">
+            <link rel="preload" as="font" type="font/woff2" crossorigin href="$faRegularUrl">
+            <link rel="preload" as="font" type="font/woff2" crossorigin href="$faSolidUrl">
+            $resources
             html;
     }
 
-    private function encodeBackendInput(array $arr): string {
-        return \json_encode($arr, \JSON_THROW_ON_ERROR);
+    public function htmlMarkupBody(): string {
+        return <<<html
+            <div id="neonApplication">
+                <div id="vueApplication"></div>
+            </div>
+            <script type="module" src="{$this->entryScriptUrl()}"></script>
+            <script>var backendInput = {$this->backendInput()};</script>
+            html;
     }
 
-    private function backendInput(bool $isTestMode, ?int $userId, ?string $userEmail, string $csrfToken): string {
-        return $this->encodeBackendInput([
+    private function entryScriptUrl(): string {
+        return "/neon2/static/{$this->vite->scriptUrl()}";
+    }
+
+    private function backendInput(): string {
+        return $this->encodedJson([
             'jobOffers'                => $this->integration->listJobOffers(),
-            'testMode'                 => $isTestMode,
-            'planBundle'               => $this->integration->planBundle($userId),
-            'userId'                   => $userId,
-            'jobOfferApplicationEmail' => $userEmail,
-            'csrfToken'                => $csrfToken,
+            'testMode'                 => $this->isTestMode,
+            'planBundle'               => $this->integration->planBundle($this->userId),
+            'userId'                   => $this->userId,
+            'jobOfferApplicationEmail' => $this->userEmail,
+            'csrfToken'                => $this->csrfToken,
             'stripePublishableKey'     => $this->stripePublishableKey,
             'paymentInvoiceCountries'  => $this->countries->invoiceCountries(),
         ]);
+    }
+
+    private function encodedJson(array $arr): string {
+        return \json_encode($arr, \JSON_THROW_ON_ERROR);
     }
 }

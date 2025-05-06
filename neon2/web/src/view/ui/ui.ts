@@ -47,7 +47,7 @@ export interface ViewListener {
 }
 
 export interface UserInterface {
-  mount(cssSelector: string): void;
+  mount(element: Element): void;
   setJobOffers(jobOffers: JobOffer[]): void;
   setJobOfferFilters(filters: JobOfferFilters): void;
   setToast(toast: Toast|null): void;
@@ -174,9 +174,9 @@ export class VueUi implements UserInterface {
     this.vueState.paymentVatIdState = state;
   }
 
-  mount(cssSelector: string): void {
+  mount(element: Element): void {
     const render = this.vueRender.bind(this);
-    createApp({render}).mount(cssSelector);
+    createApp({render}).mount(element);
   }
 
   private vueRender(): VNode {

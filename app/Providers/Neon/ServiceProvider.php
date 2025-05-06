@@ -71,12 +71,18 @@ class ServiceProvider extends RouteServiceProvider {
                         $integration->revokePlanBundle(auth()->id());
                     }
                 }
-                $jobBoardView = new JobBoardView($integration, $countries, $stripePublicKey->publishableKey);
-                return $jobBoardView->jobBoardView(
+                $jobBoardView = new JobBoardView(
+                    $integration,
+                    $countries,
+                    $stripePublicKey->publishableKey,
                     $this->isTestMode(),
                     auth()->id(),
                     auth()->user()?->email,
                     app('session')->token());
+                return view('job.home_modern', [
+                    'neonHead' => new StringHtml($jobBoardView->htmlMarkupHead()),
+                    'neonBody' => new StringHtml($jobBoardView->htmlMarkupBody()),
+                ]);
             });
         });
     }

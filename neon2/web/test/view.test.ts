@@ -124,8 +124,7 @@ class MemoryUi implements UserInterface {
   private _screen: Screen = 'home';
   private _planBundleCanRedeem: boolean|null = null;
 
-  mount(cssSelector: string): void {
-  }
+  mount(element: Element): void {}
 
   setJobOffers(jobOffers: JobOffer[]): void {
     this._jobOffers = jobOffers;

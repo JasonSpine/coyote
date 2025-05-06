@@ -36,8 +36,8 @@ export class View {
     this.ui.addViewListener(listener);
   }
 
-  mount(cssSelector: string): void {
-    this.ui.mount(cssSelector);
+  mount(element: Element): void {
+    this.ui.mount(element);
   }
 
   setJobOffers(jobOffers: JobOffer[]): void {
