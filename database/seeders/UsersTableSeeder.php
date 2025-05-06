@@ -14,14 +14,5 @@ class UsersTableSeeder extends Seeder {
             'is_confirm' => true,
         ]);
         \factory(User::class, 10)->create();
-        foreach (range(1, 10) as $index) {
-            User::query()->forceCreate([
-                'name'       => "acceptance-test-$index",
-                'email'      => "acceptance-test-$index@localhost",
-                'password'   => bcrypt("acceptance-test-$index"),
-                'reputation' => 100,
-                'is_confirm' => true,
-            ]);
-        }
     }
 }
