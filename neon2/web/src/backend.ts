@@ -9,6 +9,7 @@ import {
   PricingPlan,
   Rate,
   SubmitJobOffer,
+  Theme,
   WorkExperience,
   WorkMode,
 } from "./main";
@@ -46,6 +47,7 @@ function jobOfferFields(jobOffer: SubmitJobOffer): object {
 declare global {
   interface Window {
     backendInput: BackendInput;
+    neonOnChangeTheme?(isDarkTheme: boolean): void;
   }
 }
 
@@ -149,6 +151,13 @@ export class JobBoardBackend {
   isAuthenticated(): boolean {
     return this.backendInput.userId !== null;
   }
+
+  onChangeTheme(listener: (theme: Theme) => any) {
+    listener(this.backendInput.darkTheme ? 'dark' : 'light');
+    window['neonOnChangeTheme'] = function (isDarkTheme: boolean): void {
+      listener(isDarkTheme ? 'dark' : 'light');
+    };
+  }
 }
 
 function request(method: string, url: string, body: object) {
@@ -168,6 +177,7 @@ export interface BackendInput {
   csrfToken: string;
   stripePublishableKey: string|null;
   paymentInvoiceCountries: Array<{countryCode: string; countryName: string}>;
+  darkTheme: boolean;
 }
 
 export interface BackendJobOffer {

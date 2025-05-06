@@ -29,6 +29,9 @@ function setViewTheme(isDark: boolean): void {
   setBodyTheme(isDark);
   setBootstrapNavigationBarTheme(isDark);
   store.commit('theme/CHANGE_THEME', isDark);
+  if (window['neonOnChangeTheme']) {
+    window['neonOnChangeTheme'](isDark);
+  }
 }
 
 function setBodyTheme(isDark: boolean): void {

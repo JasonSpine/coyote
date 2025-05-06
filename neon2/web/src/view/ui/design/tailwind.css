@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(html[data-theme=dark], html[data-theme=dark] *));
+@custom-variant dark (
+  &:where(
+    :host-context(.dark) ,
+    :host-context(.dark)  *,
+  )
+);
 
 :root, :host {
   --color-body: var(--color-navy-050);

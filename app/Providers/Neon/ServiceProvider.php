@@ -64,7 +64,12 @@ class ServiceProvider extends RouteServiceProvider {
                 });
         });
         $this->middleware(['web', 'geocode'])->group(function () {
-            $this->get('/Neon', function (Integration $integration, CountryGate $countries, StripePublicKey $stripePublicKey): string {
+            $this->get('/Neon', function (
+                Integration     $integration,
+                CountryGate     $countries,
+                StripePublicKey $stripePublicKey,
+                UserTheme       $theme,
+            ): string {
                 Gate::authorize('alpha-access');
                 if ($this->isTestMode()) {
                     if (\request()->query->has('revoke-bundle')) {
@@ -78,7 +83,8 @@ class ServiceProvider extends RouteServiceProvider {
                     $this->isTestMode(),
                     auth()->id(),
                     auth()->user()?->email,
-                    app('session')->token());
+                    app('session')->token(),
+                    $theme->isThemeDark());
                 return view('job.home_modern', [
                     'neonHead' => new StringHtml($jobBoardView->htmlMarkupHead()),
                     'neonBody' => new StringHtml($jobBoardView->htmlMarkupBody()),

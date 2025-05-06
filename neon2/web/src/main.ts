@@ -203,6 +203,11 @@ view.upload({
   },
 });
 
+export type Theme = 'light'|'dark';
+backend.onChangeTheme((theme: Theme) => {
+  document.querySelector('#neonApplication')!.classList.toggle('dark', theme === 'dark');
+});
+
 view.mount(applicationElement('#neonApplication', '#vueApplication'));
 
 function applicationElement(rootSelector: string, elementSelector: string): Element {
