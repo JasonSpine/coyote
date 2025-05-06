@@ -18,7 +18,7 @@ test.describe('Acceptance test internals', () => {
       assertEquals('Mark', mangler.decoded(mangler.encoded('Mark')));
     });
     test('Previously mangled name after reset is returned as the hash itself.', () => {
-      mangler.reset();
+      mangler.invalidate();
       assertEquals('123', mangler.decoded('123'));
     });
     test('An array of encoded names can be decoded.', () => {
@@ -31,7 +31,7 @@ test.describe('Acceptance test internals', () => {
     });
     test('The same name is encoded to a different hash after a reset.', () => {
       const before = mangler.encoded('Foo');
-      mangler.reset();
+      mangler.invalidate();
       const after = mangler.encoded('Foo');
       assertNotEquals(before, after);
     });

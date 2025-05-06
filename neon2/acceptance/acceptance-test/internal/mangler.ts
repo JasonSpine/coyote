@@ -1,34 +1,36 @@
 export class Mangler {
-  private hashedNames: Record<string, string> = {};
+  private counter: number = 0;
+  private availableToDecode: Record<string, string> = {};
 
   encoded(name: string): string {
-    if (this.hasHash(name)) {
-      return this.lookupHash(name);
+    if (this.hasAssignedHash(name)) {
+      return this.assignedHash(name);
     }
-    const hash = this.hashedName(name);
-    this.hashedNames[hash] = name;
+    const hash = this.randomizeString(name);
+    this.availableToDecode[hash] = name;
     return hash;
   }
 
-  private hashedName(name: string): string {
+  private randomizeString(name: string): string {
     return '(' + this.randomString() + ') ' + name;
   }
 
-  private hasHash(name: string): boolean {
-    return Object.values(this.hashedNames).indexOf(name) > -1;
+  private hasAssignedHash(name: string): boolean {
+    return Object.values(this.availableToDecode).indexOf(name) > -1;
   }
 
-  private lookupHash(name: string): string {
-    for (const [hash, hashName] of Object.entries(this.hashedNames)) {
+  private assignedHash(name: string): string {
+    for (const [hash, hashName] of Object.entries(this.availableToDecode)) {
       if (hashName === name) {
         return hash;
       }
     }
+    throw new Error('Failed to lookup hash.');
   }
 
   decoded(hash: string): string {
-    if (this.hashedNames.hasOwnProperty(hash)) {
-      return this.hashedNames[hash];
+    if (this.availableToDecode.hasOwnProperty(hash)) {
+      return this.availableToDecode[hash];
     }
     return hash;
   }
@@ -38,10 +40,11 @@ export class Mangler {
   }
 
   private randomString(): string {
-    return Math.random().toString().substring(2);
+    this.counter++;
+    return Date.now().toString(36) + this.counter.toString(36);
   }
 
-  reset(): void {
-    this.hashedNames = {};
+  invalidate(): void {
+    this.availableToDecode = {};
   }
 }

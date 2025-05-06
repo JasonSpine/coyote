@@ -26,7 +26,7 @@ export class Dsl {
   }
 
   async beforeEach(): None {
-    this.mangler.reset();
+    this.mangler.invalidate();
   }
 
   userId(): number {
