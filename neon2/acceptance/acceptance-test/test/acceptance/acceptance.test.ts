@@ -46,7 +46,7 @@ describe('The publishing time depends on the pricing of the job offer.', () => {
 });
 
 describe('Purchased plan bundle entitles to multiple job offers.', () => {
-  test('Given no purchases job offers, there is no plan bundle.', async (dsl: Dsl) => {
+  test('Given no purchased job offers, there is no plan bundle.', async (dsl: Dsl) => {
     await dsl.assertPlanBundleNone();
   });
   test('Job offer is created alongside a strategic plan bundle.', async (dsl: Dsl) => {
