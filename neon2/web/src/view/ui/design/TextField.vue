@@ -4,22 +4,21 @@
           v-if="props.icon"
           :class="['mr-2', {'text-red-500': hasError}]"/>
     <TextInput
-      class="outline-none flex-grow-1" :class="fieldClass"
-      :component="props.multiline ? 'textarea' : 'input'"
+      class="outline-none flex-grow-1"
+      :type="props.formatHtml ? 'html' : 'plain'"
       :label-id="fieldLabelId"
       :test-id="props.testId"
       :placeholder="props.placeholder"
       :disabled="disabled"
-      v-model="text"
-      @submit="submit"
-      @change="change"/>
+      v-model="text"/>
     <slot/>
   </div>
 </template>
 
 <script setup lang="ts">
 import {computed, inject} from "vue";
-import Icon, {IconName} from '../icons/Icon.vue';
+import Icon from '../icons/Icon.vue';
+import {IconName} from "../icons/icons";
 import TextInput from "./TextInput.vue";
 
 interface Props {
@@ -27,7 +26,7 @@ interface Props {
   testId?: string;
   nested?: boolean;
   disabled?: boolean;
-  multiline?: boolean;
+  formatHtml?: boolean;
   icon?: IconName;
 }
 
@@ -35,22 +34,8 @@ const hasError = inject('fieldHasError', computed(() => false));
 const disabled = inject('fieldDisabled', computed(() => props.disabled));
 const fieldLabelId = inject('fieldLabelId', undefined);
 
-interface Emit {
-  (event: 'submit', value: string): void;
-  (event: 'change', value: string): void;
-}
-
 const props = defineProps<Props>();
-const emit = defineEmits<Emit>();
 const text = defineModel<string>({default: ''});
-
-function submit(): void {
-  emit('submit', text.value);
-}
-
-function change(): void {
-  emit('change', text.value);
-}
 
 const inputClass = computed<string>(() => {
   if (disabled.value) {
@@ -66,12 +51,5 @@ const inputClass = computed<string>(() => {
     return 'border border-red-500';
   }
   return 'border border-neutral-100';
-});
-
-const fieldClass = computed<string>(() => {
-  if (props.multiline) {
-    return 'min-h-90 max-h-240';
-  }
-  return '';
 });
 </script>

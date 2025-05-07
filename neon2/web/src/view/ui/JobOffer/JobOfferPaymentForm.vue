@@ -6,9 +6,7 @@
         <Design.PaymentMethod :options="paymentMethods" v-model="method"/>
         <Design.FieldGroup required label="Numer karty" v-show="method === 'card'">
           <div class="border border-neutral-100 px-2 py-3 rounded-lg">
-            <div ref="creditCardInputHolder" class="h-4.5">
-              <component is="slot">Wczytywanie...</component>
-            </div>
+            <component is="slot">Wczytywanie...</component>
           </div>
         </Design.FieldGroup>
         <Design.Toast :subtitle="paymentP24Information" v-if="method === 'p24'"/>

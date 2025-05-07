@@ -27,14 +27,14 @@
       <Design.JobOfferSalary :salary="salary" nowrap v-if="salary"/>
     </div>
     <div class="flex">
-      <div class="w-2/3">
-        <div
-          class="mb-12"
-          v-text="props.jobOffer.companyDescription"
-          v-if="props.jobOffer.companyDescription"/>
+      <div class="w-2/3 space-y-12">
         <template v-if="props.jobOffer.description">
           <Design.FieldLabel title="Opis oferty" class="mb-4"/>
-          <div data-testid="jobOfferDescription" v-text="props.jobOffer.description"/>
+          <div data-testid="jobOfferDescription" v-html="props.jobOffer.description" class="list-style paragraph-style"/>
+        </template>
+        <template v-if="props.jobOffer.companyDescription">
+          <Design.FieldLabel title="O firmie" class="mb-4"/>
+          <div v-html="props.jobOffer.companyDescription" class="list-style paragraph-style"/>
         </template>
       </div>
       <div class="w-1/3 space-y-3">

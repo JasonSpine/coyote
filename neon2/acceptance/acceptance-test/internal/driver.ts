@@ -91,7 +91,7 @@ export class Driver {
 
   private async fillJobOfferDetails(title: string, description: string): None {
     await this.web.fillByLabel('Tytuł ogłoszenia', title);
-    await this.web.fillByLabel('Szczegółowe informacje', description);
+    await this.web.fill('jobOfferDescription', description);
     await this.web.click('Dalej');
   }
 
