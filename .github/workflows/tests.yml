@@ -47,10 +47,10 @@ jobs:
         run: make install
 
       - name: Run client unit tests
-        run: docker compose exec -T php bash -c 'cd neon2/web/ && yarn run vitest'
+        run: docker compose exec -T php bash -c 'cd neon2/web/ && yarn install && yarn run vitest'
 
       - name: Run client static type check
-        run: docker compose exec -T php bash -c 'cd neon2/web/ && yarn tsc --noEmit'
+        run: docker compose exec -T php bash -c 'cd neon2/web/ && yarn install && yarn tsc --noEmit'
 
       - name: Bundle the client
         run: docker compose exec -T php bash -c 'cd neon2/web/ && yarn install && yarn vite build --mode production'
