@@ -9,7 +9,6 @@ use Coyote\Job;
 use Coyote\Job\Location;
 use Coyote\Services\UrlBuilder;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
-use Illuminate\Support\Facades\Gate;
 use Neon;
 use Neon2\Coyote\Integration;
 use Neon2\Invoice\CountryGate;
@@ -50,46 +49,31 @@ class ServiceProvider extends RouteServiceProvider {
         $this->middleware(['web', 'geocode'])->group(function () {
             $this
                 ->name('neon.jobOffer.list')
-                ->get('/Praca', function (UserTheme $theme) {
-                    $neon = new Neon\NeonApplication('/neon');
-                    $repository = app(JobElasticSearchRepository::class);
-                    foreach ($repository->jobOffers() as $jobOffer) {
-                        $neon->addJobOffer($this->jobOffer($jobOffer));
+                ->get('/Praca', function (
+                    Integration     $integration,
+                    CountryGate     $countries,
+                    StripePublicKey $stripePublicKey,
+                    UserTheme       $theme,
+                ): string {
+                    if ($this->isTestMode()) {
+                        if (\request()->query->has('revoke-bundle')) {
+                            $integration->revokePlanBundle(auth()->id());
+                        }
                     }
+                    $jobBoardView = new JobBoardView(
+                        $integration,
+                        $countries,
+                        $stripePublicKey->publishableKey,
+                        $this->isTestMode(),
+                        auth()->id(),
+                        auth()->user()?->email,
+                        app('session')->token(),
+                        $theme->isThemeDark());
                     return view('job.home_modern', [
-                        'neonHead' => new StringHtml($neon->htmlMarkupHead()),
-                        'neonBody' => new StringHtml($neon->htmlMarkupBody(
-                            $theme->isThemeDark() ? Neon\Theme::Dark : Neon\Theme::Light)),
+                        'neonHead' => new StringHtml($jobBoardView->htmlMarkupHead()),
+                        'neonBody' => new StringHtml($jobBoardView->htmlMarkupBody()),
                     ]);
                 });
-        });
-        $this->middleware(['web', 'geocode'])->group(function () {
-            $this->get('/Neon', function (
-                Integration     $integration,
-                CountryGate     $countries,
-                StripePublicKey $stripePublicKey,
-                UserTheme       $theme,
-            ): string {
-                Gate::authorize('alpha-access');
-                if ($this->isTestMode()) {
-                    if (\request()->query->has('revoke-bundle')) {
-                        $integration->revokePlanBundle(auth()->id());
-                    }
-                }
-                $jobBoardView = new JobBoardView(
-                    $integration,
-                    $countries,
-                    $stripePublicKey->publishableKey,
-                    $this->isTestMode(),
-                    auth()->id(),
-                    auth()->user()?->email,
-                    app('session')->token(),
-                    $theme->isThemeDark());
-                return view('job.home_modern', [
-                    'neonHead' => new StringHtml($jobBoardView->htmlMarkupHead()),
-                    'neonBody' => new StringHtml($jobBoardView->htmlMarkupBody()),
-                ]);
-            });
         });
     }
 

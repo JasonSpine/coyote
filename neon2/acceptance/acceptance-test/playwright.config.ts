@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: './test',
   fullyParallel: true,
   use: {
-    baseURL: 'http://nginx/Neon',
+    baseURL: 'http://nginx/Praca',
   },
   timeout: 60000,
   projects: [

@@ -8,7 +8,7 @@ export const describe = playwrightTest.describe;
 export function test(title: string, test: Test): void {
   playwrightTest(title, async function ({page, request}, testInfo: TestInfo): Promise<void> {
     await authenticate(page, testInfo.parallelIndex);
-    await page.goto('/Neon?revoke-bundle=true');
+    await page.goto('/Praca?revoke-bundle=true');
     await test(new Dsl(new Driver(page), new HttpDriver(request)));
   });
 }
