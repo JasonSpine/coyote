@@ -53,3 +53,7 @@ export const icons = {
   jobOfferPricingPlanListBullet: iconCheck,
   jobOfferPricingPlanListBulletSpecialCase: iconAsterisk,
 };
+
+export const htmlIconFormatBold = '<i class="fa-solid fa-bold"/>';
+export const htmlIconFormatListUnordered = '<i class="fa-solid fa-list-ul"/>';
+export const htmlIconFormatListOrdered = '<i class="fa-solid fa-list-ol"/>';

@@ -178,4 +178,16 @@ interface Props {
 .fa-asterisk:before {
   content: "\2a";
 }
+
+.fa-bold:before {
+  content: "\f032";
+}
+
+.fa-list-ul:before {
+  content: "\f0ca";
+}
+
+.fa-list-ol:before {
+  content: "\f0cb";
+}
 </style>

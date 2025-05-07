@@ -8,6 +8,7 @@
 import {exec, init} from 'pell';
 import {onMounted, ref, watch} from 'vue';
 import 'pell/dist/pell.min.css';
+import {htmlIconFormatBold, htmlIconFormatListOrdered, htmlIconFormatListUnordered} from "./icons/icons";
 
 const props = defineProps<Props>();
 
@@ -27,9 +28,9 @@ onMounted(() => {
     },
     defaultParagraphSeparator: 'p',
     actions: [
-      {icon: 'B', result: () => exec('bold')},
-      {icon: 'U', result: () => exec('insertUnorderedList')},
-      {icon: 'O', result: () => exec('insertOrderedList')},
+      {icon: htmlIconFormatBold, result: () => exec('bold')},
+      {icon: htmlIconFormatListUnordered, result: () => exec('insertUnorderedList')},
+      {icon: htmlIconFormatListOrdered, result: () => exec('insertOrderedList')},
     ],
   });
   editor.content.innerHTML = model.value!;
