@@ -240,8 +240,8 @@ export function toJobOffer(jobOffer: BackendJobOffer): JobOffer {
   return {
     ...operationalFields,
     ...fields,
-    isNew: true,
-    isFavourite: true,
+    isNew: false,
+    isFavourite: false,
   };
 }
 
