@@ -1,5 +1,5 @@
 import {JobOffer} from '../jobBoard';
-import {JobOfferFilter} from "../jobOfferFilter";
+import {JobOfferFilter, sortInPlace} from "../jobOfferFilter";
 import {Country, JobOfferFilters, PaymentSummary, PlanBundleName, UploadAssets, VatIdState} from "../main";
 import {PaymentNotification} from "../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../paymentProvider/PaymentService";
@@ -58,7 +58,11 @@ export class View {
   }
 
   private filterJobOffers(): void {
-    this.ui.setJobOffers(this.jobOffers.filter(jobOffer => this.jobOfferMatches(jobOffer)));
+    const jobOffers = this.jobOffers.filter(jobOffer => this.jobOfferMatches(jobOffer));
+    if (this.filter) {
+      sortInPlace(jobOffers, this.filter.sort);
+    }
+    this.ui.setJobOffers(jobOffers);
   }
 
   private jobOfferMatches(jobOffer: JobOffer): boolean {
