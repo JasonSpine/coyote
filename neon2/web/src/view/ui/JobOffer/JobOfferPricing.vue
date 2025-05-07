@@ -1,10 +1,11 @@
 <template>
-  <p>Znajdź najlepszych programistów szybciej i skuteczniej!</p>
-  <p>4programmers każdego miesiąca odwiedza ponad 150 000+ programistów.</p>
+  <p class="text-center text-neutral-500 text-lg mb-6 mt-12">
+    4programmers każdego miesiąca odwiedza ponad <b>150 000+</b> programistów.
+  </p>
   <div class="flex justify-center gap-2">
     <JobOfferPricingTab v-model="pricingTab"/>
   </div>
-  <div class="flex gap-4" :class="pricingTab === 'offers' ? 'w-2/3 mx-auto' : ''">
+  <div class="flex gap-4" :class="pricingTab === 'offers' ? 'lg:w-2/3 mx-auto' : ''">
     <JobOfferPricingCard
       v-if="pricingTab === 'offers'"
       v-for="plan in offerPlans"
@@ -32,14 +33,15 @@
       :color="plan.color"
       @select="selectPlan"/>
   </div>
+  <JobOfferPricingTestimonial class="mt-16"/>
 </template>
 
 <script setup lang="ts">
 import {ref} from 'vue';
 import {PricingPlan} from "../../../main";
-import {Design} from "../design/design";
 import JobOfferPricingCard, {JobOfferPricingCardColor} from './JobOfferPricingCard.vue';
 import JobOfferPricingTab, {PricingTab} from './JobOfferPricingTab.vue';
+import JobOfferPricingTestimonial from "./JobOfferPricingTestimonial.vue";
 
 const emit = defineEmits<Emit>();
 
@@ -62,8 +64,8 @@ interface PlanCard {
 const pricingTab = ref<PricingTab>('offers');
 
 const offerPlans: PlanCard[] = [
-  {name: 'free', title: 'Free*', price: 0, expiresIn: 14, bundleSize: 1, free: true, color: 'gray'},
-  {name: 'premium', title: 'Premium', price: 159, expiresIn: 30, bundleSize: 1, color: 'yellow'},
+  {name: 'free', title: 'Free*', price: 0, expiresIn: 14, bundleSize: 1, free: true, color: 'yellow'},
+  {name: 'premium', title: 'Premium', price: 159, expiresIn: 30, bundleSize: 1, color: 'blue'},
 ];
 
 const bundlePlans: PlanCard[] = [

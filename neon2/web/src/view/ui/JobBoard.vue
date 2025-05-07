@@ -1,6 +1,9 @@
 <template>
   <Design.Layout class="bg-body">
-    <Design.BannerHeading :back="showHomeLink" @back="navigateHome"/>
+    <Design.BannerHeading
+      :pricing="props.screen === 'pricing'"
+      :back="showHomeLink"
+      @back="navigateHome"/>
     <Design.Toast v-if="toastTitle" :title="toastTitle"/>
     <Design.Toast v-if="planBundleToast"
                   :title="planBundleToast"
