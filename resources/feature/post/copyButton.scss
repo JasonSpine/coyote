@@ -1,4 +1,5 @@
 @use "../../feature/theme/theme" as theme;
+@use "../../feature/lookAndFeel/style-guide" as style;
 
 .markdown-code {
   position: relative;
@@ -17,7 +18,7 @@
 
     @include theme.light {
       color:            #838383;
-      background-color: #f5f2f0; // background of code block
+      background-color: style.$navy-025; // background of code block
       &:hover {
         background-color: lighten(#f5f2f0, 2%);
       }
@@ -25,7 +26,7 @@
 
     @include theme.dark {
       border:           1px solid #838383;
-      background-color: #101010; // background of code block
+      background-color: style.$neutral-900; // background of code block
       &:hover {
         background-color: #1a1a1a;
       }

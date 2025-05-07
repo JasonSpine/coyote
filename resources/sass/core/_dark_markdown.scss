@@ -1,9 +1,11 @@
+@use "../../feature/lookAndFeel/style-guide" as style;
+
 body.theme-dark {
   :not(pre) > code,
   pre,
   {
     color: #acacac;
-    background-color: #101010; // TODO Remove after new homepage
+    background-color: style.$neutral-900; // TODO Remove after new homepage
     border: none;
   }
 
