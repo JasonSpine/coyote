@@ -17,6 +17,7 @@
 <script setup lang="ts" generic="T">
 interface Props {
   tabs: Tab<T>[];
+  modelValue: T;
 }
 
 export interface Tab<T> {
@@ -25,15 +26,18 @@ export interface Tab<T> {
   titleShort: string;
 }
 
+interface Emits {
+  (event: 'update:model-value', tab: T): void;
+}
+
 const props = defineProps<Props>();
-const emit = defineEmits(['change']);
-const model = defineModel<T>();
+const emit = defineEmits<Emits>();
 
 function select(tab: Tab<T>): void {
-  model.value = tab.value;
+  emit('update:model-value', tab.value);
 }
 
 function selected(tab: Tab<T>): boolean {
-  return tab.value === model.value;
+  return tab.value === props.modelValue;
 }
 </script>
