@@ -84,7 +84,7 @@ class CreatedNotification extends Notification implements ShouldQueue
         $offerLink = link_to(UrlBuilder::job($this->job), htmlentities($this->job->title));
         $netPrice = $this->calculator->netPrice();
         return (new MailMessage)
-            ->subject("Ogłoszenie \"{$this->job->title}\" zostało dodane i oczekuje na płatność")
+            ->subject("Ogłoszenie \"{$this->job->title}\" oczekuje na płatność")
             ->line("Ogłoszenie $offerLink zostało zapisane i czeka na dokończenie płatności w kwocie $netPrice zł.")
             ->line('Po opłaceniu będzie ono widoczne w serwisie <strong>4programmers.net</strong>')
             ->action('Opłać ogłoszenie', route('job.payment', [$this->job->getUnpaidPayment()]))
