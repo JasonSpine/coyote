@@ -16,18 +16,24 @@
         Aplikuj
       </Design.Button>
     </Design.Row>
-    <div class="mb-8 md:flex md:justify-between md:items-start max-md:mb-4">
+    <div class="mb-8 md:flex md:justify-between md:items-start max-md:mb-12 max-md:space-y-6">
       <div>
-        <h1 v-text="props.jobOffer.title" class="text-3xl font-medium text-neutral-600 dark:text-neutral-050"/>
+        <h1
+          class="text-2xl md:text-3xl md:mb-2 font-medium text-neutral-600 dark:text-neutral-050"
+          v-text="props.jobOffer.title"/>
         <h2
-          class="text-neutral-400 dark:text-neutral-050"
+          class="text-lg text-neutral-400 dark:text-neutral-050"
           v-text="props.jobOffer.companyName"
           data-testid="jobOfferCompanyName"/>
       </div>
       <Design.JobOfferSalary :salary="salary" nowrap v-if="salary"/>
     </div>
-    <div class="flex">
-      <div class="w-2/3 pr-8 text-neutral-500 dark:text-neutral-200 job-offer-description list-style paragraph-style">
+    <div class="md:flex max-md:space-y-12">
+      <div :class="[
+          'md:w-2/3 pr-8',
+          'text-neutral-500 dark:text-neutral-200',
+          'job-offer-description list-style paragraph-style'
+        ]">
         <div
           v-if="props.jobOffer.description"
           data-testid="jobOfferDescription"
@@ -37,7 +43,7 @@
           <div v-html="props.jobOffer.companyDescription"/>
         </template>
       </div>
-      <div class="w-1/3 space-y-3">
+      <div class="md:w-1/3 space-y-3">
         <Design.Card space border>
           <JobOfferField
             title="Tryb pracy"
