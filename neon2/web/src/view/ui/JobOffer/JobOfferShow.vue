@@ -73,6 +73,7 @@
         </Design.Card>
         <Design.Card space border v-if="companyCard">
           <JobOfferField
+            link
             icon="jobOfferCompanyWebsite"
             title="Witryna firmy"
             :value="props.jobOffer.companyWebsiteUrl"
