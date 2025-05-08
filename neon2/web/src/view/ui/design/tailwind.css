@@ -110,8 +110,8 @@
 
   .list-style {
     ul, ol {
-      list-style-position: inside;
-      @apply mb-4 pl-4;
+      list-style-position: outside;
+      @apply mb-4 pl-8;
     }
 
     ul {
@@ -122,16 +122,18 @@
       list-style-type: decimal;
     }
 
-    ul ul, ol ul {
+    ul ul,
+    ol ul {
       list-style-type: circle;
-      list-style-position: inside;
-      margin-left: 15px;
     }
 
-    ol ol, ul ol {
+    ol ol,
+    ul ol {
       list-style-type: lower-latin;
-      list-style-position: inside;
-      margin-left: 15px;
+    }
+
+    li {
+      margin-bottom: 16px;
     }
   }
 }
