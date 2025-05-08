@@ -28,6 +28,12 @@ export class JobOfferFormValidation<T extends string> {
           success = false;
         }
       },
+      optionalJsUrl: (field: T, errorMessage: string): void => {
+        if (jsUrlMalformed(this.fields[field])) {
+          errors[field] = errorMessage;
+          success = false;
+        }
+      },
     });
     return [success, errors];
   }
@@ -42,6 +48,7 @@ interface Validator<T> {
   nonEmpty(field: T, errorMessage: string): void;
   notEqual(field: T, value: string, errorMessage: string): void;
   optionalNumeric(field: T, errorMessage: string): void;
+  optionalJsUrl(field: T, errorMessage: string): void;
 }
 
 function numberMalformed(value: string|null): boolean {
@@ -52,9 +59,34 @@ function numberMalformed(value: string|null): boolean {
   if (text === '') {
     return false;
   }
+  return !isValidNumeric(text);
+}
+
+function jsUrlMalformed(value: string|null): boolean {
+  if (value === null) {
+    return false;
+  }
+  const text = value.trim();
+  if (text === '') {
+    return false;
+  }
+  return !isValidJsUrl(text);
+}
+
+function isValidNumeric(text: string): boolean {
   const number = parseInt(text, 10);
   if (isNaN(number)) {
-    return true;
+    return false;
   }
-  return number < 0;
+  return number >= 0;
+}
+
+function isValidJsUrl(text: string): boolean {
+  let url;
+  try {
+    url = new URL(text);
+  } catch (error) {
+    return false;
+  }
+  return url.protocol === 'http:' || url.protocol === 'https:';
 }

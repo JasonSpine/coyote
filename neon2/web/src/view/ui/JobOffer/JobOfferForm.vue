@@ -8,7 +8,7 @@
           <Design.ImageUpload v-model="jobOffer.companyLogoUrl" :upload="props.upload.uploadLogo"/>
           <Design.FieldHelp>Format: JPEG, PNG. Maksymalny rozmiar 5MB</Design.FieldHelp>
         </div>
-        <div class="flex-grow-1">
+        <div class="flex-grow-1 space-y-6">
           <div class="mb-8">
             <Design.RadioGroup vertical :options="hiringTypeOptions" v-model="jobOffer.companyHiringType"/>
           </div>
@@ -18,7 +18,7 @@
               Podając nazwę firmy, oferta staje się bardziej wiarygodna i wartościowa.
             </Design.FieldHelp>
           </Design.FieldGroup>
-          <Design.FieldGroup label="Strona WWW">
+          <Design.FieldGroup label="Strona WWW" :error="errors.companyWebsiteUrl">
             <Design.TextField placeholder="Podaj stronę www firmy" v-model="jobOffer.companyWebsiteUrl"/>
             <Design.FieldHelp>
               Firmowa strona WWW. Będzie wyświetlana przy ofercie.
@@ -122,7 +122,7 @@
             title="Poprzez 4programmers"
             :selected="jobOffer.applicationMode==='4programmers'"
             @select="jobOffer.applicationMode='4programmers'"/>
-          <Design.FieldHelp>
+          <Design.FieldHelp class="mb-4">
             Zezwól na wysyłanie CV poprzez 4programmers na Twój adres email. Adres e-mail nie
             będzie widoczny dla osób postronnych.
           </Design.FieldHelp>
@@ -137,7 +137,7 @@
             title="Poprzez Twój system ATS"
             :selected="jobOffer.applicationMode==='external-ats'"
             @select="jobOffer.applicationMode='external-ats'"/>
-          <Design.FieldHelp>
+          <Design.FieldHelp class="mb-4">
             Kandydaci zostaną przekierowani na wskazaną przez Ciebie stronę.
           </Design.FieldHelp>
           <Design.FieldGroup label="Twój adres"
@@ -233,6 +233,7 @@ const jobOffer: FormModel = reactive<FormModel>(toFormModel(props.jobOffer));
 const validation = new JobOfferFormValidation(jobOffer, [
   'title', 'companyName', 'applicationEmail', 'applicationExternalAts',
   'salaryRangeFrom', 'salaryRangeTo', 'companyFundingYear',
+  'companyWebsiteUrl',
 ]);
 
 const errors = reactive(validation.emptyErrors());
@@ -263,6 +264,7 @@ function validate() {
     return validation.validate(v => {
       v.nonEmpty('companyName', 'Podaj nazwę firmy.');
       v.optionalNumeric('companyFundingYear', 'Podaj poprawny rok założenia firmy.');
+      v.optionalJsUrl('companyWebsiteUrl', 'Podaj poprawny URL witryny firmy.');
     });
   }
   return validation.validate(v => {
