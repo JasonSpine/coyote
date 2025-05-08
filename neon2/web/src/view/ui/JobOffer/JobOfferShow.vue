@@ -18,7 +18,7 @@
     </Design.Row>
     <div class="mb-8 md:flex md:justify-between md:items-start max-md:mb-4">
       <div>
-        <h1 v-text="props.jobOffer.title" class="text-3xl font-medium"/>
+        <h1 v-text="props.jobOffer.title" class="text-3xl font-medium text-neutral-600 dark:text-neutral-050"/>
         <h2
           class="text-neutral-400 dark:text-neutral-050"
           v-text="props.jobOffer.companyName"
@@ -27,14 +27,14 @@
       <Design.JobOfferSalary :salary="salary" nowrap v-if="salary"/>
     </div>
     <div class="flex">
-      <div class="w-2/3 pr-8 space-y-12">
-        <template v-if="props.jobOffer.description">
-          <Design.FieldLabel title="Opis oferty" class="mb-4"/>
-          <div data-testid="jobOfferDescription" v-html="props.jobOffer.description" class="list-style paragraph-style"/>
-        </template>
+      <div class="w-2/3 pr-8 text-neutral-500 dark:text-neutral-200 job-offer-description list-style paragraph-style">
+        <div
+          v-if="props.jobOffer.description"
+          data-testid="jobOfferDescription"
+          v-html="props.jobOffer.description"/>
         <template v-if="props.jobOffer.companyDescription">
-          <Design.FieldLabel title="O firmie" class="mb-4"/>
-          <div v-html="props.jobOffer.companyDescription" class="list-style paragraph-style"/>
+          <p><b>O firmie</b></p>
+          <div v-html="props.jobOffer.companyDescription"/>
         </template>
       </div>
       <div class="w-1/3 space-y-3">
@@ -160,3 +160,11 @@ const companyCard = computed<boolean>((): boolean => {
     !!props.jobOffer.companySizeLevel;
 });
 </script>
+
+<style>
+@import "../../ui/design/tailwind.css";
+
+.job-offer-description b {
+  @apply text-neutral-600 dark:text-neutral-050;
+}
+</style>
