@@ -17,7 +17,7 @@ readonly class JobOfferMapper {
     public function jobOfferFields(Coyote\Job $jobOffer): JobOfferSubmit {
         return new JobOfferSubmit(
             $jobOffer->title,
-            $jobOffer->description,
+            $this->stripFormatting($jobOffer->description),
             $jobOffer->salary_from,
             $jobOffer->salary_to,
             !$jobOffer->is_gross,
@@ -34,7 +34,7 @@ readonly class JobOfferMapper {
             $jobOffer->firm->name,
             $this->companyLogoUrl($jobOffer),
             $jobOffer->firm->website,
-            $jobOffer->firm->description,
+            $this->stripFormatting($jobOffer->firm->description),
             $this->companyPhotoUrls($jobOffer->firm),
             $jobOffer->firm->youtube_url,
             $jobOffer->firm->employees,
@@ -42,6 +42,14 @@ readonly class JobOfferMapper {
             'not-used',
             $jobOffer->firm->is_agency ? HiringType::Agency : HiringType::Direct,
         );
+    }
+
+    private function stripFormatting(?string $text): ?string {
+        if ($text === null) {
+            return null;
+        }
+        $formattedText = new FormattedText();
+        return $formattedText->stripFormatting($text);
     }
 
     private function companyLogoUrl(Coyote\Job $jobOffer): ?string {
