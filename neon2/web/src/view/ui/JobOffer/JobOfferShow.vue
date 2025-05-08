@@ -27,7 +27,7 @@
       <Design.JobOfferSalary :salary="salary" nowrap v-if="salary"/>
     </div>
     <div class="flex">
-      <div class="w-2/3 space-y-12">
+      <div class="w-2/3 pr-8 space-y-12">
         <template v-if="props.jobOffer.description">
           <Design.FieldLabel title="Opis oferty" class="mb-4"/>
           <div data-testid="jobOfferDescription" v-html="props.jobOffer.description" class="list-style paragraph-style"/>

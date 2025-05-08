@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @custom-variant dark (
-  &:where(
-    :host-context(.dark) ,
-    :host-context(.dark)  *,
-  )
+&:where(
+:host-context(.dark) ,
+:host-context(.dark)  *,
+)
 );
 
 :root, :host {
@@ -109,14 +109,17 @@
   }
 
   .list-style {
+    ul, ol {
+      list-style-position: inside;
+      @apply mb-4 pl-4;
+    }
+
     ul {
       list-style-type: disc;
-      list-style-position: inside;
     }
 
     ol {
       list-style-type: decimal;
-      list-style-position: inside;
     }
 
     ul ul, ol ul {
