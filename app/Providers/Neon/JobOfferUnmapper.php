@@ -9,6 +9,7 @@ use Neon\WorkExperience;
 use Neon\WorkMode;
 use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
+use Neon2\Request\JobOfferLocation;
 use Neon2\Request\JobOfferSubmit;
 
 class JobOfferUnmapper {
@@ -22,9 +23,7 @@ class JobOfferUnmapper {
             'is_gross'        => !$jobOffer->salaryIsNet,
             'currency_id'     => $this->coyoteCurrencyId($jobOffer->salaryCurrency),
             'rate'            => $jobOffer->salaryRate->value,
-            'locations'       => \array_map(
-                fn(string $location) => ['country' => 'unknown', 'city' => $location, 'latitude' => 50.0, 'longitude' => 19.0, 'label' => "$location, unknown"],
-                $jobOffer->locations),
+            'locations'       => $this->coyoteLocations($jobOffer),
             'tags'            => $this->coyoteTagNames($jobOffer->tagNames),
             'is_remote'       => $this->coyoteRemoteRange($jobOffer->workMode) > 0,
             'remote_range'    => $this->coyoteRemoteRange($jobOffer->workMode),
@@ -49,17 +48,9 @@ class JobOfferUnmapper {
             'youtube_url' => $jobOffer->companyVideoUrl,
             'employees'   => $jobOffer->companySizeLevel,
             'founded'     => $jobOffer->companyFundingYear,
-
-            'country_id'    => null,
-            'city'          => null,
-            'street'        => $jobOffer->companyAddress,
-            'street_number' => null,
-            'postcode'      => null,
-            'latitude'      => null,
-            'longitude'     => null,
-
-            'is_agency' => $jobOffer->companyHiringType === HiringType::Agency,
-            'benefits'  => [],
+            'is_agency'   => $jobOffer->companyHiringType === HiringType::Agency,
+            'benefits'    => [],
+            ...$this->coyoteFirmFields($jobOffer),
         ];
     }
 
@@ -71,7 +62,7 @@ class JobOfferUnmapper {
             ->id;
     }
 
-    private function coyoteCurrencyId(Neon\Currency $currency): mixed {
+    private function coyoteCurrencyId(Neon\Currency $currency): int {
         return Coyote\Currency::query()
             ->where('name', $currency->value)
             ->firstOrFail('id')
@@ -128,5 +119,43 @@ class JobOfferUnmapper {
 
     private function assetPath(mixed $photoUrl): string {
         return \explode('/uploads/', $photoUrl)[1];
+    }
+
+    private function coyoteLocations(JobOfferSubmit $jobOffer): array {
+        return \array_map(
+            fn(JobOfferLocation $location) => [
+                'city'          => $location->city,
+                'latitude'      => $location->latitude,
+                'longitude'     => $location->longitude,
+                'street'        => $location->streetName,
+                'street_number' => $location->streetNumber,
+                'country_id'    => $this->coyoteCountryId($location->countryCode),
+            ],
+            $jobOffer->locations);
+    }
+
+    private function coyoteCountryId(?string $countryCode): ?int {
+        if ($countryCode === null) {
+            return null;
+        }
+        return Coyote\Country::query()
+            ->where('code', $countryCode)
+            ->first('id')
+            ->id;
+    }
+
+    private function coyoteFirmFields(JobOfferSubmit $jobOffer): array {
+        if ($jobOffer->companyAddress === null) {
+            return [];
+        }
+        return [
+            'country_id'    => $this->coyoteCountryId($jobOffer->companyAddress->countryCode),
+            'city'          => $jobOffer->companyAddress->city,
+            'street'        => $jobOffer->companyAddress->streetName,
+            'street_number' => $jobOffer->companyAddress->streetNumber,
+            'postcode'      => $jobOffer->companyAddress->postalCode,
+            'latitude'      => $jobOffer->companyAddress->latitude,
+            'longitude'     => $jobOffer->companyAddress->longitude,
+        ];
     }
 }

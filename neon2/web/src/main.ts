@@ -1,4 +1,4 @@
-import {BackendJobOffer, JobBoardBackend, toJobOffer} from "./backend";
+import {BackendJobOffer, BackendJobOfferLocation, JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard, JobOffer} from './jobBoard';
 import {JobOfferPayments} from "./jobOfferPayments";
 import {PaymentMethod, PaymentNotification, PaymentProvider} from "./paymentProvider/PaymentProvider";
@@ -38,7 +38,7 @@ export interface SubmitJobOffer {
   salaryIsNet: boolean;
   salaryCurrency: Currency;
   salaryRate: Rate;
-  locations: string[];
+  locations: BackendJobOfferLocation[];
   tagNames: string[];
   workMode: WorkMode;
   legalForm: LegalForm;
@@ -54,8 +54,12 @@ export interface SubmitJobOffer {
   companyVideoUrl: string|null;
   companySizeLevel: number|null;
   companyFundingYear: number|null;
-  companyAddress: string|null;
+  companyAddress: BackendJobOfferLocation|null;
   companyHiringType: HiringType;
+}
+
+export function toSubmitJobOffer(jobOffer: JobOffer): SubmitJobOffer {
+  return jobOffer;
 }
 
 export type WorkMode = 'stationary'|'hybrid'|'fullyRemote';

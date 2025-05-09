@@ -1,4 +1,4 @@
-import {JobOffer} from '../jobBoard';
+import {JobOffer, jobOfferCities} from '../jobBoard';
 import {JobOfferFilter, sortInPlace} from "../jobOfferFilter";
 import {Country, JobOfferFilters, PaymentSummary, PlanBundleName, UploadAssets, VatIdState} from "../main";
 import {PaymentNotification} from "../paymentProvider/PaymentProvider";
@@ -93,7 +93,7 @@ export class View {
       }
     }
     if (this.filter.locations.length) {
-      if (!this.haveCommonElement(this.filter.locations, jobOffer.locations)) {
+      if (!this.haveCommonElement(this.filter.locations, jobOfferCities(jobOffer))) {
         return false;
       }
     }

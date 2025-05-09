@@ -29,7 +29,7 @@ class Location extends Model
      *
      * @var array
      */
-    protected $fillable = ['city', 'latitude', 'longitude', 'street', 'country', 'street_number'];
+    protected $fillable = ['city', 'latitude', 'longitude', 'street', 'country', 'country_id', 'street_number'];
 
     /**
      * @var array

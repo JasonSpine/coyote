@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $user_id
  * @property bool $is_private
  * @property string $name
+ * @property float $latitude
+ * @property float $longitude
  * @property string $city
  * @property string $street
  * @property string $street_number

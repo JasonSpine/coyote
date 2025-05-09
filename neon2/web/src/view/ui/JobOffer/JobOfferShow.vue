@@ -51,8 +51,8 @@
             icon="jobOfferWorkModeRemote"/>
           <JobOfferField
             title="Lokalizacja"
-            :value="props.jobOffer.locations.join(', ')"
-            v-if="props.jobOffer.locations.length"
+            :value="props.jobOffer.locationCities.join(', ')"
+            v-if="props.jobOffer.locationCities.length"
             icon="jobOfferLocation"/>
           <JobOfferField
             title="Rodzaj umowy"
@@ -102,7 +102,6 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import {Currency, LegalForm, Rate, WorkExperience, WorkMode} from "../../../main";
 import {Design} from "../design/design";
 import JobOfferField from "../design/JobOffer/JobOfferField.vue";
 import {SalaryJobOffer} from "../design/JobOffer/JobOfferSalary.vue";
@@ -114,6 +113,7 @@ import {
   formatWorkExperience,
   formatWorkMode,
 } from "../format";
+import {JobOfferShow} from "./JobOfferShow";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
@@ -121,28 +121,6 @@ const emit = defineEmits<Emit>();
 interface Props {
   jobOffer: JobOfferShow;
   preview?: boolean;
-}
-
-export interface JobOfferShow {
-  title: string;
-  description: string|null;
-  expiresInDays: number;
-  locations: string[];
-  tagNames: string[];
-  workMode: WorkMode;
-  legalForm: LegalForm;
-  experience: WorkExperience;
-  salaryRangeFrom: number|null;
-  salaryRangeTo: number|null;
-  salaryIsNet: boolean;
-  salaryCurrency: Currency;
-  salaryRate: Rate;
-  companyName: string;
-  companyLogoUrl: string|null;
-  companyWebsiteUrl: string|null,
-  companyDescription: string|null,
-  companyFundingYear: number|null,
-  companySizeLevel: number|null,
 }
 
 interface Emit {

@@ -3,7 +3,6 @@ namespace Coyote\Providers\Neon;
 
 use Coyote;
 use Coyote\Job;
-use Coyote\Job\Location;
 use Neon\Currency;
 use Neon\LegalForm;
 use Neon\Rate;
@@ -11,6 +10,7 @@ use Neon\WorkExperience;
 use Neon\WorkMode;
 use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
+use Neon2\Request\JobOfferLocation;
 use Neon2\Request\JobOfferSubmit;
 
 readonly class JobOfferMapper {
@@ -39,7 +39,7 @@ readonly class JobOfferMapper {
             $jobOffer->firm->youtube_url,
             $jobOffer->firm->employees,
             $jobOffer->firm->founded,
-            'not-used',
+            $this->neonCompanyAddress($jobOffer->firm),
             $jobOffer->firm->is_agency ? HiringType::Agency : HiringType::Direct,
         );
     }
@@ -106,8 +106,37 @@ readonly class JobOfferMapper {
 
     private function neonLocations(Job $jobOffer): array {
         return $jobOffer->locations
-            ->map(fn(Location $location): string => $location->city)
-            ->filter(fn(string $city) => !empty($city))
+            ->map($this->neonLocation(...))
+            ->filter(fn(?JobOfferLocation $location) => $location?->city !== null)
+            ->values()
             ->toArray();
+    }
+
+    private function neonLocation(Coyote\Job\Location $location): ?JobOfferLocation {
+        if (!$location->latitude || !$location->longitude) {
+            return null;
+        }
+        return new JobOfferLocation(
+            $location->latitude,
+            $location->longitude,
+            $location->city,
+            $location->street,
+            $location->street_number,
+            $location->country?->code,
+            null);
+    }
+
+    private function neonCompanyAddress(Coyote\Firm $firm): ?JobOfferLocation {
+        if (!$firm->latitude || !$firm->longitude) {
+            return null;
+        }
+        return new JobOfferLocation(
+            $firm->latitude,
+            $firm->longitude,
+            $firm->city,
+            $firm->street,
+            $firm->street_number,
+            $firm->country?->code,
+            $firm->postcode);
     }
 }

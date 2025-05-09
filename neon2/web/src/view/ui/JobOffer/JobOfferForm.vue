@@ -155,7 +155,7 @@
     <JobOfferShow
       preview
       @edit="previousStep"
-      :job-offer="{expiresInDays: props.jobOfferExpiresInDays, ...fromFormModel(jobOffer)}"/>
+      :job-offer="fromSubmitToJobOfferShow(fromFormModel(jobOffer), props.jobOfferExpiresInDays)"/>
   </template>
   <div class="sticky bottom-2 mt-5">
     <Design.Tile space shadow>
@@ -183,6 +183,7 @@
 
 <script setup lang="ts">
 import {computed, reactive, ref} from 'vue';
+import {BackendJobOfferLocation} from "../../../backend";
 import {
   ApplicationMode,
   Currency,
@@ -207,6 +208,7 @@ import {
 import {JobOfferFormValidation} from './JobOfferFormValidation';
 import JobOfferLocationSet from './JobOfferLocationSet.vue';
 import JobOfferPhotoSet from './JobOfferPhotoSet.vue';
+import {fromSubmitToJobOfferShow} from "./JobOfferShow";
 import JobOfferShow from "./JobOfferShow.vue";
 
 const props = defineProps<Props>();
@@ -389,6 +391,7 @@ function toFormModel(jobOffer: SubmitJobOffer): FormModel {
     ...jobOffer,
     salaryRangeFrom: formatNumber(jobOffer.salaryRangeFrom),
     salaryRangeTo: formatNumber(jobOffer.salaryRangeFrom),
+    locations: jobOffer.locations.map(location => location.city).filter(city => city !== null),
     tagNames: jobOffer.tagNames.join(', '),
     description: jobOffer.description || '',
     applicationEmail: jobOffer.applicationEmail || '',
@@ -396,7 +399,7 @@ function toFormModel(jobOffer: SubmitJobOffer): FormModel {
     companyWebsiteUrl: jobOffer.companyWebsiteUrl || '',
     companyDescription: jobOffer.companyDescription || '',
     companyVideoUrl: jobOffer.companyVideoUrl || '',
-    companyAddress: jobOffer.companyAddress || '',
+    companyAddress: jobOffer.companyAddress?.city || '',
     companyFundingYear: jobOffer.companyFundingYear
       ? jobOffer.companyFundingYear.toString()
       : '',
@@ -409,16 +412,31 @@ function fromFormModel(formModel: FormModel): SubmitJobOffer {
     salaryRangeFrom: parseNumber(formModel.salaryRangeFrom),
     salaryRangeTo: parseNumber(formModel.salaryRangeTo),
     salaryIsNet: true,
-    tagNames: jobOffer.tagNames.split(',').map(s => s.trim()).filter(t => t.length),
-    locations: jobOffer.locations.filter(l => l.length),
+    tagNames: formModel.tagNames.split(',').map(s => s.trim()).filter(t => t.length),
+    locations: formModel.locations.filter(l => l.length).map(toSubmitLocation).filter(l => l !== null),
     description: parseString(formModel.description),
     applicationEmail: parseString(formModel.applicationEmail),
     applicationExternalAts: parseString(formModel.applicationExternalAts),
     companyWebsiteUrl: parseString(formModel.companyWebsiteUrl),
     companyDescription: parseString(formModel.companyDescription),
     companyVideoUrl: parseString(formModel.companyVideoUrl),
-    companyAddress: parseString(formModel.companyAddress),
+    companyAddress: toSubmitLocation(formModel.companyAddress),
     companyFundingYear: parseNumber(formModel.companyFundingYear),
+  };
+}
+
+function toSubmitLocation(city: string): BackendJobOfferLocation|null {
+  if (city.trim().length === 0) {
+    return null;
+  }
+  return {
+    city,
+    countryCode: 'PL',
+    latitude: 51,
+    longitude: 21,
+    postalCode: '31-120',
+    streetName: 'Ulicowa',
+    streetNumber: '12',
   };
 }
 

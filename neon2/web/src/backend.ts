@@ -193,7 +193,7 @@ export interface BackendJobOffer {
     salaryIsNet: boolean;
     salaryCurrency: Currency;
     salaryRate: Rate;
-    locations: string[];
+    locations: BackendJobOfferLocation[];
     tagNames: string[];
     workMode: WorkMode;
     legalForm: LegalForm;
@@ -209,9 +209,19 @@ export interface BackendJobOffer {
     companyVideoUrl: string|null,
     companySizeLevel: number|null,
     companyFundingYear: number|null,
-    companyAddress: string|null,
+    companyAddress: BackendJobOfferLocation|null,
     companyHiringType: HiringType,
   };
+}
+
+export interface BackendJobOfferLocation {
+  latitude: number;
+  longitude: number;
+  city: string|null;
+  streetName: string|null;
+  streetNumber: string|null;
+  countryCode: string|null;
+  postalCode: string|null;
 }
 
 export interface BackendPaymentIntent {

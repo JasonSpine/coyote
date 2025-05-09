@@ -1,3 +1,4 @@
+import {BackendJobOfferLocation} from "./backend";
 import {
   ApplicationMode,
   Currency,
@@ -55,10 +56,16 @@ export class JobBoard {
 
   jobOfferFilters(): JobOfferFilters {
     return {
-      locations: [...new Set(this.jobOffers.flatMap(offer => offer.locations))],
+      locations: [...new Set(this.jobOffers.flatMap(offer => jobOfferCities(offer)))],
       tags: [...new Set(this.jobOffers.flatMap(offer => offer.tagNames))],
     };
   }
+}
+
+export function jobOfferCities(jobOffer: JobOffer): string[] {
+  return jobOffer.locations
+    .map(location => location.city)
+    .filter(city => city !== null);
 }
 
 export interface JobOffer {
@@ -74,7 +81,7 @@ export interface JobOffer {
   salaryIsNet: boolean;
   salaryCurrency: Currency;
   salaryRate: Rate;
-  locations: string[];
+  locations: BackendJobOfferLocation[];
   tagNames: string[];
   workMode: WorkMode;
   legalForm: LegalForm;
@@ -84,14 +91,14 @@ export interface JobOffer {
   applicationExternalAts: string|null,
   companyName: string;
   companyLogoUrl: string|null;
-  companyWebsiteUrl: string|null,
-  companyDescription: string|null,
-  companyPhotoUrls: string[],
-  companyVideoUrl: string|null,
-  companySizeLevel: number|null,
-  companyFundingYear: number|null,
-  companyAddress: string|null,
-  companyHiringType: HiringType,
+  companyWebsiteUrl: string|null;
+  companyDescription: string|null;
+  companyPhotoUrls: string[];
+  companyVideoUrl: string|null;
+  companySizeLevel: number|null;
+  companyFundingYear: number|null;
+  companyAddress: BackendJobOfferLocation|null;
+  companyHiringType: HiringType;
 }
 
 function copyArray<T>(array: T[]): T[] {

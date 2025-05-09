@@ -45,12 +45,12 @@
     </template>
     <template v-if="props.screen === 'show'">
       <JobOfferButtonPill @click="navigateHome">Wróć do ogłoszeń</JobOfferButtonPill>
-      <JobOfferShow :job-offer="currentJobOffer" @edit="editJob"/>
+      <JobOfferShow :job-offer="toJobOfferShow(currentJobOffer)" @edit="editJob"/>
     </template>
     <JobOfferEdit
       v-if="props.screen === 'edit'"
       :id="props.currentJobOfferId!"
-      :job-offer="currentJobOffer"
+      :job-offer="toSubmitJobOffer(currentJobOffer)"
       :job-offer-expires-in-days="currentJobOffer.expiresInDays"
       :upload="props.upload!"
       @update="updateJob"
@@ -69,7 +69,7 @@
 import {computed, onMounted, watch} from 'vue';
 import {JobOffer} from '../../jobBoard';
 import {JobOfferFilter} from "../../jobOfferFilter";
-import {InitiatePayment, PricingPlan, SubmitJobOffer} from "../../main";
+import {InitiatePayment, PricingPlan, SubmitJobOffer, toSubmitJobOffer} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
@@ -81,6 +81,7 @@ import JobOfferHome from './JobOffer/JobOfferHome.vue';
 import JobOfferPaymentForm from './JobOffer/JobOfferPaymentForm.vue';
 import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
 import JobOfferRedeemBundle from "./JobOffer/JobOfferRedeemBundle.vue";
+import {toJobOfferShow} from "./JobOffer/JobOfferShow";
 import JobOfferShow from './JobOffer/JobOfferShow.vue';
 import {JobBoardProps, Screen} from "./ui";
 

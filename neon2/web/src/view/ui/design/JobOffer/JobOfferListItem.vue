@@ -93,7 +93,7 @@ const workModeBadge = computed<Badge>((): Badge => ({title: formatWorkMode(props
 const locationBadges = computed<Badge[]>((): Badge[] => {
   return props.jobOffer.locations.map(location => ({
     icon: 'jobOfferLocation',
-    title: location,
+    title: location.city ?? 'Nie podano',
   }));
 });
 

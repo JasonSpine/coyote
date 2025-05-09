@@ -15,6 +15,7 @@ use Neon2\JobBoard\InvoiceInformation;
 use Neon2\Payment\PaymentStatus;
 use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
+use Neon2\Request\JobOfferLocation;
 use Neon2\Request\JobOfferSubmit;
 
 class RouteServiceProvider extends ServiceProvider {
@@ -80,7 +81,9 @@ class RouteServiceProvider extends ServiceProvider {
             $request->get('jobOfferSalaryIsNet'),
             Currency::from($request->get('jobOfferSalaryCurrency')),
             Rate::from($request->get('jobOfferSalaryRate')),
-            $request->get('jobOfferLocations'),
+            \array_map(
+                $this->requestLocation(...),
+                $request->get('jobOfferLocations')),
             $request->get('jobOfferTagNames'),
             WorkMode::from($request->get('jobOfferWorkMode')),
             LegalForm::from($request->get('jobOfferLegalForm')),
@@ -96,7 +99,7 @@ class RouteServiceProvider extends ServiceProvider {
             $request->get('jobOfferCompanyVideoUrl'),
             $request->get('jobOfferCompanySizeLevel'),
             $request->get('jobOfferCompanyFundingYear'),
-            $request->get('jobOfferCompanyAddress'),
+            $this->requestLocation($request->get('jobOfferCompanyAddress')),
             HiringType::from($request->get('jobOfferCompanyHiringType')));
     }
 
@@ -108,5 +111,19 @@ class RouteServiceProvider extends ServiceProvider {
             $request->get('invoiceCompanyAddress'),
             $request->get('invoiceCompanyPostalCode'),
             $request->get('invoiceCompanyCity'));
+    }
+
+    private function requestLocation(?array $locationFields): ?JobOfferLocation {
+        if ($locationFields === null) {
+            return null;
+        }
+        return new JobOfferLocation(
+            $locationFields['latitude'],
+            $locationFields['longitude'],
+            $locationFields['city'],
+            $locationFields['streetName'],
+            $locationFields['streetNumber'],
+            $locationFields['countryCode'],
+            $locationFields['postalCode']);
     }
 }
