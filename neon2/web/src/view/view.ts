@@ -3,7 +3,7 @@ import {JobOfferFilter, sortInPlace} from "../jobOfferFilter";
 import {Country, JobOfferFilters, PaymentSummary, PlanBundleName, UploadAssets, VatIdState} from "../main";
 import {PaymentNotification} from "../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../paymentProvider/PaymentService";
-import {Screen, UserInterface, ViewListener} from './ui/ui';
+import {Screen, ViewListener, VueUi} from './ui/ui';
 
 export type Toast = 'created'|'edited'|'bundle-used';
 
@@ -12,7 +12,7 @@ export class View {
   private filter: JobOfferFilter|null = null;
   private planBundleCanRedeem: boolean = false;
 
-  constructor(private ui: UserInterface) {
+  constructor(private ui: VueUi) {
     this.ui.addNavigationListener({
       setScreen: (screen: Screen): void => {
         this.ui.setToast(null);
@@ -32,8 +32,8 @@ export class View {
     });
   }
 
-  addEventListener(listener: ViewListener): void {
-    this.ui.addViewListener(listener);
+  setEventListener(listener: ViewListener): void {
+    this.ui.setViewListener(listener);
   }
 
   mount(element: Element): void {

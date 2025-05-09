@@ -89,7 +89,7 @@ function bundleSize(pricingPlan: PaidPricingPlan): 1|3|5|20 {
   return bundleSizes[pricingPlan];
 }
 
-view.addEventListener({
+view.setEventListener({
   createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {
     backend.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
       board.jobOfferCreated(toJobOffer(jobOffer));

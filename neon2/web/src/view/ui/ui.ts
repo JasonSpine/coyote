@@ -20,6 +20,7 @@ import JobBoard from './JobBoard.vue';
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
 export interface JobBoardProps {
+  viewListener: ViewListener|null;
   jobOffers: JobOffer[];
   jobOfferFilters: JobOfferFilters;
   screen: Screen;
@@ -37,34 +38,13 @@ export interface JobBoardProps {
 }
 
 export interface ViewListener {
-  createJob: (plan: PricingPlan, jobOffer: SubmitJobOffer) => void;
-  updateJob: (jobOfferId: number, jobOffer: SubmitJobOffer) => void;
-  payForJob: (payment: InitiatePayment) => void;
-  redeemBundle: (jobOfferId: number) => void;
-  managePaymentMethod: (action: 'mount'|'unmount', cssSelector?: string) => void;
-  vatDetailsChanged: (countryCode: string, vatId: string) => void;
-  assertUserAuthenticated: () => boolean;
-}
-
-export interface UserInterface {
-  mount(element: Element): void;
-  setJobOffers(jobOffers: JobOffer[]): void;
-  setJobOfferFilters(filters: JobOfferFilters): void;
-  setToast(toast: Toast|null): void;
-  addViewListener(listener: ViewListener): void;
-  addNavigationListener(listener: NavigationListener): void;
-  addFilterListener(listener: FilterListener): void;
-  setScreen(screen: Screen): void;
-  setCurrentJobOfferId(jobOfferId: number): void;
-  setPaymentNotification(notification: PaymentNotification): void;
-  setPaymentStatus(status: PaymentStatus): void;
-  setPlanBundle(bundleName: PlanBundleName, remainingJobOffers: number, canRedeem: boolean): void;
-  upload(upload: UploadAssets): void;
-  setJobOfferApplicationEmail(applicationEmail: string): void;
-  setPaymentSummary(summary: PaymentSummary): void;
-  setPaymentInvoiceCountries(countries: Country[]): void;
-  setVatIncluded(vatIncluded: boolean): void;
-  setVatIdState(state: VatIdState): void;
+  createJob(plan: PricingPlan, jobOffer: SubmitJobOffer): void;
+  updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void;
+  payForJob(payment: InitiatePayment): void;
+  redeemBundle(jobOfferId: number): void;
+  managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void;
+  vatDetailsChanged(countryCode: string, vatId: string): void;
+  assertUserAuthenticated(): boolean;
 }
 
 export interface NavigationListener {
@@ -80,8 +60,9 @@ export interface PlanBundle {
   canRedeem: boolean;
 }
 
-export class VueUi implements UserInterface {
+export class VueUi {
   private vueState: Reactive<JobBoardProps> = reactive<JobBoardProps>({
+    viewListener: null,
     jobOffers: [],
     jobOfferFilters: {
       tags: [],
@@ -100,12 +81,11 @@ export class VueUi implements UserInterface {
     paymentVatIdState: 'valid',
     invoiceCountries: null,
   });
-  private viewListeners: ViewListener[] = [];
   private navigationListeners: NavigationListener[] = [];
   private searchListeners: FilterListener[] = [];
 
-  addViewListener(viewListener: ViewListener): void {
-    this.viewListeners.push(viewListener);
+  setViewListener(viewListener: ViewListener): void {
+    this.vueState.viewListener = viewListener;
   }
 
   addNavigationListener(navigationListener: NavigationListener): void {
@@ -187,28 +167,11 @@ export class VueUi implements UserInterface {
         that.navigationListeners.forEach(listener => listener.showJobOfferForm());
       },
       onSelectPlan(plan: PricingPlan): void {
-        let preventAction = false;
-        that.viewListeners.forEach(listener => {
-          if (!listener.assertUserAuthenticated()) {
-            preventAction = true;
-          }
-        });
-        if (!preventAction) {
+        const listener: ViewListener = that.vueState.viewListener!;
+        if (listener.assertUserAuthenticated()) {
           that.vueState.pricingPlan = plan;
           that.setScreen('form');
         }
-      },
-      onCreate(plan: PricingPlan, jobOffer: SubmitJobOffer): void {
-        that.viewListeners.forEach(listener => listener.createJob(plan, jobOffer));
-      },
-      onUpdate(jobOfferId: number, jobOffer: SubmitJobOffer): void {
-        that.viewListeners.forEach(listener => listener.updateJob(jobOfferId, jobOffer));
-      },
-      onPay(payment: InitiatePayment): void {
-        that.viewListeners.forEach(listener => listener.payForJob(payment));
-      },
-      onRedeemBundle(jobOfferId: number): void {
-        that.viewListeners.forEach(listener => listener.redeemBundle(jobOfferId));
       },
       onNavigate(screen: Screen, jobOfferId: number|null): void {
         that.navigationListeners.forEach(listener => listener.setScreen(screen));
@@ -216,15 +179,6 @@ export class VueUi implements UserInterface {
       },
       onFilter(filter: JobOfferFilter): void {
         that.searchListeners.forEach(listener => listener(filter));
-      },
-      onMountCardInput(cssSelector: string): void {
-        that.viewListeners.forEach(listener => listener.managePaymentMethod('mount', cssSelector));
-      },
-      onUnmountCardInput(): void {
-        that.viewListeners.forEach(listener => listener.managePaymentMethod('unmount'));
-      },
-      onVatDetailsChanged(countryCode: string, vatId: string): void {
-        that.viewListeners.forEach(listener => listener.vatDetailsChanged(countryCode, vatId));
       },
     });
   }

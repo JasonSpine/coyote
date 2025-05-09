@@ -91,16 +91,9 @@ const emit = defineEmits<Emit>();
 interface Emit {
   (event: 'show-form'): void;
   (event: 'select-plan', plan: PricingPlan): void;
-  (event: 'create', plan: PricingPlan, jobOffer: SubmitJobOffer): void;
-  (event: 'update', jobOfferId: number, jobOffer: SubmitJobOffer): void;
   (event: 'navigate', screen: Screen, id: number|null): void;
   (event: 'search', searchPhrase: string): void;
   (event: 'filter', filter: JobOfferFilter): void;
-  (event: 'pay', payment: InitiatePayment): void;
-  (event: 'redeem-bundle', jobOfferId: number): void;
-  (event: 'mount-card-input', cssSelector: string): void;
-  (event: 'unmount-card-input'): void;
-  (event: 'vat-details-changed', countryCode: string, vatId: string): void;
 }
 
 function navigate(newScreen: Screen, id?: number): void {
@@ -129,11 +122,11 @@ const currentJobOffer = computed<JobOffer>(() => {
 });
 
 function createJob(jobOffer: SubmitJobOffer): void {
-  emit('create', props.pricingPlan!, jobOffer);
+  props.viewListener!.createJob(props.pricingPlan!, jobOffer);
 }
 
 function updateJob(id: number, jobOffer: SubmitJobOffer): void {
-  emit('update', id, jobOffer);
+  props.viewListener!.updateJob(id, jobOffer);
 }
 
 function editJob(): void {
@@ -153,11 +146,11 @@ function abortEdit(): void {
 }
 
 function payForJob(payment: InitiatePayment): void {
-  emit('pay', payment);
+  props.viewListener!.payForJob(payment);
 }
 
 function redeemBundle(jobOfferId: number): void {
-  emit('redeem-bundle', jobOfferId);
+  props.viewListener!.redeemBundle(jobOfferId);
 }
 
 function selectPlan(pricingPlan: PricingPlan): void {
@@ -174,11 +167,11 @@ function filterJobs(filter: JobOfferFilter): void {
 }
 
 function mountCardInput(cssSelector: string): void {
-  emit('mount-card-input', cssSelector);
+  props.viewListener!.managePaymentMethod('mount', cssSelector);
 }
 
 function unmountCardInput(): void {
-  emit('unmount-card-input');
+  props.viewListener!.managePaymentMethod('unmount');
 }
 
 const showHomeLink = computed<boolean>(() => props.screen !== 'home');
@@ -233,6 +226,6 @@ const paymentNotificationTitle = computed<string|null>(() => {
 });
 
 function vatDetailsChanged(countryCode: string, vatId: string): void {
-  emit('vat-details-changed', countryCode, vatId);
+  props.viewListener!.vatDetailsChanged(countryCode, vatId);
 }
 </script>
