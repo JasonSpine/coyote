@@ -166,12 +166,13 @@ export default {
   data() {
     return {
       benefit: '',
+      address: String((this.firm.street || '') + ' ' + (this.firm.street_number || '') + ' ' + (this.firm.postcode || '') + ' ' + (this.firm.city || '')).trim(),
     };
   },
   methods: {
     ...mapMutations('jobs', ['REMOVE_BENEFIT', 'TOGGLE_BENEFIT']),
-    changeAddress(e) {
-      const val = e.target.value.trim();
+    changeAddress() {
+      const val = this.$data.address;
       const geocoder = new Geocoder();
 
       if (val.length) {
@@ -234,9 +235,6 @@ export default {
     },
   },
   computed: {
-    address() {
-      return String((this.firm.street || '') + ' ' + (this.firm.street_number || '') + ' ' + (this.firm.postcode || '') + ' ' + (this.firm.city || '')).trim();
-    },
     gallery() {
       return this.firm.assets?.length ? this.firm.assets : [];
     },
