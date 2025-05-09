@@ -14,7 +14,7 @@
         <Design.Image :src="props.jobOffer.companyLogoUrl" placeholder-icon="jobOfferLogoPlaceholder"/>
         <div class="flex-grow-1">
           <Design.Row vertical-center apart>
-            <p class="text-lg leading-6" v-text="jobOffer.title" data-testid="jobOfferTitle"/>
+            <p class="text-lg leading-6 dark:text-neutral-200" v-text="jobOffer.title" data-testid="jobOfferTitle"/>
             <div class="max-md:hidden">
               <Design.JobOfferSalary :salary="jobOfferSalary" v-if="jobOfferSalary"/>
               <Design.JobOfferSalaryNotProvided v-else/>
