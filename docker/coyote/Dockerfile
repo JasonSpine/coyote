@@ -10,7 +10,6 @@ COPY webpack.common.js webpack.dev.js webpack.prod.js /app/
 COPY resources /app/resources
 COPY survey /app/survey
 COPY public /app/public
-COPY neon /app/neon
 COPY neon2 /app/neon2
 
 ARG FRONTEND_SENTRY_DSN
@@ -21,11 +20,6 @@ ARG SENTRY_API_KEY
 RUN yarn run prod
 
 RUN rm -rf node_modules
-
-WORKDIR /app/neon/web
-RUN yarn install
-RUN yarn run build
-RUN rm -rf node_modules/
 
 WORKDIR /app/neon2/web
 RUN yarn install
