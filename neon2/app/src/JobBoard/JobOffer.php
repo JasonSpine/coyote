@@ -10,5 +10,6 @@ class JobOffer {
         public JobOfferStatus $status,
         public JobOfferSubmit $fields,
         public ?PaymentIntent $payment,
+        public string         $applicationUrl,
     ) {}
 }

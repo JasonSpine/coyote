@@ -59,6 +59,7 @@ describe('Job board', () => {
       companyFundingYear: null,
       companyAddress: null,
       companyHiringType: 'agency',
+      applicationUrl: '',
     };
   }
 

@@ -74,6 +74,7 @@ export interface JobOffer {
   status: 'published'|'awaitingPayment';
   isNew: boolean;
   isFavourite: boolean;
+  applicationUrl: string;
   title: string;
   description: string|null;
   salaryRangeFrom: number|null;

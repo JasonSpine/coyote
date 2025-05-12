@@ -12,7 +12,7 @@
         class="mr-auto"/>
       <Design.Button square icon="jobOfferFavourite"/>
       <Design.Button @click="editJob">Edytuj</Design.Button>
-      <Design.Button :primary="!props.preview" :primary-outline="props.preview">
+      <Design.Button :primary="!props.preview" :primary-outline="props.preview" @click="apply">
         Aplikuj
       </Design.Button>
     </Design.Row>
@@ -68,7 +68,7 @@
             :value="formatExpiresInDays(props.jobOffer.expiresInDays)"
             v-if="props.jobOffer.expiresInDays"
             test-id="jobOfferExpiresInDays"/>
-          <Design.Button :primary="!props.preview" :primary-outline="props.preview" full-width>
+          <Design.Button :primary="!props.preview" :primary-outline="props.preview" full-width @click="apply">
             Aplikuj
           </Design.Button>
         </Design.Card>
@@ -125,10 +125,15 @@ interface Props {
 
 interface Emit {
   (event: 'edit'): void;
+  (event: 'apply'): void;
 }
 
 function editJob(): void {
   emit('edit');
+}
+
+function apply(): void {
+  emit('apply');
 }
 
 const salary = computed<SalaryJobOffer|null>(() => {

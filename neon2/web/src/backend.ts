@@ -185,6 +185,7 @@ export interface BackendJobOffer {
   expiresInDays: number;
   status: BackendJobOfferStatus;
   payment: BackendPaymentIntent|null;
+  applicationUrl: string,
   fields: {
     title: string;
     description: string|null;

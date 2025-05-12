@@ -69,7 +69,8 @@ readonly class CoyoteIntegration implements Integration {
             $jobOffer->deadline + 1,
             $published ? JobBoard\JobOfferStatus::Published : JobBoard\JobOfferStatus::AwaitingPayment,
             $this->mapper->jobOfferFields($jobOffer),
-            $intent);
+            $intent,
+            route('job.application', [$jobOffer->id]));
     }
 
     private function elasticSearchFetchJobOfferIds(): array {

@@ -45,7 +45,7 @@
     </template>
     <template v-if="props.screen === 'show'">
       <JobOfferButtonPill @click="navigateHome">Wróć do ogłoszeń</JobOfferButtonPill>
-      <JobOfferShow :job-offer="toJobOfferShow(currentJobOffer)" @edit="editJob"/>
+      <JobOfferShow :job-offer="toJobOfferShow(currentJobOffer)" @edit="editJob" @apply="applyForJob"/>
     </template>
     <JobOfferEdit
       v-if="props.screen === 'edit'"
@@ -131,6 +131,10 @@ function updateJob(id: number, jobOffer: SubmitJobOffer): void {
 
 function editJob(): void {
   navigate('edit', props.currentJobOfferId!);
+}
+
+function applyForJob(): void {
+  window.location.href = currentJobOffer.value!.applicationUrl;
 }
 
 function showJob(id: number): void {
