@@ -28,8 +28,10 @@
       </Design.Row>
     </Design.Card>
     <Design.Card space title="Lokalizacja firmy">
-      <Design.FieldGroup label="Adres siedziby firmy">
-        <Design.TextField placeholder="np. Warszawa, al. Jerozolimskie 3" v-model="jobOffer.companyAddress"/>
+      <Design.FieldGroup label="Adres siedziby firmy" :error="errors.companyAddress">
+        <LocationField
+          placeholder="np. Warszawa, al. Jerozolimskie 3"
+          v-model="jobOffer.companyAddress"/>
       </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Dodatkowe informacje">
@@ -183,9 +185,7 @@
 
 <script setup lang="ts">
 import {computed, reactive, ref} from 'vue';
-import {BackendJobOfferLocation} from "../../../backend";
 import {
-  ApplicationMode,
   Currency,
   HiringType,
   LegalForm,
@@ -198,6 +198,7 @@ import {
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
 import JobOfferStepper, {JobOfferCreatorStep} from "../design/JobOffer/JobOfferStepper.vue";
+import LocationField from "../design/LocationField.vue";
 import {
   formatCompanySizeLevel,
   formatHiringType,
@@ -205,6 +206,7 @@ import {
   formatWorkExperience,
   formatWorkMode,
 } from "../format";
+import {FormModel, fromFormModel, toFormModel} from "./JobOfferForm";
 import {JobOfferFormValidation} from './JobOfferFormValidation';
 import JobOfferLocationSet from './JobOfferLocationSet.vue';
 import JobOfferPhotoSet from './JobOfferPhotoSet.vue';
@@ -229,13 +231,14 @@ interface Emit {
 }
 
 const step = ref<JobOfferCreatorStep>('company');
+const hasPreviousStep = computed<boolean>(() => step.value !== 'company');
 
 const jobOffer: FormModel = reactive<FormModel>(toFormModel(props.jobOffer));
 
 const validation = new JobOfferFormValidation(jobOffer, [
   'title', 'companyName', 'applicationEmail', 'applicationExternalAts',
   'salaryRangeFrom', 'salaryRangeTo', 'companyFundingYear',
-  'companyWebsiteUrl',
+  'companyWebsiteUrl', 'companyAddress',
 ]);
 
 const errors = reactive(validation.emptyErrors());
@@ -267,6 +270,7 @@ function validate() {
       v.nonEmpty('companyName', 'Podaj nazwę firmy.');
       v.optionalNumeric('companyFundingYear', 'Podaj poprawny rok założenia firmy.');
       v.optionalJsUrl('companyWebsiteUrl', 'Podaj poprawny URL witryny firmy.');
+      v.optionalLocation('companyAddress', 'Podaj dokładniejszy adres.');
     });
   }
   return validation.validate(v => {
@@ -281,8 +285,6 @@ function validate() {
     }
   });
 }
-
-const hasPreviousStep = computed<boolean>(() => step.value !== 'company');
 
 function previousStep(): void {
   if (step.value === 'preview') {
@@ -358,110 +360,4 @@ const companySizeOptions: DrawerOption<number|null>[] = [
   {value: 10, title: formatCompanySizeLevel(10)},
   {value: 11, title: formatCompanySizeLevel(11)},
 ];
-
-interface FormModel {
-  title: string;
-  description: string;
-  salaryRangeFrom: string;
-  salaryRangeTo: string;
-  salaryCurrency: Currency;
-  salaryRate: Rate;
-  locations: string[];
-  tagNames: string;
-  workMode: WorkMode;
-  legalForm: LegalForm;
-  experience: WorkExperience;
-  applicationMode: ApplicationMode;
-  applicationEmail: string;
-  applicationExternalAts: string;
-  companyName: string;
-  companyLogoUrl: string|null;
-  companyWebsiteUrl: string;
-  companyDescription: string;
-  companyPhotoUrls: string[];
-  companyVideoUrl: string;
-  companySizeLevel: number|null;
-  companyFundingYear: string;
-  companyAddress: string;
-  companyHiringType: HiringType;
-}
-
-function toFormModel(jobOffer: SubmitJobOffer): FormModel {
-  return {
-    ...jobOffer,
-    salaryRangeFrom: formatNumber(jobOffer.salaryRangeFrom),
-    salaryRangeTo: formatNumber(jobOffer.salaryRangeFrom),
-    locations: jobOffer.locations.map(location => location.city).filter(city => city !== null),
-    tagNames: jobOffer.tagNames.join(', '),
-    description: jobOffer.description || '',
-    applicationEmail: jobOffer.applicationEmail || '',
-    applicationExternalAts: jobOffer.applicationExternalAts || '',
-    companyWebsiteUrl: jobOffer.companyWebsiteUrl || '',
-    companyDescription: jobOffer.companyDescription || '',
-    companyVideoUrl: jobOffer.companyVideoUrl || '',
-    companyAddress: jobOffer.companyAddress?.city || '',
-    companyFundingYear: jobOffer.companyFundingYear
-      ? jobOffer.companyFundingYear.toString()
-      : '',
-  };
-}
-
-function fromFormModel(formModel: FormModel): SubmitJobOffer {
-  return {
-    ...formModel,
-    salaryRangeFrom: parseNumber(formModel.salaryRangeFrom),
-    salaryRangeTo: parseNumber(formModel.salaryRangeTo),
-    salaryIsNet: true,
-    tagNames: formModel.tagNames.split(',').map(s => s.trim()).filter(t => t.length),
-    locations: formModel.locations.filter(l => l.length).map(toSubmitLocation).filter(l => l !== null),
-    description: parseString(formModel.description),
-    applicationEmail: parseString(formModel.applicationEmail),
-    applicationExternalAts: parseString(formModel.applicationExternalAts),
-    companyWebsiteUrl: parseString(formModel.companyWebsiteUrl),
-    companyDescription: parseString(formModel.companyDescription),
-    companyVideoUrl: parseString(formModel.companyVideoUrl),
-    companyAddress: toSubmitLocation(formModel.companyAddress),
-    companyFundingYear: parseNumber(formModel.companyFundingYear),
-  };
-}
-
-function toSubmitLocation(city: string): BackendJobOfferLocation|null {
-  if (city.trim().length === 0) {
-    return null;
-  }
-  return {
-    city,
-    countryCode: 'PL',
-    latitude: 51,
-    longitude: 21,
-    postalCode: '31-120',
-    streetName: 'Ulicowa',
-    streetNumber: '12',
-  };
-}
-
-function formatNumber(value: number|null): string {
-  if (value === null) {
-    return '';
-  }
-  return value.toString(10);
-}
-
-function parseNumber(value: string): number|null {
-  if (value.trim() === '') {
-    return null;
-  }
-  const number = parseInt(value, 10);
-  if (isNaN(number)) {
-    throw new Error('Failed to parse number.');
-  }
-  return number;
-}
-
-function parseString(string: string): string|null {
-  if (string.length) {
-    return string.trim();
-  }
-  return null;
-}
 </script>

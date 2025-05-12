@@ -8,6 +8,7 @@ readonly class JobBoardView {
         private \Neon2\Coyote\Integration  $integration,
         private \Neon2\Invoice\CountryGate $countries,
         private ?string                    $stripePublishableKey,
+        private ?string                    $googleMapsKey,
         private bool                       $isTestMode,
         private ?int                       $userId,
         private ?string                    $userEmail,
@@ -22,7 +23,10 @@ readonly class JobBoardView {
         if ($this->isTestMode) {
             $resources = null;
         } else {
-            $resources = '<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter:400,500,700">';
+            $resources = <<<headResources
+                <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter:400,500,700">
+                <script async src="https://maps.googleapis.com/maps/api/js?key=$this->googleMapsKey&libraries=places&loading=async"></script>
+                headResources;
         }
         $faLightUrl = "/neon2/static/{$this->vite->fontAwesomeLightUrl()}";
         $faRegularUrl = "/neon2/static/{$this->vite->fontAwesomeRegularUrl()}";

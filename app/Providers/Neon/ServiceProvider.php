@@ -58,6 +58,7 @@ class ServiceProvider extends RouteServiceProvider {
                         $integration,
                         $countries,
                         $stripePublicKey->publishableKey,
+                        config('services.google-maps.key'),
                         $this->isTestMode(),
                         auth()->id(),
                         auth()->user()?->email,

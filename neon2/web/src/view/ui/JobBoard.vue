@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, watch} from 'vue';
+import {computed, onMounted, provide, watch} from 'vue';
 import {JobOffer} from '../../jobBoard';
 import {JobOfferFilter} from "../../jobOfferFilter";
 import {InitiatePayment, PricingPlan, SubmitJobOffer, toSubmitJobOffer} from "../../main";
@@ -99,6 +99,8 @@ interface Emit {
 function navigate(newScreen: Screen, id?: number): void {
   emit('navigate', newScreen, id || null);
 }
+
+provide('locationProvider', props.locationProvider!);
 
 const darkModePreference = window.matchMedia('(prefers-color-scheme: dark)');
 onMounted(() => changeThemeIfApplicable(darkModePreference.matches));

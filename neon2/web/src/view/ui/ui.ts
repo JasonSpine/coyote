@@ -1,6 +1,7 @@
 import {createApp, h, Reactive, reactive, VNode} from 'vue';
 import {JobOffer} from '../../jobBoard';
 import {JobOfferFilter} from "../../jobOfferFilter";
+import {LocationProvider} from "../../locationProvider/LocationProvider";
 import {
   Country,
   InitiatePayment,
@@ -35,6 +36,7 @@ export interface JobBoardProps {
   paymentSummary: PaymentSummary|null;
   paymentVatIdState: VatIdState;
   invoiceCountries: Country[]|null;
+  locationProvider: LocationProvider|null;
 }
 
 export interface ViewListener {
@@ -61,28 +63,33 @@ export interface PlanBundle {
 }
 
 export class VueUi {
-  private vueState: Reactive<JobBoardProps> = reactive<JobBoardProps>({
-    viewListener: null,
-    jobOffers: [],
-    jobOfferFilters: {
-      tags: [],
-      locations: [],
-    },
-    toast: null,
-    screen: 'home',
-    currentJobOfferId: null,
-    paymentNotification: null,
-    paymentStatus: null,
-    planBundle: null,
-    pricingPlan: null,
-    upload: null,
-    applicationEmail: null,
-    paymentSummary: null,
-    paymentVatIdState: 'valid',
-    invoiceCountries: null,
-  });
-  private navigationListeners: NavigationListener[] = [];
-  private searchListeners: FilterListener[] = [];
+  private readonly vueState: Reactive<JobBoardProps>;
+  private readonly navigationListeners: NavigationListener[] = [];
+  private readonly searchListeners: FilterListener[] = [];
+
+  constructor(locationProvider: LocationProvider) {
+    this.vueState = reactive<JobBoardProps>({
+      viewListener: null,
+      jobOffers: [],
+      jobOfferFilters: {
+        tags: [],
+        locations: [],
+      },
+      toast: null,
+      screen: 'home',
+      currentJobOfferId: null,
+      paymentNotification: null,
+      paymentStatus: null,
+      planBundle: null,
+      pricingPlan: null,
+      upload: null,
+      applicationEmail: null,
+      paymentSummary: null,
+      paymentVatIdState: 'valid',
+      invoiceCountries: null,
+      locationProvider,
+    });
+  }
 
   setViewListener(viewListener: ViewListener): void {
     this.vueState.viewListener = viewListener;

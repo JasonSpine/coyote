@@ -1,3 +1,5 @@
+import {Location} from "../../../locationProvider/LocationProvider";
+
 export class JobOfferFormValidation<T extends string> {
   constructor(
     private readonly fields: Record<T, any>,
@@ -34,6 +36,15 @@ export class JobOfferFormValidation<T extends string> {
           success = false;
         }
       },
+      optionalLocation: (field: T, errorMessage: string): void => {
+        if (this.fields[field] === null) {
+          return;
+        }
+        if (!locationContainsCity(this.fields[field])) {
+          errors[field] = errorMessage;
+          success = false;
+        }
+      },
     });
     return [success, errors];
   }
@@ -49,6 +60,7 @@ interface Validator<T> {
   notEqual(field: T, value: string, errorMessage: string): void;
   optionalNumeric(field: T, errorMessage: string): void;
   optionalJsUrl(field: T, errorMessage: string): void;
+  optionalLocation(field: T, errorMessage: string): void;
 }
 
 function numberMalformed(value: string|null): boolean {
@@ -89,4 +101,8 @@ function isValidJsUrl(text: string): boolean {
     return false;
   }
   return url.protocol === 'http:' || url.protocol === 'https:';
+}
+
+function locationContainsCity(location: Location): boolean {
+  return location.city !== null;
 }

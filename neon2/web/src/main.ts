@@ -1,6 +1,7 @@
 import {BackendJobOffer, BackendJobOfferLocation, JobBoardBackend, toJobOffer} from "./backend";
 import {JobBoard, JobOffer} from './jobBoard';
 import {JobOfferPayments} from "./jobOfferPayments";
+import {GoogleMapsLocationProvider, LocationProvider, TestLocationProvider} from "./locationProvider/LocationProvider";
 import {PaymentMethod, PaymentNotification, PaymentProvider} from "./paymentProvider/PaymentProvider";
 import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
 import {StripePaymentProvider} from './paymentProvider/StripePaymentProvider';
@@ -10,9 +11,9 @@ import {runInShadowDom, setDarkTheme} from "./view/shadowDom";
 import {VueUi} from './view/ui/ui';
 import {View} from "./view/view";
 
-const view = new View(new VueUi());
-const board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jobOffers));
 const backend = new JobBoardBackend();
+const view = new View(new VueUi(locationProvider(backend.testMode())));
+const board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jobOffers));
 const paymentProvider: PaymentProvider = backend.testMode()
   ? new TestPaymentProvider()
   : new StripePaymentProvider(backend.stripeKey()!);
@@ -171,6 +172,12 @@ payments.addEventListener({
 planBundle.addListener(function (plan: PlanBundleName, remainingJobOffers: number): void {
   view.setPlanBundle(plan, remainingJobOffers);
 });
+
+function locationProvider(testMode: boolean): LocationProvider {
+  return testMode
+    ? new TestLocationProvider()
+    : new GoogleMapsLocationProvider();
+}
 
 function remainingJobOffers(planBundle: PlanBundleName): number {
   if (planBundle === 'strategic') {

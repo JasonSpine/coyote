@@ -4,6 +4,7 @@
   "dependencies": {
     "@stripe/stripe-js": "^7.2.0",
     "@tailwindcss/vite": "^4.1.4",
+    "@types/google.maps": "^3.58.1",
     "@types/node": "^22.14.1",
     "@types/pell": "^1.0.4",
     "@vitejs/plugin-vue": "^5.2.3",

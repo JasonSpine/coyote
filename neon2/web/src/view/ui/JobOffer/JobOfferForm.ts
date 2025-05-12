@@ -1,0 +1,102 @@
+import {Location} from "../../../locationProvider/LocationProvider";
+import {
+  ApplicationMode,
+  Currency,
+  HiringType,
+  LegalForm,
+  Rate,
+  SubmitJobOffer,
+  WorkExperience,
+  WorkMode,
+} from "../../../main";
+
+export interface FormModel {
+  title: string;
+  description: string;
+  salaryRangeFrom: string;
+  salaryRangeTo: string;
+  salaryCurrency: Currency;
+  salaryRate: Rate;
+  locations: Location[];
+  tagNames: string;
+  workMode: WorkMode;
+  legalForm: LegalForm;
+  experience: WorkExperience;
+  applicationMode: ApplicationMode;
+  applicationEmail: string;
+  applicationExternalAts: string;
+  companyName: string;
+  companyLogoUrl: string|null;
+  companyWebsiteUrl: string;
+  companyDescription: string;
+  companyPhotoUrls: string[];
+  companyVideoUrl: string;
+  companySizeLevel: number|null;
+  companyFundingYear: string;
+  companyAddress: Location|null;
+  companyHiringType: HiringType;
+}
+
+export function toFormModel(jobOffer: SubmitJobOffer): FormModel {
+  return {
+    ...jobOffer,
+    salaryRangeFrom: formatNumber(jobOffer.salaryRangeFrom),
+    salaryRangeTo: formatNumber(jobOffer.salaryRangeFrom),
+    locations: jobOffer.locations,
+    tagNames: jobOffer.tagNames.join(', '),
+    description: jobOffer.description || '',
+    applicationEmail: jobOffer.applicationEmail || '',
+    applicationExternalAts: jobOffer.applicationExternalAts || '',
+    companyWebsiteUrl: jobOffer.companyWebsiteUrl || '',
+    companyDescription: jobOffer.companyDescription || '',
+    companyVideoUrl: jobOffer.companyVideoUrl || '',
+    companyAddress: jobOffer.companyAddress,
+    companyFundingYear: jobOffer.companyFundingYear
+      ? jobOffer.companyFundingYear.toString()
+      : '',
+  };
+}
+
+export function fromFormModel(formModel: FormModel): SubmitJobOffer {
+  return {
+    ...formModel,
+    salaryRangeFrom: parseNumber(formModel.salaryRangeFrom),
+    salaryRangeTo: parseNumber(formModel.salaryRangeTo),
+    salaryIsNet: true,
+    tagNames: formModel.tagNames.split(',').map(s => s.trim()).filter(t => t.length),
+    locations: formModel.locations,
+    description: parseString(formModel.description),
+    applicationEmail: parseString(formModel.applicationEmail),
+    applicationExternalAts: parseString(formModel.applicationExternalAts),
+    companyWebsiteUrl: parseString(formModel.companyWebsiteUrl),
+    companyDescription: parseString(formModel.companyDescription),
+    companyVideoUrl: parseString(formModel.companyVideoUrl),
+    companyAddress: formModel.companyAddress,
+    companyFundingYear: parseNumber(formModel.companyFundingYear),
+  };
+}
+
+function formatNumber(value: number|null): string {
+  if (value === null) {
+    return '';
+  }
+  return value.toString(10);
+}
+
+function parseNumber(value: string): number|null {
+  if (value.trim() === '') {
+    return null;
+  }
+  const number = parseInt(value, 10);
+  if (isNaN(number)) {
+    throw new Error('Failed to parse number.');
+  }
+  return number;
+}
+
+function parseString(string: string): string|null {
+  if (string.length) {
+    return string.trim();
+  }
+  return null;
+}

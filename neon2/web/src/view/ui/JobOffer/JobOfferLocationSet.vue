@@ -1,40 +1,65 @@
 <template>
-  <Design.FieldGroup label="Lokalizacja" v-for="(location, index) in locations">
-    <div class="flex gap-1 items-center">
-      <Design.TextField
+  <div class="flex flex-wrap gap-2" v-if="locationFields.length">
+    <Design.Tile
+      nested-pill
+      v-for="field in locationFields"
+      :text="field.location?.city || 'Podaj lokalizację...'"
+      icon="jobOfferLocation"/>
+  </div>
+  <Design.FieldGroup label="Lokalizacja" v-for="(locationField, index) in locationFields">
+    <div class="flex gap-2 items-center">
+      <LocationField
         class="flex-grow-1"
+        :key="locationField.id"
         :placeholder="placeholder(index)"
-        icon="jobOfferLocation"
-        :model-value="location"
-        @update:model-value="url => updateLocation(url, index)"
-      />
-      <Design.Button square outline icon="remove" @click="removeLocation(index)"/>
+        v-model="locationField.location"
+        @update:model-value="update"/>
+      <Design.Button square outline icon="remove" @click="removeLocation(locationField.id)"/>
     </div>
   </Design.FieldGroup>
-  <Design.Button primary-outline icon="add" @click="add">
+  <Design.Button primary-outline icon="add" @click="addNewLocation(null)">
     Dodaj lokalizację
   </Design.Button>
 </template>
 
 <script setup lang="ts">
+import {ref} from "vue";
+import {Location} from "../../../locationProvider/LocationProvider";
 import {Design} from "../design/design";
+import LocationField from "../design/LocationField.vue";
 
-const locations = defineModel<string[]>({required: true});
+const model = defineModel<Location[]>({required: true});
+const locationFields = ref<LocationField[]>([]);
+let lastId = 0;
 
-function updateLocation(location: string, index: number): void {
-  const urls: string[] = [...locations.value];
-  urls.splice(index, 1, location);
-  locations.value = urls.filter(image => image !== null);
+for (const location of model.value) {
+  addNewLocation(location);
 }
 
-function removeLocation(index: number): void {
-  const urls: string[] = [...locations.value];
-  urls.splice(index, 1);
-  locations.value = urls;
+interface LocationField {
+  id: number;
+  location: Location|null;
 }
 
-function add(): void {
-  locations.value.push('');
+function removeLocation(fieldId: number): void {
+  locationFields.value.splice(
+    locationFields.value.findIndex(l => l.id === fieldId),
+    1);
+  update();
+}
+
+function addNewLocation(location: Location|null): void {
+  locationFields.value.push({
+    id: lastId++,
+    location,
+  });
+}
+
+function update(): void {
+  model.value = locationFields.value
+    .map(field => field.location)
+    .filter(location => location !== null)
+    .filter(location => location.city !== null);
 }
 
 function placeholder(index: number): string {

@@ -141,7 +141,7 @@ class JobOfferUnmapper {
         return Coyote\Country::query()
             ->where('code', $countryCode)
             ->first('id')
-            ->id;
+            ?->id;
     }
 
     private function coyoteFirmFields(JobOfferSubmit $jobOffer): array {
