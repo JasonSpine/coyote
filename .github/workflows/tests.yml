@@ -7,7 +7,7 @@ on:
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     concurrency:
       group: tests
@@ -41,7 +41,7 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Setup owner
-        run: sudo chown -R runneradmin:runneradmin ./
+        run: sudo chown -R packer:packer ./ # User with UID 1000 on host machine
 
       - name: Install packages
         run: make install
