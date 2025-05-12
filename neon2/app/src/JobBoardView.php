@@ -24,7 +24,7 @@ readonly class JobBoardView {
             $resources = null;
         } else {
             $resources = <<<headResources
-                <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter:400,500,700">
+                <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter+Tight:400,500,700">
                 <script async src="https://maps.googleapis.com/maps/api/js?key=$this->googleMapsKey&libraries=places&loading=async"></script>
                 headResources;
         }

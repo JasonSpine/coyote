@@ -26,6 +26,7 @@
 }
 
 @theme {
+  --font-sans: "Inter Tight", sans-serif;
   --color-*: initial;
   --color-white: white;
   --color-black: black;
