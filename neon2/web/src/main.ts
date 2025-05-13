@@ -7,7 +7,7 @@ import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
 import {StripePaymentProvider} from './paymentProvider/StripePaymentProvider';
 import {TestPaymentProvider} from './paymentProvider/TestPaymentProvider';
 import {PlanBundle} from "./planBundle";
-import {runInShadowDom, setDarkTheme} from "./view/shadowDom";
+import {runInShadowDom, setDarkTheme} from "./view/shadowDom/shadowDom";
 import {VueUi} from './view/ui/ui';
 import {View} from "./view/view";
 
