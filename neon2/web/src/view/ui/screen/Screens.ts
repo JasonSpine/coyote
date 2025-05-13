@@ -28,12 +28,12 @@ export class Screens {
   }
 
   private addScreens(): void {
-    this.router.addScreen(JobOfferPricing, 'pricing', '/pricing');
-    this.router.addScreen(JobOfferCreate, 'form', '/job-offer/new');
-    this.router.addScreen(JobOfferShowScreen, 'show', '/job-offer/:id');
-    this.router.addScreen(JobOfferEdit, 'edit', '/job-offer/:id/edit');
     this.router.addScreen(JobOfferHome, 'home', '/');
-    this.router.addScreen(JobOfferPaymentScreen, 'payment', '/job-offer/:id/payment');
+    this.router.addScreen(JobOfferShowScreen, 'show', '/offer/:id-:slug');
+    this.router.addScreen(JobOfferPricing, 'pricing', '/pricing');
+    this.router.addScreen(JobOfferCreate, 'form', '/offer/new');
+    this.router.addScreen(JobOfferEdit, 'edit', '/offer/:id/edit');
+    this.router.addScreen(JobOfferPaymentScreen, 'payment', '/offer/:id/payment');
   }
 
   allowPayment(): void {
@@ -41,7 +41,14 @@ export class Screens {
   }
 
   navigate(screen: Screen, jobOfferId: number|null): void {
-    this.router.navigate(screen, jobOfferId);
+    this.router.navigate(screen, {id: jobOfferId});
+  }
+
+  showJobOffer(jobOffer: JobOffer): void {
+    this.router.navigate('show', {
+      id: jobOffer.id,
+      slug: jobOffer.slug,
+    });
   }
 
   useIn(app: App): void {

@@ -29,6 +29,6 @@ function update(jobOffer: SubmitJobOffer): void {
 }
 
 function abort(): void {
-  props.uiController.navigate('show', props.jobOffer.id);
+  props.uiController.showJobOffer(props.jobOffer);
 }
 </script>

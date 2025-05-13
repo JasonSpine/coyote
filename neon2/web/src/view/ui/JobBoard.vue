@@ -31,13 +31,8 @@ import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
 import {Design} from "./design/design";
 import {JobBoardProperties} from "./JobBoardProperties";
-import {Screen} from "./ui";
 
 const props = defineProps<JobBoardProperties>();
-
-function navigate(newScreen: Screen, id?: number): void {
-  props.uiController.navigate(newScreen, id || null);
-}
 
 provide('locationProvider', props.locationProvider!);
 
@@ -59,7 +54,7 @@ function changeTheme(darkTheme: boolean): void {
 }
 
 function navigateHome(): void {
-  navigate('home');
+  props.uiController.navigate('home', null);
 }
 
 const showHomeLink = computed<boolean>(() => props.screen !== 'home');

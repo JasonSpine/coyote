@@ -51,6 +51,7 @@ export interface UiController {
   navigate(screen: Screen, jobOfferId: number|null): void;
   filter(filter: JobOfferFilter): void;
   applyForJob(jobOfferId: number): void;
+  showJobOffer(jobOffer: JobOffer): void;
 }
 
 export class VueUi {
@@ -85,6 +86,7 @@ export class VueUi {
         navigate: this.navigate.bind(this),
         filter: this.filter.bind(this),
         applyForJob: this.applyForJob.bind(this),
+        showJobOffer: this.showJobOffer.bind(this),
       },
     });
     this.screens = new Screens(jobOfferId => ({
@@ -132,6 +134,10 @@ export class VueUi {
   private applyForJob(jobOfferId: number): void {
     const currentJobOffer = this.vueState.jobOffers.find(offer => offer.id === jobOfferId)!;
     window.location.href = currentJobOffer.applicationUrl;
+  }
+
+  private showJobOffer(jobOffer: JobOffer): void {
+    this.screens.showJobOffer(jobOffer);
   }
 
   setViewListener(viewListener: ViewListener): void {

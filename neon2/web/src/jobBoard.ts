@@ -75,6 +75,7 @@ export interface JobOffer {
   isNew: boolean;
   isFavourite: boolean;
   applicationUrl: string;
+  slug: string;
   title: string;
   description: string|null;
   salaryRangeFrom: number|null;

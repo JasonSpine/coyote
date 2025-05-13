@@ -70,6 +70,7 @@ readonly class CoyoteIntegration implements Integration {
             $published ? JobBoard\JobOfferStatus::Published : JobBoard\JobOfferStatus::AwaitingPayment,
             $this->mapper->jobOfferFields($jobOffer),
             $intent,
+            $jobOffer->slug,
             route('job.application', [$jobOffer->id]));
     }
 

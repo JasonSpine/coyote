@@ -39,8 +39,11 @@ export class Router {
     });
   }
 
-  navigate(screen: Screen, jobOfferId: number|null): void {
-    this.router.push({name: screen, params: {id: jobOfferId}});
+  navigate(screen: Screen, routeArguments: {id: number|null, slug?: string}): void {
+    this.router.push({
+      name: screen,
+      params: routeArguments,
+    });
   }
 
   private jobOfferId(route: RouteLocationNormalized): number|null {

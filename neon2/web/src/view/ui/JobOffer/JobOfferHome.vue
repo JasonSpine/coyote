@@ -15,7 +15,7 @@
       v-for="jobOffer in props.jobOffers"
       :key="jobOffer.id"
       :job-offer="jobOffer"
-      @select="props.uiController.navigate('show', jobOffer.id)"
+      @select="props.uiController.showJobOffer(jobOffer)"
       @favourite-change=""/>
     <Design.Material v-if="props.jobOffers.length === 0" nested class="text-center my-2 py-6">
       Nie znaleźliśmy żadnych ofert, pasujących do Twoich kryteriów wyszukiwania.

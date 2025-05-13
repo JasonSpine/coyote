@@ -60,6 +60,7 @@ describe('Job board', () => {
       companyAddress: null,
       companyHiringType: 'agency',
       applicationUrl: '',
+      slug: '',
     };
   }
 
