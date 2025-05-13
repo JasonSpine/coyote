@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import TextFieldFormat from "../TextFieldFormat.vue";
+import TextFieldFormat from "../external/TextFieldFormat.vue";
 
 const props = defineProps<Props>();
 const model = defineModel<string>({required: true});
