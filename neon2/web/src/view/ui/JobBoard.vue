@@ -87,18 +87,9 @@ import JobOfferShow from './JobOffer/JobOfferShow.vue';
 import {Screen} from "./ui";
 
 const props = defineProps<JobBoardProperties>();
-const emit = defineEmits<Emit>();
-
-interface Emit {
-  (event: 'show-form'): void;
-  (event: 'select-plan', plan: PricingPlan): void;
-  (event: 'navigate', screen: Screen, id: number|null): void;
-  (event: 'search', searchPhrase: string): void;
-  (event: 'filter', filter: JobOfferFilter): void;
-}
 
 function navigate(newScreen: Screen, id?: number): void {
-  emit('navigate', newScreen, id || null);
+  props.uiController.navigate(newScreen, id || null);
 }
 
 provide('locationProvider', props.locationProvider!);
@@ -161,16 +152,15 @@ function redeemBundle(jobOfferId: number): void {
 }
 
 function selectPlan(pricingPlan: PricingPlan): void {
-  emit('select-plan', pricingPlan);
+  props.uiController.selectPlan(pricingPlan);
 }
 
 function showJobOfferForm(): void {
-  emit('show-form');
+  props.uiController.showForm();
 }
 
 function filterJobs(filter: JobOfferFilter): void {
-  emit('search', filter.searchPhrase);
-  emit('filter', filter);
+  props.uiController.filter(filter);
 }
 
 function mountCardInput(cssSelector: string): void {

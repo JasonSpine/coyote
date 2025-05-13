@@ -1,4 +1,4 @@
-import {createApp, h, Reactive, reactive, VNode} from 'vue';
+import {createApp, h, Reactive, reactive} from 'vue';
 import {JobOffer} from '../../jobBoard';
 import {JobOfferFilter} from "../../jobOfferFilter";
 import {LocationProvider} from "../../locationProvider/LocationProvider";
@@ -44,6 +44,13 @@ export interface PlanBundle {
   canRedeem: boolean;
 }
 
+export interface UiController {
+  showForm(): void;
+  selectPlan(plan: PricingPlan): void;
+  navigate(screen: Screen, jobOfferId: number|null): void;
+  filter(filter: JobOfferFilter): void;
+}
+
 export class VueUi {
   private readonly vueState: Reactive<JobBoardProperties>;
   private readonly navigationListeners: NavigationListener[] = [];
@@ -70,7 +77,34 @@ export class VueUi {
       paymentVatIdState: 'valid',
       invoiceCountries: null,
       locationProvider,
+      uiController: {
+        showForm: this.showForm.bind(this),
+        selectPlan: this.selectPlan.bind(this),
+        navigate: this.navigate.bind(this),
+        filter: this.filter.bind(this),
+      },
     });
+  }
+
+  private showForm(): void {
+    this.navigationListeners.forEach(listener => listener.showJobOfferForm());
+  }
+
+  private selectPlan(plan: PricingPlan): void {
+    const listener: ViewListener = this.vueState.viewListener!;
+    if (listener.assertUserAuthenticated()) {
+      this.vueState.pricingPlan = plan;
+      this.setScreen('form');
+    }
+  }
+
+  private navigate(screen: Screen, jobOfferId: number|null): void {
+    this.navigationListeners.forEach(listener => listener.setScreen(screen));
+    this.setCurrentJobOfferId(jobOfferId);
+  }
+
+  private filter(filter: JobOfferFilter): void {
+    this.searchListeners.forEach(listener => listener(filter));
   }
 
   setViewListener(viewListener: ViewListener): void {
@@ -144,31 +178,7 @@ export class VueUi {
   }
 
   mount(element: Element): void {
-    const render = this.vueRender.bind(this);
-    createApp({render}).mount(element);
-  }
-
-  private vueRender(): VNode {
-    const that = this;
-    return h(JobBoard, {
-      ...this.vueState,
-      onShowForm(): void {
-        that.navigationListeners.forEach(listener => listener.showJobOfferForm());
-      },
-      onSelectPlan(plan: PricingPlan): void {
-        const listener: ViewListener = that.vueState.viewListener!;
-        if (listener.assertUserAuthenticated()) {
-          that.vueState.pricingPlan = plan;
-          that.setScreen('form');
-        }
-      },
-      onNavigate(screen: Screen, jobOfferId: number|null): void {
-        that.navigationListeners.forEach(listener => listener.setScreen(screen));
-        that.setCurrentJobOfferId(jobOfferId);
-      },
-      onFilter(filter: JobOfferFilter): void {
-        that.searchListeners.forEach(listener => listener(filter));
-      },
-    });
+    const app = createApp({render: () => h(JobBoard, this.vueState)});
+    app.mount(element);
   }
 }

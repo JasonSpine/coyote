@@ -4,7 +4,7 @@ import {Country, JobOfferFilters, PaymentSummary, PricingPlan, UploadAssets, Vat
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from "../view";
-import {PlanBundle, Screen, ViewListener} from "./ui";
+import {PlanBundle, Screen, UiController, ViewListener} from "./ui";
 
 export interface JobBoardProperties {
   viewListener: ViewListener|null;
@@ -23,4 +23,5 @@ export interface JobBoardProperties {
   paymentVatIdState: VatIdState;
   invoiceCountries: Country[]|null;
   locationProvider: LocationProvider|null;
+  uiController: UiController;
 }
