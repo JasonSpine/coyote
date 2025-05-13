@@ -20,11 +20,11 @@
       :ui-controller="props.uiController"/>
     <JobOfferCreate
       v-if="props.screen === 'form'"
+      :ui-controller="props.uiController"
+      :view-listener="props.viewListener!"
       :upload="props.upload!"
       :pricing-plan="props.pricingPlan!"
-      :application-email="props.applicationEmail!"
-      @create="createJob"
-      @abort="navigate('pricing')"/>
+      :application-email="props.applicationEmail!"/>
     <template v-if="props.screen === 'payment'">
       <Design.Toast title="Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność."/>
       <JobOfferRedeemBundle
@@ -108,10 +108,6 @@ function changeTheme(darkTheme: boolean): void {
 const currentJobOffer = computed<JobOffer>(() => {
   return props.jobOffers.find(offer => offer.id === props.currentJobOfferId)!;
 });
-
-function createJob(jobOffer: SubmitJobOffer): void {
-  props.viewListener!.createJob(props.pricingPlan!, jobOffer);
-}
 
 function updateJob(id: number, jobOffer: SubmitJobOffer): void {
   props.viewListener!.updateJob(id, jobOffer);

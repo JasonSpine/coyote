@@ -6,30 +6,27 @@
     :upload="props.upload"
     :four-steps="fourSteps"
     @submit="create"
-    @abort="emit('abort')"/>
+    @abort="props.uiController.navigate('pricing', null)"/>
 </template>
 
 <script setup lang="ts">
 import {computed} from 'vue';
 import {PricingPlan, SubmitJobOffer, UploadAssets} from "../../../main";
+import {UiController, ViewListener} from "../ui";
 import JobOfferForm from "./JobOfferForm.vue";
 
+const props = defineProps<Props>();
+
 interface Props {
+  uiController: UiController;
+  viewListener: ViewListener;
   upload: UploadAssets;
   pricingPlan: PricingPlan;
   applicationEmail: string;
 }
 
-interface Emit {
-  (event: 'create', jobOffer: SubmitJobOffer): void;
-  (event: 'abort'): void;
-}
-
-const props = defineProps<Props>();
-const emit = defineEmits<Emit>();
-
 function create(jobOffer: SubmitJobOffer): void {
-  emit('create', jobOffer);
+  props.viewListener.createJob(props.pricingPlan, jobOffer);
 }
 
 const expiresInDays = computed(() => props.pricingPlan === 'free' ? 14 : 30);
