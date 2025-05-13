@@ -34,14 +34,11 @@
         @redeem-bundle="redeemBundle"/>
       <JobOfferPaymentForm
         v-else
+        :view-listener="props.viewListener!"
         :job-offer-id="props.currentJobOfferId!"
         :summary="props.paymentSummary!"
         :countries="props.invoiceCountries!"
-        :vat-id-state="props.paymentVatIdState"
-        @pay="payForJob"
-        @mount-card-input="mountCardInput"
-        @unmount-card-input="unmountCardInput"
-        @vat-details-changed="vatDetailsChanged"/>
+        :vat-id-state="props.paymentVatIdState"/>
     </template>
     <template v-if="props.screen === 'show'">
       <JobOfferButtonPill @click="navigateHome">Wróć do ogłoszeń</JobOfferButtonPill>
@@ -146,14 +143,6 @@ function payForJob(payment: InitiatePayment): void {
 
 function redeemBundle(jobOfferId: number): void {
   props.viewListener!.redeemBundle(jobOfferId);
-}
-
-function mountCardInput(cssSelector: string): void {
-  props.viewListener!.managePaymentMethod('mount', cssSelector);
-}
-
-function unmountCardInput(): void {
-  props.viewListener!.managePaymentMethod('unmount');
 }
 
 const showHomeLink = computed<boolean>(() => props.screen !== 'home');

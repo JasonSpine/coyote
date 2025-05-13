@@ -82,35 +82,29 @@
 
 <script setup lang="ts">
 import {computed, onBeforeUnmount, onMounted, reactive, ref} from "vue";
-import {Country, InitiatePayment, InvoiceInformation, PaymentSummary, VatIdState} from "../../../main";
+import {Country, InvoiceInformation, PaymentSummary, VatIdState} from "../../../main";
 import {PaymentMethod} from "../../../paymentProvider/PaymentProvider";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
-import JobOfferStepper from './JobOfferStepper.vue';
+import {ViewListener} from "../ui";
 import {JobOfferFormValidation} from "./JobOfferFormValidation";
+import JobOfferStepper from './JobOfferStepper.vue';
 
 const props = defineProps<Props>();
-const emit = defineEmits<Emit>();
 
 interface Props {
+  viewListener: ViewListener;
   jobOfferId: number;
   summary: PaymentSummary;
   countries: Country[];
   vatIdState: VatIdState;
 }
 
-interface Emit {
-  (event: 'pay', payment: InitiatePayment): void;
-  (event: 'mountCardInput', cssSelector: string): void;
-  (event: 'unmountCardInput'): void;
-  (event: 'vat-details-changed', countryCode: string, vatId: string): void;
-}
-
 function pay(): void {
   const [success, failureErrors] = validate();
   Object.assign(errors, failureErrors);
   if (success) {
-    emit('pay', {
+    props.viewListener.payForJob({
       jobOfferId: props.jobOfferId,
       invoiceInfo: {
         companyName: invoiceInformation.companyName.trim(),
@@ -125,8 +119,8 @@ function pay(): void {
   }
 }
 
-onMounted(() => emit('mountCardInput', '#creditCardInput'));
-onBeforeUnmount(() => emit('unmountCardInput'));
+onMounted(() => props.viewListener.managePaymentMethod('mount', '#creditCardInput'));
+onBeforeUnmount(() => props.viewListener.managePaymentMethod('unmount'));
 
 const method = ref<PaymentMethod>('card');
 
@@ -210,7 +204,7 @@ const effectiveVat = computed(() => {
 });
 
 function vatDetailsChanged(): void {
-  emit('vat-details-changed',
+  props.viewListener.vatDetailsChanged(
     invoiceInformation.countryCode,
     invoiceInformation.vatId.trim());
 }
