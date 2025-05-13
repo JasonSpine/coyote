@@ -17,7 +17,7 @@
       :button-title="buttonTitle(plan)"
       :content="plan.free ? 'restricted' : 'full'"
       :color="plan.color"
-      @select="selectPlan"/>
+      @select="props.uiController.selectPlan"/>
     <JobOfferPricingCard
       v-else
       v-for="plan in bundlePlans"
@@ -31,7 +31,7 @@
       :content="plan.bundleDiscount ? 'premium-summary' : 'full'"
       :bundle-discount="plan.bundleDiscount"
       :color="plan.color"
-      @select="selectPlan"/>
+      @select="props.uiController.selectPlan"/>
   </div>
   <JobOfferPricingTestimonial class="mt-16"/>
 </template>
@@ -39,14 +39,15 @@
 <script setup lang="ts">
 import {ref} from 'vue';
 import {PricingPlan} from "../../../main";
+import {UiController} from "../ui";
 import JobOfferPricingCard, {JobOfferPricingCardColor} from './JobOfferPricingCard.vue';
 import JobOfferPricingTab, {PricingTab} from './JobOfferPricingTab.vue';
 import JobOfferPricingTestimonial from "./JobOfferPricingTestimonial.vue";
 
-const emit = defineEmits<Emit>();
+const props = defineProps<Props>();
 
-interface Emit {
-  (event: 'select', pricingPlan: PricingPlan): void;
+interface Props {
+  uiController: UiController;
 }
 
 interface PlanCard {
@@ -111,9 +112,5 @@ function buttonTitle(plan: PlanCard): string {
     'scale': 'Kup pakiet Scale',
   };
   return titles[plan.name];
-}
-
-function selectPlan(pricingPlan: PricingPlan): void {
-  emit('select', pricingPlan);
 }
 </script>

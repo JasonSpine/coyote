@@ -17,7 +17,7 @@
                   :title="paymentStatusTitle"/>
     <JobOfferPricing
       v-if="props.screen === 'pricing'"
-      @select="selectPlan"/>
+      :ui-controller="props.uiController"/>
     <JobOfferCreate
       v-if="props.screen === 'form'"
       :upload="props.upload!"
@@ -69,7 +69,7 @@
 import {computed, onMounted, provide, watch} from 'vue';
 import {JobOffer} from '../../jobBoard';
 import {JobOfferFilter} from "../../jobOfferFilter";
-import {InitiatePayment, PricingPlan, SubmitJobOffer, toSubmitJobOffer} from "../../main";
+import {InitiatePayment, SubmitJobOffer, toSubmitJobOffer} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
@@ -149,10 +149,6 @@ function payForJob(payment: InitiatePayment): void {
 
 function redeemBundle(jobOfferId: number): void {
   props.viewListener!.redeemBundle(jobOfferId);
-}
-
-function selectPlan(pricingPlan: PricingPlan): void {
-  props.uiController.selectPlan(pricingPlan);
 }
 
 function showJobOfferForm(): void {
