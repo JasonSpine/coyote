@@ -1,9 +1,7 @@
 import {JobOffer, jobOfferCities} from '../jobBoard';
 import {JobOfferFilter, sortInPlace} from "../jobOfferFilter";
-import {Country, JobOfferFilters, PaymentSummary, PlanBundleName, UploadAssets, VatIdState} from "../main";
-import {PaymentNotification} from "../paymentProvider/PaymentProvider";
-import {PaymentStatus} from "../paymentProvider/PaymentService";
-import {Screen, ViewListener, VueUi} from './ui/ui';
+import {PlanBundleName} from "../main";
+import {Screen, VueUi} from './ui/ui';
 
 export type Toast = 'created'|'edited'|'bundle-used';
 
@@ -32,29 +30,9 @@ export class View {
     });
   }
 
-  setEventListener(listener: ViewListener): void {
-    this.ui.setViewListener(listener);
-  }
-
-  mount(element: Element): void {
-    this.ui.mount(element);
-  }
-
   setJobOffers(jobOffers: JobOffer[]): void {
     this.jobOffers = jobOffers;
     this.filterJobOffers();
-  }
-
-  setJobOfferFilters(filters: JobOfferFilters): void {
-    this.ui.setJobOfferFilters(filters);
-  }
-
-  setPaymentNotification(notification: PaymentNotification): void {
-    this.ui.setPaymentNotification(notification);
-  }
-
-  setPaymentStatus(notification: PaymentStatus): void {
-    this.ui.setPaymentStatus(notification);
   }
 
   private filterJobOffers(): void {
@@ -131,29 +109,5 @@ export class View {
   setPlanBundle(planName: PlanBundleName, remainingJobOffers: number): void {
     this.planBundleCanRedeem = remainingJobOffers > 0;
     this.ui.setPlanBundle(planName, remainingJobOffers, this.planBundleCanRedeem);
-  }
-
-  upload(upload: UploadAssets): void {
-    this.ui.upload(upload);
-  }
-
-  setJobOfferApplicationEmail(applicationEmail: string): void {
-    this.ui.setJobOfferApplicationEmail(applicationEmail);
-  }
-
-  setPaymentSummary(summary: PaymentSummary): void {
-    this.ui.setPaymentSummary(summary);
-  }
-
-  setPaymentInvoiceCountries(countries: Country[]): void {
-    this.ui.setPaymentInvoiceCountries(countries);
-  }
-
-  setVatIncluded(vatIncluded: boolean): void {
-    this.ui.setVatIncluded(vatIncluded);
-  }
-
-  setPaymentInvoiceVatIdState(state: VatIdState): void {
-    this.ui.setVatIdState(state);
   }
 }

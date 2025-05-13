@@ -12,7 +12,8 @@ import {VueUi} from './view/ui/ui';
 import {View} from "./view/view";
 
 const backend = new JobBoardBackend();
-const view = new View(new VueUi(locationProvider(backend.testMode())));
+const ui = new VueUi(locationProvider(backend.testMode()));
+const view = new View(ui);
 const board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jobOffers));
 const paymentProvider: PaymentProvider = backend.testMode()
   ? new TestPaymentProvider()
@@ -90,7 +91,7 @@ function bundleSize(pricingPlan: PaidPricingPlan): 1|3|5|20 {
   return bundleSizes[pricingPlan];
 }
 
-view.setEventListener({
+ui.setViewListener({
   createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {
     backend.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
       board.jobOfferCreated(toJobOffer(jobOffer));
@@ -99,7 +100,7 @@ view.setEventListener({
       } else {
         const payment = jobOffer.payment!;
         jobOfferPayments.addJobOffer({jobOfferId: jobOffer.id, paymentId: payment.paymentId, pricingPlan});
-        view.setPaymentSummary({
+        ui.setPaymentSummary({
           bundleSize: bundleSize(pricingPlan),
           basePrice: payment.paymentPriceBase,
           vat: payment.paymentPriceVat,
@@ -110,7 +111,7 @@ view.setEventListener({
     });
   },
   vatDetailsChanged(countryCode: string, vatId: string): void {
-    view.setVatIncluded(isVatIncluded(countryCode, vatId));
+    ui.setVatIncluded(isVatIncluded(countryCode, vatId));
   },
   updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void {
     backend.updateJobOffer(jobOfferId, jobOffer, (): void => {
@@ -119,7 +120,7 @@ view.setEventListener({
     });
   },
   payForJob(initiatePayment: InitiatePayment): void {
-    view.setPaymentInvoiceVatIdState('pending');
+    ui.setVatIdState('pending');
     payments.initiatePayment(
       jobOfferPayments.paymentId(initiatePayment.jobOfferId),
       initiatePayment.invoiceInfo,
@@ -151,13 +152,13 @@ view.setEventListener({
 
 payments.addEventListener({
   paymentInitiationVatIdState(vatId: VatIdState): void {
-    view.setPaymentInvoiceVatIdState(vatId);
+    ui.setVatIdState(vatId);
   },
   notificationReceived(notification: PaymentNotification): void {
-    view.setPaymentNotification(notification);
+    ui.setPaymentNotification(notification);
   },
   statusChanged(paymentId: string, status: PaymentStatus): void {
-    view.setPaymentStatus(status);
+    ui.setPaymentStatus(status);
     if (status === 'paymentComplete') {
       board.jobOfferPaid(jobOfferPayments.jobOfferId(paymentId));
       const pricingPlan = jobOfferPayments.pricingPlan(paymentId);
@@ -200,12 +201,10 @@ if (bundle.hasBundle) {
 backend.initialJobOffers()
   .forEach(offer => board.jobOfferCreated(toJobOffer(offer)));
 
-view.setJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
-view.setPaymentInvoiceCountries(backend.paymentInvoiceCountries());
-
-view.setJobOfferFilters(board.jobOfferFilters());
-
-view.upload({
+ui.setJobOfferApplicationEmail(backend.jobOfferApplicationEmail());
+ui.setPaymentInvoiceCountries(backend.paymentInvoiceCountries());
+ui.setJobOfferFilters(board.jobOfferFilters());
+ui.upload({
   async uploadLogo(file: File): Promise<string> {
     return await backend.uploadLogoReturnUrl(file);
   },
@@ -216,7 +215,7 @@ view.upload({
 
 export type Theme = 'light'|'dark';
 backend.onChangeTheme((theme: Theme) => setDarkTheme(theme === 'dark'));
-runInShadowDom(element => view.mount(element!));
+runInShadowDom(element => ui.mount(element!));
 
 export interface UploadImage {
   (file: File): Promise<string>;
