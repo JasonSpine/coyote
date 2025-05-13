@@ -3,19 +3,19 @@
     <Design.Row>
       <Design.Tabs :tabs="tabs" model-value="jobBoardHome" @update:model-value="changeTab"/>
       <Design.RowEnd class="max-md:hidden">
-        <Design.Button icon="add" primary-outline @click="emit('add')">
+        <Design.Button icon="add" primary-outline @click="props.uiController.showForm">
           Dodaj ogłoszenie
         </Design.Button>
       </Design.RowEnd>
     </Design.Row>
     <JobOfferFilters
       :filters="props.filters"
-      @filter="filter => emit('filter', filter)"/>
+      @filter="props.uiController.filter"/>
     <JobOfferListItem
       v-for="jobOffer in props.jobOffers"
       :key="jobOffer.id"
       :job-offer="jobOffer"
-      @select="emit('show', jobOffer.id)"
+      @select="props.uiController.navigate('show', jobOffer.id)"
       @favourite-change=""/>
     <Design.Material v-if="props.jobOffers.length === 0" nested class="text-center my-2 py-6">
       Nie znaleźliśmy żadnych ofert, pasujących do Twoich kryteriów wyszukiwania.
@@ -25,24 +25,18 @@
 
 <script setup lang="ts">
 import {JobOffer} from '../../../jobBoard';
-import {JobOfferFilter} from "../../../jobOfferFilter";
 import {JobOfferFilters as Filters} from "../../../main";
 import {Design} from "../design/design";
+import {UiController} from "../ui";
 import JobOfferFilters from "./JobOfferFilters.vue";
 import JobOfferListItem from "./JobOfferListItem.vue";
 
 const props = defineProps<Props>();
-const emit = defineEmits<Emit>();
 
 interface Props {
+  uiController: UiController;
   jobOffers: JobOffer[];
   filters: Filters;
-}
-
-interface Emit {
-  (event: 'show', id: number): void;
-  (event: 'add'): void;
-  (event: 'filter', filter: JobOfferFilter): void;
 }
 
 const tabs = [

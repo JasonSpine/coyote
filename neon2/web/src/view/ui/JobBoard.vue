@@ -57,18 +57,15 @@
       @abort="abortEdit"/>
     <JobOfferHome
       v-if="props.screen === 'home'"
+      :ui-controller="props.uiController"
       :job-offers="props.jobOffers"
-      :filters="props.jobOfferFilters"
-      @show="showJob"
-      @add="showJobOfferForm"
-      @filter="filterJobs"/>
+      :filters="props.jobOfferFilters"/>
   </Design.Layout>
 </template>
 
 <script setup lang="ts">
 import {computed, onMounted, provide, watch} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {JobOfferFilter} from "../../jobOfferFilter";
 import {InitiatePayment, SubmitJobOffer, toSubmitJobOffer} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
@@ -149,14 +146,6 @@ function payForJob(payment: InitiatePayment): void {
 
 function redeemBundle(jobOfferId: number): void {
   props.viewListener!.redeemBundle(jobOfferId);
-}
-
-function showJobOfferForm(): void {
-  props.uiController.showForm();
-}
-
-function filterJobs(filter: JobOfferFilter): void {
-  props.uiController.filter(filter);
 }
 
 function mountCardInput(cssSelector: string): void {
