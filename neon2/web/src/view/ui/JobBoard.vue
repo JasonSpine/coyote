@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, provide, watch} from 'vue';
+import {computed, provide} from 'vue';
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
@@ -35,23 +35,6 @@ import {JobBoardProperties} from "./JobBoardProperties";
 const props = defineProps<JobBoardProperties>();
 
 provide('locationProvider', props.locationProvider!);
-
-const darkModePreference = window.matchMedia('(prefers-color-scheme: dark)');
-onMounted(() => changeThemeIfApplicable(darkModePreference.matches));
-darkModePreference.addEventListener('change', (event) => changeThemeIfApplicable(event.matches));
-watch(() => props.screen, () => changeThemeIfApplicable(darkModePreference.matches));
-
-function screenHasDarkTheme(): boolean {
-  return ['edit', 'form', 'payment', 'pricing'].indexOf(props.screen) === -1;
-}
-
-function changeThemeIfApplicable(darkTheme: boolean): void {
-  changeTheme(screenHasDarkTheme() && darkTheme);
-}
-
-function changeTheme(darkTheme: boolean): void {
-  document.documentElement.dataset.theme = darkTheme ? 'dark' : 'light';
-}
 
 function navigateHome(): void {
   props.uiController.navigate('home', null);

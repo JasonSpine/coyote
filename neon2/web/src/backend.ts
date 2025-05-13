@@ -152,8 +152,11 @@ export class JobBoardBackend {
     return this.backendInput.userId !== null;
   }
 
-  onChangeTheme(listener: (theme: Theme) => any) {
+  onChangeTheme(listener: (theme: Theme) => void): void {
     listener(this.backendInput.darkTheme ? 'dark' : 'light');
+    if (this.backendInput.themeMode === 'system') {
+      listener(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    }
     window['neonOnChangeTheme'] = function (isDarkTheme: boolean): void {
       listener(isDarkTheme ? 'dark' : 'light');
     };
@@ -178,6 +181,7 @@ export interface BackendInput {
   stripePublishableKey: string|null;
   paymentInvoiceCountries: Array<{countryCode: string; countryName: string}>;
   darkTheme: boolean;
+  themeMode: 'dark'|'light'|'system';
 }
 
 export interface BackendJobOffer {

@@ -63,7 +63,8 @@ class ServiceProvider extends RouteServiceProvider {
                         auth()->id(),
                         auth()->user()?->email,
                         app('session')->token(),
-                        $theme->isThemeDark());
+                        $theme->isThemeDark(),
+                        $theme->themeMode());
                     return view('job.home_modern', [
                         'neonHead' => new StringHtml($jobBoardView->htmlMarkupHead()),
                         'neonBody' => new StringHtml($jobBoardView->htmlMarkupBody()),

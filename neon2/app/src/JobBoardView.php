@@ -14,6 +14,7 @@ readonly class JobBoardView {
         private ?string                    $userEmail,
         private string                     $csrfToken,
         private bool                       $darkTheme,
+        private string                     $themeMode,
     ) {
         $this->vite = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/');
     }
@@ -83,6 +84,7 @@ readonly class JobBoardView {
             'stripePublishableKey'     => $this->stripePublishableKey,
             'paymentInvoiceCountries'  => $this->countries->invoiceCountries(),
             'darkTheme'                => $this->darkTheme,
+            'themeMode'                => $this->themeMode,
         ]);
     }
 
