@@ -56,8 +56,8 @@ export interface UiController {
 export class VueUi {
   private readonly screens: Screens;
   private readonly vueState: JobBoardProperties;
-  private readonly navigationListeners: NavigationListener[] = [];
   private readonly searchListeners: FilterListener[] = [];
+  private navigationListener: NavigationListener|null = null;
 
   constructor(locationProvider: LocationProvider) {
     this.vueState = reactive<JobBoardProperties>({
@@ -105,7 +105,7 @@ export class VueUi {
   }
 
   private showForm(): void {
-    this.navigationListeners.forEach(listener => listener.showJobOfferForm());
+    this.navigationListener!.showJobOfferForm();
   }
 
   private selectPlan(plan: PricingPlan): void {
@@ -117,7 +117,7 @@ export class VueUi {
   }
 
   private navigate(screen: Screen, jobOfferId: number|null): void {
-    this.navigationListeners.forEach(listener => listener.setScreen(screen, jobOfferId));
+    this.navigationListener!.setScreen(screen, jobOfferId);
   }
 
   setScreen(screen: Screen, jobOfferId: number|null): void {
@@ -138,8 +138,8 @@ export class VueUi {
     this.vueState.viewListener = viewListener;
   }
 
-  addNavigationListener(navigationListener: NavigationListener): void {
-    this.navigationListeners.push(navigationListener);
+  setNavigationListener(navigationListener: NavigationListener): void {
+    this.navigationListener = navigationListener;
   }
 
   addFilterListener(listener: FilterListener): void {

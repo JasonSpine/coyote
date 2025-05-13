@@ -11,10 +11,10 @@ export class View {
   private planBundleCanRedeem: boolean = false;
 
   constructor(private ui: VueUi) {
-    this.ui.addNavigationListener({
-      setScreen: (screen: Screen, jobOfferId: number|null): void => {
-        this.ui.setToast(null);
-        this.ui.setScreen(screen, jobOfferId);
+    this.ui.setNavigationListener({
+      setScreen(screen: Screen, jobOfferId: number|null): void {
+        ui.setToast(null);
+        ui.setScreen(screen, jobOfferId);
       },
       showJobOfferForm: (): void => {
         if (this.planBundleCanRedeem) {
