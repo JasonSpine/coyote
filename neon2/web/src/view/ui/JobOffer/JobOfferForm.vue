@@ -205,7 +205,7 @@ import {
   formatLegalForm,
   formatWorkExperience,
   formatWorkMode,
-} from "../format";
+} from "./format";
 import {FormModel, fromFormModel, toFormModel} from "./JobOfferForm";
 import {JobOfferFormValidation} from './JobOfferFormValidation';
 import JobOfferLocationSet from './JobOfferLocationSet.vue';

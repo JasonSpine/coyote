@@ -1,4 +1,4 @@
-import {HiringType, LegalForm, WorkExperience, WorkMode} from "../../main";
+import {HiringType, LegalForm, WorkExperience, WorkMode} from "../../../main";
 
 export function formatExpiresInDays(expiresInDays: number): string {
   return 'za ' + expiresInDays.toString() + ' dni';

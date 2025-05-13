@@ -112,7 +112,7 @@ import {
   formatLegalForm,
   formatWorkExperience,
   formatWorkMode,
-} from "../format";
+} from "./format";
 import {JobOfferShow} from "./JobOfferShow";
 
 const props = defineProps<Props>();

@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {JobOffer} from "../../../../jobBoard";
-import {formatLegalForm, formatWorkMode} from "../../format";
+import {formatLegalForm, formatWorkMode} from "../../JobOffer/format";
 import Icon, {IconName} from "../../icons/Icon.vue";
 import {Design} from "../design";
 import {SalaryJobOffer} from "./JobOfferSalary.vue";
