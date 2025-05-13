@@ -25,21 +25,14 @@
       :upload="props.upload!"
       :pricing-plan="props.pricingPlan!"
       :application-email="props.applicationEmail!"/>
-    <template v-if="props.screen === 'payment'">
-      <Design.Toast title="Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność."/>
-      <JobOfferRedeemBundle
-        v-if="props.planBundle?.canRedeem"
-        :view-listener="props.viewListener!"
-        :job-offer-id="props.currentJobOfferId!"
-        :plan-bundle="props.planBundle!"/>
-      <JobOfferPaymentForm
-        v-else
-        :view-listener="props.viewListener!"
-        :job-offer-id="props.currentJobOfferId!"
-        :summary="props.paymentSummary!"
-        :countries="props.invoiceCountries!"
-        :vat-id-state="props.paymentVatIdState"/>
-    </template>
+    <JobOfferPaymentScreen
+      v-if="props.screen === 'payment'"
+      :view-listener="props.viewListener!"
+      :plan-bundle="props.planBundle!"
+      :job-offer-id="props.currentJobOfferId!"
+      :invoice-countries="props.invoiceCountries!"
+      :payment-summary="props.paymentSummary!"
+      :payment-vat-id-state="props.paymentVatIdState"/>
     <JobOfferShowScreen
       v-if="props.screen === 'show'"
       :ui-controller="props.uiController"
@@ -73,9 +66,8 @@ import {JobBoardProperties} from "./JobBoardProperties";
 import JobOfferCreate from "./JobOffer/JobOfferCreate.vue";
 import JobOfferEdit from './JobOffer/JobOfferEdit.vue';
 import JobOfferHome from './JobOffer/JobOfferHome.vue';
-import JobOfferPaymentForm from './JobOffer/JobOfferPaymentForm.vue';
+import JobOfferPaymentScreen from "./JobOffer/JobOfferPaymentScreen.vue";
 import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
-import JobOfferRedeemBundle from "./JobOffer/JobOfferRedeemBundle.vue";
 import {toJobOfferShow} from "./JobOffer/JobOfferShow";
 import JobOfferShowScreen from "./JobOffer/JobOfferShowScreen.vue";
 import {Screen} from "./ui";
