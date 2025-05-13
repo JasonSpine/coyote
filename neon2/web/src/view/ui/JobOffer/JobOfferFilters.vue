@@ -124,11 +124,11 @@
 
 <script setup lang="ts">
 import {computed, reactive, ref, watch} from "vue";
-import {JobOfferFilter, OrderBy} from "../../../../jobOfferFilter";
-import {JobOfferFilters, LegalForm, WorkExperience, WorkMode} from "../../../../main";
-import Icon, {IconName} from "../../icons/Icon.vue";
-import {Design} from "../design";
-import {DropdownOption} from "../DropdownOption";
+import {JobOfferFilter, OrderBy} from "../../../jobOfferFilter";
+import {JobOfferFilters, LegalForm, WorkExperience, WorkMode} from "../../../main";
+import Icon, {IconName} from "../icons/Icon.vue";
+import {Design} from "../design/design";
+import {DropdownOption} from "../design/DropdownOption";
 
 const props = defineProps<Props>();
 

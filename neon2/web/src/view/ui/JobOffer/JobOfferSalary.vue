@@ -1,16 +1,16 @@
 <template>
-  <Design.JobOfferBadge color="primary" :nowrap="props.nowrap">
+  <JobOfferBadge color="primary" :nowrap="props.nowrap">
     {{salaryRange}}
     {{props.salary.salaryCurrency}}
     {{props.salary.salaryIsNet ? 'netto' : ''}}
     {{rateTitle}}
-  </Design.JobOfferBadge>
+  </JobOfferBadge>
 </template>
 
 <script setup lang="ts">
 import {computed} from "vue";
-import {Currency, Rate} from "../../../../main";
-import {Design} from "../design";
+import {Currency, Rate} from "../../../main";
+import JobOfferBadge from "./JobOfferBadge.vue";
 
 export interface SalaryJobOffer {
   salaryRangeFrom: number;

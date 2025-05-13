@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import {Design} from "../design/design";
-import JobOfferStepper from '../design/JobOffer/JobOfferStepper.vue';
+import JobOfferStepper from './JobOfferStepper.vue';
 import {PlanBundle} from "../ui";
 
 const props = defineProps<Props>();

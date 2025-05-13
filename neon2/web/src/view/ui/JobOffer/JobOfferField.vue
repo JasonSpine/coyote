@@ -14,8 +14,8 @@
 </template>
 
 <script setup lang="ts">
-import Icon from "../../icons/Icon.vue";
-import {IconName} from "../../icons/icons";
+import Icon from "../icons/Icon.vue";
+import {IconName} from "../icons/icons";
 
 interface Props {
   title: string;

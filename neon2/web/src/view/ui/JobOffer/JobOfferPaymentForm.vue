@@ -86,7 +86,7 @@ import {Country, InitiatePayment, InvoiceInformation, PaymentSummary, VatIdState
 import {PaymentMethod} from "../../../paymentProvider/PaymentProvider";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
-import JobOfferStepper from '../design/JobOffer/JobOfferStepper.vue';
+import JobOfferStepper from './JobOfferStepper.vue';
 import {JobOfferFormValidation} from "./JobOfferFormValidation";
 
 const props = defineProps<Props>();

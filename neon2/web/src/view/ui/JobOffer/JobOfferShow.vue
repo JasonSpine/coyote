@@ -26,7 +26,7 @@
           v-text="props.jobOffer.companyName"
           data-testid="jobOfferCompanyName"/>
       </div>
-      <Design.JobOfferSalary :salary="salary" nowrap v-if="salary"/>
+      <JobOfferSalary :salary="salary" nowrap v-if="salary"/>
     </div>
     <div class="md:flex max-md:space-y-12">
       <div :class="[
@@ -103,9 +103,6 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {Design} from "../design/design";
-import JobOfferField from "../design/JobOffer/JobOfferField.vue";
-import {SalaryJobOffer} from "../design/JobOffer/JobOfferSalary.vue";
-import JobOfferTagList from "../design/JobOffer/JobOfferTagList.vue";
 import {
   formatCompanySizeLevel,
   formatExpiresInDays,
@@ -113,7 +110,10 @@ import {
   formatWorkExperience,
   formatWorkMode,
 } from "./format";
+import JobOfferField from "./JobOfferField.vue";
+import JobOfferSalary, {SalaryJobOffer} from "./JobOfferSalary.vue";
 import {JobOfferShow} from "./JobOfferShow";
+import JobOfferTagList from "./JobOfferTagList.vue";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();

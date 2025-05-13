@@ -197,7 +197,7 @@ import {
 } from "../../../main";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
-import JobOfferStepper, {JobOfferCreatorStep} from "../design/JobOffer/JobOfferStepper.vue";
+import JobOfferStepper, {JobOfferCreatorStep} from "./JobOfferStepper.vue";
 import LocationField from "../design/LocationField.vue";
 import {
   formatCompanySizeLevel,

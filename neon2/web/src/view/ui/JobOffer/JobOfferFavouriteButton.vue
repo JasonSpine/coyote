@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import Icon from '../../icons/Icon.vue';
+import Icon from '../icons/Icon.vue';
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();

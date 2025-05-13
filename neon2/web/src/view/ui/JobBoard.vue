@@ -74,7 +74,7 @@ import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
 import {Design} from "./design/design";
-import JobOfferButtonPill from "./design/JobOffer/JobOfferButtonPill.vue";
+import JobOfferButtonPill from "./JobOffer/JobOfferButtonPill.vue";
 import JobOfferCreate from "./JobOffer/JobOfferCreate.vue";
 import JobOfferEdit from './JobOffer/JobOfferEdit.vue';
 import JobOfferHome from './JobOffer/JobOfferHome.vue';

@@ -3,8 +3,8 @@
     <Design.Row wrap vertical-center>
       <Design.Tile nested-pill v-for="badge in badges" :text="badge.title" :icon="badge.icon"/>
       <Design.RowEnd inline>
-        <Design.JobOfferBadge color="pink" v-text="'Nowe'" v-if="jobOffer.isNew" text-small/>
-        <Design.JobOfferFavouriteButton
+        <JobOfferBadge color="pink" v-text="'Nowe'" v-if="jobOffer.isNew" text-small/>
+        <JobOfferFavouriteButton
           :favourite="jobOffer.isFavourite"
           @favourite-change="toggleFavourite"/>
       </Design.RowEnd>
@@ -16,8 +16,8 @@
           <Design.Row vertical-center apart>
             <p class="text-lg leading-6 dark:text-neutral-200" v-text="jobOffer.title" data-testid="jobOfferTitle"/>
             <div class="max-md:hidden">
-              <Design.JobOfferSalary :salary="jobOfferSalary" v-if="jobOfferSalary"/>
-              <Design.JobOfferSalaryNotProvided v-else/>
+              <JobOfferSalary :salary="jobOfferSalary" v-if="jobOfferSalary"/>
+              <JobOfferSalaryNotProvided v-else/>
             </div>
           </Design.Row>
           <Design.Row apart class="max-md:hidden mt-2" vertical-center>
@@ -25,7 +25,7 @@
               <span v-if="jobOffer.companyName"
                     v-text="jobOffer.companyName"
                     class="text-neutral-900 dark:text-neutral-050"/>
-              <Design.JobOfferTagList :tag-names="jobOffer.tagNames" :max="5"/>
+              <JobOfferTagList :tag-names="jobOffer.tagNames" :max="5"/>
             </Design.Row>
             <Design.Row class="space-x-2 text-sm">
               <div v-for="badge in badges">
@@ -41,14 +41,14 @@
         <Design.Row wrap vertical-center>
           <span>{{jobOffer.companyName}}</span>
           <Design.RowEnd>
-            <Design.JobOfferSalary :salary="jobOfferSalary" v-if="jobOfferSalary"/>
-            <Design.JobOfferSalaryNotProvided v-else/>
+            <JobOfferSalary :salary="jobOfferSalary" v-if="jobOfferSalary"/>
+            <JobOfferSalaryNotProvided v-else/>
           </Design.RowEnd>
         </Design.Row>
         <template v-if="jobOffer.tagNames.length">
           <Design.Divider/>
           <Design.Row>
-            <Design.JobOfferTagList :tag-names="jobOffer.tagNames" :max="5"/>
+            <JobOfferTagList :tag-names="jobOffer.tagNames" :max="5"/>
           </Design.Row>
         </template>
       </div>
@@ -58,11 +58,16 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import {JobOffer} from "../../../../jobBoard";
-import {formatLegalForm, formatWorkMode} from "../../JobOffer/format";
-import Icon, {IconName} from "../../icons/Icon.vue";
-import {Design} from "../design";
-import {SalaryJobOffer} from "./JobOfferSalary.vue";
+import {JobOffer} from "../../../jobBoard";
+import {Design} from "../design/design";
+import Icon from "../icons/Icon.vue";
+import {IconName} from "../icons/icons";
+import {formatLegalForm, formatWorkMode} from "./format";
+import JobOfferBadge from "./JobOfferBadge.vue";
+import JobOfferFavouriteButton from "./JobOfferFavouriteButton.vue";
+import JobOfferSalary, {SalaryJobOffer} from "./JobOfferSalary.vue";
+import JobOfferSalaryNotProvided from "./JobOfferSalaryNotProvided.vue";
+import JobOfferTagList from "./JobOfferTagList.vue";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();

@@ -8,10 +8,10 @@
         </Design.Button>
       </Design.RowEnd>
     </Design.Row>
-    <Design.JobOfferFilters
+    <JobOfferFilters
       :filters="props.filters"
       @filter="filter => emit('filter', filter)"/>
-    <Design.JobOfferListItem
+    <JobOfferListItem
       v-for="jobOffer in props.jobOffers"
       :key="jobOffer.id"
       :job-offer="jobOffer"
@@ -26,15 +26,17 @@
 <script setup lang="ts">
 import {JobOffer} from '../../../jobBoard';
 import {JobOfferFilter} from "../../../jobOfferFilter";
-import {JobOfferFilters} from "../../../main";
+import {JobOfferFilters as Filters} from "../../../main";
 import {Design} from "../design/design";
+import JobOfferFilters from "./JobOfferFilters.vue";
+import JobOfferListItem from "./JobOfferListItem.vue";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
 interface Props {
   jobOffers: JobOffer[];
-  filters: JobOfferFilters;
+  filters: Filters;
 }
 
 interface Emit {

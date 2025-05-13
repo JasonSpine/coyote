@@ -13,13 +13,6 @@ import FieldHelp from "./FieldHelp.vue";
 import FieldLabel from "./FieldLabel.vue";
 import Image from "./Image.vue";
 import ImageUpload from "./ImageUpload.vue";
-import JobOfferBadge from "./JobOffer/JobOfferBadge.vue";
-import JobOfferFavouriteButton from "./JobOffer/JobOfferFavouriteButton.vue";
-import JobOfferListItem from "./JobOffer/JobOfferListItem.vue";
-import JobOfferSalary from "./JobOffer/JobOfferSalary.vue";
-import JobOfferSalaryNotProvided from "./JobOffer/JobOfferSalaryNotProvided.vue";
-import JobOfferTagList from "./JobOffer/JobOfferTagList.vue";
-import JobOfferFilters from "./JobOffer/JobOfferFilters.vue";
 import Layout from "./Layout.vue";
 import Material from "./Material.vue";
 import PaymentMethod from "./PaymentMethod.vue";
@@ -52,13 +45,6 @@ export const Design = {
   FieldHelp,
   Image,
   ImageUpload,
-  JobOfferBadge,
-  JobOfferFavouriteButton,
-  JobOfferListItem,
-  JobOfferSalary,
-  JobOfferSalaryNotProvided,
-  JobOfferTagList,
-  JobOfferFilters,
   Layout,
   Material,
   PaymentMethod,
