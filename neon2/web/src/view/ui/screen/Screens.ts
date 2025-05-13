@@ -29,7 +29,7 @@ export class Screens {
 
   private addScreens(): void {
     this.router.addScreen(JobOfferHome, 'home', '/');
-    this.router.addScreen(JobOfferShowScreen, 'show', '/offer/:id-:slug');
+    this.router.addScreen(JobOfferShowScreen, 'show', '/offer/:slug--:id');
     this.router.addScreen(JobOfferPricing, 'pricing', '/pricing');
     this.router.addScreen(JobOfferCreate, 'form', '/offer/new');
     this.router.addScreen(JobOfferEdit, 'edit', '/offer/:id/edit');

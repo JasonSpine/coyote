@@ -70,7 +70,7 @@ readonly class CoyoteIntegration implements Integration {
             $published ? JobBoard\JobOfferStatus::Published : JobBoard\JobOfferStatus::AwaitingPayment,
             $this->mapper->jobOfferFields($jobOffer),
             $intent,
-            $jobOffer->slug,
+            $this->slug($jobOffer),
             route('job.application', [$jobOffer->id]));
     }
 
@@ -247,5 +247,18 @@ readonly class CoyoteIntegration implements Integration {
 
     private function findPaymentById(string $paymentId): Coyote\Payment {
         return Coyote\Payment::query()->find($paymentId);
+    }
+
+    private function slug(Job $jobOffer): string {
+        return \implode('-',
+            \array_map(str_slug(...), $this->slugPieces($jobOffer)));
+    }
+
+    private function slugPieces(Job $jobOffer): array {
+        $pieces = [$jobOffer->firm->name, $jobOffer->title];
+        if ($jobOffer->locations->isNotEmpty()) {
+            $pieces[] = $jobOffer->locations[0]->city;
+        }
+        return $pieces;
     }
 }
