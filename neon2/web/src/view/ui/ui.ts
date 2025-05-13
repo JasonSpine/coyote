@@ -49,6 +49,7 @@ export interface UiController {
   selectPlan(plan: PricingPlan): void;
   navigate(screen: Screen, jobOfferId: number|null): void;
   filter(filter: JobOfferFilter): void;
+  applyForJob(jobOfferId: number): void;
 }
 
 export class VueUi {
@@ -82,6 +83,7 @@ export class VueUi {
         selectPlan: this.selectPlan.bind(this),
         navigate: this.navigate.bind(this),
         filter: this.filter.bind(this),
+        applyForJob: this.applyForJob.bind(this),
       },
     });
   }
@@ -105,6 +107,11 @@ export class VueUi {
 
   private filter(filter: JobOfferFilter): void {
     this.searchListeners.forEach(listener => listener(filter));
+  }
+
+  private applyForJob(jobOfferId: number): void {
+    const currentJobOffer = this.vueState.jobOffers.find(offer => offer.id === jobOfferId)!;
+    window.location.href = currentJobOffer.applicationUrl;
   }
 
   setViewListener(viewListener: ViewListener): void {

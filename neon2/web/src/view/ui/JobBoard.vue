@@ -40,10 +40,11 @@
         :countries="props.invoiceCountries!"
         :vat-id-state="props.paymentVatIdState"/>
     </template>
-    <template v-if="props.screen === 'show'">
-      <JobOfferButtonPill @click="navigateHome">Wróć do ogłoszeń</JobOfferButtonPill>
-      <JobOfferShow :job-offer="toJobOfferShow(currentJobOffer)" @edit="editJob" @apply="applyForJob"/>
-    </template>
+    <JobOfferShowScreen
+      v-if="props.screen === 'show'"
+      :ui-controller="props.uiController"
+      :id="props.currentJobOfferId!"
+      :job-offer="toJobOfferShow(currentJobOffer)"/>
     <JobOfferEdit
       v-if="props.screen === 'edit'"
       :ui-controller="props.uiController"
@@ -69,7 +70,6 @@ import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
 import {Design} from "./design/design";
 import {JobBoardProperties} from "./JobBoardProperties";
-import JobOfferButtonPill from "./JobOffer/JobOfferButtonPill.vue";
 import JobOfferCreate from "./JobOffer/JobOfferCreate.vue";
 import JobOfferEdit from './JobOffer/JobOfferEdit.vue';
 import JobOfferHome from './JobOffer/JobOfferHome.vue';
@@ -77,7 +77,7 @@ import JobOfferPaymentForm from './JobOffer/JobOfferPaymentForm.vue';
 import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
 import JobOfferRedeemBundle from "./JobOffer/JobOfferRedeemBundle.vue";
 import {toJobOfferShow} from "./JobOffer/JobOfferShow";
-import JobOfferShow from './JobOffer/JobOfferShow.vue';
+import JobOfferShowScreen from "./JobOffer/JobOfferShowScreen.vue";
 import {Screen} from "./ui";
 
 const props = defineProps<JobBoardProperties>();
@@ -108,18 +108,6 @@ function changeTheme(darkTheme: boolean): void {
 const currentJobOffer = computed<JobOffer>(() => {
   return props.jobOffers.find(offer => offer.id === props.currentJobOfferId)!;
 });
-
-function editJob(): void {
-  navigate('edit', props.currentJobOfferId!);
-}
-
-function applyForJob(): void {
-  window.location.href = currentJobOffer.value!.applicationUrl;
-}
-
-function showJob(id: number): void {
-  navigate('show', id);
-}
 
 function navigateHome(): void {
   navigate('home');
