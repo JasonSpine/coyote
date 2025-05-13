@@ -17,23 +17,19 @@
 
 <script setup lang="ts">
 import {Design} from "../design/design";
+import {PlanBundle, ViewListener} from "../ui";
 import JobOfferStepper from './JobOfferStepper.vue';
-import {PlanBundle} from "../ui";
 
 const props = defineProps<Props>();
-const emit = defineEmits<Emit>();
 
 interface Props {
+  viewListener: ViewListener;
   jobOfferId: number;
   planBundle: PlanBundle;
 }
 
-interface Emit {
-  (event: 'redeem-bundle', jobOfferId: number): void;
-}
-
 function redeemBundle(): void {
-  emit('redeem-bundle', props.jobOfferId);
+  props.viewListener.redeemBundle(props.jobOfferId);
 }
 
 function capitalize(string: string): string {

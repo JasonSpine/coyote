@@ -29,9 +29,9 @@
       <Design.Toast title="Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność."/>
       <JobOfferRedeemBundle
         v-if="props.planBundle?.canRedeem"
+        :view-listener="props.viewListener!"
         :job-offer-id="props.currentJobOfferId!"
-        :plan-bundle="props.planBundle!"
-        @redeem-bundle="redeemBundle"/>
+        :plan-bundle="props.planBundle!"/>
       <JobOfferPaymentForm
         v-else
         :view-listener="props.viewListener!"
@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import {computed, onMounted, provide, watch} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {InitiatePayment, SubmitJobOffer, toSubmitJobOffer} from "../../main";
+import {SubmitJobOffer, toSubmitJobOffer} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
@@ -137,14 +137,6 @@ function abortEdit(): void {
   showJob(props.currentJobOfferId!);
 }
 
-function payForJob(payment: InitiatePayment): void {
-  props.viewListener!.payForJob(payment);
-}
-
-function redeemBundle(jobOfferId: number): void {
-  props.viewListener!.redeemBundle(jobOfferId);
-}
-
 const showHomeLink = computed<boolean>(() => props.screen !== 'home');
 
 const toastTitle = computed<string|null>(() => {
@@ -195,8 +187,4 @@ const paymentNotificationTitle = computed<string|null>(() => {
   };
   return titles[props.paymentNotification];
 });
-
-function vatDetailsChanged(countryCode: string, vatId: string): void {
-  props.viewListener!.vatDetailsChanged(countryCode, vatId);
-}
 </script>
