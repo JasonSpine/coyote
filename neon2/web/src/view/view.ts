@@ -12,15 +12,15 @@ export class View {
 
   constructor(private ui: VueUi) {
     this.ui.addNavigationListener({
-      setScreen: (screen: Screen): void => {
+      setScreen: (screen: Screen, jobOfferId: number|null): void => {
         this.ui.setToast(null);
-        this.ui.setScreen(screen);
+        this.ui.setScreen(screen, jobOfferId);
       },
       showJobOfferForm: (): void => {
         if (this.planBundleCanRedeem) {
-          this.ui.setScreen('form');
+          this.ui.setScreen('form', null);
         } else {
-          this.ui.setScreen('pricing');
+          this.ui.setScreen('pricing', null);
         }
       },
     });
@@ -84,18 +84,17 @@ export class View {
 
   jobOfferCreatedFree(jobOfferId: number): void {
     this.ui.setToast('created');
-    this.ui.setScreen('home');
+    this.ui.setScreen('home', null);
   }
 
   jobOfferCreatedRequirePayment(jobOfferId: number): void {
     this.ui.setToast('created');
-    this.ui.setCurrentJobOfferId(jobOfferId);
-    this.ui.setScreen('payment');
+    this.ui.setScreen('payment', jobOfferId);
   }
 
   jobOfferEdited(jobOfferId: number): void {
     this.ui.setToast('edited');
-    this.ui.setScreen('home');
+    this.ui.setScreen('home', null);
   }
 
   planBundleUsed(): void {
@@ -103,7 +102,7 @@ export class View {
   }
 
   jobOfferPaid(): void {
-    this.ui.setScreen('home');
+    this.ui.setScreen('home', null);
   }
 
   setPlanBundle(planName: PlanBundleName, remainingJobOffers: number): void {

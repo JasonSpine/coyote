@@ -4,72 +4,33 @@
       :pricing="props.screen === 'pricing'"
       :back="showHomeLink"
       @back="navigateHome"/>
-    <Design.Toast v-if="toastTitle" :title="toastTitle"/>
-    <Design.Toast v-if="planBundleToast"
-                  :title="planBundleToast"
-                  test-id="planBundle"/>
-    <Design.Toast test-id="paymentNotification"
-                  :test-value="props.paymentNotification!"
-                  v-if="paymentNotificationTitle"
-                  :title="paymentNotificationTitle"/>
-    <Design.Toast test-id="paymentStatus"
-                  v-if="paymentStatusTitle"
-                  :title="paymentStatusTitle"/>
-    <JobOfferPricing
-      v-if="props.screen === 'pricing'"
-      :ui-controller="props.uiController"/>
-    <JobOfferCreate
-      v-if="props.screen === 'form'"
-      :ui-controller="props.uiController"
-      :view-listener="props.viewListener!"
-      :upload="props.upload!"
-      :pricing-plan="props.pricingPlan!"
-      :application-email="props.applicationEmail!"/>
-    <JobOfferPaymentScreen
-      v-if="props.screen === 'payment'"
-      :view-listener="props.viewListener!"
-      :plan-bundle="props.planBundle!"
-      :job-offer-id="props.currentJobOfferId!"
-      :invoice-countries="props.invoiceCountries!"
-      :payment-summary="props.paymentSummary!"
-      :payment-vat-id-state="props.paymentVatIdState"/>
-    <JobOfferShowScreen
-      v-if="props.screen === 'show'"
-      :ui-controller="props.uiController"
-      :id="props.currentJobOfferId!"
-      :job-offer="toJobOfferShow(currentJobOffer)"/>
-    <JobOfferEdit
-      v-if="props.screen === 'edit'"
-      :ui-controller="props.uiController"
-      :view-listener="props.viewListener!"
-      :upload="props.upload!"
-      :id="props.currentJobOfferId!"
-      :job-offer="toSubmitJobOffer(currentJobOffer)"
-      :job-offer-expires-in-days="currentJobOffer.expiresInDays"/>
-    <JobOfferHome
-      v-if="props.screen === 'home'"
-      :ui-controller="props.uiController"
-      :job-offers="props.jobOffers"
-      :filters="props.jobOfferFilters"/>
+    <Design.Toast
+      v-if="toastTitle"
+      :title="toastTitle"/>
+    <Design.Toast
+      v-if="planBundleToast"
+      :title="planBundleToast"
+      test-id="planBundle"/>
+    <Design.Toast
+      test-id="paymentNotification"
+      :test-value="props.paymentNotification!"
+      v-if="paymentNotificationTitle"
+      :title="paymentNotificationTitle"/>
+    <Design.Toast
+      test-id="paymentStatus"
+      v-if="paymentStatusTitle"
+      :title="paymentStatusTitle"/>
+    <RouterView/>
   </Design.Layout>
 </template>
 
 <script setup lang="ts">
 import {computed, onMounted, provide, watch} from 'vue';
-import {JobOffer} from '../../jobBoard';
-import {toSubmitJobOffer} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
 import {Design} from "./design/design";
 import {JobBoardProperties} from "./JobBoardProperties";
-import JobOfferCreate from "./JobOffer/JobOfferCreate.vue";
-import JobOfferEdit from './JobOffer/JobOfferEdit.vue';
-import JobOfferHome from './JobOffer/JobOfferHome.vue';
-import JobOfferPaymentScreen from "./JobOffer/JobOfferPaymentScreen.vue";
-import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
-import {toJobOfferShow} from "./JobOffer/JobOfferShow";
-import JobOfferShowScreen from "./JobOffer/JobOfferShowScreen.vue";
 import {Screen} from "./ui";
 
 const props = defineProps<JobBoardProperties>();
@@ -96,10 +57,6 @@ function changeThemeIfApplicable(darkTheme: boolean): void {
 function changeTheme(darkTheme: boolean): void {
   document.documentElement.dataset.theme = darkTheme ? 'dark' : 'light';
 }
-
-const currentJobOffer = computed<JobOffer>(() => {
-  return props.jobOffers.find(offer => offer.id === props.currentJobOfferId)!;
-});
 
 function navigateHome(): void {
   navigate('home');

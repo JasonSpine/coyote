@@ -1,8 +1,8 @@
 <template>
   <JobOfferForm
     mode="update"
-    :job-offer="props.jobOffer"
-    :job-offer-expires-in-days="props.jobOfferExpiresInDays"
+    :job-offer="toSubmitJobOffer(props.jobOffer)"
+    :job-offer-expires-in-days="props.jobOffer.id"
     :upload="props.upload"
     :four-steps="false"
     @submit="update"
@@ -10,7 +10,8 @@
 </template>
 
 <script setup lang="ts">
-import {SubmitJobOffer, UploadAssets} from "../../../main";
+import {JobOffer} from "../../../jobBoard";
+import {SubmitJobOffer, toSubmitJobOffer, UploadAssets} from "../../../main";
 import {UiController, ViewListener} from "../ui";
 import JobOfferForm from "./JobOfferForm.vue";
 
@@ -19,17 +20,15 @@ const props = defineProps<Props>();
 interface Props {
   uiController: UiController;
   viewListener: ViewListener;
-  id: number;
-  jobOffer: SubmitJobOffer;
-  jobOfferExpiresInDays: number;
+  jobOffer: JobOffer;
   upload: UploadAssets;
 }
 
 function update(jobOffer: SubmitJobOffer): void {
-  props.viewListener.updateJob(props.id, jobOffer);
+  props.viewListener.updateJob(props.jobOffer.id, jobOffer);
 }
 
 function abort(): void {
-  props.uiController.navigate('show', props.id);
+  props.uiController.navigate('show', props.jobOffer.id);
 }
 </script>

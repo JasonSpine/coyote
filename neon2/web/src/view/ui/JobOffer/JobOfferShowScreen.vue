@@ -1,19 +1,22 @@
 <template>
   <JobOfferButtonPill @click="navigateHome">Wróć do ogłoszeń</JobOfferButtonPill>
-  <JobOfferShow :job-offer="props.jobOffer" @edit="editJob" @apply="applyForJob"/>
+  <JobOfferShow
+    :job-offer="toJobOfferShow(props.jobOffer)"
+    @edit="editJob"
+    @apply="applyForJob"/>
 </template>
 
 <script setup lang="ts">
+import {JobOffer} from "../../../jobBoard";
 import {UiController} from "../ui";
 import JobOfferButtonPill from "./JobOfferButtonPill.vue";
-import {JobOfferShow as JobOffer} from "./JobOfferShow";
+import {toJobOfferShow} from "./JobOfferShow";
 import JobOfferShow from "./JobOfferShow.vue";
 
 const props = defineProps<Props>();
 
 interface Props {
   uiController: UiController;
-  id: number;
   jobOffer: JobOffer;
 }
 
@@ -22,10 +25,10 @@ function navigateHome(): void {
 }
 
 function editJob(): void {
-  props.uiController.navigate('edit', props.id);
+  props.uiController.navigate('edit', props.jobOffer.id);
 }
 
 function applyForJob(): void {
-  props.uiController.applyForJob(props.id);
+  props.uiController.applyForJob(props.jobOffer.id);
 }
 </script>

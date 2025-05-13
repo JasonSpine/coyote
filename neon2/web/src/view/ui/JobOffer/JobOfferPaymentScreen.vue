@@ -3,12 +3,12 @@
   <JobOfferRedeemBundle
     v-if="props.planBundle?.canRedeem"
     :view-listener="props.viewListener"
-    :job-offer-id="props.jobOfferId"
+    :job-offer-id="props.paymentJobOfferId"
     :plan-bundle="props.planBundle"/>
   <JobOfferPaymentForm
     v-else
     :view-listener="props.viewListener"
-    :job-offer-id="props.jobOfferId"
+    :job-offer-id="props.paymentJobOfferId"
     :summary="props.paymentSummary"
     :countries="props.invoiceCountries"
     :vat-id-state="props.paymentVatIdState"/>
@@ -25,8 +25,8 @@ const props = defineProps<Props>();
 
 interface Props {
   viewListener: ViewListener;
-  planBundle: PlanBundle;
-  jobOfferId: number;
+  planBundle: PlanBundle|null;
+  paymentJobOfferId: number;
   invoiceCountries: Country[];
   paymentSummary: PaymentSummary;
   paymentVatIdState: VatIdState;

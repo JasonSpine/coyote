@@ -4,7 +4,8 @@
       class="outline-none flex-grow-1"
       autocomplete="off"
       ref="locationField"
-      :placeholder="props.placeholder"/>
+      :placeholder="loading ? 'Wczytywanie...' : props.placeholder"
+      :disabled="loading"/>
   </TextInputOutline>
 </template>
 
@@ -25,9 +26,14 @@ const locationField = ref<HTMLInputElement|null>(null);
 
 let previouslySelectedFormattedAddress: string = formatAddress(modelLocation.value);
 
+const loading = ref<boolean>(true);
+
 onMounted(() => {
   locationField.value!.value = formatAddress(modelLocation.value);
   provider.mount(locationField.value!, {
+    mounted(): void {
+      loading.value = false;
+    },
     select(location: Location): void {
       previouslySelectedFormattedAddress = locationField.value!.value;
       modelLocation.value = location;

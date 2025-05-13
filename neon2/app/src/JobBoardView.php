@@ -23,10 +23,7 @@ readonly class JobBoardView {
         if ($this->isTestMode) {
             $resources = null;
         } else {
-            $resources = <<<headResources
-                <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter+Tight:400,500,700">
-                <script async src="https://maps.googleapis.com/maps/api/js?key=$this->googleMapsKey&libraries=places&loading=async"></script>
-                headResources;
+            $resources = '<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter+Tight:400,500,700">';
         }
         $faLightUrl = "/neon2/static/{$this->vite->fontAwesomeLightUrl()}";
         $faRegularUrl = "/neon2/static/{$this->vite->fontAwesomeRegularUrl()}";
@@ -42,12 +39,32 @@ readonly class JobBoardView {
     }
 
     public function htmlMarkupBody(): string {
+        if ($this->isTestMode) {
+            $resource = null;
+        } else {
+            $resource = <<<htmlResource
+                <script async src="https://maps.googleapis.com/maps/api/js?key=$this->googleMapsKey&libraries=places&loading=async&callback=googleMapsApiLoaded"></script>
+                htmlResource;
+        }
         return <<<html
             <custom-neon-application>
                 <div id="creditCardInput"></div>
             </custom-neon-application>
             <script type="module" src="{$this->entryScriptUrl()}"></script>
             <script>var backendInput = {$this->backendInput()};</script>
+            <script>
+            let wasLoaded = false;
+            const queuedCalls = [];
+            function googleMapsApiLoaded() {
+                wasLoaded = true;
+                for (const queuedCall of queuedCalls) queuedCall();
+            }
+            function onGoogleMapsLoaded(callback) {
+                if (wasLoaded) { callback(); return; }
+                queuedCalls.push(callback);
+            }
+            </script>
+            $resource
             html;
     }
 

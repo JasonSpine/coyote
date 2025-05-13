@@ -1,12 +1,14 @@
 <template>
-  <JobOfferForm
-    mode="create"
-    :job-offer="newJobOffer"
-    :job-offer-expires-in-days="expiresInDays"
-    :upload="props.upload"
-    :four-steps="fourSteps"
-    @submit="create"
-    @abort="props.uiController.navigate('pricing', null)"/>
+  <div>
+    <JobOfferForm
+      mode="create"
+      :job-offer="newJobOffer"
+      :job-offer-expires-in-days="expiresInDays"
+      :upload="props.upload"
+      :four-steps="fourSteps"
+      @submit="create"
+      @abort="props.uiController.navigate('pricing', null)"/>
+  </div>
 </template>
 
 <script setup lang="ts">

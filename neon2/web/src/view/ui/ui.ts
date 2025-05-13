@@ -1,4 +1,4 @@
-import {createApp, h, Reactive, reactive} from 'vue';
+import {createApp, h, reactive} from 'vue';
 import {JobOffer} from '../../jobBoard';
 import {JobOfferFilter} from "../../jobOfferFilter";
 import {LocationProvider} from "../../locationProvider/LocationProvider";
@@ -18,6 +18,7 @@ import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
 import JobBoard from './JobBoard.vue';
 import {JobBoardProperties} from "./JobBoardProperties";
+import {Screens} from "./screen/Screens";
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
@@ -32,7 +33,7 @@ export interface ViewListener {
 }
 
 export interface NavigationListener {
-  setScreen(screen: Screen): void;
+  setScreen(screen: Screen, jobOfferId: number|null): void;
   showJobOfferForm(): void;
 }
 
@@ -53,7 +54,8 @@ export interface UiController {
 }
 
 export class VueUi {
-  private readonly vueState: Reactive<JobBoardProperties>;
+  private readonly screens: Screens;
+  private readonly vueState: JobBoardProperties;
   private readonly navigationListeners: NavigationListener[] = [];
   private readonly searchListeners: FilterListener[] = [];
 
@@ -67,7 +69,6 @@ export class VueUi {
       },
       toast: null,
       screen: 'home',
-      currentJobOfferId: null,
       paymentNotification: null,
       paymentStatus: null,
       planBundle: null,
@@ -86,6 +87,21 @@ export class VueUi {
         applyForJob: this.applyForJob.bind(this),
       },
     });
+    this.screens = new Screens(jobOfferId => ({
+      uiController: this.vueState.uiController,
+      viewListener: this.vueState.viewListener!,
+      upload: this.vueState.upload!,
+      pricingPlan: this.vueState.pricingPlan!,
+      applicationEmail: this.vueState.applicationEmail!,
+      planBundle: this.vueState.planBundle!,
+      invoiceCountries: this.vueState.invoiceCountries!,
+      paymentSummary: this.vueState.paymentSummary!,
+      paymentVatIdState: this.vueState.paymentVatIdState,
+      paymentJobOfferId: jobOfferId,
+      jobOffer: jobOfferId ? this.findJobOffer(jobOfferId) : null,
+      jobOffers: this.vueState.jobOffers,
+      filters: this.vueState.jobOfferFilters,
+    }));
   }
 
   private showForm(): void {
@@ -96,13 +112,17 @@ export class VueUi {
     const listener: ViewListener = this.vueState.viewListener!;
     if (listener.assertUserAuthenticated()) {
       this.vueState.pricingPlan = plan;
-      this.setScreen('form');
+      this.setScreen('form', null);
     }
   }
 
   private navigate(screen: Screen, jobOfferId: number|null): void {
-    this.navigationListeners.forEach(listener => listener.setScreen(screen));
-    this.setCurrentJobOfferId(jobOfferId);
+    this.navigationListeners.forEach(listener => listener.setScreen(screen, jobOfferId));
+  }
+
+  setScreen(screen: Screen, jobOfferId: number|null): void {
+    this.screens.navigate(screen, jobOfferId);
+    window.scrollTo(0, 0);
   }
 
   private filter(filter: JobOfferFilter): void {
@@ -134,17 +154,16 @@ export class VueUi {
     this.vueState.jobOfferFilters = filters;
   }
 
-  setScreen(screen: Screen): void {
-    this.vueState.screen = screen;
-    window.scrollTo(0, 0);
-  }
-
   setToast(toast: Toast|null): void {
     this.vueState.toast = toast;
   }
 
-  setCurrentJobOfferId(jobOfferId: number|null): void {
-    this.vueState.currentJobOfferId = jobOfferId;
+  private findJobOffer(jobOfferId: number): JobOffer|null {
+    const jobOffer = this.vueState.jobOffers.find(o => o.id === jobOfferId);
+    if (jobOffer) {
+      return jobOffer;
+    }
+    return null;
   }
 
   setPaymentNotification(notification: PaymentNotification): void {
@@ -166,6 +185,7 @@ export class VueUi {
 
   setPaymentSummary(summary: PaymentSummary): void {
     this.vueState.paymentSummary = summary;
+    this.screens.allowPayment();
   }
 
   setPaymentInvoiceCountries(countries: Country[]): void {
@@ -186,6 +206,7 @@ export class VueUi {
 
   mount(element: Element): void {
     const app = createApp({render: () => h(JobBoard, this.vueState)});
+    this.screens.useIn(app);
     app.mount(element);
   }
 }

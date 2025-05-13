@@ -12,7 +12,6 @@ export interface JobBoardProperties {
   jobOfferFilters: JobOfferFilters;
   screen: Screen;
   toast: Toast|null;
-  currentJobOfferId: number|null;
   paymentNotification: PaymentNotification|null;
   paymentStatus: PaymentStatus|null;
   planBundle: PlanBundle|null;

@@ -1,12 +1,23 @@
 import PlaceResult = google.maps.places.PlaceResult;
 
+declare global {
+  interface Window {
+    onGoogleMapsLoaded(callback: () => void): void;
+  }
+}
+
 export class GoogleMapsLocationProvider implements LocationProvider {
   mount(input: HTMLInputElement, listener: LocationListener): void {
+    window.onGoogleMapsLoaded(() => this.mountAutocomplete(input, listener));
+  }
+
+  private mountAutocomplete(input: HTMLInputElement, listener: LocationListener): void {
     const autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.addListener('place_changed', (): void => {
       this.callListener(listener, autocomplete.getPlace());
     });
     input.addEventListener('blur', () => listener.abort());
+    listener.mounted();
   }
 
   private callListener(listener: LocationListener, place: PlaceResult): void {
@@ -58,6 +69,7 @@ export interface LocationProvider {
 }
 
 export interface LocationListener {
+  mounted(): void;
   select(location: Location): void;
   abort(): void;
 }
