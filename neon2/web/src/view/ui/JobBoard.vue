@@ -46,12 +46,12 @@
     </template>
     <JobOfferEdit
       v-if="props.screen === 'edit'"
+      :ui-controller="props.uiController"
+      :view-listener="props.viewListener!"
+      :upload="props.upload!"
       :id="props.currentJobOfferId!"
       :job-offer="toSubmitJobOffer(currentJobOffer)"
-      :job-offer-expires-in-days="currentJobOffer.expiresInDays"
-      :upload="props.upload!"
-      @update="updateJob"
-      @abort="abortEdit"/>
+      :job-offer-expires-in-days="currentJobOffer.expiresInDays"/>
     <JobOfferHome
       v-if="props.screen === 'home'"
       :ui-controller="props.uiController"
@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import {computed, onMounted, provide, watch} from 'vue';
 import {JobOffer} from '../../jobBoard';
-import {SubmitJobOffer, toSubmitJobOffer} from "../../main";
+import {toSubmitJobOffer} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
@@ -109,10 +109,6 @@ const currentJobOffer = computed<JobOffer>(() => {
   return props.jobOffers.find(offer => offer.id === props.currentJobOfferId)!;
 });
 
-function updateJob(id: number, jobOffer: SubmitJobOffer): void {
-  props.viewListener!.updateJob(id, jobOffer);
-}
-
 function editJob(): void {
   navigate('edit', props.currentJobOfferId!);
 }
@@ -127,10 +123,6 @@ function showJob(id: number): void {
 
 function navigateHome(): void {
   navigate('home');
-}
-
-function abortEdit(): void {
-  showJob(props.currentJobOfferId!);
 }
 
 const showHomeLink = computed<boolean>(() => props.screen !== 'home');

@@ -6,29 +6,30 @@
     :upload="props.upload"
     :four-steps="false"
     @submit="update"
-    @abort="emit('abort')"/>
+    @abort="abort"/>
 </template>
 
 <script setup lang="ts">
 import {SubmitJobOffer, UploadAssets} from "../../../main";
+import {UiController, ViewListener} from "../ui";
 import JobOfferForm from "./JobOfferForm.vue";
 
 const props = defineProps<Props>();
-const emit = defineEmits<Emit>();
 
 interface Props {
+  uiController: UiController;
+  viewListener: ViewListener;
   id: number;
   jobOffer: SubmitJobOffer;
   jobOfferExpiresInDays: number;
   upload: UploadAssets;
 }
 
-interface Emit {
-  (event: 'update', id: number, jobOffer: SubmitJobOffer): void;
-  (event: 'abort'): void;
+function update(jobOffer: SubmitJobOffer): void {
+  props.viewListener.updateJob(props.id, jobOffer);
 }
 
-function update(jobOffer: SubmitJobOffer): void {
-  emit('update', props.id, jobOffer);
+function abort(): void {
+  props.uiController.navigate('show', props.id);
 }
 </script>
