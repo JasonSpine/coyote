@@ -17,27 +17,9 @@ import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
 import JobBoard from './JobBoard.vue';
+import {JobBoardProperties} from "./JobBoardProperties";
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
-
-export interface JobBoardProps {
-  viewListener: ViewListener|null;
-  jobOffers: JobOffer[];
-  jobOfferFilters: JobOfferFilters;
-  screen: Screen;
-  toast: Toast|null;
-  currentJobOfferId: number|null;
-  paymentNotification: PaymentNotification|null;
-  paymentStatus: PaymentStatus|null;
-  planBundle: PlanBundle|null;
-  pricingPlan: PricingPlan|null;
-  upload: UploadAssets|null;
-  applicationEmail: string|null;
-  paymentSummary: PaymentSummary|null;
-  paymentVatIdState: VatIdState;
-  invoiceCountries: Country[]|null;
-  locationProvider: LocationProvider|null;
-}
 
 export interface ViewListener {
   createJob(plan: PricingPlan, jobOffer: SubmitJobOffer): void;
@@ -63,12 +45,12 @@ export interface PlanBundle {
 }
 
 export class VueUi {
-  private readonly vueState: Reactive<JobBoardProps>;
+  private readonly vueState: Reactive<JobBoardProperties>;
   private readonly navigationListeners: NavigationListener[] = [];
   private readonly searchListeners: FilterListener[] = [];
 
   constructor(locationProvider: LocationProvider) {
-    this.vueState = reactive<JobBoardProps>({
+    this.vueState = reactive<JobBoardProperties>({
       viewListener: null,
       jobOffers: [],
       jobOfferFilters: {

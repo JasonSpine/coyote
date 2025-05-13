@@ -74,6 +74,7 @@ import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
 import {Design} from "./design/design";
+import {JobBoardProperties} from "./JobBoardProperties";
 import JobOfferButtonPill from "./JobOffer/JobOfferButtonPill.vue";
 import JobOfferCreate from "./JobOffer/JobOfferCreate.vue";
 import JobOfferEdit from './JobOffer/JobOfferEdit.vue';
@@ -83,9 +84,9 @@ import JobOfferPricing from './JobOffer/JobOfferPricing.vue';
 import JobOfferRedeemBundle from "./JobOffer/JobOfferRedeemBundle.vue";
 import {toJobOfferShow} from "./JobOffer/JobOfferShow";
 import JobOfferShow from './JobOffer/JobOfferShow.vue';
-import {JobBoardProps, Screen} from "./ui";
+import {Screen} from "./ui";
 
-const props = defineProps<JobBoardProps>();
+const props = defineProps<JobBoardProperties>();
 const emit = defineEmits<Emit>();
 
 interface Emit {
