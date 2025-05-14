@@ -3,10 +3,9 @@ namespace Coyote\Providers\Neon;
 
 use Coyote;
 use Coyote\User;
-use Neon;
-use Neon\LegalForm;
-use Neon\WorkExperience;
-use Neon\WorkMode;
+use Neon2\JobBoard\LegalForm;
+use Neon2\JobBoard\WorkExperience;
+use Neon2\JobBoard\WorkMode;
 use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
 use Neon2\Request\JobOfferLocation;
@@ -62,7 +61,7 @@ class JobOfferUnmapper {
             ->id;
     }
 
-    private function coyoteCurrencyId(Neon\Currency $currency): int {
+    private function coyoteCurrencyId(\Neon2\JobBoard\Currency $currency): int {
         return Coyote\Currency::query()
             ->where('name', $currency->value)
             ->firstOrFail('id')
@@ -75,7 +74,7 @@ class JobOfferUnmapper {
             $tagNames);
     }
 
-    private function coyoteRemoteRange(Neon\WorkMode $workMode): int {
+    private function coyoteRemoteRange(\Neon2\JobBoard\WorkMode $workMode): int {
         return match ($workMode) {
             WorkMode::Stationary  => 0,
             WorkMode::Hybrid      => 50,
@@ -83,7 +82,7 @@ class JobOfferUnmapper {
         };
     }
 
-    private function coyoteLegalForm(Neon\LegalForm $legalForm): string {
+    private function coyoteLegalForm(\Neon2\JobBoard\LegalForm $legalForm): string {
         return match ($legalForm) {
             LegalForm::EmploymentContract      => 'employment',
             LegalForm::ContractOfMandate       => 'mandatory',
@@ -92,7 +91,7 @@ class JobOfferUnmapper {
         };
     }
 
-    private function coyoteWorkExperience(Neon\WorkExperience $experience): ?string {
+    private function coyoteWorkExperience(\Neon2\JobBoard\WorkExperience $experience): ?string {
         return match ($experience) {
             WorkExperience::Intern      => 'student',
             WorkExperience::Junior      => 'junior',

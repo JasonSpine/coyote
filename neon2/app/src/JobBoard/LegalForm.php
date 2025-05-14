@@ -1,5 +1,5 @@
 <?php
-namespace Neon;
+namespace Neon2\JobBoard;
 
 enum LegalForm: string
 {

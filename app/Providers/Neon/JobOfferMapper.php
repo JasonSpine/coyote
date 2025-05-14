@@ -3,11 +3,11 @@ namespace Coyote\Providers\Neon;
 
 use Coyote;
 use Coyote\Job;
-use Neon\Currency;
-use Neon\LegalForm;
-use Neon\Rate;
-use Neon\WorkExperience;
-use Neon\WorkMode;
+use Neon2\JobBoard\Currency;
+use Neon2\JobBoard\LegalForm;
+use Neon2\JobBoard\Rate;
+use Neon2\JobBoard\WorkExperience;
+use Neon2\JobBoard\WorkMode;
 use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
 use Neon2\Request\JobOfferLocation;

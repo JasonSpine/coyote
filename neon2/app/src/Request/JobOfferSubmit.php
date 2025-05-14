@@ -1,11 +1,11 @@
 <?php
 namespace Neon2\Request;
 
-use Neon\Currency;
-use Neon\LegalForm;
-use Neon\Rate;
-use Neon\WorkExperience;
-use Neon\WorkMode;
+use Neon2\JobBoard\Currency;
+use Neon2\JobBoard\LegalForm;
+use Neon2\JobBoard\Rate;
+use Neon2\JobBoard\WorkExperience;
+use Neon2\JobBoard\WorkMode;
 
 readonly class JobOfferSubmit {
     /**
