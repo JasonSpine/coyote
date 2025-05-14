@@ -1,4 +1,4 @@
-import {authenticate, expect, test as playwrightTest, TestInfo} from './authentication';
+import {expect, test as playwrightTest, TestInfo} from '@playwright/test';
 import {Driver} from './driver';
 import {Dsl} from './dsl';
 import {HttpDriver} from "./httpDriver";
@@ -7,8 +7,7 @@ export const describe = playwrightTest.describe;
 
 export function test(title: string, test: Test): void {
   playwrightTest(title, async function ({page, request}, testInfo: TestInfo): Promise<void> {
-    await authenticate(page, testInfo.parallelIndex);
-    await page.goto('/Praca?revoke-bundle=true');
+    await page.goto('/Praca?revoke-bundle=true&workerIndex=' + testInfo.parallelIndex);
     await test(new Dsl(new Driver(page), new HttpDriver(request)));
   });
 }

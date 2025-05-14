@@ -1,6 +1,7 @@
 <?php
 namespace Coyote\Providers\Neon;
 
+use Coyote;
 use Coyote\Domain\Settings\UserTheme;
 use Coyote\Domain\StringHtml;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
@@ -50,6 +51,10 @@ class ServiceProvider extends RouteServiceProvider {
                     UserTheme       $theme,
                 ): string {
                     if ($this->isTestMode()) {
+                        if (request()->query->has('workerIndex')) {
+                            $userId = $this->acceptanceTestUserId(request()->query->get('workerIndex'));
+                            auth()->loginUsingId($userId, remember:true);
+                        }
                         if (\request()->query->has('revoke-bundle')) {
                             $integration->revokePlanBundle(auth()->id());
                         }
@@ -71,6 +76,11 @@ class ServiceProvider extends RouteServiceProvider {
                     ]);
                 });
         });
+    }
+
+    private function acceptanceTestUserId(int $workerIndex): int {
+        $userId = $workerIndex + 1;
+        return Coyote\User::query()->where('name', "acceptance-test-$userId")->first()->id;
     }
 
     private function isTestMode(): bool {

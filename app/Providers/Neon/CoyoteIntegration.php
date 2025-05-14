@@ -20,7 +20,7 @@ use Coyote\Services\Invoice\CalculatorFactory;
 use Coyote\Services\Invoice\VatRateCalculator;
 use Coyote\Services\SubmitJobService;
 use Illuminate\Database;
-use Illuminate\Support;
+use Illuminate\Database\Query;
 use Neon2\Coyote\Integration;
 use Neon2\JobBoard;
 use Neon2\JobBoard\InvoiceInformation;
@@ -51,10 +51,14 @@ readonly class CoyoteIntegration implements Integration {
      * @return JobOffer[]
      */
     public function listJobOffers(): array {
-        $ids = $this->elasticSearchFetchJobOfferIds();
         $this->job->pushCriteria(new EagerLoading(['firm', 'firm.assets', 'locations', 'tags', 'currency']));
         $this->job->pushCriteria(new IncludeSubscribers(auth()->id()));
-        return $this->job->findManyWithOrder($ids)
+        /** @var Query\Builder $query */
+        $query = $this->job->query();
+        return $query
+            ->where('is_publish', '=', 1)
+            ->where('deadline_at', '>', Carbon::now())
+            ->get()
             ->map(fn(Coyote\Job $job) => $this->neonJobOffer($job, true, null))
             ->toArray();
     }
@@ -72,23 +76,6 @@ readonly class CoyoteIntegration implements Integration {
             $intent,
             $this->slug($jobOffer),
             route('job.application', [$jobOffer->id]));
-    }
-
-    private function elasticSearchFetchJobOfferIds(): array {
-        $this->builder->boostLocation(request()->attributes->get('geocode'));
-        $this->builder->setSort(SearchBuilder::DEFAULT_SORT);
-        $result = $this->job->searchBody($this->builder->buildUnlimited(0, 1000));
-        /** @var Support\Collection $source */
-        $source = $result->getSource();
-        if (count($source)) {
-            $allPremium = $result->getAggregationHits('premium_listing', true);
-            $premium = array_first($allPremium); // only one premium at the top
-            if ($premium) {
-                $source->prepend($premium);
-            }
-            return $source->pluck('id')->unique()->toArray();
-        }
-        return [];
     }
 
     public function planBundle(?int $userId): PlanBundle {

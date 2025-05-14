@@ -34,12 +34,6 @@ export class Dsl {
   }
 
   async resetClient(): None {
-    await new Promise<void>(resolve => {
-      // The only reason for this, is that job offer is taking a little while
-      // to actually appear in search. The user should be notified of the added
-      // job offer somehow, probably via websocket, but that's not implemented.
-      setTimeout(() => resolve(), 15000); 
-    });
     await this.driver.reloadApplication();
   }
 
