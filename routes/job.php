@@ -5,7 +5,7 @@ use Illuminate\Routing\Router;
 /** @var $this Router */
 $this->group(['namespace' => 'Job', 'prefix' => 'Praca', 'as' => 'job.'], function () {
     /** @var $this Router */
-    $this->get('/Legacy', ['uses' => 'HomeController@index', 'as' => 'home', 'middleware' => 'json']);
+    $this->get('/', ['uses' => 'HomeController@index', 'as' => 'home', 'middleware' => 'json']);
 
     $this->get('Submit/{job?}', ['uses' => 'SubmitController@index', 'as' => 'submit', 'middleware' => 'auth']);
     $this->post('Submit/{job?}', ['uses' => 'SubmitController@save', 'middleware' => 'auth']);

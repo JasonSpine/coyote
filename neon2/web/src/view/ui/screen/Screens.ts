@@ -8,19 +8,25 @@ import JobOfferPaymentScreen from "../JobOffer/JobOfferPaymentScreen.vue";
 import JobOfferPricing from "../JobOffer/JobOfferPricing.vue";
 import JobOfferShowScreen from "../JobOffer/JobOfferShowScreen.vue";
 import {PlanBundle, Screen, UiController, ViewListener} from "../ui";
+import {Policy} from "./Policy";
 
 import {Router} from "./Router";
 
 export class Screens {
   private router: Router;
-  private paymentAllowed: boolean = false;
 
-  constructor(listener: ScreenListener) {
+  constructor(listener: ScreenListener, policy: Policy) {
     this.router = new Router(listener);
     this.addScreens();
     this.router.addDefaultScreen('home');
-    this.router.before((screen: Screen): Screen|null => {
-      if (screen === 'payment' && !this.paymentAllowed) {
+    this.router.before((screen: Screen, jobOfferId: number|null): Screen|null => {
+      if (screen === 'form' && !policy.createCreateJobOffer()) {
+        return 'pricing';
+      }
+      if (screen === 'edit' && !policy.canEditJobOffer(jobOfferId!)) {
+        return 'home';
+      }
+      if (screen === 'payment' && !policy.canPayForJobOffer()) {
         return 'home';
       }
       return null;
@@ -28,16 +34,12 @@ export class Screens {
   }
 
   private addScreens(): void {
-    this.router.addScreen(JobOfferHome, 'home', '/');
-    this.router.addScreen(JobOfferShowScreen, 'show', '/offer/:slug--:id');
-    this.router.addScreen(JobOfferPricing, 'pricing', '/pricing');
-    this.router.addScreen(JobOfferCreate, 'form', '/offer/new');
-    this.router.addScreen(JobOfferEdit, 'edit', '/offer/:id/edit');
-    this.router.addScreen(JobOfferPaymentScreen, 'payment', '/offer/:id/payment');
-  }
-
-  allowPayment(): void {
-    this.paymentAllowed = true;
+    this.router.addScreen(JobOfferHome, 'home', '/Job/');
+    this.router.addScreen(JobOfferShowScreen, 'show', '/Job/:slug--:id');
+    this.router.addScreen(JobOfferPricing, 'pricing', '/Job/pricing');
+    this.router.addScreen(JobOfferCreate, 'form', '/Job/new');
+    this.router.addScreen(JobOfferEdit, 'edit', '/Job/:id/edit');
+    this.router.addScreen(JobOfferPaymentScreen, 'payment', '/Job/:id/payment');
   }
 
   navigate(screen: Screen, jobOfferId: number|null): void {

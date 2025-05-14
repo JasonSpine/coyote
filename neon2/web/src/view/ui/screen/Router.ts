@@ -1,19 +1,19 @@
 import {App, Component} from "vue";
-import {createRouter, createWebHashHistory, RouteLocationNormalized, Router as VueRouter} from "vue-router";
+import {createRouter, createWebHistory, RouteLocationNormalized, Router as VueRouter} from "vue-router";
 import {Screen} from "../ui";
 import {ScreenListener, ScreenProperties} from "./Screens";
 
 export class Router {
   private readonly router: VueRouter = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes: [],
   });
 
   constructor(private listener: ScreenListener) {}
 
-  before(before: (screen: Screen) => Screen|null) {
+  before(before: (screen: Screen, jobOfferId: number|null) => Screen|null): void {
     this.router.beforeEach((route: RouteLocationNormalized) => {
-      const redirectTo = before(route.name as Screen);
+      const redirectTo = before(route.name as Screen, this.jobOfferId(route));
       if (redirectTo !== null) {
         return {name: redirectTo};
       }

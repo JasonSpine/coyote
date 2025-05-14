@@ -18,6 +18,7 @@ import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
 import JobBoard from './JobBoard.vue';
 import {JobBoardProperties} from "./JobBoardProperties";
+import {Policy} from "./screen/Policy";
 import {Screens} from "./screen/Screens";
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
@@ -54,13 +55,16 @@ export interface UiController {
   showJobOffer(jobOffer: JobOffer): void;
 }
 
+export type CanEdit = (jobOfferId: number) => boolean;
+
 export class VueUi {
+  private readonly gate: Policy;
   private readonly screens: Screens;
   private readonly vueState: JobBoardProperties;
   private readonly searchListeners: FilterListener[] = [];
   private navigationListener: NavigationListener|null = null;
 
-  constructor(locationProvider: LocationProvider) {
+  constructor(locationProvider: LocationProvider, isAuthenticated: boolean) {
     this.vueState = reactive<JobBoardProperties>({
       viewListener: null,
       jobOffers: [],
@@ -89,6 +93,9 @@ export class VueUi {
         showJobOffer: this.showJobOffer.bind(this),
       },
     });
+    this.gate = new Policy(isAuthenticated, (jobOfferId: number): boolean => {
+      return this.findJobOffer(jobOfferId)?.canEdit ?? false;
+    });
     this.screens = new Screens(jobOfferId => ({
       uiController: this.vueState.uiController,
       viewListener: this.vueState.viewListener!,
@@ -103,7 +110,7 @@ export class VueUi {
       jobOffer: jobOfferId ? this.findJobOffer(jobOfferId) : null,
       jobOffers: this.vueState.jobOffers,
       filters: this.vueState.jobOfferFilters,
-    }));
+    }), this.gate);
   }
 
   private showForm(): void {
@@ -191,7 +198,7 @@ export class VueUi {
 
   setPaymentSummary(summary: PaymentSummary): void {
     this.vueState.paymentSummary = summary;
-    this.screens.allowPayment();
+    this.gate.allowPayment();
   }
 
   setPaymentInvoiceCountries(countries: Country[]): void {

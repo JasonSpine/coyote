@@ -44,7 +44,7 @@ class ServiceProvider extends RouteServiceProvider {
         $this->middleware(['web', 'geocode'])->group(function () {
             $this
                 ->name('neon.jobOffer.list')
-                ->get('/Praca', function (
+                ->get('/Job/{fallback?}', function (
                     Integration     $integration,
                     CountryGate     $countries,
                     StripePublicKey $stripePublicKey,
@@ -74,7 +74,7 @@ class ServiceProvider extends RouteServiceProvider {
                         'neonHead' => new StringHtml($jobBoardView->htmlMarkupHead()),
                         'neonBody' => new StringHtml($jobBoardView->htmlMarkupBody()),
                     ]);
-                });
+                })->where('fallback', '.*');
         });
     }
 

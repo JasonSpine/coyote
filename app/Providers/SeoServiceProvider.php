@@ -2,15 +2,15 @@
 namespace Coyote\Providers;
 
 use Coyote\Domain\Seo\Schema;
+use Coyote\Job;
+use Coyote\Providers\Neon\CoyoteIntegration;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Factory;
 
-class SeoServiceProvider extends ServiceProvider
-{
-    public function boot(): void
-    {
+class SeoServiceProvider extends ServiceProvider {
+    public function boot(): void {
         /** @var Factory $view */
         $view = $this->app['view'];
         $view->composer('layout', function (View $view): void {
@@ -22,8 +22,7 @@ class SeoServiceProvider extends ServiceProvider
         });
     }
 
-    private function metaRobots(): string
-    {
+    private function metaRobots(): string {
         /** @var Request $request */
         $request = $this->app['request'];
         if ($request->getHost() === '4programmers.dev') {
@@ -41,39 +40,53 @@ class SeoServiceProvider extends ServiceProvider
         return 'index,follow';
     }
 
-    private function metaCanonicalForRequest(): ?string
-    {
+    private function metaCanonicalForRequest(): ?string {
         /** @var Request $request */
         $request = $this->app['request'];
         return $this->metaCanonical($request);
     }
 
-    private function metaCanonical(Request $request): ?string
-    {
+    private function metaCanonical(Request $request): ?string {
         if ($request->getPathInfo() === '/Mikroblogi') {
+            return null;
+        }
+        $canonicalPath = $this->canonicalPath($request->getPathInfo());
+        if ($canonicalPath === null) {
             return null;
         }
         return 'https://' .
             $request->getHost() .
-            $this->canonicalPath($request->getPathInfo()) .
+            $canonicalPath .
             $this->queryString($request);
     }
 
-    private function canonicalPath(string $path): string
-    {
+    private function canonicalPath(string $path): ?string {
         if (\starts_with($path, '/Praca/Technologia')) {
             return '/Praca';
+        }
+        if ($path === '/Praca') {
+            return '/Job';
+        }
+        if ($path === '/Praca/Oferta') {
+            return '/Job/pricing';
+        }
+        if (\preg_match('#^/Praca/(\d+)-#', $path, $match)) {
+            $id = $match[1];
+            $job = Job::query()->find($id);
+            if ($job === null) {
+                return null;
+            }
+            $slug = CoyoteIntegration::slug($job);
+            return "/Job/$slug--$id";
         }
         return $path;
     }
 
-    private function queryString(Request $request): string
-    {
+    private function queryString(Request $request): string {
         return \rTrim('?' . \http_build_query($this->queryStringParams($request)), '?');
     }
 
-    private function queryStringParams(Request $request): array
-    {
+    private function queryStringParams(Request $request): array {
         if (!$this->allowQueryParam($request)) {
             return [];
         }
@@ -84,8 +97,7 @@ class SeoServiceProvider extends ServiceProvider
         return [];
     }
 
-    private function allowQueryParam(Request $request): bool
-    {
+    private function allowQueryParam(Request $request): bool {
         $uri = $request->getPathInfo();
         if ($uri === '/Forum') {
             return false;
@@ -93,8 +105,7 @@ class SeoServiceProvider extends ServiceProvider
         return \str_starts_with($uri, '/Forum') || \str_starts_with($uri, '/Praca');
     }
 
-    private function queryParams(Request $request): array
-    {
+    private function queryParams(Request $request): array {
         \parse_str($request->getQueryString(), $queryParams);
         return $queryParams;
     }

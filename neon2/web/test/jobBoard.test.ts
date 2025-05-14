@@ -61,6 +61,7 @@ describe('Job board', () => {
       companyHiringType: 'agency',
       applicationUrl: '',
       slug: '',
+      canEdit: false,
     };
   }
 

@@ -246,12 +246,12 @@ readonly class CoyoteIntegration implements Integration {
         return Coyote\Payment::query()->find($paymentId);
     }
 
-    private function slug(Job $jobOffer): string {
+    public static function slug(Job $jobOffer): string {
         return \implode('-',
-            \array_map(str_slug(...), $this->slugPieces($jobOffer)));
+            \array_map(str_slug(...), self::slugPieces($jobOffer)));
     }
 
-    private function slugPieces(Job $jobOffer): array {
+    private static function slugPieces(Job $jobOffer): array {
         $pieces = [$jobOffer->firm->name, $jobOffer->title];
         if ($jobOffer->locations->isNotEmpty()) {
             $pieces[] = $jobOffer->locations[0]->city;

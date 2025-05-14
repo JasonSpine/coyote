@@ -14,7 +14,7 @@ export class WebDriver {
   }
 
   async reload(): None {
-    await this.page.goto('/Praca');
+    await this.page.goto('/Job');
   }
 
   async click(text: string): None {
