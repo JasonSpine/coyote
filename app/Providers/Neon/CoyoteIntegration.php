@@ -75,7 +75,8 @@ readonly class CoyoteIntegration implements Integration {
             $this->mapper->jobOfferFields($jobOffer),
             $intent,
             $this->slug($jobOffer),
-            route('job.application', [$jobOffer->id]));
+            route('job.application', [$jobOffer->id]),
+            $this->canEdit($jobOffer));
     }
 
     public function planBundle(?int $userId): PlanBundle {
@@ -136,6 +137,15 @@ readonly class CoyoteIntegration implements Integration {
             return $this->neonJobOffer($job, true, null);
         }
         return $this->neonJobOffer($job, false, $this->paymentIntent($payment));
+    }
+
+    private function canEdit(Job $jobOffer): bool {
+        if (auth()->check()) {
+            /** @var Coyote\User $user */
+            $user = auth()->user();
+            return $user->can('update', $jobOffer);
+        }
+        return false;
     }
 
     private function loggedUser(): Coyote\User {
@@ -248,4 +258,5 @@ readonly class CoyoteIntegration implements Integration {
         }
         return $pieces;
     }
+
 }

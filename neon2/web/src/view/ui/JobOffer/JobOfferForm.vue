@@ -156,6 +156,7 @@
   <template v-if="step === 'preview'">
     <JobOfferShow
       preview
+      :can-edit="false"
       @edit="previousStep"
       :job-offer="fromSubmitToJobOfferShow(fromFormModel(jobOffer), props.jobOfferExpiresInDays)"/>
   </template>

@@ -11,7 +11,7 @@
         placeholder-icon="jobOfferLogoPlaceholder"
         class="mr-auto"/>
       <Design.Button square icon="jobOfferFavourite"/>
-      <Design.Button @click="editJob">Edytuj</Design.Button>
+      <Design.Button @click="editJob" v-if="props.canEdit">Edytuj</Design.Button>
       <Design.Button :primary="!props.preview" :primary-outline="props.preview" @click="apply">
         Aplikuj
       </Design.Button>
@@ -121,6 +121,7 @@ const emit = defineEmits<Emit>();
 interface Props {
   jobOffer: JobOfferShow;
   preview?: boolean;
+  canEdit: boolean;
 }
 
 interface Emit {

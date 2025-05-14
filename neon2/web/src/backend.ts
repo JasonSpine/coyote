@@ -191,6 +191,7 @@ export interface BackendJobOffer {
   payment: BackendPaymentIntent|null;
   applicationUrl: string;
   slug: string;
+  canEdit: boolean;
   fields: {
     title: string;
     description: string|null;

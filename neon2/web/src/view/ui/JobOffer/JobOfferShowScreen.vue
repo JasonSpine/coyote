@@ -2,6 +2,7 @@
   <JobOfferButtonPill @click="navigateHome">Wróć do ogłoszeń</JobOfferButtonPill>
   <JobOfferShow
     :job-offer="toJobOfferShow(props.jobOffer)"
+    :can-edit="props.jobOffer.canEdit"
     @edit="editJob"
     @apply="applyForJob"/>
 </template>

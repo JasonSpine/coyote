@@ -12,5 +12,6 @@ class JobOffer {
         public ?PaymentIntent $payment,
         public string         $slug,
         public string         $applicationUrl,
+        public bool           $canEdit,
     ) {}
 }
