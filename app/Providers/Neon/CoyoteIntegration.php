@@ -255,9 +255,10 @@ readonly class CoyoteIntegration implements Integration {
     private static function slugPieces(Job $jobOffer): array {
         $pieces = [$jobOffer->firm->name, $jobOffer->title];
         if ($jobOffer->locations->isNotEmpty()) {
-            $pieces[] = $jobOffer->locations[0]->city;
+            if (!empty($jobOffer->locations[0]->city)) {
+                $pieces[] = $jobOffer->locations[0]->city;
+            }
         }
         return $pieces;
     }
-
 }
