@@ -190,4 +190,8 @@ interface Props {
 .fa-list-ol:before {
   content: "\f0cb";
 }
+
+.fa-spinner-third:before {
+  content: "\f3f4";
+}
 </style>

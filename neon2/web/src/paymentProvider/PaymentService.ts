@@ -3,6 +3,8 @@ import {InvoiceInformation, VatIdState} from "../main";
 import {PaymentMethod, PaymentNotification, PaymentProvider} from "./PaymentProvider";
 
 interface PaymentListener {
+  processingStarted(): void;
+  processingFinished(): void;
   paymentInitiationVatIdState(vatId: VatIdState): void;
   notificationReceived(notification: string): void;
   statusChanged(paymentId: string, status: PaymentStatus): void;
@@ -20,6 +22,7 @@ export class PaymentService {
   }
 
   async initiatePayment(paymentId: string, invoiceInfo: InvoiceInformation, paymentMethod: PaymentMethod): Promise<void> {
+    this.listeners.forEach(listener => listener.processingStarted());
     const response = await this.backend.preparePayment(paymentId, invoiceInfo);
     this.listeners.forEach(listener => {
       const vatId = response.status === 'failedInvalidVatId' ? 'invalid' : 'valid';
@@ -27,9 +30,15 @@ export class PaymentService {
     });
     if (response.status === 'success') {
       const payment = response.preparedPayment!;
-      this.updatePaymentNotification(await this.performPayment(payment, paymentMethod));
-      this.updatePaymentStatus(paymentId, await this.readPaymentStatus(payment.paymentId));
+      const notification = await this.performPayment(payment, paymentMethod);
+      this.updatePaymentNotification(notification);
+      if (notification === 'accepted') {
+        this.updatePaymentStatus(paymentId, await this.readPaymentStatus(payment.paymentId));
+      } else {
+        this.updatePaymentStatus(paymentId, 'paymentFailed');
+      }
     }
+    this.listeners.forEach(listener => listener.processingFinished());
   }
 
   private async readPaymentStatus(paymentId: string): Promise<PaymentStatus> {
@@ -40,8 +49,8 @@ export class PaymentService {
       if (status !== 'awaitingPayment') {
         return status;
       }
-      await new Promise(resolve => setTimeout(resolve, 1250));
-      if (counter >= 200) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      if (counter >= 20) {
         break;
       }
     }

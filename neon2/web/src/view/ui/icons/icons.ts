@@ -21,6 +21,7 @@ export const icons = {
   add: iconPlus,
   remove: iconRemove,
   toastClose: iconClose,
+  buttonLoading: 'fa-solid fa-spinner-third',
   toastInfo: 'fa-light fa-circle-info',
   jobOfferFavourite: 'fa-light fa-star',
   jobOfferFavouriteChecked: 'fa-solid fa-star',

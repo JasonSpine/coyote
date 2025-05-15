@@ -23,4 +23,5 @@ export interface JobBoardProperties {
   invoiceCountries: Country[]|null;
   locationProvider: LocationProvider|null;
   uiController: UiController;
+  paymentProcessing: boolean;
 }

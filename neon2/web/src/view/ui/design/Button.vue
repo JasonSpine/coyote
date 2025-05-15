@@ -1,8 +1,8 @@
 <template>
   <button
     @click="click"
-    class="cursor-pointer rounded-lg"
-    :class="[variantClass, sizeClass, {'w-full': props.fullWidth}]"
+    class="rounded-lg"
+    :class="[variantClass, sizeClass, disabledClass, cursorClass, {'w-full': props.fullWidth}]"
     :data-testid="props.testId">
     <Icon v-if="props.icon" :name="props.icon" :class="{'mr-2': !props.square}"/>
     <slot/>
@@ -11,7 +11,8 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import Icon, {IconName} from "../icons/Icon.vue";
+import Icon from "../icons/Icon.vue";
+import {IconName} from "../icons/icons";
 
 const emit = defineEmits(['click']);
 
@@ -23,6 +24,8 @@ interface Props {
   outline?: boolean;
   square?: boolean;
   fullWidth?: boolean;
+  disabled?: boolean;
+  cursorWait?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -33,7 +36,7 @@ function click(): void {
 
 const variantClass = computed(() => {
   if (props.primary) {
-    return 'bg-primary text-on-primary border border-transparent';
+    return 'text-on-primary border border-transparent';
   }
   if (props.primaryOutline) {
     return 'text-primary border border-primary';
@@ -42,6 +45,23 @@ const variantClass = computed(() => {
     return 'text-neutral-800 dark:text-neutral-050 border border-navy-100';
   }
   return 'bg-tile';
+});
+
+const disabledClass = computed(() => {
+  if (props.primary) {
+    if (props.disabled) {
+      return 'bg-green-050';
+    }
+    return 'bg-primary';
+  }
+  return '';
+});
+
+const cursorClass = computed(() => {
+  if (props.cursorWait) {
+    return 'cursor-progress';
+  }
+  return 'cursor-pointer';
 });
 
 const sizeClass = computed(() => {

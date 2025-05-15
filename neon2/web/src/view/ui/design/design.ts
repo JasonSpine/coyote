@@ -14,6 +14,7 @@ import FieldLabel from "./FieldLabel.vue";
 import Image from "./Image.vue";
 import ImageUpload from "./ImageUpload.vue";
 import Layout from "./Layout.vue";
+import LoadingButton from "./LoadingButton.vue";
 import Material from "./Material.vue";
 import PaymentMethod from "./PaymentMethod.vue";
 import RadioButton from "./RadioButton.vue";
@@ -46,6 +47,7 @@ export const Design = {
   Image,
   ImageUpload,
   Layout,
+  LoadingButton,
   Material,
   PaymentMethod,
   RadioButton,

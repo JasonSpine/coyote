@@ -73,8 +73,10 @@
   <Design.Tile space>
     <Design.Row>
       <Design.RowEnd>
-        <Design.Button primary @click="pay" v-if="props.vatIdState === 'pending'">Przetwarzanie...</Design.Button>
-        <Design.Button primary @click="pay" v-else>Zapłać i Publikuj</Design.Button>
+        <Design.LoadingButton
+          :loading="props.paymentProcessing"
+          title="Zapłać i Publikuj"
+          @click="pay"/>
       </Design.RowEnd>
     </Design.Row>
   </Design.Tile>
@@ -98,6 +100,7 @@ interface Props {
   summary: PaymentSummary;
   countries: Country[];
   vatIdState: VatIdState;
+  paymentProcessing: boolean;
 }
 
 function pay(): void {

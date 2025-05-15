@@ -11,7 +11,8 @@
     :job-offer-id="props.paymentJobOfferId"
     :summary="props.paymentSummary"
     :countries="props.invoiceCountries"
-    :vat-id-state="props.paymentVatIdState"/>
+    :vat-id-state="props.paymentVatIdState"
+    :payment-processing="props.paymentProcessing"/>
 </template>
 
 <script setup lang="ts">
@@ -30,5 +31,6 @@ interface Props {
   invoiceCountries: Country[];
   paymentSummary: PaymentSummary;
   paymentVatIdState: VatIdState;
+  paymentProcessing: boolean;
 }
 </script>

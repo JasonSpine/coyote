@@ -288,7 +288,8 @@ export class Driver {
     // the error message, we'd have to assert the validation based
     // on the payment actually being processed, which is more complex.
     await this.submitPayment();
-    await this.web.waitForTextDisappears('Przetwarzanie...');
+    // The button turned to loading, we wait for it to become active again.
+    await this.web.waitForText('Zapłać i Publikuj');
   }
 
   async findInvoiceVatTaxIncluded(): Promise<'included'|'free'> {

@@ -92,6 +92,7 @@ export class VueUi {
         applyForJob: this.applyForJob.bind(this),
         showJobOffer: this.showJobOffer.bind(this),
       },
+      paymentProcessing: false,
     });
     this.gate = new Policy(isAuthenticated, (jobOfferId: number): boolean => {
       return this.findJobOffer(jobOfferId)?.canEdit ?? false;
@@ -106,6 +107,7 @@ export class VueUi {
       invoiceCountries: this.vueState.invoiceCountries!,
       paymentSummary: this.vueState.paymentSummary!,
       paymentVatIdState: this.vueState.paymentVatIdState,
+      paymentProcessing: this.vueState.paymentProcessing,
       paymentJobOfferId: jobOfferId,
       jobOffer: jobOfferId ? this.findJobOffer(jobOfferId) : null,
       jobOffers: this.vueState.jobOffers,
@@ -203,6 +205,10 @@ export class VueUi {
 
   setPaymentInvoiceCountries(countries: Country[]): void {
     this.vueState.invoiceCountries = countries;
+  }
+
+  setPaymentProcessing(processing: boolean): void {
+    this.vueState.paymentProcessing = processing;
   }
 
   upload(upload: UploadAssets): void {

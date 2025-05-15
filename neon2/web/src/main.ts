@@ -120,7 +120,6 @@ ui.setViewListener({
     });
   },
   payForJob(initiatePayment: InitiatePayment): void {
-    ui.setVatIdState('pending');
     payments.initiatePayment(
       jobOfferPayments.paymentId(initiatePayment.jobOfferId),
       initiatePayment.invoiceInfo,
@@ -151,6 +150,13 @@ ui.setViewListener({
 });
 
 payments.addEventListener({
+  processingStarted(): void {
+    ui.setPaymentProcessing(true);
+    ui.setVatIdState('pending');
+  },
+  processingFinished(): void {
+    ui.setPaymentProcessing(false);
+  },
   paymentInitiationVatIdState(vatId: VatIdState): void {
     ui.setVatIdState(vatId);
   },

@@ -1,0 +1,34 @@
+<template>
+  <Design.Button
+    primary
+    class="relative"
+    :disabled="props.loading"
+    :cursor-wait="props.loading"
+    @click="click">
+    <Icon
+      v-if="props.loading"
+      name="buttonLoading"
+      class="spin absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"/>
+    <span v-text="props.title" :class="{invisible: props.loading}"/>
+  </Design.Button>
+</template>
+
+<script setup lang="ts">
+import Icon from "../icons/Icon.vue";
+import {Design} from "./design";
+
+const emit = defineEmits(['click']);
+
+const props = defineProps<Props>();
+
+interface Props {
+  title: string;
+  loading?: boolean;
+}
+
+function click(): void {
+  if (!props.loading) {
+    emit('click');
+  }
+}
+</script>
