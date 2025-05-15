@@ -58,6 +58,7 @@ readonly class CoyoteIntegration implements Integration {
         return $query
             ->where('is_publish', '=', 1)
             ->where('deadline_at', '>', Carbon::now())
+            ->orderByDesc('is_on_top')
             ->get()
             ->map(fn(Coyote\Job $job) => $this->neonJobOffer($job, true, null))
             ->toArray();

@@ -4,10 +4,8 @@ namespace Database\Seeders;
 use Coyote\Plan;
 use Illuminate\Database\Seeder;
 
-class ModernPlansTableSeeder extends Seeder
-{
-    public function run(): void
-    {
+class ModernPlansTableSeeder extends Seeder {
+    public function run(): void {
         $this->createLegacyPlans();
         $this->createPlan('Free', price:0, length:14, boost:false, locations:1);
         $this->createPlan('Premium', price:159);
@@ -23,8 +21,7 @@ class ModernPlansTableSeeder extends Seeder
         bool   $boost = true,
         ?int   $bundle = null,
         ?int   $locations = null,
-    ): void
-    {
+    ): void {
         Plan::query()->forceCreate([
             'name'          => $planName,
             'price'         => $price,
@@ -33,7 +30,7 @@ class ModernPlansTableSeeder extends Seeder
             'discount'      => 0,
             'boost'         => $boost ? 3 : 0,
             'benefits'      => $boost
-                ? ['is_publish', 'is_boost', 'is_ads']
+                ? ['is_publish', 'is_boost', 'is_ads', 'is_on_top']
                 : ['is_publish'],
             'is_active'     => true,
             'bundle_size'   => $bundle,
@@ -41,8 +38,7 @@ class ModernPlansTableSeeder extends Seeder
         ]);
     }
 
-    private function createLegacyPlans(): void
-    {
+    private function createLegacyPlans(): void {
         \Coyote\Plan::query()->forceCreate([
             'name'      => 'Standard',
             'price'     => 0,
