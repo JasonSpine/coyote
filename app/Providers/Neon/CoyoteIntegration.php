@@ -130,7 +130,7 @@ readonly class CoyoteIntegration implements Integration {
             $this->submitJob->createJobPayment($user, $job);
             event(new JobWasSaved($job)); // we don't queue listeners for this event
         });
-        $job->firm->assets()->saveMany($this->unmapper->coyoteCompanyPhotoAssets($jobOffer));
+        $job->firm->assets()->sync($this->unmapper->coyoteCompanyPhotoAssets($jobOffer));
         $job->user->notify(new CreatedNotification($job));
         $payment = $job->getUnpaidPayment();
         if (!$payment->plan->price) {
@@ -176,6 +176,7 @@ readonly class CoyoteIntegration implements Integration {
         $job->firm->user_id = $user->id;
         $job->firm->fill($this->unmapper->companyInput($user, $jobOffer));
         $job->firm->save();
+        $job->firm->assets()->sync($this->unmapper->coyoteCompanyPhotoAssets($jobOffer));
         $this->submitJob->submitJobOffer($user, $job);
     }
 
