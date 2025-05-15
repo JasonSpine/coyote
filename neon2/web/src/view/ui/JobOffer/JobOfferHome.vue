@@ -1,7 +1,7 @@
 <template>
   <div class="text-neutral-600 dark:text-neutral-300 space-y-3">
     <Design.Row>
-      <Design.Tabs :tabs="tabs" model-value="jobBoardHome" @update:model-value="changeTab"/>
+      <Design.Tabs :tabs="tabs" v-model="tab" @update:model-value="changeTab"/>
       <Design.RowEnd class="max-md:hidden">
         <Design.Button icon="add" primary-outline @click="props.uiController.showForm">
           Dodaj ogłoszenie
@@ -9,6 +9,7 @@
       </Design.RowEnd>
     </Design.Row>
     <JobOfferFilters
+      v-if="filtersVisible"
       :filters="props.filters"
       @filter="props.uiController.filter"/>
     <JobOfferListItem
@@ -24,6 +25,7 @@
 </template>
 
 <script setup lang="ts">
+import {computed, ref} from "vue";
 import {JobOffer} from '../../../jobBoard';
 import {JobOfferFilters as Filters} from "../../../main";
 import {Design} from "../design/design";
@@ -44,9 +46,17 @@ const tabs = [
   {value: 'jobBoardMine', title: 'Moje ogłoszenia', titleShort: 'Moje'},
 ];
 
+type Tab = 'jobBoardHome'|'jobBoardMine';
+
+const tab = ref<Tab>('jobBoardHome');
+
 function changeTab(tab: string): void {
   if (tab === 'jobBoardMine') {
-    window.location.href = '/Praca/Moje';
+    props.uiController.filterOnlyMine(true);
+  } else {
+    props.uiController.filterOnlyMine(false);
   }
 }
+
+const filtersVisible = computed(() => tab.value === 'jobBoardHome');
 </script>

@@ -38,7 +38,10 @@ export interface NavigationListener {
   showJobOfferForm(): void;
 }
 
-export type FilterListener = (filter: JobOfferFilter) => void;
+export interface FilterListener {
+  filter(filter: JobOfferFilter): void;
+  filterOnlyMine(onlyMine: boolean): void;
+}
 
 export interface PlanBundle {
   bundleName: PlanBundleName;
@@ -53,6 +56,7 @@ export interface UiController {
   filter(filter: JobOfferFilter): void;
   applyForJob(jobOfferId: number): void;
   showJobOffer(jobOffer: JobOffer): void;
+  filterOnlyMine(onlyMine: boolean): void;
 }
 
 export type CanEdit = (jobOfferId: number) => boolean;
@@ -61,7 +65,7 @@ export class VueUi {
   private readonly gate: Policy;
   private readonly screens: Screens;
   private readonly vueState: JobBoardProperties;
-  private readonly searchListeners: FilterListener[] = [];
+  private readonly filterListeners: FilterListener[] = [];
   private navigationListener: NavigationListener|null = null;
 
   constructor(locationProvider: LocationProvider, isAuthenticated: boolean) {
@@ -89,6 +93,7 @@ export class VueUi {
         selectPlan: this.selectPlan.bind(this),
         navigate: this.navigate.bind(this),
         filter: this.filter.bind(this),
+        filterOnlyMine: this.filterOnlyMine.bind(this),
         applyForJob: this.applyForJob.bind(this),
         showJobOffer: this.showJobOffer.bind(this),
       },
@@ -137,7 +142,11 @@ export class VueUi {
   }
 
   private filter(filter: JobOfferFilter): void {
-    this.searchListeners.forEach(listener => listener(filter));
+    this.filterListeners.forEach(listener => listener.filter(filter));
+  }
+
+  private filterOnlyMine(onlyMine: boolean): void {
+    this.filterListeners.forEach(listener => listener.filterOnlyMine(onlyMine));
   }
 
   private applyForJob(jobOfferId: number): void {
@@ -158,7 +167,7 @@ export class VueUi {
   }
 
   addFilterListener(listener: FilterListener): void {
-    this.searchListeners.push(listener);
+    this.filterListeners.push(listener);
   }
 
   setJobOffers(jobOffers: JobOffer[]): void {

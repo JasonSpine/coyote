@@ -77,7 +77,8 @@ readonly class CoyoteIntegration implements Integration {
             $intent,
             $this->slug($jobOffer),
             route('job.application', [$jobOffer->id]),
-            $this->canEdit($jobOffer));
+            $this->canEdit($jobOffer),
+            $this->isMine($jobOffer));
     }
 
     public function planBundle(?int $userId): PlanBundle {
@@ -146,6 +147,13 @@ readonly class CoyoteIntegration implements Integration {
             /** @var Coyote\User $user */
             $user = auth()->user();
             return $user->can('update', $jobOffer);
+        }
+        return false;
+    }
+
+    private function isMine(Job $jobOffer): bool {
+        if (auth()->check()) {
+            return $jobOffer->user_id === auth()->id();
         }
         return false;
     }

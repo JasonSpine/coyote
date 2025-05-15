@@ -8,6 +8,7 @@ export type Toast = 'created'|'edited'|'bundle-used';
 export class View {
   private jobOffers: JobOffer[] = [];
   private filter: JobOfferFilter|null = null;
+  private filterOnlyMine: boolean = false;
   private planBundleCanRedeem: boolean = false;
 
   constructor(private ui: VueUi) {
@@ -24,9 +25,15 @@ export class View {
         }
       },
     });
-    this.ui.addFilterListener(filter => {
-      this.filter = filter;
-      this.filterJobOffers();
+    this.ui.addFilterListener({
+      filter: (filter: JobOfferFilter): void => {
+        this.filter = filter;
+        this.filterJobOffers();
+      },
+      filterOnlyMine: (onlyMine: boolean): void => {
+        this.filterOnlyMine = onlyMine;
+        this.filterJobOffers();
+      },
     });
   }
 
@@ -36,6 +43,10 @@ export class View {
   }
 
   private filterJobOffers(): void {
+    if (this.filterOnlyMine) {
+      this.ui.setJobOffers(this.jobOffers.filter(jobOffer => jobOffer.isMine));
+      return;
+    }
     const jobOffers = this.jobOffers.filter(jobOffer => this.jobOfferMatches(jobOffer));
     if (this.filter) {
       sortInPlace(jobOffers, this.filter.sort);

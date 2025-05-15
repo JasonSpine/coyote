@@ -13,5 +13,6 @@ class JobOffer {
         public string         $slug,
         public string         $applicationUrl,
         public bool           $canEdit,
+        public bool           $isMine,
     ) {}
 }

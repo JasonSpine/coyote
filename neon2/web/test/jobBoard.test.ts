@@ -62,6 +62,7 @@ describe('Job board', () => {
       applicationUrl: '',
       slug: '',
       canEdit: false,
+      isMine: false,
     };
   }
 

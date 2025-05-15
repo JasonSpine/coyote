@@ -77,6 +77,7 @@ export interface JobOffer {
   applicationUrl: string;
   slug: string;
   canEdit: boolean;
+  isMine: boolean;
   title: string;
   description: string|null;
   salaryRangeFrom: number|null;

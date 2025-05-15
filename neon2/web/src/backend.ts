@@ -192,6 +192,7 @@ export interface BackendJobOffer {
   applicationUrl: string;
   slug: string;
   canEdit: boolean;
+  isMine: boolean;
   fields: {
     title: string;
     description: string|null;
