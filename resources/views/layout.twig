@@ -25,7 +25,8 @@
     <meta property="og:locale" content="pl_PL">
     <meta property="og:title" content="{{ block('ogtitle') is defined ? block('ogtitle') : block('title') }}">
     <meta property="og:description" content="{{ block('description') }}">
-    <meta property="og:image" content="{{ block('logo') is defined ? block ('logo') : secure_asset('img/apple-touch.png') }}">
+    <meta property="og:image"
+          content="{{ block('logo') is defined ? block ('logo') : secure_asset('img/apple-touch.png') }}">
 
     <link rel="stylesheet" href="{{ cdn('css/stylesEager.css') }}">
 
@@ -40,7 +41,9 @@
   <link rel="apple-touch-icon" href="{{ asset('img/apple-touch.png?v2') }}">
   <link rel="shortcut icon" href="{{ asset('img/favicon.png?v3') }}" type="image/png">
 
-  <link rel="stylesheet preload prefetch" href="//fonts.googleapis.com/css?family=Open+Sans:400,300&subset=latin,latin-ext&display=swap" as="style" crossorigin>
+  <link rel="stylesheet preload prefetch"
+        href="//fonts.googleapis.com/css?family=Open+Sans:400,300&subset=latin,latin-ext&display=swap" as="style"
+        crossorigin>
   <link rel="preload" href="/fonts/font-awesome/fa-light-300.woff2?v2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/font-awesome/fa-regular-400.woff2?v2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/font-awesome/fa-solid-900.woff2?v2" as="font" type="font/woff2" crossorigin>
@@ -59,7 +62,8 @@
   {% import 'legacyComponents.widgets' as widgets %}
 
   {% if questionnaire is defined %}
-  <div class="sem:questionnaireQuestion questionnaire position-fixed d-flex justify-content-center px-4" style="width:100%; z-index:5; visibility:hidden;">
+  <div class="sem:questionnaireQuestion questionnaire position-fixed d-flex justify-content-center px-4"
+       style="width:100%; z-index:5; visibility:hidden;">
     <div class="questionnaire__modal neon-tile neon-rounded px-3 py-1 d-flex">
       <div class="d-md-flex align-items-center">
         <div class="mb-1 me-2 me-md-4">
@@ -75,7 +79,8 @@
         </div>
         <div class="d-flex justify-content-center">
           {% for answer in questionnaire.answers %}
-            <button class="sem:questionnaireAnswer btn btn-sm btn-secondary py-2 py-md-1 px-3 px-sm-3 px-md-2 me-3 me-md-1">
+            <button
+                class="sem:questionnaireAnswer btn btn-sm btn-secondary py-2 py-md-1 px-3 px-sm-3 px-md-2 me-3 me-md-1">
               {{ answer }}
             </button>
           {% endfor %}
@@ -152,8 +157,8 @@
 
         {% if not auth_check() %}
           <div class="order-2 d-flex align-items-center me-2">
-            <a class="btn btn-sm btn-primary" href="{{ route('job.business') }}">
-              Dodaj ofertę pracy
+            <a class="btn btn-sm btn-primary" href="{{ route('neon.jobOffer.pricing') }}">
+              + Dodaj ofertę pracy
             </a>
           </div>
         {% endif %}
@@ -220,12 +225,14 @@
                     font-weight: bold;
                   }
                 </style>
-                <span class="dropdown-item" title="Przełącz Look&amp;Feel forum" id="lookAndFeelSwitcher" style="cursor:default;">
+                <span class="dropdown-item" title="Przełącz Look&amp;Feel forum" id="lookAndFeelSwitcher"
+                      style="cursor:default;">
                   {{ icon('lookAndFeel') }}
                   <span class="me-2">
                     Look&amp;Feel:
                   </span>
-                  <span class="option {{ lookAndFeelModern ?: 'option-active' }}" @click="lookAndFeelSwitchLegacy">Retro</span>
+                  <span class="option {{ lookAndFeelModern ?: 'option-active' }}"
+                        @click="lookAndFeelSwitchLegacy">Retro</span>
                   /
                   <span class="option {{ lookAndFeelModern ?'option-active' }}" @click="lookAndFeelSwitchModern">Aktualny</span>
                 </span>
@@ -259,7 +266,8 @@
             </div>
           </div>
         {% endif %}
-        <button class="navbar-toggler shadow-none order-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobile-menu">
+        <button class="navbar-toggler shadow-none order-3" type="button" data-bs-toggle="collapse"
+                data-bs-target="#mobile-menu">
           <div class="button-open">
             {{ icon('mobileMenuOpen') }}
           </div>

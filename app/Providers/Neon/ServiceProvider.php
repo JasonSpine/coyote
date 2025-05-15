@@ -43,39 +43,45 @@ class ServiceProvider extends RouteServiceProvider {
         ]);
         $this->middleware(['web', 'geocode'])->group(function () {
             $this
+                ->name('neon.jobOffer.pricing')
+                ->get('/Job/pricing', $this->indexView(...));
+            $this
                 ->name('neon.jobOffer.list')
-                ->get('/Job/{fallback?}', function (
-                    Integration     $integration,
-                    CountryGate     $countries,
-                    StripePublicKey $stripePublicKey,
-                    UserTheme       $theme,
-                ): string {
-                    if ($this->isTestMode()) {
-                        if (request()->query->has('workerIndex')) {
-                            $userId = $this->acceptanceTestUserId(request()->query->get('workerIndex'));
-                            auth()->loginUsingId($userId, remember:true);
-                        }
-                        if (\request()->query->has('revoke-bundle')) {
-                            $integration->revokePlanBundle(auth()->id());
-                        }
-                    }
-                    $jobBoardView = new JobBoardView(
-                        $integration,
-                        $countries,
-                        $stripePublicKey->publishableKey,
-                        config('services.google-maps.key'),
-                        $this->isTestMode(),
-                        auth()->id(),
-                        auth()->user()?->email,
-                        app('session')->token(),
-                        $theme->isThemeDark(),
-                        $theme->themeMode());
-                    return view('job.home_modern', [
-                        'neonHead' => new StringHtml($jobBoardView->htmlMarkupHead()),
-                        'neonBody' => new StringHtml($jobBoardView->htmlMarkupBody()),
-                    ]);
-                })->where('fallback', '.*');
+                ->get('/Job/{fallback?}', $this->indexView(...))
+                ->where('fallback', '.*');
         });
+    }
+
+    private function indexView(
+        Integration     $integration,
+        CountryGate     $countries,
+        StripePublicKey $stripePublicKey,
+        UserTheme       $theme,
+    ): string {
+        if ($this->isTestMode()) {
+            if (request()->query->has('workerIndex')) {
+                $userId = $this->acceptanceTestUserId(request()->query->get('workerIndex'));
+                auth()->loginUsingId($userId, remember:true);
+            }
+            if (\request()->query->has('revoke-bundle')) {
+                $integration->revokePlanBundle(auth()->id());
+            }
+        }
+        $jobBoardView = new JobBoardView(
+            $integration,
+            $countries,
+            $stripePublicKey->publishableKey,
+            config('services.google-maps.key'),
+            $this->isTestMode(),
+            auth()->id(),
+            auth()->user()?->email,
+            app('session')->token(),
+            $theme->isThemeDark(),
+            $theme->themeMode());
+        return view('job.home_modern', [
+            'neonHead' => new StringHtml($jobBoardView->htmlMarkupHead()),
+            'neonBody' => new StringHtml($jobBoardView->htmlMarkupBody()),
+        ]);
     }
 
     private function acceptanceTestUserId(int $workerIndex): int {
