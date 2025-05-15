@@ -134,10 +134,6 @@ describe('Job board', () => {
       assertEquals(offer.id, afterEdit.id);
     });
   });
-  test('Paid job offer is not listable.', () => {
-    addJobOfferWaitingPayment(1, 'To be paid');
-    assertEquals([], publishedOffers());
-  });
   test('Given an unpaid job offer, when it is paid, it is listable.', () => {
     addJobOfferWaitingPayment(42, 'Paid job offer');
     board.jobOfferPaid(42);

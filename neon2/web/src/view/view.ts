@@ -47,7 +47,9 @@ export class View {
       this.ui.setJobOffers(this.jobOffers.filter(jobOffer => jobOffer.isMine));
       return;
     }
-    const jobOffers = this.jobOffers.filter(jobOffer => this.jobOfferMatches(jobOffer));
+    const jobOffers = this.jobOffers
+      .filter(jobOffer => jobOffer.status === 'published')
+      .filter(jobOffer => this.jobOfferMatches(jobOffer));
     if (this.filter) {
       sortInPlace(jobOffers, this.filter.sort);
     }

@@ -46,7 +46,7 @@ export class JobBoard {
   }
 
   updateView(): void {
-    this.observe(copyArray<JobOffer>(this.jobOffers.filter(offer => offer.status === 'published')));
+    this.observe(copyArray<JobOffer>(this.jobOffers));
   }
 
   jobOfferPaid(jobOfferId: number): void {
@@ -71,7 +71,7 @@ export function jobOfferCities(jobOffer: JobOffer): string[] {
 export interface JobOffer {
   id: number;
   expiresInDays: number;
-  status: 'published'|'awaitingPayment';
+  status: 'published'|'awaitingPayment'|'expired';
   isNew: boolean;
   isFavourite: boolean;
   applicationUrl: string;

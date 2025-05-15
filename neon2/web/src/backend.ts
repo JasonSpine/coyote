@@ -238,7 +238,7 @@ export interface BackendPaymentIntent {
   paymentPriceVat: number;
 }
 
-export type BackendJobOfferStatus = 'published'|'awaitingPayment';
+export type BackendJobOfferStatus = 'published'|'awaitingPayment'|'expired';
 export type BackendPaymentStatus = 'awaitingPayment'|'paymentComplete'|'paymentFailed';
 
 export interface BackendPreparedPayment {

@@ -14,13 +14,12 @@ use Coyote\Repositories\Criteria\EagerLoading;
 use Coyote\Repositories\Criteria\Job\IncludeSubscribers;
 use Coyote\Repositories\Eloquent\JobRepository;
 use Coyote\Repositories\Eloquent\PaymentRepository;
-use Coyote\Services\Elasticsearch\Builders\Job\SearchBuilder;
 use Coyote\Services\Invoice;
 use Coyote\Services\Invoice\CalculatorFactory;
 use Coyote\Services\Invoice\VatRateCalculator;
 use Coyote\Services\SubmitJobService;
 use Illuminate\Database;
-use Illuminate\Database\Query;
+use Illuminate\Database\Eloquent;
 use Neon2\Coyote\Integration;
 use Neon2\JobBoard;
 use Neon2\JobBoard\InvoiceInformation;
@@ -38,7 +37,6 @@ readonly class CoyoteIntegration implements Integration {
         private JobOfferMapper      $mapper,
         private JobOfferUnmapper    $unmapper,
         private JobRepository       $job,
-        private SearchBuilder       $builder,
         private SubmitJobService    $submitJob,
         private Invoice\Generator   $invoice,
         private Database\Connection $database,
@@ -53,26 +51,35 @@ readonly class CoyoteIntegration implements Integration {
     public function listJobOffers(): array {
         $this->job->pushCriteria(new EagerLoading(['firm', 'firm.assets', 'locations', 'tags', 'currency']));
         $this->job->pushCriteria(new IncludeSubscribers(auth()->id()));
-        /** @var Query\Builder $query */
         $query = $this->job->query();
+        if (auth()->check()) {
+            $query
+                ->where('user_id', auth()->id())
+                ->orWhere($this->isPublished(...));
+        } else {
+            $this->isPublished($query);
+        }
         return $query
-            ->where('is_publish', '=', 1)
-            ->where('deadline_at', '>', Carbon::now())
             ->orderByDesc('is_on_top')
             ->get()
-            ->map(fn(Coyote\Job $job) => $this->neonJobOffer($job, true, null))
+            ->map(fn(Coyote\Job $job) => $this->neonJobOffer($job, null))
             ->toArray();
+    }
+
+    private function isPublished(Eloquent\Builder $query): void {
+        $query
+            ->where('is_publish', '=', 1)
+            ->where('deadline_at', '>', Carbon::now());
     }
 
     public function neonJobOffer(
         Coyote\Job     $jobOffer,
-        bool           $published,
         ?PaymentIntent $intent,
     ): JobBoard\JobOffer {
         return new JobBoard\JobOffer(
             $jobOffer->id,
             $jobOffer->deadline + 1,
-            $published ? JobBoard\JobOfferStatus::Published : JobBoard\JobOfferStatus::AwaitingPayment,
+            $this->jobOfferStatus($jobOffer),
             $this->mapper->jobOfferFields($jobOffer),
             $intent,
             $this->slug($jobOffer),
@@ -137,9 +144,9 @@ readonly class CoyoteIntegration implements Integration {
         $payment = $job->getUnpaidPayment();
         if (!$payment->plan->price) {
             event(new PaymentPaid($payment));
-            return $this->neonJobOffer($job, true, null);
+            return $this->neonJobOffer($job->fresh(), null);
         }
-        return $this->neonJobOffer($job, false, $this->paymentIntent($payment));
+        return $this->neonJobOffer($job, $this->paymentIntent($payment));
     }
 
     private function canEdit(Job $jobOffer): bool {
@@ -274,5 +281,15 @@ readonly class CoyoteIntegration implements Integration {
             }
         }
         return $pieces;
+    }
+
+    private function jobOfferStatus(Job $jobOffer): JobBoard\JobOfferStatus {
+        if (!$jobOffer->is_publish) {
+            return JobBoard\JobOfferStatus::AwaitingPayment;
+        }
+        if ($jobOffer->deadline_at > Carbon::now()) {
+            return JobBoard\JobOfferStatus::Published;
+        }
+        return JobBoard\JobOfferStatus::Expired;
     }
 }
