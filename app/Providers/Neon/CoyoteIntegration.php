@@ -125,12 +125,13 @@ readonly class CoyoteIntegration implements Integration {
         $job->fill($this->unmapper->jobOfferInput($user, $jobOffer));
         $job->firm->fill($this->unmapper->companyInput($user, $jobOffer));
         $job->firm->user_id = $user->id;
-        $this->submitJob->connection->transaction(function () use ($user, $job) {
-            $this->submitJob->saveRelations($job, $user);
+        $this->submitJob->connection->transaction(function () use ($jobOffer, $user, $job) {
+            $this->submitJob->saveRelations($job, $user,
+                $this->unmapper->coyoteTagNames($jobOffer->tagNames));
+            $job->firm->assets()->sync($this->unmapper->coyoteCompanyPhotoAssets($jobOffer));
             $this->submitJob->createJobPayment($user, $job);
             event(new JobWasSaved($job)); // we don't queue listeners for this event
         });
-        $job->firm->assets()->sync($this->unmapper->coyoteCompanyPhotoAssets($jobOffer));
         $job->user->notify(new CreatedNotification($job));
         $payment = $job->getUnpaidPayment();
         if (!$payment->plan->price) {
@@ -175,9 +176,13 @@ readonly class CoyoteIntegration implements Integration {
         $job->fill($this->unmapper->jobOfferInput($user, $jobOffer));
         $job->firm->user_id = $user->id;
         $job->firm->fill($this->unmapper->companyInput($user, $jobOffer));
-        $job->firm->save();
-        $job->firm->assets()->sync($this->unmapper->coyoteCompanyPhotoAssets($jobOffer));
-        $this->submitJob->submitJobOffer($user, $job);
+        $this->submitJob->connection->transaction(function () use ($user, $jobOffer, $job) {
+            $job->firm->save();
+            $job->firm->assets()->sync($this->unmapper->coyoteCompanyPhotoAssets($jobOffer));
+            $this->submitJob->saveRelations($job, $user,
+                $this->unmapper->coyoteTagNames($jobOffer->tagNames));
+            event(new JobWasSaved($job)); // we don't queue listeners for this event
+        });
     }
 
     public function preparePayment(int $userId, string $paymentId, InvoiceInformation $invoiceInfo): PreparedPayment {

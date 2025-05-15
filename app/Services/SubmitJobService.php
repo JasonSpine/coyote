@@ -30,7 +30,8 @@ readonly class SubmitJobService {
 
     public function submitJobOffer(User $user, Job $job): void {
         $this->connection->transaction(function () use ($user, $job) {
-            $this->saveRelations($job, $user);
+            $this->saveRelations($job, $user,
+                $this->request->input('tags', []));
             if ($job->wasRecentlyCreated || !$job->is_publish) {
                 $this->redeemPlanBundleOrCreatePayment($user, $job);
             }
@@ -78,7 +79,7 @@ readonly class SubmitJobService {
         return $job;
     }
 
-    public function saveRelations(Job $job, User $user): Job {
+    public function saveRelations(Job $job, User $user, array $tagInput): Job {
         $activity = $job->id ? Stream_Update::class : Stream_Create::class;
         if ($job->firm) {
             if (!$job->firm->exists) {
@@ -95,8 +96,8 @@ readonly class SubmitJobService {
         });
         $job->save();
         $job->locations()->push($job->locations);
-        $job->tags()->sync($this->tags($this->request));
-        $job->features()->sync($this->features($this->request));
+        $job->tags()->sync($this->tags($tagInput));
+        $job->features()->sync($this->features($this->request->input('features', [])));
         stream($activity, (new Stream_Job)->map($job));
         return $job;
     }
@@ -115,19 +116,19 @@ readonly class SubmitJobService {
         return $models;
     }
 
-    private function features(Request $request): array {
+    private function features(array $featureInput): array {
         $features = [];
-        foreach ($request->input('features', []) as $feature) {
+        foreach ($featureInput as $feature) {
             $checked = (int)$feature['checked'];
             $features[$feature['id']] = ['checked' => $feature['checked'], 'value' => $checked ? ($feature['value'] ?? null) : null];
         }
         return $features;
     }
 
-    private function tags(Request $request): array {
+    private function tags(array $tagsInput): array {
         $tags = [];
         $order = 0;
-        foreach ($request->input('tags', []) as $tag) {
+        foreach ($tagsInput as $tag) {
             $model = Tag::query()->firstOrCreate(['name' => $tag['name']]);
             $tags[$model->id] = [
                 'priority' => $tag['priority'] ?? 0,

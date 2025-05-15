@@ -23,7 +23,6 @@ class JobOfferUnmapper {
             'currency_id'     => $this->coyoteCurrencyId($jobOffer->salaryCurrency),
             'rate'            => $jobOffer->salaryRate->value,
             'locations'       => $this->coyoteLocations($jobOffer),
-            'tags'            => $this->coyoteTagNames($jobOffer->tagNames),
             'is_remote'       => $this->coyoteRemoteRange($jobOffer->workMode) > 0,
             'remote_range'    => $this->coyoteRemoteRange($jobOffer->workMode),
             'employment'      => $this->coyoteLegalForm($jobOffer->legalForm),
@@ -68,7 +67,7 @@ class JobOfferUnmapper {
             ->id;
     }
 
-    private function coyoteTagNames(array $tagNames): array {
+    public function coyoteTagNames(array $tagNames): array {
         return \array_map(
             fn(string $tagName) => ['name' => $tagName, 'priority' => 2],
             $tagNames);
