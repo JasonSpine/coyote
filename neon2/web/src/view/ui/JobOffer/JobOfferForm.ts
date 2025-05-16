@@ -41,7 +41,7 @@ export function toFormModel(jobOffer: SubmitJobOffer): FormModel {
   return {
     ...jobOffer,
     salaryRangeFrom: formatNumber(jobOffer.salaryRangeFrom),
-    salaryRangeTo: formatNumber(jobOffer.salaryRangeFrom),
+    salaryRangeTo: formatNumber(jobOffer.salaryRangeTo),
     locations: jobOffer.locations,
     tagNames: jobOffer.tagNames.join(', '),
     description: jobOffer.description || '',
