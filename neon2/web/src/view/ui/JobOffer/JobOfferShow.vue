@@ -1,5 +1,5 @@
 <template>
-  <Design.Tile highlight class="p-4 md:p-8">
+  <Design.Tile class="p-4 md:p-8">
     <div :class="[
       'h-16 rounded-lg -m-2 md:-m-6 mb-0',
       'bg-linear-to-r from-green-050 dark:from-green-800 to-tile'

@@ -18,10 +18,10 @@ export interface JobOfferShow {
   salaryRate: Rate;
   companyName: string;
   companyLogoUrl: string|null;
-  companyWebsiteUrl: string|null,
-  companyDescription: string|null,
-  companyFundingYear: number|null,
-  companySizeLevel: number|null,
+  companyWebsiteUrl: string|null;
+  companyDescription: string|null;
+  companyFundingYear: number|null;
+  companySizeLevel: number|null;
 }
 
 export function toJobOfferShow(jobOffer: JobOffer): JobOfferShow {
