@@ -3,7 +3,12 @@
     <Design.Row wrap vertical-center>
       <Design.Tile nested-pill v-for="badge in badges" :text="badge.title" :icon="badge.icon"/>
       <Design.RowEnd inline>
-        <JobOfferBadge color="pink" v-text="'Nowe'" v-if="jobOffer.isNew" text-small/>
+        <JobOfferBadge text-small color="gray" v-text="'Oczekuje na płatność'"
+                       v-if="jobOffer.status === 'awaitingPayment'"/>
+        <JobOfferBadge text-small color="gray" v-text="'Wygasła'"
+                       v-else-if="jobOffer.status === 'expired'"/>
+        <JobOfferBadge text-small color="pink" v-text="'Nowe'"
+                       v-else-if="jobOffer.isNew"/>
         <JobOfferFavouriteButton
           :favourite="jobOffer.isFavourite"
           @favourite-change="toggleFavourite"/>

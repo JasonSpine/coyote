@@ -18,14 +18,13 @@ interface Props {
   nowrap?: boolean;
 }
 
-type BadgeColor = 'primary'|'pink'|'gray';
+const classes = {
+  primary: 'accent',
+  gray: 'bg-navy-100 text-neutral-600 dark:bg-neutral-950 dark:text-neutral-400',
+  pink: 'bg-[#e2d2f9] text-[#16062d] dark:bg-[#16062d] dark:text-[#b68cf6]',
+};
 
-const colorClass = computed((): string => {
-  const classes: Record<BadgeColor, string> = {
-    primary: 'accent',
-    gray: 'bg-navy-100 text-neutral-600 dark:bg-neutral-950 dark:text-neutral-400',
-    pink: 'bg-[#e2d2f9] text-[#16062d] dark:bg-[#16062d] dark:text-[#b68cf6]',
-  };
-  return classes[props.color];
-});
+type BadgeColor = keyof typeof classes;
+
+const colorClass = computed((): string => classes[props.color]);
 </script>
