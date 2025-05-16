@@ -2,7 +2,7 @@
   <JobOfferBadge color="primary" :nowrap="props.nowrap">
     {{salaryRange}}
     {{props.salary.salaryCurrency}}
-    {{props.salary.salaryIsNet ? 'netto' : ''}}
+    {{props.salary.salaryIsNet ? 'netto' : 'brutto'}}
     {{rateTitle}}
   </JobOfferBadge>
 </template>
