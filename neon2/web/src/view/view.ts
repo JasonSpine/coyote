@@ -60,7 +60,7 @@ export class View {
     if (this.filter === null) {
       return true;
     }
-    if (!jobOffer.title.toLowerCase().includes(this.filter.searchPhrase.toLowerCase())) {
+    if (!this.jobOfferMatchesSearchPhrase(jobOffer, this.filter.searchPhrase)) {
       return false;
     }
     if (this.filter.workModes.length) {
@@ -89,6 +89,32 @@ export class View {
       }
     }
     return true;
+  }
+
+  private jobOfferMatchesSearchPhrase(jobOffer: JobOffer, searchPhrase: string): boolean {
+    return jobOffer.title.toLowerCase().includes(searchPhrase.toLowerCase())
+      || jobOffer.companyName.toLowerCase().includes(searchPhrase.toLowerCase())
+      || jobOffer.tagNames.some(tagName => tagName.toLowerCase().includes(searchPhrase.toLowerCase()))
+      || this.jobOfferDescriptionPlain(jobOffer).toLowerCase().includes(searchPhrase.toLowerCase())
+      || this.jobOfferCompanyDescriptionPlain(jobOffer).toLowerCase().includes(searchPhrase.toLowerCase());
+  }
+
+  private jobOfferDescriptionPlain(jobOffer: JobOffer): string {
+    if (jobOffer.description === null) {
+      return '';
+    }
+    return this.plainText(jobOffer.description);
+  }
+
+  private jobOfferCompanyDescriptionPlain(jobOffer: JobOffer): string {
+    if (jobOffer.companyDescription === null) {
+      return '';
+    }
+    return this.plainText(jobOffer.companyDescription);
+  }
+
+  private plainText(string: string): string {
+    return string.replaceAll(new RegExp('</?[a-z]+/?>', 'g'), '');
   }
 
   private haveCommonElement(array1: string[], array2: string[]): boolean {
