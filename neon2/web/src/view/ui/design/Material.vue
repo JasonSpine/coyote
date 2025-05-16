@@ -1,5 +1,8 @@
 <template>
-  <div :class="tileClass">
+  <a v-if="props.href" :href="props.href" class="block" :class="tileClass">
+    <slot/>
+  </a>
+  <div v-else :class="tileClass">
     <slot/>
   </div>
 </template>
@@ -13,6 +16,7 @@ interface Props {
   nested?: boolean;
   space?: boolean;
   round?: MaterialRound;
+  href?: string;
 }
 
 export type MaterialRound = 'regular'|'large'|'full';

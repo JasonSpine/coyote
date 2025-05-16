@@ -14,7 +14,7 @@
           @favourite-change="toggleFavourite"/>
       </Design.RowEnd>
     </Design.Row>
-    <Design.Tile nested desktop-space clickable @click="emit('select')">
+    <Design.Tile nested desktop-space :href="props.jobOfferUrl" @click="click">
       <Design.Row vertical-center>
         <Design.Image :src="props.jobOffer.companyLogoUrl" placeholder-icon="jobOfferLogoPlaceholder"/>
         <div class="flex-grow-1">
@@ -79,6 +79,7 @@ const emit = defineEmits<Emit>();
 
 interface Props {
   jobOffer: JobOffer;
+  jobOfferUrl: string;
 }
 
 interface Emit {
@@ -124,4 +125,15 @@ const jobOfferSalary = computed<SalaryJobOffer|null>((): SalaryJobOffer|null => 
   }
   return null;
 });
+
+function click(event: MouseEvent): void {
+  if (!opensInNewTab(event)) {
+    event.preventDefault();
+    emit('select');
+  }
+}
+
+function opensInNewTab(event: MouseEvent): boolean {
+  return event.ctrlKey || event.metaKey;
+}
 </script>

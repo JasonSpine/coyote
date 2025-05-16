@@ -52,6 +52,11 @@ export class Screens {
     });
   }
 
+  jobOfferUrl(jobOffer: JobOffer): string {
+    const {slug, id} = jobOffer;
+    return `/Job/${slug}--${id}`;
+  }
+
   useIn(app: App): void {
     this.router.useIn(app);
   }

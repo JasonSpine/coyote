@@ -56,6 +56,7 @@ export interface UiController {
   filter(filter: JobOfferFilter): void;
   applyForJob(jobOfferId: number): void;
   showJobOffer(jobOffer: JobOffer): void;
+  jobOfferUrl(jobOffer: JobOffer): string;
   filterOnlyMine(onlyMine: boolean): void;
 }
 
@@ -96,6 +97,7 @@ export class VueUi {
         filterOnlyMine: this.filterOnlyMine.bind(this),
         applyForJob: this.applyForJob.bind(this),
         showJobOffer: this.showJobOffer.bind(this),
+        jobOfferUrl: this.jobOfferUrl.bind(this),
       },
       paymentProcessing: false,
     });
@@ -144,6 +146,10 @@ export class VueUi {
 
   private showJobOffer(jobOffer: JobOffer): void {
     this.screens.showJobOffer(jobOffer);
+  }
+
+  private jobOfferUrl(jobOffer: JobOffer): string {
+    return this.screens.jobOfferUrl(jobOffer);
   }
 
   setViewListener(viewListener: ViewListener): void {

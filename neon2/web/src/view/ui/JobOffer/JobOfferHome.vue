@@ -16,6 +16,7 @@
       v-for="jobOffer in screen.jobOffers"
       :key="jobOffer.id"
       :job-offer="jobOffer"
+      :job-offer-url="screen.uiController.jobOfferUrl(jobOffer)"
       @select="screen.uiController.showJobOffer(jobOffer)"
       @favourite-change=""/>
     <Design.Material v-if="screen.jobOffers.length === 0" nested class="text-center my-2 py-6">

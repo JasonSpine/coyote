@@ -3,6 +3,7 @@
     :nested="props.nested || props.nestedPill"
     :round="rounded"
     :class="tileClass"
+    :href="props.href"
     :data-testid="props.testId">
     <Icon v-if="props.icon" :name="props.icon" class="mr-2"/>
     {{props.text}}
@@ -12,7 +13,8 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import Icon, {IconName} from "../icons/Icon.vue";
+import Icon from "../icons/Icon.vue";
+import {IconName} from "../icons/icons";
 import {Design} from "./design";
 import {MaterialRound} from "./Material.vue";
 
@@ -29,7 +31,7 @@ interface Props {
   vertical?: boolean;
   text?: string;
   shadow?: boolean;
-  clickable?: boolean;
+  href?: string;
 }
 
 const tileClass = computed(() => [padding(), verticalSpacing(), fontSize(), wrapping(), shadow(), cursor()]);
