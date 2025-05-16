@@ -60,6 +60,7 @@ readonly class CoyoteIntegration implements Integration {
             $this->isPublished($query);
         }
         return $query
+            ->orderBy('is_publish') // With my offers, not paid should be highest
             ->orderByDesc('is_on_top')
             ->get()
             ->map(fn(Coyote\Job $job) => $this->neonJobOffer($job, null))

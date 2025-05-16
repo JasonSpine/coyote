@@ -44,7 +44,9 @@ export class View {
 
   private filterJobOffers(): void {
     if (this.filterOnlyMine) {
-      this.ui.setJobOffers(this.jobOffers.filter(jobOffer => jobOffer.isMine));
+      const jobOffers = this.jobOffers.filter(jobOffer => jobOffer.isMine);
+      jobOffers.sort();
+      this.ui.setJobOffers(jobOffers);
       return;
     }
     const jobOffers = this.jobOffers
