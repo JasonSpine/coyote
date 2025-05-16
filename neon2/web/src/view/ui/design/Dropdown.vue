@@ -24,9 +24,10 @@
   </select>
 </template>
 
-<script setup lang="ts" generic="U extends string|number|null">
+<script setup lang="ts" generic="U extends string|number|boolean|null">
 import {computed, inject, ref} from "vue";
-import Icon, {IconName} from "../icons/Icon.vue";
+import Icon from "../icons/Icon.vue";
+import {IconName} from "../icons/icons";
 import {Design} from "./design";
 
 export interface DrawerOption<T> {

@@ -90,16 +90,21 @@
         </Design.FieldGroup>
       </Design.Row>
       <Design.Row space>
-        <Design.FieldGroup label="Wynagrodzenie od (netto)" :error="errors.salaryRangeFrom">
+        <Design.FieldGroup label="Wynagrodzenie od" :error="errors.salaryRangeFrom">
           <Design.TextField placeholder="Dolne widełki" v-model="jobOffer.salaryRangeFrom"/>
         </Design.FieldGroup>
-        <Design.FieldGroup label="Wynagrodzenie do (netto)" :error="errors.salaryRangeTo">
+        <Design.FieldGroup label="Wynagrodzenie do" :error="errors.salaryRangeTo">
           <Design.TextField placeholder="Górne widełki" v-model="jobOffer.salaryRangeTo"/>
         </Design.FieldGroup>
       </Design.Row>
-      <Design.FieldGroup label="Częstotliwość wynagrodzenia">
-        <Design.Dropdown :options="salaryRateOptions" v-model="jobOffer.salaryRate"/>
-      </Design.FieldGroup>
+      <Design.Row space>
+        <Design.FieldGroup label="Częstotliwość wynagrodzenia">
+          <Design.Dropdown :options="salaryRateOptions" v-model="jobOffer.salaryRate"/>
+        </Design.FieldGroup>
+        <Design.FieldGroup label="Netto / Brutto">
+          <Design.Dropdown :options="salaryIsNetOptions" v-model="jobOffer.salaryIsNet"/>
+        </Design.FieldGroup>
+      </Design.Row>
     </Design.Card>
     <Design.Card space title="Tryb pracy">
       <Design.RadioGroup :options="workModeOptions" v-model="jobOffer.workMode"/>
@@ -345,6 +350,10 @@ const salaryRateOptions: DrawerOption<Rate>[] = [
   {value: 'weekly', title: 'tygodniowo'},
   {value: 'monthly', title: 'miesięcznie'},
   {value: 'yearly', title: 'rocznie'},
+];
+const salaryIsNetOptions: DrawerOption<boolean>[] = [
+  {value: true, title: 'netto'},
+  {value: false, title: 'brutto'},
 ];
 const companySizeOptions: DrawerOption<number|null>[] = [
   {value: null, title: formatCompanySizeLevel(null)},

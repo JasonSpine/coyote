@@ -17,6 +17,7 @@ export interface FormModel {
   salaryRangeTo: string;
   salaryCurrency: Currency;
   salaryRate: Rate;
+  salaryIsNet: boolean;
   locations: Location[];
   tagNames: string;
   workMode: WorkMode;
@@ -62,7 +63,7 @@ export function fromFormModel(formModel: FormModel): SubmitJobOffer {
     ...formModel,
     salaryRangeFrom: parseNumber(formModel.salaryRangeFrom),
     salaryRangeTo: parseNumber(formModel.salaryRangeTo),
-    salaryIsNet: true,
+    salaryIsNet: formModel.salaryIsNet,
     tagNames: formModel.tagNames.split(',').map(s => s.trim()).filter(t => t.length),
     locations: formModel.locations,
     description: parseString(formModel.description),
