@@ -1,4 +1,4 @@
-import {BackendJobOffer, BackendJobOfferLocation, JobBoardBackend, toJobOffer} from "./backend";
+import {BackendJobOffer, BackendJobOfferLocation, JobBoardBackend, JobOfferPaymentIntent, toJobOffer} from "./backend";
 import {JobBoard, JobOffer} from './jobBoard';
 import {JobOfferPayments} from "./jobOfferPayments";
 import {GoogleMapsLocationProvider, LocationProvider, TestLocationProvider} from "./locationProvider/LocationProvider";
@@ -91,6 +91,9 @@ function bundleSize(pricingPlan: PaidPricingPlan): 1|3|5|20 {
   return bundleSizes[pricingPlan];
 }
 
+backend.jobOfferPayments()
+  .forEach((paymentIntent: JobOfferPaymentIntent): void => jobOfferPayments.addJobOffer(paymentIntent));
+
 ui.setViewListener({
   createJob(pricingPlan: PricingPlan, jobOffer: SubmitJobOffer): void {
     backend.addJobOffer(pricingPlan, jobOffer, (jobOffer: BackendJobOffer): void => {
@@ -98,14 +101,8 @@ ui.setViewListener({
       if (pricingPlan === 'free') {
         view.jobOfferCreatedFree(jobOffer.id);
       } else {
-        const payment = jobOffer.payment!;
-        jobOfferPayments.addJobOffer({jobOfferId: jobOffer.id, paymentId: payment.paymentId, pricingPlan});
-        ui.setPaymentSummary({
-          bundleSize: bundleSize(pricingPlan),
-          basePrice: payment.paymentPriceBase,
-          vat: payment.paymentPriceVat,
-          vatIncluded: true,
-        });
+        jobOfferPayments.addJobOffer({jobOfferId: jobOffer.id, paymentIntent: jobOffer.payment!});
+        ui.setPaymentSummary(paymentSummary(jobOffer.id));
         view.jobOfferCreatedRequirePayment(jobOffer.id);
       }
     });
@@ -124,6 +121,9 @@ ui.setViewListener({
       jobOfferPayments.paymentId(initiatePayment.jobOfferId),
       initiatePayment.invoiceInfo,
       initiatePayment.paymentMethod);
+  },
+  resumePayment(jobOfferId: number): void {
+    ui.setPaymentSummary(paymentSummary(jobOfferId));
   },
   redeemBundle(jobOfferId: number): void {
     backend.publishJobOfferUsingBundle(jobOfferId).then(() => {
@@ -148,6 +148,16 @@ ui.setViewListener({
     return false;
   },
 });
+
+function paymentSummary(jobOfferId: number): PaymentSummary {
+  const payment = jobOfferPayments.jobOfferPayment(jobOfferId);
+  return {
+    bundleSize: bundleSize(payment.paymentPricingPlan),
+    basePrice: payment.paymentPriceBase,
+    vat: payment.paymentPriceVat,
+    vatIncluded: true,
+  };
+}
 
 payments.addEventListener({
   processingStarted(): void {

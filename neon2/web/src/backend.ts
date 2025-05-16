@@ -6,6 +6,7 @@ import {
   HiringType,
   InvoiceInformation,
   LegalForm,
+  PaidPricingPlan,
   PricingPlan,
   Rate,
   SubmitJobOffer,
@@ -161,6 +162,29 @@ export class JobBoardBackend {
       listener(isDarkTheme ? 'dark' : 'light');
     };
   }
+
+  jobOfferPayment(jobOfferId: number): BackendPaymentIntent {
+    return this.backendInput.jobOffers
+      .find(jobOffer => jobOffer.id === jobOfferId)!
+      .payment!;
+  }
+
+  jobOfferPayments(): JobOfferPaymentIntent[] {
+    return this.backendInput
+      .jobOffers
+      .filter(jobOffer => jobOffer.payment !== null)
+      .map(jobOffer => {
+        return {
+          jobOfferId: jobOffer.id,
+          paymentIntent: jobOffer.payment!,
+        };
+      });
+  }
+}
+
+export interface JobOfferPaymentIntent {
+  jobOfferId: number;
+  paymentIntent: BackendPaymentIntent;
 }
 
 function request(method: string, url: string, body: object) {
@@ -236,6 +260,7 @@ export interface BackendPaymentIntent {
   paymentId: string;
   paymentPriceBase: number;
   paymentPriceVat: number;
+  paymentPricingPlan: PaidPricingPlan;
 }
 
 export type BackendJobOfferStatus = 'published'|'awaitingPayment'|'expired';

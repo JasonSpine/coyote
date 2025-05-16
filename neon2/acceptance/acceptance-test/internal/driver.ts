@@ -36,6 +36,12 @@ export class Driver {
     }
   }
 
+  async continuePayment(jobOfferTitle: string): Promise<void> {
+    await this.web.click('Moje ogłoszenia');
+    await this.web.click(jobOfferTitle);
+    await this.web.click('Przejdź do płatności');
+  }
+
   async finishPayment(paymentCardNumber: string): None {
     await this.finalizeJobOfferPayment('completed', paymentCardNumber);
   }

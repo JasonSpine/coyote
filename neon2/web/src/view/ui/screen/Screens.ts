@@ -25,8 +25,8 @@ export class Screens {
       if (screen === 'edit' && !policy.canEditJobOffer(jobOfferId!)) {
         return 'home';
       }
-      if (screen === 'payment' && !policy.canPayForJobOffer()) {
-        return 'home';
+      if (screen === 'payment') {
+        listener.resumePayment(jobOfferId!);
       }
       return null;
     });
@@ -64,6 +64,7 @@ export class Screens {
 
 export interface ScreenListener {
   routeProperties(jobOfferId: number|null): RouteProperties;
+  resumePayment(jobOfferId: number): void;
 }
 
 export interface RouteProperties {

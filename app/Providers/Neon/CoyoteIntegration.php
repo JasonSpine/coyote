@@ -63,7 +63,15 @@ readonly class CoyoteIntegration implements Integration {
             ->orderBy('is_publish') // With my offers, not paid should be highest
             ->orderByDesc('is_on_top')
             ->get()
-            ->map(fn(Coyote\Job $job) => $this->neonJobOffer($job, null))
+            ->map(function (Coyote\Job $job): JobBoard\JobOffer {
+                if ($this->isMine($job)) {
+                    $payment = $job->getUnpaidPayment();
+                    if ($payment && $payment->plan->price) {
+                        return $this->neonJobOffer($job, $this->paymentIntent($payment));
+                    }
+                }
+                return $this->neonJobOffer($job, null);
+            })
             ->toArray();
     }
 
@@ -150,7 +158,7 @@ readonly class CoyoteIntegration implements Integration {
         return $this->neonJobOffer($job, $this->paymentIntent($payment));
     }
 
-    private function canEdit(Job $jobOffer): bool {
+    private function canEdit(Coyote\Job $jobOffer): bool {
         if (auth()->check()) {
             /** @var Coyote\User $user */
             $user = auth()->user();
@@ -180,7 +188,8 @@ readonly class CoyoteIntegration implements Integration {
         return new PaymentIntent(
             $payment->id,
             (int)($calculator->netPrice() * 100),
-            (int)($calculator->vatPrice() * 100));
+            (int)($calculator->vatPrice() * 100),
+            \lcFirst($payment->plan->name));
     }
 
     public function updateJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void {

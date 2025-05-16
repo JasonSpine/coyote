@@ -37,7 +37,7 @@ export class JobBoard {
     this.updateView();
   }
 
-  private findJobOffer(id: number): JobOffer {
+  findJobOffer(id: number): JobOffer {
     const jobOffer = this.jobOffers.find(o => o.id === id);
     if (jobOffer) {
       return jobOffer;

@@ -6,5 +6,6 @@ class PaymentIntent {
         public string $paymentId,
         public int    $paymentPriceBase,
         public int    $paymentPriceVat,
+        public string $paymentPricingPlan,
     ) {}
 }

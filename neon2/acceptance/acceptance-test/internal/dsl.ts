@@ -54,6 +54,11 @@ export class Dsl {
       jobOffer.companyName || 'Company name');
   }
 
+  async continueAndFinishPayment(payment: {jobOfferTitle: string}): None {
+    await this.driver.continuePayment(this.enc(payment.jobOfferTitle));
+    await this.finishPayment();
+  }
+
   async finishPayment(): None {
     await this.driver.finishPayment(this.cardNumber('valid'));
   }

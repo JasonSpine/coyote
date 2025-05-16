@@ -87,4 +87,13 @@ describe('Job offers are persisted after browser reset.', () => {
       await dsl.assertJobOfferField({jobOfferTitle: 'Updated', expectedDescription: 'After'});
     });
   });
+
+  describe('A failed payment can be retried.', () => {
+    test('Given a job offer with a failed payment, when payment is retried, the job offer is published.', async (dsl: Dsl) => {
+      await dsl.publishJobOffer({title: 'Job offer', payment: 'ignored'});
+      await dsl.resetClient();
+      await dsl.continueAndFinishPayment({jobOfferTitle: 'Job offer'});
+      await dsl.assertJobOfferIsListed({jobOfferTitle: 'Job offer'});
+    });
+  });
 });

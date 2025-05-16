@@ -27,6 +27,7 @@ export interface ViewListener {
   createJob(plan: PricingPlan, jobOffer: SubmitJobOffer): void;
   updateJob(jobOfferId: number, jobOffer: SubmitJobOffer): void;
   payForJob(payment: InitiatePayment): void;
+  resumePayment(jobOfferId: number): void;
   redeemBundle(jobOfferId: number): void;
   managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void;
   vatDetailsChanged(countryCode: string, vatId: string): void;
@@ -58,6 +59,7 @@ export interface UiController {
   showJobOffer(jobOffer: JobOffer): void;
   jobOfferUrl(jobOffer: JobOffer): string;
   filterOnlyMine(onlyMine: boolean): void;
+  resumePayment(jobOfferId: number): void;
 }
 
 export type CanEdit = (jobOfferId: number) => boolean;
@@ -98,6 +100,7 @@ export class VueUi {
         applyForJob: this.applyForJob.bind(this),
         showJobOffer: this.showJobOffer.bind(this),
         jobOfferUrl: this.jobOfferUrl.bind(this),
+        resumePayment: this.resumePayment.bind(this),
       },
       paymentProcessing: false,
     });
@@ -110,6 +113,9 @@ export class VueUi {
           routeJobOfferId: jobOfferId,
           routeJobOffer: jobOfferId ? this.findJobOffer(jobOfferId) : null,
         };
+      },
+      resumePayment: (jobOfferId: number): void => {
+        this.vueState.viewListener!.resumePayment(jobOfferId);
       },
     }, this.gate);
   }
@@ -154,6 +160,10 @@ export class VueUi {
 
   private jobOfferUrl(jobOffer: JobOffer): string {
     return this.screens.jobOfferUrl(jobOffer);
+  }
+
+  private resumePayment(jobOfferId: number): void {
+    this.screens.navigate('payment', jobOfferId);
   }
 
   setViewListener(viewListener: ViewListener): void {
@@ -207,7 +217,6 @@ export class VueUi {
 
   setPaymentSummary(summary: PaymentSummary): void {
     this.vueState.paymentSummary = summary;
-    this.gate.allowPayment();
   }
 
   setPaymentInvoiceCountries(countries: Country[]): void {
