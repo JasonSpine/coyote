@@ -153,13 +153,12 @@
       </div>
     </Design.Card>
   </div>
-  <template v-if="step === 'preview'">
-    <JobOfferShow
-      preview
-      :can-edit="false"
-      @edit="previousStep"
-      :job-offer="fromSubmitToJobOfferShow(fromFormModel(jobOffer), props.jobOfferExpiresInDays)"/>
-  </template>
+  <JobOfferShow
+    v-if="step === 'preview'"
+    preview
+    :can-edit="false"
+    @edit="previousStep"
+    :job-offer="fromSubmitToJobOfferShow(fromFormModel(jobOffer), props.jobOfferExpiresInDays)"/>
   <div class="sticky bottom-2 mt-5">
     <Design.Tile space shadow>
       <Design.Row vertical-center>
@@ -198,7 +197,6 @@ import {
 } from "../../../main";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
-import JobOfferStepper, {JobOfferCreatorStep} from "./JobOfferStepper.vue";
 import LocationField from "../design/LocationField.vue";
 import {
   formatCompanySizeLevel,
@@ -213,6 +211,7 @@ import JobOfferLocationSet from './JobOfferLocationSet.vue';
 import JobOfferPhotoSet from './JobOfferPhotoSet.vue';
 import {fromSubmitToJobOfferShow} from "./JobOfferShow";
 import JobOfferShow from "./JobOfferShow.vue";
+import JobOfferStepper, {JobOfferCreatorStep} from "./JobOfferStepper.vue";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();

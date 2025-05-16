@@ -103,20 +103,8 @@ export class VueUi {
       return this.findJobOffer(jobOfferId)?.canEdit ?? false;
     });
     this.screens = new Screens(jobOfferId => ({
-      uiController: this.vueState.uiController,
-      viewListener: this.vueState.viewListener!,
-      upload: this.vueState.upload!,
-      pricingPlan: this.vueState.pricingPlan!,
-      applicationEmail: this.vueState.applicationEmail!,
-      planBundle: this.vueState.planBundle!,
-      invoiceCountries: this.vueState.invoiceCountries!,
-      paymentSummary: this.vueState.paymentSummary!,
-      paymentVatIdState: this.vueState.paymentVatIdState,
-      paymentProcessing: this.vueState.paymentProcessing,
-      paymentJobOfferId: jobOfferId,
-      jobOffer: jobOfferId ? this.findJobOffer(jobOfferId) : null,
-      jobOffers: this.vueState.jobOffers,
-      filters: this.vueState.jobOfferFilters,
+      routeJobOfferId: jobOfferId,
+      routeJobOffer: jobOfferId ? this.findJobOffer(jobOfferId) : null,
     }), this.gate);
   }
 

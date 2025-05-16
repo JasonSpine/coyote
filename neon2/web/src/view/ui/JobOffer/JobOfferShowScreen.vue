@@ -1,35 +1,36 @@
 <template>
   <JobOfferButtonPill @click="navigateHome">Wróć do ogłoszeń</JobOfferButtonPill>
   <JobOfferShow
-    :job-offer="toJobOfferShow(props.jobOffer)"
-    :can-edit="props.jobOffer.canEdit"
+    :job-offer="toJobOfferShow(route.routeJobOffer!)"
+    :can-edit="route.routeJobOffer!.canEdit"
     @edit="editJob"
     @apply="applyForJob"/>
 </template>
 
 <script setup lang="ts">
-import {JobOffer} from "../../../jobBoard";
+import {inject} from "vue";
+import {RouteProperties} from "../screen/Screens";
 import {UiController} from "../ui";
 import JobOfferButtonPill from "./JobOfferButtonPill.vue";
 import {toJobOfferShow} from "./JobOfferShow";
 import JobOfferShow from "./JobOfferShow.vue";
 
-const props = defineProps<Props>();
+const screen = inject('screen') as Screen;
+const route = defineProps<RouteProperties>();
 
-interface Props {
+interface Screen {
   uiController: UiController;
-  jobOffer: JobOffer;
 }
 
 function navigateHome(): void {
-  props.uiController.navigate('home', null);
+  screen.uiController.navigate('home', null);
 }
 
 function editJob(): void {
-  props.uiController.navigate('edit', props.jobOffer.id);
+  screen.uiController.navigate('edit', route.routeJobOffer!.id);
 }
 
 function applyForJob(): void {
-  props.uiController.applyForJob(props.jobOffer.id);
+  screen.uiController.applyForJob(route.routeJobOffer!.id);
 }
 </script>

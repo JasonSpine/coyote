@@ -1,33 +1,35 @@
 <template>
   <Design.Toast title="Ogłoszenie zostało zapisane, zostanie opublikowane kiedy zaksięgujemy płatność."/>
   <JobOfferRedeemBundle
-    v-if="props.planBundle?.canRedeem"
-    :view-listener="props.viewListener"
-    :job-offer-id="props.paymentJobOfferId"
-    :plan-bundle="props.planBundle"/>
+    v-if="screen.planBundle?.canRedeem"
+    :view-listener="screen.viewListener"
+    :job-offer-id="route.routeJobOfferId!"
+    :plan-bundle="screen.planBundle"/>
   <JobOfferPaymentForm
     v-else
-    :view-listener="props.viewListener"
-    :job-offer-id="props.paymentJobOfferId"
-    :summary="props.paymentSummary"
-    :countries="props.invoiceCountries"
-    :vat-id-state="props.paymentVatIdState"
-    :payment-processing="props.paymentProcessing"/>
+    :view-listener="screen.viewListener"
+    :job-offer-id="route.routeJobOfferId!"
+    :summary="screen.paymentSummary"
+    :countries="screen.invoiceCountries"
+    :vat-id-state="screen.paymentVatIdState"
+    :payment-processing="screen.paymentProcessing"/>
 </template>
 
 <script setup lang="ts">
+import {inject} from "vue";
 import {Country, PaymentSummary, VatIdState} from "../../../main";
 import {Design} from "../design/design";
+import {RouteProperties} from "../screen/Screens";
 import {PlanBundle, ViewListener} from "../ui";
 import JobOfferPaymentForm from "./JobOfferPaymentForm.vue";
 import JobOfferRedeemBundle from "./JobOfferRedeemBundle.vue";
 
-const props = defineProps<Props>();
+const screen = inject('screen') as Screen;
+const route = defineProps<RouteProperties>();
 
-interface Props {
+interface Screen {
   viewListener: ViewListener;
   planBundle: PlanBundle|null;
-  paymentJobOfferId: number;
   invoiceCountries: Country[];
   paymentSummary: PaymentSummary;
   paymentVatIdState: VatIdState;

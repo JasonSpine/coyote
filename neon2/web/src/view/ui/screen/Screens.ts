@@ -1,13 +1,12 @@
 import {App} from "vue";
 import {JobOffer} from "../../../jobBoard";
-import {Country, JobOfferFilters, PaymentSummary, PricingPlan, UploadAssets, VatIdState} from "../../../main";
 import JobOfferCreate from "../JobOffer/JobOfferCreate.vue";
 import JobOfferEdit from "../JobOffer/JobOfferEdit.vue";
 import JobOfferHome from "../JobOffer/JobOfferHome.vue";
 import JobOfferPaymentScreen from "../JobOffer/JobOfferPaymentScreen.vue";
 import JobOfferPricing from "../JobOffer/JobOfferPricing.vue";
 import JobOfferShowScreen from "../JobOffer/JobOfferShowScreen.vue";
-import {PlanBundle, Screen, UiController, ViewListener} from "../ui";
+import {Screen} from "../ui";
 import {Policy} from "./Policy";
 
 import {Router} from "./Router";
@@ -58,20 +57,9 @@ export class Screens {
   }
 }
 
-export type ScreenListener = (jobOfferId: number|null) => ScreenProperties;
+export type ScreenListener = (jobOfferId: number|null) => RouteProperties;
 
-export interface ScreenProperties {
-  uiController: UiController;
-  viewListener: ViewListener;
-  upload: UploadAssets;
-  pricingPlan: PricingPlan;
-  applicationEmail: string;
-  planBundle: PlanBundle;
-  invoiceCountries: Country[];
-  paymentSummary: PaymentSummary;
-  paymentVatIdState: VatIdState;
-  paymentJobOfferId: number|null;
-  jobOffer: JobOffer|null;
-  jobOffers: JobOffer[];
-  filters: JobOfferFilters;
+export interface RouteProperties {
+  routeJobOfferId: number|null;
+  routeJobOffer: JobOffer|null;
 }

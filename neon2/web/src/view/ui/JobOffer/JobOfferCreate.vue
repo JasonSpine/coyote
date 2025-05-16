@@ -1,25 +1,23 @@
 <template>
-  <div>
-    <JobOfferForm
-      mode="create"
-      :job-offer="newJobOffer"
-      :job-offer-expires-in-days="expiresInDays"
-      :upload="props.upload"
-      :four-steps="fourSteps"
-      @submit="create"
-      @abort="props.uiController.navigate('pricing', null)"/>
-  </div>
+  <JobOfferForm
+    mode="create"
+    :job-offer="newJobOffer"
+    :job-offer-expires-in-days="expiresInDays"
+    :upload="screen.upload"
+    :four-steps="fourSteps"
+    @submit="create"
+    @abort="screen.uiController.navigate('pricing', null)"/>
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue';
+import {computed, inject} from 'vue';
 import {PricingPlan, SubmitJobOffer, UploadAssets} from "../../../main";
 import {UiController, ViewListener} from "../ui";
 import JobOfferForm from "./JobOfferForm.vue";
 
-const props = defineProps<Props>();
+const screen = inject('screen') as Screen;
 
-interface Props {
+interface Screen {
   uiController: UiController;
   viewListener: ViewListener;
   upload: UploadAssets;
@@ -28,11 +26,11 @@ interface Props {
 }
 
 function create(jobOffer: SubmitJobOffer): void {
-  props.viewListener.createJob(props.pricingPlan, jobOffer);
+  screen.viewListener.createJob(screen.pricingPlan, jobOffer);
 }
 
-const expiresInDays = computed(() => props.pricingPlan === 'free' ? 14 : 30);
-const fourSteps = computed(() => props.pricingPlan !== 'free');
+const expiresInDays = computed(() => screen.pricingPlan === 'free' ? 14 : 30);
+const fourSteps = computed(() => screen.pricingPlan !== 'free');
 
 const newJobOffer: SubmitJobOffer = {
   title: '',
@@ -51,7 +49,7 @@ const newJobOffer: SubmitJobOffer = {
   experience: 'not-provided',
   applicationMode: '4programmers',
   applicationExternalAts: null,
-  applicationEmail: props.applicationEmail,
+  applicationEmail: screen.applicationEmail,
   companyHiringType: 'direct',
   companyFundingYear: null,
   companySizeLevel: null,

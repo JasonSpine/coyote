@@ -1,34 +1,35 @@
 <template>
   <JobOfferForm
     mode="update"
-    :job-offer="toSubmitJobOffer(props.jobOffer)"
-    :job-offer-expires-in-days="props.jobOffer.id"
-    :upload="props.upload"
+    :job-offer="toSubmitJobOffer(route.routeJobOffer!)"
+    :job-offer-expires-in-days="route.routeJobOffer!.id"
+    :upload="screen.upload"
     :four-steps="false"
     @submit="update"
     @abort="abort"/>
 </template>
 
 <script setup lang="ts">
-import {JobOffer} from "../../../jobBoard";
+import {inject} from "vue";
 import {SubmitJobOffer, toSubmitJobOffer, UploadAssets} from "../../../main";
+import {RouteProperties} from "../screen/Screens";
 import {UiController, ViewListener} from "../ui";
 import JobOfferForm from "./JobOfferForm.vue";
 
-const props = defineProps<Props>();
+const screen = inject('screen') as Screen;
+const route = defineProps<RouteProperties>();
 
-interface Props {
+interface Screen {
   uiController: UiController;
   viewListener: ViewListener;
-  jobOffer: JobOffer;
   upload: UploadAssets;
 }
 
 function update(jobOffer: SubmitJobOffer): void {
-  props.viewListener.updateJob(props.jobOffer.id, jobOffer);
+  screen.viewListener.updateJob(route.routeJobOffer!.id, jobOffer);
 }
 
 function abort(): void {
-  props.uiController.showJobOffer(props.jobOffer);
+  screen.uiController.showJobOffer(route.routeJobOffer!);
 }
 </script>

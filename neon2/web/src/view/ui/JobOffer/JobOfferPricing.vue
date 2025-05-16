@@ -17,7 +17,7 @@
       :button-title="buttonTitle(plan)"
       :content="plan.free ? 'restricted' : 'full'"
       :color="plan.color"
-      @select="props.uiController.selectPlan"/>
+      @select="screen.uiController.selectPlan"/>
     <JobOfferPricingCard
       v-else
       v-for="plan in bundlePlans"
@@ -31,22 +31,22 @@
       :content="plan.bundleDiscount ? 'premium-summary' : 'full'"
       :bundle-discount="plan.bundleDiscount"
       :color="plan.color"
-      @select="props.uiController.selectPlan"/>
+      @select="screen.uiController.selectPlan"/>
   </div>
   <JobOfferPricingTestimonial class="mt-16"/>
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
+import {inject, ref} from 'vue';
 import {PricingPlan} from "../../../main";
 import {UiController} from "../ui";
 import JobOfferPricingCard, {JobOfferPricingCardColor} from './JobOfferPricingCard.vue';
 import JobOfferPricingTab, {PricingTab} from './JobOfferPricingTab.vue';
 import JobOfferPricingTestimonial from "./JobOfferPricingTestimonial.vue";
 
-const props = defineProps<Props>();
+const screen = inject('screen') as Screen;
 
-interface Props {
+interface Screen {
   uiController: UiController;
 }
 

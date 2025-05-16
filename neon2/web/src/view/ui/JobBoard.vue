@@ -35,6 +35,7 @@ import {JobBoardProperties} from "./JobBoardProperties";
 const props = defineProps<JobBoardProperties>();
 
 provide('locationProvider', props.locationProvider!);
+provide('screen', props);
 
 function navigateHome(): void {
   props.uiController.navigate('home', null);
