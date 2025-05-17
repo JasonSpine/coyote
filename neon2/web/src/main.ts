@@ -43,7 +43,7 @@ export interface SubmitJobOffer {
   salaryRate: Rate;
   locations: BackendJobOfferLocation[];
   tagNames: string[];
-  workMode: WorkMode;
+  workModeRemoteRange: number;
   legalForm: LegalForm;
   experience: WorkExperience;
   applicationMode: ApplicationMode;

@@ -5,7 +5,6 @@ use Neon2\JobBoard\Currency;
 use Neon2\JobBoard\LegalForm;
 use Neon2\JobBoard\Rate;
 use Neon2\JobBoard\WorkExperience;
-use Neon2\JobBoard\WorkMode;
 
 readonly class JobOfferSubmit {
     /**
@@ -23,7 +22,7 @@ readonly class JobOfferSubmit {
         public Rate              $salaryRate,
         public array             $locations,
         public array             $tagNames,
-        public WorkMode          $workMode,
+        public int               $workModeRemoteRange,
         public LegalForm         $legalForm,
         public WorkExperience    $experience,
         public ApplicationMode   $applicationMode,

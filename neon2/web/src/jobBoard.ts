@@ -88,6 +88,7 @@ export interface JobOffer {
   locations: BackendJobOfferLocation[];
   tagNames: string[];
   workMode: WorkMode;
+  workModeRemoteRange: number;
   legalForm: LegalForm;
   experience: WorkExperience;
   applicationMode: ApplicationMode,

@@ -7,7 +7,6 @@ use Neon2\JobBoard\Currency;
 use Neon2\JobBoard\LegalForm;
 use Neon2\JobBoard\Rate;
 use Neon2\JobBoard\WorkExperience;
-use Neon2\JobBoard\WorkMode;
 use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
 use Neon2\Request\JobOfferLocation;
@@ -25,7 +24,7 @@ readonly class JobOfferMapper {
             Rate::from($jobOffer->rate),
             $this->neonLocations($jobOffer),
             $this->neonTagNames($jobOffer),
-            $this->neonWorkMode($jobOffer),
+            $this->neonWorkModeRemoteRange($jobOffer),
             $this->neonLegalForm($jobOffer),
             $this->neonWorkExperience($jobOffer),
             $jobOffer->enable_apply ? ApplicationMode::_4programmers : ApplicationMode::ExternalAts,
@@ -94,14 +93,11 @@ readonly class JobOfferMapper {
         return $jobOffer->tags->pluck('name')->toArray();
     }
 
-    private function neonWorkMode(Job $jobOffer): WorkMode {
-        if (!$jobOffer->is_remote) {
-            return WorkMode::Stationary;
+    private function neonWorkModeRemoteRange(Job $jobOffer): int {
+        if ($jobOffer->is_remote) {
+            return $jobOffer->remote_range ?? 0;
         }
-        if ($jobOffer->remote_range === 100) {
-            return WorkMode::FullyRemote;
-        }
-        return WorkMode::Hybrid;
+        return 0;
     }
 
     private function neonLocations(Job $jobOffer): array {

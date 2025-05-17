@@ -11,7 +11,6 @@ use Neon2\JobBoard\InvoiceInformation;
 use Neon2\JobBoard\LegalForm;
 use Neon2\JobBoard\Rate;
 use Neon2\JobBoard\WorkExperience;
-use Neon2\JobBoard\WorkMode;
 use Neon2\Payment\PaymentStatus;
 use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
@@ -85,7 +84,7 @@ class RouteServiceProvider extends ServiceProvider {
                 $this->requestLocation(...),
                 $request->get('jobOfferLocations')),
             $request->get('jobOfferTagNames'),
-            WorkMode::from($request->get('jobOfferWorkMode')),
+            $request->get('jobOfferWorkModeRemoteRange'),
             LegalForm::from($request->get('jobOfferLegalForm')),
             WorkExperience::from($request->get('jobOfferExperience')),
             ApplicationMode::from($request->get('jobOfferApplicationMode')),

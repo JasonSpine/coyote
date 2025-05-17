@@ -5,7 +5,6 @@ use Coyote;
 use Coyote\User;
 use Neon2\JobBoard\LegalForm;
 use Neon2\JobBoard\WorkExperience;
-use Neon2\JobBoard\WorkMode;
 use Neon2\Request\ApplicationMode;
 use Neon2\Request\HiringType;
 use Neon2\Request\JobOfferLocation;
@@ -23,8 +22,8 @@ class JobOfferUnmapper {
             'currency_id'     => $this->coyoteCurrencyId($jobOffer->salaryCurrency),
             'rate'            => $jobOffer->salaryRate->value,
             'locations'       => $this->coyoteLocations($jobOffer),
-            'is_remote'       => $this->coyoteRemoteRange($jobOffer->workMode) > 0,
-            'remote_range'    => $this->coyoteRemoteRange($jobOffer->workMode),
+            'is_remote'       => $jobOffer->workModeRemoteRange > 0,
+            'remote_range'    => $jobOffer->workModeRemoteRange,
             'employment'      => $this->coyoteLegalForm($jobOffer->legalForm),
             'seniority'       => $this->coyoteWorkExperience($jobOffer->experience),
             'enable_apply'    => $this->coyoteApplicationMode($jobOffer->applicationMode),
@@ -71,14 +70,6 @@ class JobOfferUnmapper {
         return \array_map(
             fn(string $tagName) => ['name' => $tagName, 'priority' => 2],
             $tagNames);
-    }
-
-    private function coyoteRemoteRange(\Neon2\JobBoard\WorkMode $workMode): int {
-        return match ($workMode) {
-            WorkMode::Stationary  => 0,
-            WorkMode::Hybrid      => 50,
-            WorkMode::FullyRemote => 100,
-        };
     }
 
     private function coyoteLegalForm(\Neon2\JobBoard\LegalForm $legalForm): string {

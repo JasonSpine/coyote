@@ -1,6 +1,7 @@
 import {BackendJobOfferLocation} from "../../../backend";
 import {JobOffer} from "../../../jobBoard";
 import {Currency, LegalForm, Rate, SubmitJobOffer, WorkExperience, WorkMode} from "../../../main";
+import {parseWorkMode} from "../../../workMode";
 
 export interface JobOfferShow {
   title: string;
@@ -36,6 +37,7 @@ export function fromSubmitToJobOfferShow(submit: SubmitJobOffer, expiresInDays: 
     expiresInDays,
     ...submit,
     locationCities: locationCities(submit.locations),
+    workMode: parseWorkMode(submit.workModeRemoteRange),
   };
 }
 

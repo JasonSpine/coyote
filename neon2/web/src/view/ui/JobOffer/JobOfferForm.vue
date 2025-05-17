@@ -107,7 +107,16 @@
       </Design.Row>
     </Design.Card>
     <Design.Card space title="Tryb pracy">
-      <Design.RadioGroup :options="workModeOptions" v-model="jobOffer.workMode"/>
+      <Design.RadioGroup
+        :options="workModeOptions"
+        :model-value="jobOfferWorkMode"
+        @update:model-value="updateWorkMode"/>
+      <Design.FieldGroup label="Zakres pracy zdalnej">
+        <Design.Dropdown
+          :disabled="jobOfferWorkMode !== 'hybrid'"
+          :options="workModeRemoteRangeOptions"
+          v-model="jobOffer.workModeRemoteRange"/>
+      </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Lokalizacja">
       <JobOfferLocationSet v-model="jobOffer.locations"/>
@@ -200,6 +209,7 @@ import {
   WorkExperience,
   WorkMode,
 } from "../../../main";
+import {formatWorkMode, parseWorkMode} from "../../../workMode";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
 import LocationField from "../design/LocationField.vue";
@@ -208,7 +218,7 @@ import {
   formatHiringType,
   formatLegalForm,
   formatWorkExperience,
-  formatWorkMode,
+  formatWorkMode as formatWorkModeString,
 } from "./format";
 import {FormModel, fromFormModel, toFormModel} from "./JobOfferForm";
 import {JobOfferFormValidation} from './JobOfferFormValidation';
@@ -330,9 +340,22 @@ const legalFormOptions: DrawerOption<LegalForm>[] = [
   {value: 'b2b', title: formatLegalForm('b2b')},
 ];
 const workModeOptions: DrawerOption<WorkMode>[] = [
-  {value: 'stationary', title: formatWorkMode('stationary')},
-  {value: 'fullyRemote', title: formatWorkMode('fullyRemote')},
-  {value: 'hybrid', title: formatWorkMode('hybrid')},
+  {value: 'stationary', title: formatWorkModeString('stationary')},
+  {value: 'fullyRemote', title: formatWorkModeString('fullyRemote') + ' (100%)'},
+  {value: 'hybrid', title: formatWorkModeString('hybrid')},
+];
+const workModeRemoteRangeOptions: DrawerOption<number>[] = [
+  {value: 0, title: '0% pracy zdalnej - Praca stacjonarna'},
+  {value: 10, title: '10% pracy zdalnej'},
+  {value: 20, title: '20% pracy zdalnej'},
+  {value: 30, title: '30% pracy zdalnej'},
+  {value: 40, title: '40% pracy zdalnej'},
+  {value: 50, title: '50% pracy zdalnej'},
+  {value: 60, title: '60% pracy zdalnej'},
+  {value: 70, title: '70% pracy zdalnej'},
+  {value: 80, title: '80% pracy zdalnej'},
+  {value: 90, title: '90% pracy zdalnej'},
+  {value: 100, title: '100% pracy zdalnej'},
 ];
 const hiringTypeOptions: DrawerOption<HiringType>[] = [
   {value: 'direct', title: formatHiringType('direct')},
@@ -369,4 +392,10 @@ const companySizeOptions: DrawerOption<number|null>[] = [
   {value: 10, title: formatCompanySizeLevel(10)},
   {value: 11, title: formatCompanySizeLevel(11)},
 ];
+
+const jobOfferWorkMode = computed((): WorkMode => parseWorkMode(jobOffer.workModeRemoteRange));
+
+function updateWorkMode(workMode: WorkMode): void {
+  jobOffer.workModeRemoteRange = formatWorkMode(workMode);
+}
 </script>

@@ -44,7 +44,7 @@ const newJobOffer: SubmitJobOffer = {
   locations: [],
   companyLogoUrl: null,
   tagNames: [],
-  workMode: 'stationary',
+  workModeRemoteRange: 0,
   legalForm: 'employment',
   experience: 'not-provided',
   applicationMode: '4programmers',

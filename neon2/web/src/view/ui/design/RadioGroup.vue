@@ -23,5 +23,5 @@ function select(option: DrawerOption<U>): void {
   selected.value = option.value;
 }
 
-const selected = defineModel<U, U, U>();
+const selected = defineModel<U, U, U>({required: true});
 </script>

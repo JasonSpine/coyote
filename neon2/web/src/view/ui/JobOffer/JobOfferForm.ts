@@ -1,14 +1,5 @@
 import {Location} from "../../../locationProvider/LocationProvider";
-import {
-  ApplicationMode,
-  Currency,
-  HiringType,
-  LegalForm,
-  Rate,
-  SubmitJobOffer,
-  WorkExperience,
-  WorkMode,
-} from "../../../main";
+import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, WorkExperience} from "../../../main";
 
 export interface FormModel {
   title: string;
@@ -20,7 +11,7 @@ export interface FormModel {
   salaryIsNet: boolean;
   locations: Location[];
   tagNames: string;
-  workMode: WorkMode;
+  workModeRemoteRange: number;
   legalForm: LegalForm;
   experience: WorkExperience;
   applicationMode: ApplicationMode;

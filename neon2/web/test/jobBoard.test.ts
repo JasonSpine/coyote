@@ -1,4 +1,5 @@
 import {JobBoard, JobOffer} from "../src/jobBoard";
+import {SubmitJobOffer} from "../src/main";
 import {assertContains, assertEquals, assertNotContains, assertThrows, beforeEach, describe, test} from "./assertion";
 
 describe('Job board', () => {
@@ -27,7 +28,11 @@ describe('Job board', () => {
     board.jobOfferCreated(jobOffer({id: jobOfferId, title, status: 'awaitingPayment'}));
   }
 
-  function jobOffer(offer: {title?: string, status?: 'published'|'awaitingPayment', id?: number}): JobOffer {
+  function jobOffer(offer: {
+    title?: string,
+    status?: 'published'|'awaitingPayment',
+    id?: number
+  }): SubmitJobOffer&JobOffer {
     return {
       id: offer.id || 1,
       title: offer.title || 'Offer',
@@ -44,6 +49,7 @@ describe('Job board', () => {
       locations: [],
       tagNames: [],
       workMode: 'stationary',
+      workModeRemoteRange: 0,
       legalForm: 'b2b',
       experience: 'not-provided',
       applicationMode: '4programmers',

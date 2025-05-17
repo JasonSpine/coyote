@@ -12,8 +12,8 @@ import {
   SubmitJobOffer,
   Theme,
   WorkExperience,
-  WorkMode,
 } from "./main";
+import {parseWorkMode} from "./workMode";
 
 function jobOfferFields(jobOffer: SubmitJobOffer): object {
   return {
@@ -28,7 +28,7 @@ function jobOfferFields(jobOffer: SubmitJobOffer): object {
     jobOfferLocations: jobOffer.locations,
     jobOfferCompanyLogoUrl: jobOffer.companyLogoUrl,
     jobOfferTagNames: jobOffer.tagNames,
-    jobOfferWorkMode: jobOffer.workMode,
+    jobOfferWorkModeRemoteRange: jobOffer.workModeRemoteRange,
     jobOfferLegalForm: jobOffer.legalForm,
     jobOfferExperience: jobOffer.experience,
     jobOfferCompanyWebsiteUrl: jobOffer.companyWebsiteUrl,
@@ -227,7 +227,7 @@ export interface BackendJobOffer {
     salaryRate: Rate;
     locations: BackendJobOfferLocation[];
     tagNames: string[];
-    workMode: WorkMode;
+    workModeRemoteRange: number;
     legalForm: LegalForm;
     experience: WorkExperience;
     applicationMode: ApplicationMode,
@@ -285,6 +285,7 @@ export function toJobOffer(jobOffer: BackendJobOffer): JobOffer {
     ...fields,
     isNew: false,
     isFavourite: false,
+    workMode: parseWorkMode(jobOffer.fields.workModeRemoteRange),
   };
 }
 
