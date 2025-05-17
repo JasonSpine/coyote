@@ -1,4 +1,5 @@
 import {JobOffer} from "../../jobBoard";
+import {JobOfferFilter} from "../../jobOfferFilter";
 import {LocationProvider} from "../../locationProvider/LocationProvider";
 import {Country, JobOfferFilters, PaymentSummary, PricingPlan, UploadAssets, VatIdState} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
@@ -9,6 +10,7 @@ import {PlanBundle, Screen, UiController, ViewListener} from "./ui";
 export interface JobBoardProperties {
   viewListener: ViewListener|null;
   jobOffers: JobOffer[];
+  jobOfferFilter: JobOfferFilter;
   jobOfferFilters: JobOfferFilters;
   screen: Screen;
   toast: Toast|null;

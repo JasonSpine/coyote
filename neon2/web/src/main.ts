@@ -1,5 +1,6 @@
 import {BackendJobOffer, BackendJobOfferLocation, JobBoardBackend, JobOfferPaymentIntent, toJobOffer} from "./backend";
 import {JobBoard, JobOffer} from './jobBoard';
+import {JobOfferFilter} from "./jobOfferFilter";
 import {JobOfferPayments} from "./jobOfferPayments";
 import {GoogleMapsLocationProvider, LocationProvider, TestLocationProvider} from "./locationProvider/LocationProvider";
 import {PaymentMethod, PaymentNotification, PaymentProvider} from "./paymentProvider/PaymentProvider";
@@ -226,6 +227,12 @@ ui.upload({
   },
   async uploadAsset(file: File): Promise<string> {
     return await backend.uploadAssetReturnUrl(file);
+  },
+});
+
+view.addFilterListener({
+  filterChange(filter: JobOfferFilter): void {
+    ui.setJobOfferFilter(filter);
   },
 });
 

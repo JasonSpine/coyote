@@ -10,6 +10,7 @@ export class View {
   private filter: JobOfferFilter|null = null;
   private filterOnlyMine: boolean = false;
   private planBundleCanRedeem: boolean = false;
+  private filterListener: FilterListener|null = null;
 
   constructor(private ui: VueUi) {
     this.ui.setNavigationListener({
@@ -28,6 +29,7 @@ export class View {
     this.ui.addFilterListener({
       filter: (filter: JobOfferFilter): void => {
         this.filter = filter;
+        this.filterListener!.filterChange(filter);
         this.filterJobOffers();
       },
       filterOnlyMine: (onlyMine: boolean): void => {
@@ -150,4 +152,12 @@ export class View {
     this.planBundleCanRedeem = remainingJobOffers > 0;
     this.ui.setPlanBundle(planName, remainingJobOffers, this.planBundleCanRedeem);
   }
+
+  addFilterListener(listener: FilterListener): void {
+    this.filterListener = listener;
+  }
+}
+
+export interface FilterListener {
+  filterChange(filter: JobOfferFilter): void;
 }

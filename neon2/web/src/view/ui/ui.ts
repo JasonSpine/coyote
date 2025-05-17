@@ -18,6 +18,7 @@ import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
 import JobBoard from './JobBoard.vue';
 import {JobBoardProperties} from "./JobBoardProperties";
+import {emptyJobOfferFilter} from "./JobOffer/JobOfferFilters";
 import {Policy} from "./screen/Policy";
 import {RouteProperties, Screens} from "./screen/Screens";
 
@@ -79,6 +80,7 @@ export class VueUi {
         tags: [],
         locations: [],
       },
+      jobOfferFilter: emptyJobOfferFilter(),
       toast: null,
       screen: 'home',
       paymentNotification: null,
@@ -184,6 +186,10 @@ export class VueUi {
 
   setJobOfferFilters(filters: JobOfferFilters): void {
     this.vueState.jobOfferFilters = filters;
+  }
+
+  setJobOfferFilter(filter: JobOfferFilter): void {
+    this.vueState.jobOfferFilter = filter;
   }
 
   setToast(toast: Toast|null): void {

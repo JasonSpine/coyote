@@ -10,6 +10,7 @@
     </Design.Row>
     <JobOfferFilters
       v-if="filtersVisible"
+      :filter="screen.jobOfferFilter"
       :filters="screen.jobOfferFilters"
       @filter="screen.uiController.filter"/>
     <JobOfferListItem
@@ -28,6 +29,7 @@
 <script setup lang="ts">
 import {computed, inject, ref} from "vue";
 import {JobOffer} from '../../../jobBoard';
+import {JobOfferFilter} from "../../../jobOfferFilter";
 import {JobOfferFilters as Filters} from "../../../main";
 import {Design} from "../design/design";
 import {UiController} from "../ui";
@@ -39,6 +41,7 @@ const screen = inject('screen') as Screen;
 interface Screen {
   uiController: UiController;
   jobOffers: JobOffer[];
+  jobOfferFilter: JobOfferFilter;
   jobOfferFilters: Filters;
 }
 

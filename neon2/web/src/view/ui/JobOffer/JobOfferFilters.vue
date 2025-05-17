@@ -124,73 +124,53 @@
 
 <script setup lang="ts">
 import {computed, reactive, ref, watch} from "vue";
-import {JobOfferFilter, OrderBy} from "../../../jobOfferFilter";
+import {JobOfferFilter} from "../../../jobOfferFilter";
 import {JobOfferFilters, LegalForm, WorkExperience, WorkMode} from "../../../main";
-import Icon, {IconName} from "../icons/Icon.vue";
 import {Design} from "../design/design";
 import {DropdownOption} from "../design/DropdownOption";
+import Icon from "../icons/Icon.vue";
+import {IconName} from "../icons/icons";
+import {emptyJobOfferFilter} from "./JobOfferFilters";
 
 const props = defineProps<Props>();
+const emit = defineEmits<Emit>();
 
 interface Props {
+  filter: JobOfferFilter;
   filters: JobOfferFilters;
 }
-
-const emit = defineEmits<Emit>();
 
 interface Emit {
   (event: 'filter', filter: JobOfferFilter): void;
 }
 
-function clearFilters(): void {
-  state.searchPhrase = '';
-  state.tags = [];
-  state.locations = [];
-  state.workModes = [];
-  state.legalForms = [];
-  state.workExperiences = [];
-  state.sort = 'promoted';
-}
+const state = reactive<JobOfferFilter>(props.filter);
 
-const filtersCount = computed(() => {
+watch(
+  () => state,
+  () => emit('filter', {...state}),
+  {deep: true});
+
+const filtersCount = computed((): number => {
   let count = 0;
-  if (state.searchPhrase.trim() !== '') count++;
-  if (state.tags.length > 0) count++;
-  if (state.locations.length > 0) count++;
-  if (state.workModes.length > 0) count++;
-  if (state.legalForms.length > 0) count++;
-  if (state.workExperiences.length > 0) count++;
+  if (props.filter.searchPhrase.trim() !== '') count++;
+  if (props.filter.tags.length > 0) count++;
+  if (props.filter.locations.length > 0) count++;
+  if (props.filter.workModes.length > 0) count++;
+  if (props.filter.legalForms.length > 0) count++;
+  if (props.filter.workExperiences.length > 0) count++;
   return count;
 });
+
+function clearFilters(): void {
+  Object.assign(state, emptyJobOfferFilter());
+}
 
 interface Field<T> {
   title: string;
   icon: IconName;
   options: DropdownOption<T>[];
 }
-
-const state = reactive<JobOfferFilter>({
-  searchPhrase: '',
-  tags: [],
-  locations: [],
-  workModes: [],
-  legalForms: [],
-  workExperiences: [],
-  sort: 'promoted' as OrderBy,
-});
-
-watch(
-  () => state,
-  () => emit('filter', {
-    searchPhrase: state.searchPhrase,
-    tags: [...state.tags],
-    locations: [...state.locations],
-    workModes: [...state.workModes],
-    legalForms: [...state.legalForms],
-    workExperiences: [...state.workExperiences],
-    sort: state.sort,
-  }),
-  {deep: true});
 
 const workModeField: Field<WorkMode> = {
   title: 'Tryb pracy',
