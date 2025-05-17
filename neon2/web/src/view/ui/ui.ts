@@ -19,7 +19,7 @@ import {Toast} from '../view';
 import JobBoard from './JobBoard.vue';
 import {JobBoardProperties} from "./JobBoardProperties";
 import {Policy} from "./screen/Policy";
-import {Screens} from "./screen/Screens";
+import {RouteProperties, Screens} from "./screen/Screens";
 
 export type Screen = 'home'|'edit'|'form'|'payment'|'pricing'|'show';
 
@@ -104,10 +104,14 @@ export class VueUi {
     this.gate = new Policy(isAuthenticated, (jobOfferId: number): boolean => {
       return this.findJobOffer(jobOfferId)?.canEdit ?? false;
     });
-    this.screens = new Screens(jobOfferId => ({
-      routeJobOfferId: jobOfferId,
-      routeJobOffer: jobOfferId ? this.findJobOffer(jobOfferId) : null,
-    }), this.gate);
+    this.screens = new Screens({
+      routeProperties: (jobOfferId: number|null): RouteProperties => {
+        return {
+          routeJobOfferId: jobOfferId,
+          routeJobOffer: jobOfferId ? this.findJobOffer(jobOfferId) : null,
+        };
+      },
+    }, this.gate);
   }
 
   private showForm(): void {

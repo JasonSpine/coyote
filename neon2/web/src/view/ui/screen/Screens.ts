@@ -62,7 +62,9 @@ export class Screens {
   }
 }
 
-export type ScreenListener = (jobOfferId: number|null) => RouteProperties;
+export interface ScreenListener {
+  routeProperties(jobOfferId: number|null): RouteProperties;
+}
 
 export interface RouteProperties {
   routeJobOfferId: number|null;

@@ -1,7 +1,7 @@
 import {App, Component} from "vue";
 import {createRouter, createWebHistory, RouteLocationNormalized, Router as VueRouter} from "vue-router";
 import {Screen} from "../ui";
-import {ScreenListener, RouteProperties} from "./Screens";
+import {RouteProperties, ScreenListener} from "./Screens";
 
 export class Router {
   private readonly router: VueRouter = createRouter({
@@ -34,7 +34,7 @@ export class Router {
       name: screen,
       path: vueRouterRoute,
       props: (route: RouteLocationNormalized): RouteProperties => {
-        return this.listener(this.jobOfferId(route));
+        return this.listener.routeProperties(this.jobOfferId(route));
       },
     });
   }
