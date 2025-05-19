@@ -269,8 +269,14 @@
 
 {% block sidebar %}
   {% embed 'forum.partials.sidebar' %}
+    {% from 'boardBanner.boardBanner' import boardBanner %}
     {% block side_menu %}
       <div id="js-sidebar" class="box mb-5" v-cloak>
+        {% if not auth_check() %}
+          <div class="d-none d-xl-block">
+            {{ boardBanner(mode: random(['small', 'large'])) }}
+          </div>
+        {% endif %}
         <div class="box">
           <h4 class="heading">
             {{ icon('forumActions') }}
