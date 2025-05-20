@@ -32,7 +32,9 @@ export class GoogleMapsLocationProvider implements LocationProvider {
     return {
       latitude: place.geometry!.location!.lat(),
       longitude: place.geometry!.location!.lng(),
-      city: this.addressComponent(place, 'locality') || this.addressComponent(place, 'neighborhood'),
+      city: this.addressComponent(place, 'postal_town')
+        || this.addressComponent(place, 'locality')
+        || this.addressComponent(place, 'neighborhood'),
       streetName: this.addressComponent(place, 'route'),
       streetNumber: this.addressComponent(place, 'street_number'),
       countryCode: this.addressComponentShort(place, 'country'),
