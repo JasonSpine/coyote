@@ -217,6 +217,7 @@ export interface BackendJobOffer {
   slug: string;
   canEdit: boolean;
   isMine: boolean;
+  isNew: boolean;
   fields: {
     title: string;
     description: string|null;
@@ -283,7 +284,6 @@ export function toJobOffer(jobOffer: BackendJobOffer): JobOffer {
   return {
     ...operationalFields,
     ...fields,
-    isNew: false,
     isFavourite: false,
     workMode: parseWorkMode(jobOffer.fields.workModeRemoteRange),
   };

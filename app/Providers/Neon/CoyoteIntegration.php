@@ -76,7 +76,8 @@ readonly class CoyoteIntegration implements Integration {
             $this->slug($jobOffer),
             route('job.application', [$jobOffer->id]),
             $this->canEdit($jobOffer),
-            $this->isMine($jobOffer));
+            $this->isMine($jobOffer),
+            $this->isNew($jobOffer));
     }
 
     public function planBundle(?int $userId): PlanBundle {
@@ -283,5 +284,9 @@ readonly class CoyoteIntegration implements Integration {
             return JobBoard\JobOfferStatus::Published;
         }
         return JobBoard\JobOfferStatus::Expired;
+    }
+
+    private function isNew(Job $jobOffer): bool {
+        return carbon($jobOffer->boost_at)->diffInDays(Carbon::now()) <= 2;
     }
 }
