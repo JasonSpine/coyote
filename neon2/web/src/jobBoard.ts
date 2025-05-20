@@ -27,7 +27,7 @@ export class JobBoard {
   }
 
   jobOfferCreated(jobOffer: JobOffer): void {
-    this.jobOffers.push(jobOffer);
+    this.jobOffers.unshift(jobOffer);
     this.updateView();
   }
 

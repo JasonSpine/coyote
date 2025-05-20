@@ -146,4 +146,9 @@ describe('Job board', () => {
     const [jobOffer] = publishedOffers();
     assertEquals('Paid job offer', jobOffer.title);
   });
+  test('Newly created offer is presented at the top.', () => {
+    jobOfferCreated('First');
+    jobOfferCreated('Second');
+    assertContains('Second', publishedOfferTitles()[0]);
+  });
 });
