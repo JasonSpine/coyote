@@ -77,12 +77,12 @@ const borderClass = computed(() => {
   if (props.hasError) {
     return 'border border-red-500';
   }
-  return 'border border-neutral-100';
+  return 'border border-neutral2-300';
 });
 
 const disabledClass = computed(() => {
   if (props.disabled) {
-    return 'text-neutral-400 border border-neutral-100';
+    return 'text-neutral2-400 border border-tile-border';
   }
   return 'cursor-pointer';
 });

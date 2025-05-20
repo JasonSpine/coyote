@@ -2,7 +2,7 @@
   <button @click="emit('click')" :class="[
     'font-medium cursor-pointer',
     'rounded-lg px-4 py-2',
-    'border border-navy-100',
+    'border border-neutral2-200',
     'flex items-center gap-2',
   ]">
     <Icon name="jobOfferCreatorStepBack"/>

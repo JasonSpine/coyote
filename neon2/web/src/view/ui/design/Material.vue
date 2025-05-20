@@ -26,7 +26,7 @@ const tileClass = computed(() => [background(), rounded(), padding()]);
 
 function background(): string {
   if (props.disabled) {
-    return 'bg-neutral-050';
+    return 'bg-neutral2-025';
   }
   return props.nested ? 'bg-tile-nested' : 'bg-tile';
 }

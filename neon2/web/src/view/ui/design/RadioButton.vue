@@ -2,7 +2,7 @@
   <div class="flex cursor-pointer" @click="select">
     <div
       class="size-5 rounded-xl mr-2 flex-shrink-0"
-      :class="props.selected ? 'border-5 border-green-500' : 'border-1 border-neutral-200'"/>
+      :class="props.selected ? 'border-5 border-green-500' : 'border-1 border-neutral2-400'"/>
     {{props.title}}
   </div>
 </template>
@@ -17,7 +17,7 @@ interface Props {
 }
 
 interface Emit {
-  (event: 'select');
+  (event: 'select'): void;
 }
 
 function select(): void {

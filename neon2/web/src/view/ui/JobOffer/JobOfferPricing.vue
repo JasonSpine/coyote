@@ -1,5 +1,5 @@
 <template>
-  <p class="text-center text-neutral-500 text-lg mb-6 mt-12">
+  <p class="text-center text-neutral2-500 text-lg mb-6 mt-12">
     4programmers każdego miesiąca odwiedza ponad <b>150 000+</b> programistów.
   </p>
   <div class="flex justify-center gap-2">

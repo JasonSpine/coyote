@@ -25,6 +25,6 @@ const tileClass = computed(() => {
   if (props.selected) {
     return 'text-green-800 bg-green-050 border-green-500';
   }
-  return 'text-navy-600 bg-navy-050 border-transparent';
+  return 'text-neutral2-500 bg-neutral2-050 border-transparent';
 });
 </script>

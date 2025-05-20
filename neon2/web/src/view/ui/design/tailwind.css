@@ -1,27 +1,27 @@
 @import "tailwindcss";
 
-@custom-variant dark (
-&:where(
-:host-context(.dark) ,
-:host-context(.dark)  *,
-)
-);
+@custom-variant dark (&:where(:host-context(.dark), :host-context(.dark) *));
 
 :root, :host {
-  --color-body: var(--color-navy-050);
-  --color-on-primary: white;
-  --color-tile: white;
-  --color-tile-nested: var(--color-navy-025);
-  --color-tile-border: var(--color-neutral-050);
-  --color-tag: var(--color-navy-100);
-
   @variant dark {
-    --color-body: var(--color-neutral-900);
-    --color-on-primary: var(--color-navy-950);
-    --color-tile: var(--color-neutral-800);
-    --color-tile-nested: var(--color-neutral-900);
-    --color-tile-border: var(--color-neutral-700);
-    --color-tag: var(--color-navy-950);
+    --color-body: #121314;
+    --color-on-primary: #0a0d10;
+    --color-tile-border: #2b2e30;
+    --color-tag: #0a0d10;
+    --color-banner-gradient: #0d5c28;
+
+    --color-neutral2-025: #0a0a0b;
+    --color-neutral2-050: #121314;
+    --color-neutral2-100: #181a1b;
+    --color-neutral2-200: #2b2e30;
+    --color-neutral2-300: #44474b;
+    --color-neutral2-400: #5c6166;
+    --color-neutral2-500: #767d84;
+    --color-neutral2-600: #91969c;
+    --color-neutral2-700: #acb0b4;
+    --color-neutral2-800: #c7c9cc;
+    --color-neutral2-900: #e4e6e7;
+    --color-neutral2-950: #ffffff;
   }
 }
 
@@ -30,42 +30,41 @@
   --color-*: initial;
   --color-white: white;
   --color-black: black;
-  --color-navy-025: #f5f7fa;
-  --color-navy-050: #f0f2f5;
-  --color-navy-100: #dde4ea;
-  --color-navy-200: #bdcad6;
-  --color-navy-600: #4e687e;
-  --color-navy-950: #0a0d10;
-  --color-neutral-050: #e4e6e7;
-  --color-neutral-100: #c7c9cc;
-  --color-neutral-200: #acb0b4;
-  --color-neutral-300: #91969c;
-  --color-neutral-400: #767d84;
-  --color-neutral-500: #5c6166;
-  --color-neutral-600: #44474b;
-  --color-neutral-700: #2b2e30;
-  --color-neutral-800: #181a1b;
-  --color-neutral-900: #121314;
-  --color-neutral-950: #0a0a0b;
+
+  --color-neutral2-025: #eaecf1;
+  --color-neutral2-050: #f5f7fa;
+  --color-neutral2-100: #ffffff;
+  --color-neutral2-200: #dde4ea;
+  --color-neutral2-300: #acb0b4;
+  --color-neutral2-400: #91969c;
+  --color-neutral2-500: #5c6066;
+  --color-neutral2-600: #44474b;
+  --color-neutral2-700: #2b2e30;
+  --color-neutral2-800: #181a1b;
+  --color-neutral2-900: #121314;
+  --color-neutral2-950: #0a0d10;
+
   --color-green-050: #e7f7e6;
   --color-green-500: #00a538;
   --color-green-700: #016a24;
   --color-green-800: #014718;
   --color-green-950: #001407;
+
   --color-red-500: #e11d48;
+
   --color-blue-050: #eff5ff;
   --color-blue-200: #bfdbfe;
   --color-blue-600: #2563eb;
 
-  --color-body: var(--color-body);
-
+  --color-body: #f0f2f5;
   --color-primary: var(--color-green-500);
-  --color-on-primary: var(--color-on-primary);
-  --color-tile-border: var(--color-tile-border);
-  --color-tag: var(--color-tag);
+  --color-on-primary: #ffffff;
+  --color-tile: var(--color-neutral2-100);
+  --color-tile-nested: var(--color-neutral2-050);
+  --color-tile-border: #e4e6e7;
+  --color-tag: #dde4ea;
+  --color-banner-gradient: #bbe7ca;
 
-  --color-tile: var(--color-tile);
-  --color-tile-nested: var(--color-tile-nested);
 
   --text-*: initial;
   --text-xs: 0.625rem;
@@ -87,12 +86,8 @@
   --text-4xl--line-height: calc(2.5 / 2.0);
 }
 
-@utility tile-highlight {
-  background-image: linear-gradient(45deg, var(--color-tile), var(--color-tile), var(--color-tile-highlight));
-}
-
 @utility tile-highlight-long {
-  background-image: linear-gradient(45deg, var(--color-tile) 0%, var(--color-tile) 70%, var(--color-tile-highlight) 140%);
+  background-image: linear-gradient(45deg, var(--color-tile) 0%, var(--color-tile) 70%, var(--color-banner-gradient) 140%);
 }
 
 @utility accent {
@@ -139,7 +134,6 @@
     }
   }
 }
-
 
 @keyframes spin {
   from {

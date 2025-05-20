@@ -24,7 +24,7 @@ interface Props {
 export type StepMode = 'previous'|'current'|'next';
 
 interface Emit {
-  (event: 'select');
+  (event: 'select'): void;
 }
 
 function select(): void {
@@ -33,9 +33,9 @@ function select(): void {
 
 const iconClass = computed(() => {
   if (props.mode === 'next') {
-    return 'text-navy-600 bg-navy-100';
+    return 'text-neutral2-500 bg-neutral2-200';
   }
-  return 'bg-green-500 text-white';
+  return 'text-white bg-green-500';
 });
 
 const titleClass = computed(() => {

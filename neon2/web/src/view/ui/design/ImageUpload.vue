@@ -4,7 +4,7 @@
   </div>
   <div v-else :class="[
       'size-35 rounded-xl cursor-pointer',
-      'border border-dashed border-neutral-100',
+      'border border-dashed border-neutral2-300',
       'flex justify-center items-center',
       'relative']">
     <input
@@ -13,7 +13,7 @@
       @change="fileChanged"
       class="absolute opacity-0 size-full left-0 top-0 cursor-pointer"/>
     <span v-if="uploading">Przesyłanie...</span>
-    <Icon v-else name="jobOfferUploadCompanyLogo" class="text-2xl color-neutral-500"/>
+    <Icon v-else name="jobOfferUploadCompanyLogo" class="text-2xl"/>
   </div>
 </template>
 

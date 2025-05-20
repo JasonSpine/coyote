@@ -1,5 +1,5 @@
 <template>
-  <div class="size-8 rounded-lg" :class="phantom ? 'border border-navy-100' : 'bg-white'">
+  <div class="size-8 rounded-lg" :class="phantom ? 'border border-neutral2-200' : 'bg-white'">
     <svg v-if="props.plan === 'free'" width="32" height="32" viewBox="0 0 32 32" fill="none"
          xmlns="http://www.w3.org/2000/svg">
       <path

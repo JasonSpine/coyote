@@ -2,7 +2,7 @@
   <div class="flex items-center cursor-pointer" @click="toggle">
     <div
       class="size-5 rounded flex items-center flex-shrink-0 justify-center transition duration-200"
-      :class="checked ? 'bg-primary text-on-primary' : 'bg-tile-nested border-1 border-navy-100 dark:border-neutral-700'"
+      :class="checked ? 'bg-primary text-on-primary' : 'bg-tile-nested border-1 border-neutral2-200'"
       :data-testid="props.testId">
       <Icon name="checkboxChecked" v-if="checked"/>
     </div>

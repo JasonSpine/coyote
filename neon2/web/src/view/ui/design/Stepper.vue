@@ -1,11 +1,11 @@
 <template>
-  <div class="rounded-2xl border border-navy-100 p-6 flex items-center justify-between">
+  <div class="rounded-2xl border border-tile-border p-6 flex items-center justify-between">
     <template v-for="(step, index) in props.steps" :key="index">
       <Step
         :title="step.title"
         :mode="stepMode(index)"
         :counter="index+1"/>
-      <div class="w-9.5 h-px bg-navy-200" v-if="index < props.steps.length - 1"/>
+      <div class="w-9.5 h-px bg-neutral2-300" v-if="index < props.steps.length - 1"/>
     </template>
   </div>
 </template>

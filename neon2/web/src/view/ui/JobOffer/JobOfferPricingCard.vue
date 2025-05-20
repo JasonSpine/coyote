@@ -66,20 +66,19 @@ interface Emit {
 }
 
 export type PlanContent = 'restricted'|'full'|'premium-summary';
-export type JobOfferPricingCardColor = 'gray'|'yellow'|'blue'|'violet'|'green'|'phantom';
+export type JobOfferPricingCardColor = 'yellow'|'blue'|'violet'|'green'|'phantom';
 
 const colorSets: Record<JobOfferPricingCardColor, ColorSet> = {
-  gray: {weak: 'var(--color-neutral-050)', medium: 'var(--color-neutral-100)', strong: '#0f1419'},
   yellow: {weak: '#f7f5e6', medium: '#dbd7bb', strong: '#3d3709'},
   blue: {weak: '#eff5ff', medium: '#dbeafe', strong: '#2563eb'},
   violet: {weak: '#ebe8fc', medium: '#cac5e9', strong: '#3620c2'},
   green: {weak: '#e7f7e6', medium: '#d5f0d3', strong: '#028d30'},
-  phantom: {weak: 'var(--color-navy-025)', medium: 'var(--color-navy-025)', strong: 'var(--color-navy-900)'},
+  phantom: {weak: 'var(--color-neutral2-025)', medium: 'transparent', strong: 'var(--color-neutral2-950)'},
 };
 
 const dividerClass = computed(() => {
   if (isPhantom.value) {
-    return 'text-navy-100';
+    return 'text-neutral2-200';
   }
   return 'text-white';
 });

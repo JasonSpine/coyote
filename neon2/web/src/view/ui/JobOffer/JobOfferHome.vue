@@ -1,5 +1,5 @@
 <template>
-  <div class="text-neutral-600 dark:text-neutral-300 space-y-3">
+  <div class="text-neutral2-600 space-y-3">
     <Design.Row>
       <Design.Tabs :tabs="tabs" v-model="tab" @update:model-value="changeTab"/>
       <Design.RowEnd class="max-md:hidden">

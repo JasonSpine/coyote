@@ -19,7 +19,7 @@
         <Design.Image :src="props.jobOffer.companyLogoUrl" placeholder-icon="jobOfferLogoPlaceholder"/>
         <div class="flex-grow-1">
           <Design.Row vertical-center apart>
-            <p class="text-lg leading-6 dark:text-neutral-200" v-text="jobOffer.title" data-testid="jobOfferTitle"/>
+            <p class="text-lg leading-6" v-text="jobOffer.title" data-testid="jobOfferTitle"/>
             <div class="max-md:hidden">
               <JobOfferSalary :salary="jobOfferSalary" v-if="jobOfferSalary"/>
               <JobOfferSalaryNotProvided v-else/>
@@ -27,9 +27,7 @@
           </Design.Row>
           <Design.Row apart class="max-md:hidden mt-2" vertical-center>
             <Design.Row vertical-center class="space-x-2">
-              <span v-if="jobOffer.companyName"
-                    v-text="jobOffer.companyName"
-                    class="text-neutral-900 dark:text-neutral-050"/>
+              <span v-if="jobOffer.companyName" v-text="jobOffer.companyName" class="text-neutral2-900"/>
               <JobOfferTagList :tag-names="jobOffer.tagNames" :max="5"/>
             </Design.Row>
             <Design.Row class="space-x-2 text-sm">

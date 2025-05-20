@@ -20,7 +20,7 @@ interface Props {
 
 const classes = {
   primary: 'accent',
-  gray: 'bg-navy-100 text-neutral-600 dark:bg-neutral-950 dark:text-neutral-400',
+  gray: 'bg-neutral2-025 text-neutral2-500',
   pink: 'bg-[#e2d2f9] text-[#16062d] dark:bg-[#16062d] dark:text-[#b68cf6]',
 };
 

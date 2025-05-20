@@ -19,10 +19,10 @@
     <div class="mb-8 md:flex md:justify-between md:items-start max-md:mb-12 max-md:space-y-6">
       <div>
         <h1
-          class="text-2xl md:text-3xl md:mb-2 font-medium text-neutral-600 dark:text-neutral-050"
+          class="text-2xl md:text-3xl md:mb-2 font-medium text-neutral2-900"
           v-text="props.jobOffer.title"/>
         <h2
-          class="text-lg text-neutral-400 dark:text-neutral-050"
+          class="text-lg text-neutral2-900"
           v-text="props.jobOffer.companyName"
           data-testid="jobOfferCompanyName"/>
       </div>
@@ -31,7 +31,7 @@
     <div class="md:flex max-md:space-y-12">
       <div :class="[
           'md:w-2/3 pr-8',
-          'text-neutral-500 dark:text-neutral-200',
+          'text-neutral2-700',
           'job-offer-description list-style paragraph-style'
         ]">
         <div
@@ -155,6 +155,6 @@ const companyCard = computed<boolean>((): boolean => {
 @import "../../ui/design/tailwind.css";
 
 .job-offer-description b {
-  @apply text-neutral-600 dark:text-neutral-050;
+  @apply text-neutral2-800;
 }
 </style>

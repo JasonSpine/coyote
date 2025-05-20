@@ -5,7 +5,7 @@
       <Design.Card title="Płatność poprzez bezpieczne połączenie">
         <Design.PaymentMethod :options="paymentMethods" v-model="method"/>
         <Design.FieldGroup required label="Numer karty" v-show="method === 'card'">
-          <div class="border border-neutral-100 px-2 py-3 rounded-lg">
+          <div class="border border-neutral2-300 px-2 py-3 rounded-lg">
             <component is="slot">Wczytywanie...</component>
           </div>
         </Design.FieldGroup>

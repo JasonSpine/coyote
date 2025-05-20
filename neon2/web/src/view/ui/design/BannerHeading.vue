@@ -9,7 +9,7 @@
         » Ogłoszenie
       </span>
     </p>
-    <div class="text-neutral-700 dark:text-neutral-050">
+    <div class="text-neutral2-900">
       <h1 class="text-xl leading-6 font-semibold" v-if="pricing">
         Znajdź najlepszych programistów szybciej i skuteczniej!
       </h1>

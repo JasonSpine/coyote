@@ -1,7 +1,7 @@
 <template>
   <span :class="[
     'mb-1 block font-medium',
-    props.disabled ? 'text-neutral-400' : 'text-neutral-950 dark:text-neutral-050',
+    props.disabled ? 'text-neutral2-500' : 'text-neutral2-950',
     {'text-red-500':props.hasError}
   ]">
     {{props.title}}

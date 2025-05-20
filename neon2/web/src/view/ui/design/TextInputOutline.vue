@@ -25,7 +25,7 @@ const disabled = inject('fieldDisabled', computed(() => props.disabled));
 
 const inputClass = computed<string>(() => {
   if (disabled.value) {
-    return 'text-neutral-400 border border-neutral-100 bg-neutral-050';
+    return 'text-neutral2-400 bg-neutral2-025 border border-tile-border';
   }
   if (props.nested) {
     if (hasError.value) {
@@ -36,6 +36,6 @@ const inputClass = computed<string>(() => {
   if (hasError.value) {
     return 'border border-red-500';
   }
-  return 'border border-neutral-100';
+  return 'border border-neutral2-300';
 });
 </script>

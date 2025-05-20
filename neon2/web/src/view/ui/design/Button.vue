@@ -42,7 +42,7 @@ const variantClass = computed(() => {
     return 'text-primary border border-primary';
   }
   if (props.outline) {
-    return 'text-neutral-800 dark:text-neutral-050 border border-navy-100';
+    return 'text-neutral2-800 border border-neutral2-200';
   }
   return 'bg-tile';
 });
