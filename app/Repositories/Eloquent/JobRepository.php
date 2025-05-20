@@ -49,10 +49,7 @@ class JobRepository extends Repository implements JobRepositoryInterface {
         } else {
             $this->isPublished($this->model);
         }
-        $result = $this->model
-            ->orderBy('is_publish') // With my offers, not paid should be highest
-            ->orderByDesc('is_on_top')
-            ->get();
+        $result = $this->model->get();
         $this->resetModel();
         return $result;
     }
