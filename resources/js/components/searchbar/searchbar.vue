@@ -220,7 +220,7 @@ export default {
       if (htmlElement.isContentEditable) {
         return !htmlElement.closest(".editor-4play"); // make sure we found 4play editor
       }
-      return !/^(?:input|textarea|select|button)$/i.test(htmlElement.tagName);
+      return !/^(?:input|textarea|select|button|custom-neon-application)$/i.test(htmlElement.tagName);
     },
     changeUrl(): void {
       if (this.selectedIndex === -1) {
