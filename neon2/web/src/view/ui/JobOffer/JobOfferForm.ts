@@ -1,5 +1,6 @@
 import {Location} from "../../../locationProvider/LocationProvider";
 import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, WorkExperience} from "../../../main";
+import {prependJsUrlProtocol} from "./JobOfferFormValidation";
 
 export interface FormModel {
   title: string;
@@ -60,7 +61,7 @@ export function fromFormModel(formModel: FormModel): SubmitJobOffer {
     description: parseString(formModel.description),
     applicationEmail: parseString(formModel.applicationEmail),
     applicationExternalAts: parseString(formModel.applicationExternalAts),
-    companyWebsiteUrl: parseString(formModel.companyWebsiteUrl),
+    companyWebsiteUrl: parseString(prependJsUrlProtocol(formModel.companyWebsiteUrl)),
     companyDescription: parseString(formModel.companyDescription),
     companyVideoUrl: parseString(formModel.companyVideoUrl),
     companyAddress: formModel.companyAddress,

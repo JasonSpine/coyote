@@ -31,7 +31,7 @@ export class JobOfferFormValidation<T extends string> {
         }
       },
       optionalJsUrl: (field: T, errorMessage: string): void => {
-        if (jsUrlMalformed(this.fields[field])) {
+        if (jsUrlMalformed(prependJsUrlProtocol(this.fields[field]))) {
           errors[field] = errorMessage;
           success = false;
         }
@@ -83,6 +83,16 @@ function jsUrlMalformed(value: string|null): boolean {
     return false;
   }
   return !isValidJsUrl(text);
+}
+
+export function prependJsUrlProtocol(url: string): string {
+  if (url === '') {
+    return url;
+  }
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  return 'https://' + url;
 }
 
 function isValidNumeric(text: string): boolean {

@@ -6,7 +6,11 @@
       class="text-neutral2-700"
       :data-testid="props.testId"
       v-if="props.value">
-      <a v-if="props.link" v-text="displayLink(props.value)" :href="props.value"/>
+      <a v-if="props.link"
+         v-text="displayLink(props.value)"
+         :href="props.value"
+         target="_blank"
+         rel="nofollow"/>
       <span v-else v-text="props.value"/>
     </span>
     <slot/>
