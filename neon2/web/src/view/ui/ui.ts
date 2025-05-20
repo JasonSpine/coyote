@@ -64,6 +64,7 @@ export interface UiController {
 }
 
 export type CanEdit = (jobOfferId: number) => boolean;
+export type PricingPlanSelected = () => boolean;
 
 export class VueUi {
   private readonly gate: Policy;
@@ -106,9 +107,11 @@ export class VueUi {
       },
       paymentProcessing: false,
     });
-    this.gate = new Policy(isAuthenticated, (jobOfferId: number): boolean => {
-      return this.findJobOffer(jobOfferId)?.canEdit ?? false;
-    });
+    this.gate = new Policy(
+      isAuthenticated,
+      (jobOfferId: number): boolean => this.findJobOffer(jobOfferId)?.canEdit ?? false,
+      () => this.vueState.pricingPlan !== null,
+    );
     this.screens = new Screens({
       routeProperties: (jobOfferId: number|null): RouteProperties => {
         return {
