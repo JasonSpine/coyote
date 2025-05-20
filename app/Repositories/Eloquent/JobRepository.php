@@ -1,6 +1,7 @@
 <?php
 namespace Coyote\Repositories\Eloquent;
 
+use Carbon\Carbon;
 use Coyote\Feature;
 use Coyote\Job;
 use Coyote\Repositories\Contracts\JobRepositoryInterface;
@@ -13,15 +14,12 @@ use Illuminate\Database\Query\JoinClause;
  * @method mixed searchBody(array $body)
  * @method $this withTrashed()
  */
-class JobRepository extends Repository implements JobRepositoryInterface
-{
-    public function model(): string
-    {
+class JobRepository extends Repository implements JobRepositoryInterface {
+    public function model(): string {
         return Job::class;
     }
 
-    public function findManyWithOrder(array $ids): Eloquent\Collection
-    {
+    public function findManyWithOrder(array $ids): Eloquent\Collection {
         if (empty($ids)) {
             return Eloquent\Collection::empty();
         }
@@ -41,11 +39,34 @@ class JobRepository extends Repository implements JobRepositoryInterface
         return $result;
     }
 
+    public function findPublicJobOffers(?int $userId): Eloquent\Collection {
+        $this->applyCriteria();
+        if ($userId !== null) {
+            $this->model
+                ->select(['jobs.*'])
+                ->where('jobs.user_id', auth()->id())
+                ->orWhere($this->isPublished(...));
+        } else {
+            $this->isPublished($this->model);
+        }
+        $result = $this->model
+            ->orderBy('is_publish') // With my offers, not paid should be highest
+            ->orderByDesc('is_on_top')
+            ->get();
+        $this->resetModel();
+        return $result;
+    }
+
+    private function isPublished(Eloquent\Builder $query): void {
+        $query
+            ->where('is_publish', '=', 1)
+            ->where('deadline_at', '>', Carbon::now());
+    }
+
     /**
      * @inheritdoc
      */
-    public function published($userId)
-    {
+    public function published($userId) {
         $this->applyCriteria();
 
         $result = $this
@@ -62,8 +83,7 @@ class JobRepository extends Repository implements JobRepositoryInterface
     /**
      * @inheritdoc
      */
-    public function subscribes($userId)
-    {
+    public function subscribes($userId) {
         $this->applyCriteria();
 
         $result = $this
@@ -82,8 +102,7 @@ class JobRepository extends Repository implements JobRepositoryInterface
     /**
      * @inheritdoc
      */
-    public function getDefaultFeatures($userId)
-    {
+    public function getDefaultFeatures($userId) {
         $sub = $this->toSql(
             $this->model->select('id')->where('user_id', $userId)->orderBy('id', 'DESC')->limit(1),
         );
@@ -104,8 +123,7 @@ class JobRepository extends Repository implements JobRepositoryInterface
     /**
      * @inheritdoc
      */
-    public function getTagSuggestions(array $tags): array
-    {
+    public function getTagSuggestions(array $tags): array {
         return (new Tag())
             ->select(['t.name'])
             ->join('tag_resources', 'tag_resources.tag_id', '=', 'tags.id')

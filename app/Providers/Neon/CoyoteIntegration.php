@@ -19,7 +19,6 @@ use Coyote\Services\Invoice\CalculatorFactory;
 use Coyote\Services\Invoice\VatRateCalculator;
 use Coyote\Services\SubmitJobService;
 use Illuminate\Database;
-use Illuminate\Database\Eloquent;
 use Neon2\Coyote\Integration;
 use Neon2\JobBoard;
 use Neon2\JobBoard\InvoiceInformation;
@@ -51,18 +50,7 @@ readonly class CoyoteIntegration implements Integration {
     public function listJobOffers(): array {
         $this->job->pushCriteria(new EagerLoading(['firm', 'firm.assets', 'locations', 'tags', 'currency']));
         $this->job->pushCriteria(new IncludeSubscribers(auth()->id()));
-        $query = $this->job->query();
-        if (auth()->check()) {
-            $query
-                ->where('user_id', auth()->id())
-                ->orWhere($this->isPublished(...));
-        } else {
-            $this->isPublished($query);
-        }
-        return $query
-            ->orderBy('is_publish') // With my offers, not paid should be highest
-            ->orderByDesc('is_on_top')
-            ->get()
+        return $this->job->findPublicJobOffers(auth()->id())
             ->map(function (Coyote\Job $job): JobBoard\JobOffer {
                 if ($this->isMine($job)) {
                     $payment = $job->getUnpaidPayment();
@@ -73,12 +61,6 @@ readonly class CoyoteIntegration implements Integration {
                 return $this->neonJobOffer($job, null);
             })
             ->toArray();
-    }
-
-    private function isPublished(Eloquent\Builder $query): void {
-        $query
-            ->where('is_publish', '=', 1)
-            ->where('deadline_at', '>', Carbon::now());
     }
 
     public function neonJobOffer(
