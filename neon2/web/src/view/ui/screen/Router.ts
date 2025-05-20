@@ -7,6 +7,9 @@ export class Router {
   private readonly router: VueRouter = createRouter({
     history: createWebHistory(),
     routes: [],
+    scrollBehavior() {
+      return {top: 0};
+    },
   });
 
   constructor(private listener: ScreenListener) {}
