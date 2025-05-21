@@ -79,6 +79,10 @@
         </Design.Card>
         <Design.Card space border v-if="companyCard">
           <JobOfferField
+            title="Nazwa firmy"
+            :value="props.jobOffer.companyName"
+            v-if="props.jobOffer.companyName"/>
+          <JobOfferField
             link
             icon="jobOfferCompanyWebsite"
             title="Witryna firmy"
@@ -147,7 +151,8 @@ const salary = computed<SalaryJobOffer|null>(() => {
 const companyCard = computed<boolean>((): boolean => {
   return !!props.jobOffer.companyWebsiteUrl ||
     !!props.jobOffer.companyFundingYear ||
-    !!props.jobOffer.companySizeLevel;
+    !!props.jobOffer.companySizeLevel ||
+    !!props.jobOffer.companyName;
 });
 </script>
 
