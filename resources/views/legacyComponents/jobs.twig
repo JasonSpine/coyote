@@ -1,7 +1,7 @@
 {% for job in jobs %}
   <div class="media text-truncate mb-2">
     <a class="media-link"
-       href="{{ route('job.offer', [job.id, job.slug]) }}"
+       href="{{ route('neon.jobOffer.show', [job.slug, job.id]) }}"
        title="{{ job.title }}">
       <div class="me-2 i-45 d-none d-xl-inline-block">
         {% if job.firm.logo %}

@@ -46,6 +46,9 @@ class ServiceProvider extends RouteServiceProvider {
                 ->name('neon.jobOffer.pricing')
                 ->get('/Job/pricing', $this->indexView(...));
             $this
+                ->name('neon.jobOffer.show')
+                ->get('/Job/{slug}--{id}', $this->indexView(...));
+            $this
                 ->name('neon.jobOffer.list')
                 ->get('/Job/{fallback?}', $this->indexView(...))
                 ->where('fallback', '.*');
