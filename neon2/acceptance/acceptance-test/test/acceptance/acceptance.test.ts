@@ -35,9 +35,9 @@ describe('Job offer in a non-free plan requires a payment.', () => {
 });
 
 describe('The publishing time depends on the pricing of the job offer.', () => {
-  test('A free job offer expires after 14 days.', async (dsl: Dsl) => {
+  test('A free job offer expires after 30 days.', async (dsl: Dsl) => {
     await dsl.publishJobOffer({title: 'Free offer', pricingType: 'free'});
-    await dsl.assertJobOfferExpiresInDays({jobOfferTitle: 'Free offer', expectedExpiry: 14});
+    await dsl.assertJobOfferExpiresInDays({jobOfferTitle: 'Free offer', expectedExpiry: 30});
   });
   test('A paid job offer expires after 30 days.', async (dsl: Dsl) => {
     await dsl.publishJobOffer({title: 'Paid offer', pricingType: 'paid'});

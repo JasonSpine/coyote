@@ -35,7 +35,7 @@ class BoostJobOffer implements ShouldQueue
         }
         $payment->status_id = Payment::PAID;
         $payment->starts_at = Carbon::now();
-        $payment->ends_at = Carbon::now()->addDays($payment->days);
+        $payment->ends_at = Carbon::now()->addDays(30);
         if ($payment->coupon) {
             $payment->coupon->delete();
         }
