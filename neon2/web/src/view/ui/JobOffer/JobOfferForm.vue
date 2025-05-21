@@ -28,6 +28,12 @@
       </Design.Row>
     </Design.Card>
     <Design.Card space title="Lokalizacja firmy">
+      <div class="flex">
+        <Design.Tile
+          nested-pill
+          :text="jobOffer.companyAddress?.city || 'Podaj lokalizację...'"
+          icon="jobOfferLocation"/>
+      </div>
       <Design.FieldGroup label="Adres siedziby firmy" :error="errors.companyAddress">
         <LocationField
           placeholder="np. Warszawa, al. Jerozolimskie 3"
