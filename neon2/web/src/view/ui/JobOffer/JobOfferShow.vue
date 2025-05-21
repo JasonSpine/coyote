@@ -43,62 +43,64 @@
           <div v-html="props.jobOffer.companyDescription"/>
         </template>
       </div>
-      <div class="md:w-1/3 space-y-3">
-        <Design.Card space border>
-          <JobOfferField
-            title="Tryb pracy"
-            :value="formatWorkMode(props.jobOffer.workMode)"
-            icon="jobOfferWorkModeRemote"/>
-          <JobOfferField
-            title="Lokalizacja"
-            :value="props.jobOffer.locationCities.join(', ')"
-            v-if="props.jobOffer.locationCities.length"
-            icon="jobOfferLocation"/>
-          <JobOfferField
-            title="Rodzaj umowy"
-            :value="formatLegalForm(props.jobOffer.legalForm)"
-            icon="jobOfferLegalForm"/>
-          <JobOfferField
-            title="Poziom Doświadczenia"
-            :value="formatWorkExperience(props.jobOffer.experience)"
-            v-if="props.jobOffer.experience !== 'not-provided'"
-            icon="jobOfferWorkExperience"/>
-          <JobOfferField
-            title="Wygasa"
-            :value="formatExpiresInDays(props.jobOffer.expiresInDays)"
-            v-if="props.jobOffer.expiresInDays"
-            test-id="jobOfferExpiresInDays"/>
-          <Design.Button :primary="!props.preview" :primary-outline="props.preview" full-width @click="apply">
-            Aplikuj
-          </Design.Button>
-        </Design.Card>
-        <Design.Card space border v-if="props.jobOffer.tagNames.length">
-          <JobOfferField title="Technologie">
-            <JobOfferTagList :tag-names="props.jobOffer.tagNames" :max="20"/>
-          </JobOfferField>
-        </Design.Card>
-        <Design.Card space border v-if="companyCard">
-          <JobOfferField
-            title="Nazwa firmy"
-            :value="props.jobOffer.companyName"
-            v-if="props.jobOffer.companyName"/>
-          <JobOfferField
-            link
-            icon="jobOfferCompanyWebsite"
-            title="Witryna firmy"
-            :value="props.jobOffer.companyWebsiteUrl"
-            v-if="props.jobOffer.companyWebsiteUrl"/>
-          <JobOfferField
-            icon="jobOfferCompanyFundingYear"
-            title="Rok założenia firmy"
-            :value="props.jobOffer.companyFundingYear.toString()"
-            v-if="props.jobOffer.companyFundingYear"/>
-          <JobOfferField
-            icon="jobOfferCompanySize"
-            title="Rozmiar firmy"
-            :value="formatCompanySizeLevel(props.jobOffer.companySizeLevel)"
-            v-if="props.jobOffer.companySizeLevel"/>
-        </Design.Card>
+      <div class="md:w-1/3 md:relative">
+        <div class="space-y-3 md:sticky md:top-14">
+          <Design.Card space border>
+            <JobOfferField
+              title="Tryb pracy"
+              :value="formatWorkMode(props.jobOffer.workMode)"
+              icon="jobOfferWorkModeRemote"/>
+            <JobOfferField
+              title="Lokalizacja"
+              :value="props.jobOffer.locationCities.join(', ')"
+              v-if="props.jobOffer.locationCities.length"
+              icon="jobOfferLocation"/>
+            <JobOfferField
+              title="Rodzaj umowy"
+              :value="formatLegalForm(props.jobOffer.legalForm)"
+              icon="jobOfferLegalForm"/>
+            <JobOfferField
+              title="Poziom Doświadczenia"
+              :value="formatWorkExperience(props.jobOffer.experience)"
+              v-if="props.jobOffer.experience !== 'not-provided'"
+              icon="jobOfferWorkExperience"/>
+            <JobOfferField
+              title="Wygasa"
+              :value="formatExpiresInDays(props.jobOffer.expiresInDays)"
+              v-if="props.jobOffer.expiresInDays"
+              test-id="jobOfferExpiresInDays"/>
+            <Design.Button :primary="!props.preview" :primary-outline="props.preview" full-width @click="apply">
+              Aplikuj
+            </Design.Button>
+          </Design.Card>
+          <Design.Card space border v-if="props.jobOffer.tagNames.length">
+            <JobOfferField title="Technologie">
+              <JobOfferTagList :tag-names="props.jobOffer.tagNames" :max="20"/>
+            </JobOfferField>
+          </Design.Card>
+          <Design.Card space border v-if="companyCard">
+            <JobOfferField
+              title="Nazwa firmy"
+              :value="props.jobOffer.companyName"
+              v-if="props.jobOffer.companyName"/>
+            <JobOfferField
+              link
+              icon="jobOfferCompanyWebsite"
+              title="Witryna firmy"
+              :value="props.jobOffer.companyWebsiteUrl"
+              v-if="props.jobOffer.companyWebsiteUrl"/>
+            <JobOfferField
+              icon="jobOfferCompanyFundingYear"
+              title="Rok założenia firmy"
+              :value="props.jobOffer.companyFundingYear.toString()"
+              v-if="props.jobOffer.companyFundingYear"/>
+            <JobOfferField
+              icon="jobOfferCompanySize"
+              title="Rozmiar firmy"
+              :value="formatCompanySizeLevel(props.jobOffer.companySizeLevel)"
+              v-if="props.jobOffer.companySizeLevel"/>
+          </Design.Card>
+        </div>
       </div>
     </div>
   </Design.Tile>
