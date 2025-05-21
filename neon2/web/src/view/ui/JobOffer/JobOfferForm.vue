@@ -50,7 +50,7 @@
           placeholder="Miejsce na szczegółowy opis firmy. Pole nie jest wymagane."
           v-model="jobOffer.companyDescription"/>
       </Design.FieldGroup>
-      <Design.FieldGroup label="Nagranie wideo">
+      <Design.FieldGroup label="Nagranie wideo" :error="errors.companyVideoUrl">
         <Design.TextField
           placeholder="Podaj link do filmu o firmie w serwisie YouTube"
           v-model="jobOffer.companyVideoUrl"/>
@@ -221,12 +221,12 @@ import {
   formatWorkMode as formatWorkModeString,
 } from "./format";
 import {FormModel, fromFormModel, toFormModel} from "./JobOfferForm";
-import {ValidationBag} from './ValidationBag';
 import JobOfferLocationSet from './JobOfferLocationSet.vue';
 import JobOfferPhotoSet from './JobOfferPhotoSet.vue';
 import {fromSubmitToJobOfferShow} from "./JobOfferShow";
 import JobOfferShow from "./JobOfferShow.vue";
 import JobOfferStepper, {JobOfferCreatorStep} from "./JobOfferStepper.vue";
+import {ValidationBag} from './ValidationBag';
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
@@ -253,7 +253,7 @@ const jobOffer: FormModel = reactive<FormModel>(toFormModel(props.jobOffer));
 const validation = new ValidationBag(jobOffer, [
   'title', 'companyName', 'applicationEmail', 'applicationExternalAts',
   'salaryRangeFrom', 'salaryRangeTo', 'companyFundingYear',
-  'companyWebsiteUrl', 'companyAddress',
+  'companyWebsiteUrl', 'companyAddress', 'companyVideoUrl',
 ]);
 
 const errors = reactive(validation.emptyErrors());
@@ -285,6 +285,7 @@ function validate() {
       rules.nonEmpty('companyName', 'Podaj nazwę firmy.');
       rules.optionalNumeric('companyFundingYear', 'Podaj poprawny rok założenia firmy.');
       rules.optionalJsUrl('companyWebsiteUrl', 'Podaj poprawny URL witryny firmy.');
+      rules.optionalJsUrl('companyVideoUrl', 'Podaj poprawny URL wideo firmy.');
       rules.optionalLocation('companyAddress', 'Podaj dokładniejszy adres.');
     });
   }

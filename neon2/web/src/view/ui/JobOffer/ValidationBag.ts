@@ -107,6 +107,9 @@ export function strippedNumericString(string: string): string {
 
 function isValidJsUrl(text: string): boolean {
   let url;
+  if (text.includes(' ')) {
+    return false;
+  }
   try {
     url = new URL(text);
   } catch (error) {
