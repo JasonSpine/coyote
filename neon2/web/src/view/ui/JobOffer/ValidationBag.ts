@@ -24,6 +24,12 @@ export class ValidationBag<T extends string> {
           success = false;
         }
       },
+      maxLength: (field: T, maxLength: number, errorMessage: string): void => {
+        if (this.fields[field]?.trim().length > maxLength) {
+          errors[field] = errorMessage;
+          success = false;
+        }
+      },
       optionalNumeric: (field: T, errorMessage: string): void => {
         if (numberMalformed(this.fields[field])) {
           errors[field] = errorMessage;
@@ -57,6 +63,7 @@ export type ValidationResult<T extends string> = [
 
 interface RuleSet<T> {
   nonEmpty(field: T, errorMessage: string): void;
+  maxLength(field: T, maxLength: number, errorMessage: string): void;
   notEqual(field: T, value: string, errorMessage: string): void;
   optionalNumeric(field: T, errorMessage: string): void;
   optionalJsUrl(field: T, errorMessage: string): void;

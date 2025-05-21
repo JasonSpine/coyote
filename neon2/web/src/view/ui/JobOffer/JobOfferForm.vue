@@ -283,6 +283,7 @@ function validate() {
   if (step.value === 'company') {
     return validation.validate(rules => {
       rules.nonEmpty('companyName', 'Podaj nazwę firmy.');
+      rules.maxLength('companyName', 60, 'Nazwa firmy jest zbyt długa.');
       rules.optionalNumeric('companyFundingYear', 'Podaj poprawny rok założenia firmy.');
       rules.optionalJsUrl('companyWebsiteUrl', 'Podaj poprawny URL witryny firmy.');
       rules.optionalJsUrl('companyVideoUrl', 'Podaj poprawny URL wideo firmy.');
@@ -291,6 +292,7 @@ function validate() {
   }
   return validation.validate(rules => {
     rules.nonEmpty('title', 'Podaj tytuł ogłoszenia.');
+    rules.maxLength('title', 60, 'Tytuł ogłoszenia jest zbyt długi.');
     rules.optionalNumeric('salaryRangeFrom', 'Podaj poprawne wynagrodzenie.');
     rules.optionalNumeric('salaryRangeTo', 'Podaj poprawne wynagrodzenie.');
     if (jobOffer.applicationMode === '4programmers') {
