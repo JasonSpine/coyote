@@ -4,10 +4,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
-{
-    public function run(): void
-    {
+class DatabaseSeeder extends Seeder {
+    public function run(): void {
         Model::unguard();
         $this->call(PagesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
@@ -32,5 +30,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TopicsTableSeeder::class);
         $this->call(ActivityTableSeeder::class);
         $this->call(UserAvatarsSeeder::class);
+        $this->call(JobOfferSeeder::class);
     }
 }
