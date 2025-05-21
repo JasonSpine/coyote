@@ -1,6 +1,6 @@
 import {Location} from "../../../locationProvider/LocationProvider";
 import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, WorkExperience} from "../../../main";
-import {prependJsUrlProtocol} from "./JobOfferFormValidation";
+import {prependJsUrlProtocol} from "./ValidationBag";
 
 export interface FormModel {
   title: string;

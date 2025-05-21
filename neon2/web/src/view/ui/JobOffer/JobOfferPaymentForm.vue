@@ -89,7 +89,7 @@ import {PaymentMethod} from "../../../paymentProvider/PaymentProvider";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
 import {ViewListener} from "../ui";
-import {JobOfferFormValidation} from "./JobOfferFormValidation";
+import {ValidationBag} from "./ValidationBag";
 import JobOfferStepper from './JobOfferStepper.vue';
 
 const props = defineProps<Props>();
@@ -151,7 +151,7 @@ const errorVatId = computed(() => {
   return null;
 });
 
-const validation = new JobOfferFormValidation(invoiceInformation, Object.keys(errors));
+const validation = new ValidationBag(invoiceInformation, Object.keys(errors));
 
 function validate() {
   return validation.validate(v => {

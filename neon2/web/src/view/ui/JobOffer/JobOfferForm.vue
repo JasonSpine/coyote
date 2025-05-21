@@ -221,7 +221,7 @@ import {
   formatWorkMode as formatWorkModeString,
 } from "./format";
 import {FormModel, fromFormModel, toFormModel} from "./JobOfferForm";
-import {JobOfferFormValidation} from './JobOfferFormValidation';
+import {ValidationBag} from './ValidationBag';
 import JobOfferLocationSet from './JobOfferLocationSet.vue';
 import JobOfferPhotoSet from './JobOfferPhotoSet.vue';
 import {fromSubmitToJobOfferShow} from "./JobOfferShow";
@@ -250,7 +250,7 @@ const hasPreviousStep = computed<boolean>(() => step.value !== 'company');
 
 const jobOffer: FormModel = reactive<FormModel>(toFormModel(props.jobOffer));
 
-const validation = new JobOfferFormValidation(jobOffer, [
+const validation = new ValidationBag(jobOffer, [
   'title', 'companyName', 'applicationEmail', 'applicationExternalAts',
   'salaryRangeFrom', 'salaryRangeTo', 'companyFundingYear',
   'companyWebsiteUrl', 'companyAddress',

@@ -1,6 +1,6 @@
 import {Location} from "../../../locationProvider/LocationProvider";
 
-export class JobOfferFormValidation<T extends string> {
+export class ValidationBag<T extends string> {
   constructor(
     private readonly fields: Record<T, any>,
     private readonly fieldNames: T[]) {}
