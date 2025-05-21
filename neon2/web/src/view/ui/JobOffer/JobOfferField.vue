@@ -10,8 +10,9 @@
          v-text="simplifiedUrl(props.value)"
          :href="props.value"
          target="_blank"
-         rel="nofollow"/>
+         rel="noindex,nofollow"/>
       <span v-else v-text="props.value"/>
+      <slot/>
     </span>
     <slot/>
   </div>

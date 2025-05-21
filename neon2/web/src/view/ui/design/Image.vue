@@ -1,10 +1,11 @@
 <template>
-  <div
-    class="size-14 rounded-lg overflow-hidden"
-    :class="[{'border-4 border-tile box-content': props.border}]">
+  <div :class="[
+      sizeClass, 'rounded-lg overflow-hidden', 
+      {'border-4 border-tile box-content': props.border}, 
+    ]">
     <img v-if="props.src" :src="props.src" class="bg-tile"/>
     <div v-else :class="[
-      'size-14 rounded flex-shrink-0',
+      sizeClass, 'rounded flex-shrink-0',
       'flex items-center justify-center',
       'accent'
     ]">
@@ -14,7 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import Icon, {IconName} from "../icons/Icon.vue";
+import {computed} from "vue";
+import Icon from "../icons/Icon.vue";
+import {IconName} from "../icons/icons";
 
 const props = defineProps<Props>();
 
@@ -22,5 +25,10 @@ interface Props {
   src: string|null;
   placeholderIcon: IconName;
   border?: boolean;
+  size?: 'small'|'medium';
 }
+
+const sizeClass = computed(() => {
+  return props.size === 'small' ? 'size-10' : 'size-14';
+});
 </script>

@@ -20,17 +20,28 @@
         <Icon class="ml-2" name="jobOfferApplyExternally" v-if="props.jobOffer.applyExternally"/>
       </Design.Button>
     </Design.Row>
-    <div class="mb-8 md:flex md:justify-between md:items-start max-md:mb-12 max-md:space-y-6">
+    <div class="mb-8 md:flex md:justify-between md:items-start max-md:space-y-6">
       <div>
         <h1
           class="text-2xl md:text-3xl md:mb-2 font-medium text-neutral2-900"
           v-text="props.jobOffer.title"/>
         <h2
-          class="text-lg text-neutral2-900"
+          class="text-lg text-neutral2-700"
           v-text="props.jobOffer.companyName"
           data-testid="jobOfferCompanyName"/>
       </div>
-      <JobOfferSalary :salary="salary" nowrap v-if="salary"/>
+      <div>
+        <div class="md:flex md:justify-end">
+          <JobOfferSalary :salary="salary" nowrap v-if="salary"/>
+          <JobOfferSalaryNotProvided v-else/>
+        </div>
+        <div class="mt-6 md:mt-3 text-neutral2-500 flex flex-wrap md:justify-end gap-x-4 gap-y-2">
+          <span v-for="field in catchEyeFields" class="whitespace-nowrap">
+            <Icon :name="field.icon" class="mr-1"/>
+            {{field.title}}
+          </span>
+        </div>
+      </div>
     </div>
     <div class="md:flex max-md:space-y-12">
       <div :class="[
@@ -52,7 +63,7 @@
             v-if="props.jobOffer.companyVideoUrl"
             :youtube-url="props.jobOffer.companyVideoUrl"/>
         </template>
-        <Design.Button primary @click="apply">
+        <Design.Button primary @click="apply" class="max-md:hidden">
           Aplikuj
           <Icon class="ml-2" name="jobOfferApplyExternally" v-if="props.jobOffer.applyExternally"/>
         </Design.Button>
@@ -60,6 +71,7 @@
       <div class="md:w-1/3 md:relative">
         <div class="space-y-3 md:sticky md:top-14">
           <Design.Card space border>
+            <h2 :class="['mb-5', titleClass]" v-text="props.jobOffer.title"/>
             <JobOfferField
               title="Tryb pracy"
               :value="formatWorkMode(props.jobOffer.workMode)"
@@ -78,6 +90,9 @@
               :value="formatWorkExperience(props.jobOffer.experience)"
               v-if="props.jobOffer.experience !== 'not-provided'"
               icon="jobOfferWorkExperience"/>
+            <JobOfferField title="Wynagrodzenie" v-if="salary">
+              <span class="text-green-500">{{formatSalary(salary)}}</span>
+            </JobOfferField>
             <JobOfferField
               title="Wygasa"
               :value="formatExpiresInDays(props.jobOffer.expiresInDays)"
@@ -98,10 +113,14 @@
             </JobOfferField>
           </Design.Card>
           <Design.Card space border v-if="companyCard">
-            <JobOfferField
-              title="Nazwa firmy"
-              :value="props.jobOffer.companyName"
-              v-if="props.jobOffer.companyName"/>
+            <div class="flex items-center">
+              <Design.Image
+                class="mr-2 flex-shrink-0"
+                size="small"
+                :src="props.jobOffer.companyLogoUrl"
+                placeholder-icon="jobOfferLogoPlaceholder"/>
+              <span :class="titleClass" v-text="props.jobOffer.companyName"/>
+            </div>
             <JobOfferField
               link
               icon="jobOfferCompanyWebsite"
@@ -129,6 +148,7 @@
 import {computed} from "vue";
 import {Design} from "../design/design";
 import Icon from "../icons/Icon.vue";
+import {IconName} from "../icons/icons";
 import {
   formatCompanySizeLevel,
   formatExpiresInDays,
@@ -137,7 +157,9 @@ import {
   formatWorkMode,
 } from "./format";
 import JobOfferField from "./JobOfferField.vue";
-import JobOfferSalary, {SalaryJobOffer} from "./JobOfferSalary.vue";
+import {formatSalary, SalaryJobOffer} from "./JobOfferSalary";
+import JobOfferSalary from "./JobOfferSalary.vue";
+import JobOfferSalaryNotProvided from "./JobOfferSalaryNotProvided.vue";
 import {JobOfferShow} from "./JobOfferShow";
 import JobOfferTagList from "./JobOfferTagList.vue";
 import VideoPlayer from "./VideoPlayer.vue";
@@ -163,6 +185,24 @@ function editJob(): void {
 function apply(): void {
   emit('apply');
 }
+
+const titleClass = 'text-lg text-neutral2-900';
+
+interface CatchEyeField {
+  title: string;
+  icon: IconName;
+}
+
+const catchEyeFields = computed((): CatchEyeField[] => {
+  const fields: CatchEyeField[] = [
+    {icon: 'jobOfferWorkModeRemote', title: formatWorkMode(props.jobOffer.workMode)},
+  ];
+  if (props.jobOffer.locationCities.length) {
+    fields.push({icon: 'jobOfferLocation', title: props.jobOffer.locationCities.join(', ')});
+  }
+  fields.push({icon: 'jobOfferLegalForm', title: formatLegalForm(props.jobOffer.legalForm)});
+  return fields;
+});
 
 const salary = computed<SalaryJobOffer|null>(() => {
   if (props.jobOffer.salaryRangeFrom && props.jobOffer.salaryRangeTo) {
