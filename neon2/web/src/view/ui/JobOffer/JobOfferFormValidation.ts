@@ -11,7 +11,7 @@ export class JobOfferFormValidation<T extends string> {
       {} as Record<T, string|null>);
   }
 
-  validate(validation: (validator: Validator<T>) => void): ValidationResult<T> {
+  validate(validation: (rule: RuleSet<T>) => void): ValidationResult<T> {
     const errors = this.emptyErrors();
     let success = true;
     validation({
@@ -55,7 +55,7 @@ export type ValidationResult<T extends string> = [
   Record<T, string|null>
 ];
 
-interface Validator<T> {
+interface RuleSet<T> {
   nonEmpty(field: T, errorMessage: string): void;
   notEqual(field: T, value: string, errorMessage: string): void;
   optionalNumeric(field: T, errorMessage: string): void;

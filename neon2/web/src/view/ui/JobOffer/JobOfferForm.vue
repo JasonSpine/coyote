@@ -281,22 +281,22 @@ function nextStep(): void {
 
 function validate() {
   if (step.value === 'company') {
-    return validation.validate(v => {
-      v.nonEmpty('companyName', 'Podaj nazwę firmy.');
-      v.optionalNumeric('companyFundingYear', 'Podaj poprawny rok założenia firmy.');
-      v.optionalJsUrl('companyWebsiteUrl', 'Podaj poprawny URL witryny firmy.');
-      v.optionalLocation('companyAddress', 'Podaj dokładniejszy adres.');
+    return validation.validate(rules => {
+      rules.nonEmpty('companyName', 'Podaj nazwę firmy.');
+      rules.optionalNumeric('companyFundingYear', 'Podaj poprawny rok założenia firmy.');
+      rules.optionalJsUrl('companyWebsiteUrl', 'Podaj poprawny URL witryny firmy.');
+      rules.optionalLocation('companyAddress', 'Podaj dokładniejszy adres.');
     });
   }
-  return validation.validate(v => {
-    v.nonEmpty('title', 'Podaj tytuł ogłoszenia.');
-    v.optionalNumeric('salaryRangeFrom', 'Podaj poprawne wynagrodzenie.');
-    v.optionalNumeric('salaryRangeTo', 'Podaj poprawne wynagrodzenie.');
+  return validation.validate(rules => {
+    rules.nonEmpty('title', 'Podaj tytuł ogłoszenia.');
+    rules.optionalNumeric('salaryRangeFrom', 'Podaj poprawne wynagrodzenie.');
+    rules.optionalNumeric('salaryRangeTo', 'Podaj poprawne wynagrodzenie.');
     if (jobOffer.applicationMode === '4programmers') {
-      v.nonEmpty('applicationEmail', 'Podaj adres e-mail do otrzymania aplikacji.');
+      rules.nonEmpty('applicationEmail', 'Podaj adres e-mail do otrzymania aplikacji.');
     }
     if (jobOffer.applicationMode === 'external-ats') {
-      v.nonEmpty('applicationExternalAts', 'Podaj adres Twojego systemu ATS.');
+      rules.nonEmpty('applicationExternalAts', 'Podaj adres Twojego systemu ATS.');
     }
   });
 }
