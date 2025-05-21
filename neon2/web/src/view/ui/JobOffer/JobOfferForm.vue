@@ -292,7 +292,9 @@ function validate() {
       rules.maxLength('companyName', 60, 'Nazwa firmy jest zbyt długa.');
       rules.optionalNumeric('companyFundingYear', 'Podaj poprawny rok założenia firmy.');
       rules.optionalJsUrl('companyWebsiteUrl', 'Podaj poprawny URL witryny firmy.');
-      rules.optionalJsUrl('companyVideoUrl', 'Podaj poprawny URL wideo firmy.');
+      rules.optionalJsUrlHostname('companyVideoUrl',
+        ['www.youtube.com', 'youtube.com', 'youtu.be'],
+        'Podaj poprawny URL wideo firmy.');
       rules.optionalLocation('companyAddress', 'Podaj dokładniejszy adres.');
     });
   }

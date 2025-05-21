@@ -42,6 +42,22 @@ export class ValidationBag<T extends string> {
           success = false;
         }
       },
+      optionalJsUrlHostname: (field: T, hostnames: string[], errorMessage: string): void => {
+        const url = prependJsUrlProtocol(this.fields[field]);
+        if (jsUrlMalformed(url)) {
+          errors[field] = errorMessage;
+          success = false;
+        } else {
+          if (url === '') {
+            return;
+          }
+          const hostname = urlHostname(url);
+          if (!hostnames.includes(hostname)) {
+            errors[field] = errorMessage;
+            success = false;
+          }
+        }
+      },
       optionalLocation: (field: T, errorMessage: string): void => {
         if (this.fields[field] === null) {
           return;
@@ -56,6 +72,10 @@ export class ValidationBag<T extends string> {
   }
 }
 
+function urlHostname(url: string): string {
+  return new URL(url).hostname;
+}
+
 export type ValidationResult<T extends string> = [
   boolean,
   Record<T, string|null>
@@ -67,6 +87,7 @@ interface RuleSet<T> {
   notEqual(field: T, value: string, errorMessage: string): void;
   optionalNumeric(field: T, errorMessage: string): void;
   optionalJsUrl(field: T, errorMessage: string): void;
+  optionalJsUrlHostname(field: T, hostnames: string[], errorMessage: string): void;
   optionalLocation(field: T, errorMessage: string): void;
 }
 
