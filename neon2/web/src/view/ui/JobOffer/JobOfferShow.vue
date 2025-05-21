@@ -12,8 +12,12 @@
         class="mr-auto"/>
       <Design.Button square icon="jobOfferFavourite"/>
       <Design.Button @click="editJob" v-if="props.canEdit">Edytuj</Design.Button>
-      <Design.Button :primary="!props.preview" :primary-outline="props.preview" @click="apply">
+      <Design.Button
+        :primary="!props.preview"
+        :primary-outline="props.preview"
+        @click="apply">
         Aplikuj
+        <Icon class="ml-2" name="jobOfferApplyExternally" v-if="props.jobOffer.applyExternally"/>
       </Design.Button>
     </Design.Row>
     <div class="mb-8 md:flex md:justify-between md:items-start max-md:mb-12 max-md:space-y-6">
@@ -42,6 +46,10 @@
           <p><b>O firmie</b></p>
           <div v-html="props.jobOffer.companyDescription"/>
         </template>
+        <Design.Button primary @click="apply">
+          Aplikuj
+          <Icon class="ml-2" name="jobOfferApplyExternally" v-if="props.jobOffer.applyExternally"/>
+        </Design.Button>
       </div>
       <div class="md:w-1/3 md:relative">
         <div class="space-y-3 md:sticky md:top-14">
@@ -69,8 +77,13 @@
               :value="formatExpiresInDays(props.jobOffer.expiresInDays)"
               v-if="props.jobOffer.expiresInDays"
               test-id="jobOfferExpiresInDays"/>
-            <Design.Button :primary="!props.preview" :primary-outline="props.preview" full-width @click="apply">
+            <Design.Button
+              :primary="!props.preview"
+              :primary-outline="props.preview"
+              full-width
+              @click="apply">
               Aplikuj
+              <Icon class="ml-2" name="jobOfferApplyExternally" v-if="props.jobOffer.applyExternally"/>
             </Design.Button>
           </Design.Card>
           <Design.Card space border v-if="props.jobOffer.tagNames.length">
@@ -109,6 +122,7 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {Design} from "../design/design";
+import Icon from "../icons/Icon.vue";
 import {
   formatCompanySizeLevel,
   formatExpiresInDays,

@@ -53,6 +53,7 @@ export const icons = {
   jobOfferCreatorStepBack: 'fa-light fa-arrow-left',
   jobOfferPricingPlanListBullet: iconCheck,
   jobOfferPricingPlanListBulletSpecialCase: iconAsterisk,
+  jobOfferApplyExternally: 'fa-light fa-arrow-up-right-from-square',
 };
 
 export const htmlIconFormatBold = '<i class="fa-solid fa-bold"/>';

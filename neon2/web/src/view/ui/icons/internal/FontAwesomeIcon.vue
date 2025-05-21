@@ -194,4 +194,8 @@ interface Props {
 .fa-spinner-third:before {
   content: "\f3f4";
 }
+
+.fa-arrow-up-right-from-square::before {
+  content: "\f08e";
+}
 </style>

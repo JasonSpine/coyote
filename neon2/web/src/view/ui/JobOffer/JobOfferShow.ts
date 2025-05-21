@@ -23,11 +23,13 @@ export interface JobOfferShow {
   companyDescription: string|null;
   companyFundingYear: number|null;
   companySizeLevel: number|null;
+  applyExternally: boolean;
 }
 
 export function toJobOfferShow(jobOffer: JobOffer): JobOfferShow {
   return {
     ...jobOffer,
+    applyExternally: jobOffer.applicationMode === 'external-ats',
     locationCities: locationCities(jobOffer.locations),
   };
 }
@@ -36,6 +38,7 @@ export function fromSubmitToJobOfferShow(submit: SubmitJobOffer, expiresInDays: 
   return {
     expiresInDays,
     ...submit,
+    applyExternally: submit.applicationMode === 'external-ats',
     locationCities: locationCities(submit.locations),
     workMode: parseWorkMode(submit.workModeRemoteRange),
   };

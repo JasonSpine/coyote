@@ -155,8 +155,12 @@ export class VueUi {
   }
 
   private applyForJob(jobOfferId: number): void {
-    const currentJobOffer = this.vueState.jobOffers.find(offer => offer.id === jobOfferId)!;
-    window.location.href = currentJobOffer.applicationUrl;
+    const jobOffer = this.vueState.jobOffers.find(offer => offer.id === jobOfferId)!;
+    if (jobOffer.applicationMode === 'external-ats') {
+      window.open(jobOffer.applicationUrl, '_blank');
+    } else {
+      window.location.href = jobOffer.applicationUrl;
+    }
   }
 
   private showJobOffer(jobOffer: JobOffer): void {
