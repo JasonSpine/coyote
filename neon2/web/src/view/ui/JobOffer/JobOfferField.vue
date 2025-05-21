@@ -7,7 +7,7 @@
       :data-testid="props.testId"
       v-if="props.value">
       <a v-if="props.link"
-         v-text="displayLink(props.value)"
+         v-text="simplifiedUrl(props.value)"
          :href="props.value"
          target="_blank"
          rel="nofollow"/>
@@ -20,6 +20,9 @@
 <script setup lang="ts">
 import Icon from "../icons/Icon.vue";
 import {IconName} from "../icons/icons";
+import {simplifiedUrl} from "./JobOfferField";
+
+const props = defineProps<Props>();
 
 interface Props {
   title: string;
@@ -27,11 +30,5 @@ interface Props {
   value?: string;
   testId?: string;
   link?: boolean;
-}
-
-const props = defineProps<Props>();
-
-function displayLink(url: string): string {
-  return new URL(url).hostname;
 }
 </script>
