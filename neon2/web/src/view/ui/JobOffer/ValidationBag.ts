@@ -96,11 +96,13 @@ export function prependJsUrlProtocol(url: string): string {
 }
 
 function isValidNumeric(text: string): boolean {
-  const number = parseInt(text, 10);
-  if (isNaN(number)) {
-    return false;
-  }
-  return number >= 0;
+  return !/\D/.test(strippedNumericString(text));
+}
+
+export function strippedNumericString(string: string): string {
+  return string
+    .replaceAll(' ', '')
+    .replaceAll(',', '');
 }
 
 function isValidJsUrl(text: string): boolean {

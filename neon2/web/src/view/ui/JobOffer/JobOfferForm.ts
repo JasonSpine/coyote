@@ -1,6 +1,6 @@
 import {Location} from "../../../locationProvider/LocationProvider";
 import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, WorkExperience} from "../../../main";
-import {prependJsUrlProtocol} from "./ValidationBag";
+import {prependJsUrlProtocol, strippedNumericString} from "./ValidationBag";
 
 export interface FormModel {
   title: string;
@@ -76,11 +76,11 @@ function formatNumber(value: number|null): string {
   return value.toString(10);
 }
 
-function parseNumber(value: string): number|null {
+export function parseNumber(value: string): number|null {
   if (value.trim() === '') {
     return null;
   }
-  const number = parseInt(value, 10);
+  const number = parseInt(strippedNumericString(value), 10);
   if (isNaN(number)) {
     throw new Error('Failed to parse number.');
   }
