@@ -51,8 +51,8 @@ readonly class CoyoteIntegration implements Integration {
         $this->job->pushCriteria(new EagerLoading(['firm', 'firm.assets', 'locations', 'tags', 'currency']));
         $this->job->pushCriteria(new IncludeSubscribers(auth()->id()));
         return $this->job->findPublicJobOffers(auth()->id())
-            ->sortByDesc('boost_at')
-            ->sortByDesc('is_on_top')
+            ->sortBy('boost_at')
+            ->sortBy('is_on_top')
             ->sortBy($this->isNew(...))
             ->sortBy('is_publish') // With my offers, not paid should be highest
             ->values()
@@ -292,6 +292,6 @@ readonly class CoyoteIntegration implements Integration {
     }
 
     private function isNew(Job $jobOffer): bool {
-        return carbon($jobOffer->boost_at)->diffInHours(Carbon::now()) <= 24;
+        return $jobOffer->created_at->diffInHours(Carbon::now()) <= 24;
     }
 }
