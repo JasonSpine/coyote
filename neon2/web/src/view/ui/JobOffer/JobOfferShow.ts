@@ -23,6 +23,7 @@ export interface JobOfferShow {
   companyDescription: string|null;
   companyFundingYear: number|null;
   companySizeLevel: number|null;
+  companyVideoUrl: string|null;
   applyExternally: boolean;
 }
 

@@ -40,11 +40,17 @@
         ]">
         <div
           v-if="props.jobOffer.description"
-          data-testid="jobOfferDescription"
-          v-html="props.jobOffer.description"/>
-        <template v-if="props.jobOffer.companyDescription">
+          v-html="props.jobOffer.description"
+          data-testid="jobOfferDescription"/>
+        <template v-if="props.jobOffer.companyDescription || props.jobOffer.companyVideoUrl">
           <p><b>O firmie</b></p>
-          <div v-html="props.jobOffer.companyDescription"/>
+          <div
+            v-html="props.jobOffer.companyDescription"
+            v-if="props.jobOffer.companyDescription"/>
+          <VideoPlayer
+            class="my-4"
+            v-if="props.jobOffer.companyVideoUrl"
+            :youtube-url="props.jobOffer.companyVideoUrl"/>
         </template>
         <Design.Button primary @click="apply">
           Aplikuj
@@ -134,6 +140,7 @@ import JobOfferField from "./JobOfferField.vue";
 import JobOfferSalary, {SalaryJobOffer} from "./JobOfferSalary.vue";
 import {JobOfferShow} from "./JobOfferShow";
 import JobOfferTagList from "./JobOfferTagList.vue";
+import VideoPlayer from "./VideoPlayer.vue";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
