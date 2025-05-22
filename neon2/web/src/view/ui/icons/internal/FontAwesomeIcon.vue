@@ -17,21 +17,21 @@ interface Props {
   font-family: 'Font Awesome 6 Pro';
   font-style: normal;
   font-weight: 300;
-  src: url('./fa-light-300.woff2') format('woff2'), url('./fa-light-300.ttf') format('truetype');
+  src: url('./fa-light-300.woff2') format('woff2');
 }
 
 @font-face {
   font-family: 'Font Awesome 6 Pro';
   font-style: normal;
   font-weight: 400;
-  src: url('./fa-regular-400.woff2') format('woff2'), url('./fa-regular-400.ttf') format('truetype');
+  src: url('./fa-regular-400.woff2') format('woff2');
 }
 
 @font-face {
   font-family: 'Font Awesome 6 Free';
   font-style: normal;
   font-weight: 900;
-  src: url('./fa-solid-900.woff2') format('woff2'), url('./fa-solid-900.ttf') format('truetype');
+  src: url('./fa-solid-900.woff2') format('woff2');
 }
 
 .fa-solid {
