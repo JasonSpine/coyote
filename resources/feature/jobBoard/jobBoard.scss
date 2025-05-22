@@ -1,4 +1,3 @@
-@use "../../../public/fonts/inter/inter.css";
 @use "../lookAndFeel/feel" as feel;
 @use "../lookAndFeel/size" as size;
 @use "../lookAndFeel/style-guide" as style;
@@ -14,7 +13,7 @@
 }
 
 .reset {
-  font-family: Inter, sans-serif;
+  font-family: Arial, sans-serif;
   font-size:   14px;
   ul {
     margin-bottom: 0;
