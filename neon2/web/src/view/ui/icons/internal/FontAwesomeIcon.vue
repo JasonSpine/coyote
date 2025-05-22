@@ -13,27 +13,6 @@ interface Props {
 <style>
 @use "../../../node_modules/@fortawesome/fontawesome-free/css/fontawesome.css";
 
-@font-face {
-  font-family: 'Font Awesome 6 Pro';
-  font-style: normal;
-  font-weight: 300;
-  src: url('./fa-light-300.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Font Awesome 6 Pro';
-  font-style: normal;
-  font-weight: 400;
-  src: url('./fa-regular-400.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Font Awesome 6 Free';
-  font-style: normal;
-  font-weight: 900;
-  src: url('./fa-solid-900.woff2') format('woff2');
-}
-
 .fa-solid {
   font-family: 'Font Awesome 6 Free';
   font-style: normal;

@@ -26,11 +26,9 @@ readonly class JobBoardView {
         } else {
             $resources = '<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inter+Tight:400,500,600,700">';
         }
-        $faLightUrl = "/neon2/static/{$this->vite->fontAwesomeLightUrl()}";
         return <<<html
             <meta name="viewport" content="width=device-width,initial-scale=1">
             <link rel="stylesheet" type="text/css" href="$styleUrl" title="includeInShadowRoot">
-            <link rel="preload" as="font" type="font/woff2" crossorigin href="$faLightUrl">
             $resources
             html;
     }
