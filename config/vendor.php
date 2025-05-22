@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'name'             => 'Makana Sp. z o.o.',
+    'name'             => '4Programmers Sp. z o.o.',
     'address'          => 'Krupnicza 13',
     'city'             => 'Wrocław',
     'postal_code'      => '50-075',
