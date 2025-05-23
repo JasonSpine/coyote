@@ -56,7 +56,8 @@
         <div class="my-4 space-y-3" v-if="
             props.jobOffer.companyDescription || 
             props.jobOffer.companyVideoUrl ||
-            props.jobOffer.companyPhotoUrls.length > 0">
+            props.jobOffer.companyPhotoUrls.length > 0 ||
+            props.jobOffer.companyAddress">
           <p><b>O firmie</b></p>
           <div
             v-html="props.jobOffer.companyDescription"
@@ -73,6 +74,9 @@
               :src="photoUrl"
               alt="company photo">
           </div>
+          <div
+            v-if="props.jobOffer.companyAddress"
+            ref="address" class="w-full h-54 lg:h-76"/>
         </div>
         <Design.Button primary @click="apply" class="max-md:hidden">
           Aplikuj
@@ -156,10 +160,11 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {Design} from "../design/design";
 import Icon from "../icons/Icon.vue";
 import {IconName} from "../icons/icons";
+import {ViewListener} from "../ui";
 import {
   formatCompanySizeLevel,
   formatExpiresInDays,
@@ -182,6 +187,7 @@ interface Props {
   jobOffer: JobOfferShow;
   preview?: boolean;
   canEdit: boolean;
+  viewListener: ViewListener;
 }
 
 interface Emit {
@@ -198,6 +204,17 @@ function apply(): void {
 }
 
 const titleClass = 'text-lg text-neutral2-900';
+
+const address = ref<HTMLElement|null>(null);
+onMounted(() => {
+  if (props.jobOffer.companyAddress === null) {
+    return;
+  }
+  props.viewListener.mountAddress(
+    address.value!,
+    props.jobOffer.companyAddress.latitude,
+    props.jobOffer.companyAddress.longitude);
+});
 
 interface CatchEyeField {
   title: string;

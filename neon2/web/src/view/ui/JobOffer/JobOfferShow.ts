@@ -26,6 +26,12 @@ export interface JobOfferShow {
   companyVideoUrl: string|null;
   applyExternally: boolean;
   companyPhotoUrls: string[];
+  companyAddress: CompanyAddress|null;
+}
+
+export interface CompanyAddress {
+  latitude: number;
+  longitude: number;
 }
 
 export function toJobOfferShow(jobOffer: JobOffer): JobOfferShow {
@@ -33,6 +39,7 @@ export function toJobOfferShow(jobOffer: JobOffer): JobOfferShow {
     ...jobOffer,
     applyExternally: jobOffer.applicationMode === 'external-ats',
     locationCities: locationCities(jobOffer.locations),
+    companyAddress: address(jobOffer),
   };
 }
 
@@ -43,6 +50,17 @@ export function fromSubmitToJobOfferShow(submit: SubmitJobOffer, expiresInDays: 
     applyExternally: submit.applicationMode === 'external-ats',
     locationCities: locationCities(submit.locations),
     workMode: parseWorkMode(submit.workModeRemoteRange),
+    companyAddress: address(submit),
+  };
+}
+
+function address(jobOffer: JobOffer|SubmitJobOffer): CompanyAddress|null {
+  if (jobOffer.companyAddress === null) {
+    return null;
+  }
+  return {
+    latitude: jobOffer.companyAddress.latitude,
+    longitude: jobOffer.companyAddress.longitude,
   };
 }
 

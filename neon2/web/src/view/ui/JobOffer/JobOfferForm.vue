@@ -175,6 +175,7 @@
   </div>
   <JobOfferShow
     v-if="step === 'preview'"
+    :view-listener="props.viewListener"
     preview
     :can-edit="false"
     @edit="previousStep"
@@ -219,6 +220,7 @@ import {formatWorkMode, parseWorkMode} from "../../../workMode";
 import {Design} from "../design/design";
 import {DrawerOption} from "../design/Dropdown.vue";
 import LocationField from "../design/LocationField.vue";
+import {ViewListener} from "../ui";
 import {
   formatCompanySizeLevel,
   formatHiringType,
@@ -238,6 +240,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
 interface Props {
+  viewListener: ViewListener;
   jobOffer: SubmitJobOffer;
   jobOfferExpiresInDays: number;
   mode: 'create'|'update';

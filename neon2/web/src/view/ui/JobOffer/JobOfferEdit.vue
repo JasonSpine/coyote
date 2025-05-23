@@ -1,6 +1,7 @@
 <template>
   <JobOfferForm
     mode="update"
+    :view-listener="screen.viewListener"
     :job-offer="toSubmitJobOffer(route.routeJobOffer!)"
     :job-offer-expires-in-days="route.routeJobOffer!.id"
     :upload="screen.upload"

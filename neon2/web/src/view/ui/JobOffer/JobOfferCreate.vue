@@ -1,6 +1,7 @@
 <template>
   <JobOfferForm
     mode="create"
+    :view-listener="screen.viewListener"
     :job-offer="newJobOffer"
     :job-offer-expires-in-days="expiresInDays"
     :upload="screen.upload"

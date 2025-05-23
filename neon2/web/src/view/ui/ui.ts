@@ -31,6 +31,7 @@ export interface ViewListener {
   resumePayment(jobOfferId: number): void;
   redeemBundle(jobOfferId: number): void;
   managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void;
+  mountAddress(element: HTMLElement, latitude: number, longitude: number): void;
   vatDetailsChanged(countryCode: string, vatId: string): void;
   assertUserAuthenticated(): boolean;
 }

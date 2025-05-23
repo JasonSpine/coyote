@@ -2,6 +2,7 @@ import {BackendJobOffer, BackendJobOfferLocation, JobBoardBackend, JobOfferPayme
 import {JobBoard, JobOffer} from './jobBoard';
 import {JobOfferFilter} from "./jobOfferFilter";
 import {JobOfferPayments} from "./jobOfferPayments";
+import {GoogleMapsAddressProvider, TestAddressProvider} from "./locationProvider/AddressProvider";
 import {GoogleMapsLocationProvider, LocationProvider, TestLocationProvider} from "./locationProvider/LocationProvider";
 import {PaymentMethod, PaymentNotification, PaymentProvider} from "./paymentProvider/PaymentProvider";
 import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
@@ -22,6 +23,9 @@ const paymentProvider: PaymentProvider = backend.testMode()
 const payments = new PaymentService(backend, paymentProvider);
 const jobOfferPayments = new JobOfferPayments();
 const planBundle = new PlanBundle();
+const address = backend.testMode() 
+  ? new TestAddressProvider() 
+  : new GoogleMapsAddressProvider();
 
 export type PlanBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|PaidPricingPlan;
@@ -140,6 +144,9 @@ ui.setViewListener({
     } else {
       paymentProvider.unmountCardInput();
     }
+  },
+  mountAddress(element: HTMLElement, latitude: number, longitude: number): void {
+    address.mount(element, latitude, longitude);
   },
   assertUserAuthenticated(): boolean {
     if (backend.isAuthenticated()) {

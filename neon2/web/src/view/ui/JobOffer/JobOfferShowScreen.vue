@@ -8,6 +8,7 @@
     </Design.Button>
   </Design.Card>
   <JobOfferShow
+    :view-listener="screen.viewListener"
     :job-offer="toJobOfferShow(route.routeJobOffer!)"
     :can-edit="route.routeJobOffer!.canEdit"
     @edit="editJob"
