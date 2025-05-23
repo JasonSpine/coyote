@@ -10,10 +10,8 @@ use Coyote\Services\Parser\Parsers\Purifier;
 use Coyote\Services\Parser\Parsers\SimpleMarkdown;
 use Coyote\Services\Parser\Parsers\Smilies;
 
-class SigFactory extends AbstractFactory
-{
-    public function parse(string $text): string
-    {
+class SigFactory extends AbstractFactory {
+    public function parse(string $text): string {
         start_measure('parsing', get_class($this));
 
         $parser = new CompositeParser();
@@ -23,9 +21,11 @@ class SigFactory extends AbstractFactory
                 $this->container[UserRepositoryInterface::class],
                 $this->container[PageRepositoryInterface::class],
                 request()->getHost(),
-                singleLine: false);
+                singleLine:false);
             $parser->attach($markdown);
-            $parser->attach(new Purifier(['b', 'strong', 'i', 'em', 'del', 'a[href|title|data-user-id|class]', 'code', 'br']));
+            $parser->attach(new Purifier(
+                ['b', 'strong', 'i', 'em', 'del', 'a[href|title|data-user-id|class]', 'code', 'br'],
+                hostname:$this->linkHostname()));
             $parser->attach(new Censore($this->container[WordRepositoryInterface::class]));
 
             return $parser;

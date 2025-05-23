@@ -12,17 +12,14 @@ use Coyote\Services\Parser\Parsers\SimpleMarkdown;
 use Coyote\Services\Parser\Parsers\Smilies;
 use Illuminate\Container\Container;
 
-class CommentFactory extends AbstractFactory
-{
+class CommentFactory extends AbstractFactory {
     public function __construct(
         Container   $container,
-        private int $userId)
-    {
+        private int $userId) {
         parent::__construct($container);
     }
 
-    public function parse(string $text): string
-    {
+    public function parse(string $text): string {
         start_measure('parsing', get_class($this));
 
         $this->cache->setId(class_basename($this) . $this->userId);
@@ -34,8 +31,10 @@ class CommentFactory extends AbstractFactory
                 $this->container[UserRepositoryInterface::class],
                 $this->container[PageRepositoryInterface::class],
                 request()->getHost(),
-                singleLine: true));
-            $parser->attach(new Purifier(['b', 'strong', 'i', 'u', 'em', 'del', 'a[href|title|data-user-id|class]', 'code']));
+                singleLine:true));
+            $parser->attach(new Purifier(
+                ['b', 'strong', 'i', 'u', 'em', 'del', 'a[href|title|data-user-id|class]', 'code'],
+                hostname:$this->linkHostname()));
             $parser->attach(new Censore($this->container[WordRepositoryInterface::class]));
 
             if (!empty($this->userId)) {

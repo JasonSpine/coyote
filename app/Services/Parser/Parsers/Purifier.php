@@ -7,7 +7,11 @@ use HTMLPurifier_Config;
 class Purifier implements Parser {
     private HTMLPurifier_Config $config;
 
-    public function __construct(array $overrideAllowedHtml = null, private bool $canAddVideo = false) {
+    public function __construct(
+        array           $overrideAllowedHtml = null,
+        private bool    $canAddVideo = false,
+        private ?string $hostname = null,
+    ) {
         $config = HTMLPurifier_Config::createDefault();
         $config->autoFinalize = false;
         $config->loadArray([
@@ -53,8 +57,12 @@ class Purifier implements Parser {
 
         $anchor = $def->addBlankElement('a');
         $anchor->attr_transform_post[] = new SetAttribute('rel', 'nofollow');
+        if ($this->hostname !== null) {
+            $anchor->attr_transform_post[] = new OpenInNewTabIfExternal($this->hostname);
+        }
 
         $def->addAttribute('a', 'data-user-id', 'Number');
+        $def->addAttribute('a', 'target', 'Text');
         $def->addAttribute('iframe', 'allowfullscreen', 'Bool');
 
         $mark = $def->addElement('mark', 'Inline', 'Inline', 'Common');
