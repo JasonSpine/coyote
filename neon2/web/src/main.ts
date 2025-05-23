@@ -2,8 +2,8 @@ import {BackendJobOffer, BackendJobOfferLocation, JobBoardBackend, JobOfferPayme
 import {JobBoard, JobOffer} from './jobBoard';
 import {JobOfferFilter} from "./jobOfferFilter";
 import {JobOfferPayments} from "./jobOfferPayments";
-import {GoogleMapsAddressProvider, TestAddressProvider} from "./locationProvider/AddressProvider";
-import {GoogleMapsLocationProvider, LocationProvider, TestLocationProvider} from "./locationProvider/LocationProvider";
+import {GoogleMapsPin, LocationDisplay, TestLocationDisplay} from "./location/LocationDisplay";
+import {GoogleMapsAutocomplete, LocationInput, TestLocationInput} from "./location/LocationInput";
 import {PaymentMethod, PaymentNotification, PaymentProvider} from "./paymentProvider/PaymentProvider";
 import {PaymentService, PaymentStatus} from "./paymentProvider/PaymentService";
 import {StripePaymentProvider} from './paymentProvider/StripePaymentProvider';
@@ -14,7 +14,7 @@ import {VueUi} from './view/ui/ui';
 import {View} from "./view/view";
 
 const backend = new JobBoardBackend();
-const ui = new VueUi(locationProvider(backend.testMode()), backend.isAuthenticated());
+const ui = new VueUi(locationInput(backend.testMode()), backend.isAuthenticated());
 const view = new View(ui);
 const board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jobOffers));
 const paymentProvider: PaymentProvider = backend.testMode()
@@ -23,9 +23,9 @@ const paymentProvider: PaymentProvider = backend.testMode()
 const payments = new PaymentService(backend, paymentProvider);
 const jobOfferPayments = new JobOfferPayments();
 const planBundle = new PlanBundle();
-const address = backend.testMode() 
-  ? new TestAddressProvider() 
-  : new GoogleMapsAddressProvider();
+const locationDisplay: LocationDisplay = backend.testMode()
+  ? new TestLocationDisplay()
+  : new GoogleMapsPin();
 
 export type PlanBundleName = 'strategic'|'growth'|'scale';
 export type PricingPlan = 'free'|PaidPricingPlan;
@@ -145,8 +145,8 @@ ui.setViewListener({
       paymentProvider.unmountCardInput();
     }
   },
-  mountAddress(element: HTMLElement, latitude: number, longitude: number): void {
-    address.mount(element, latitude, longitude);
+  mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void {
+    locationDisplay.mount(element, latitude, longitude);
   },
   assertUserAuthenticated(): boolean {
     if (backend.isAuthenticated()) {
@@ -198,10 +198,10 @@ planBundle.addListener(function (plan: PlanBundleName, remainingJobOffers: numbe
   view.setPlanBundle(plan, remainingJobOffers);
 });
 
-function locationProvider(testMode: boolean): LocationProvider {
+function locationInput(testMode: boolean): LocationInput {
   return testMode
-    ? new TestLocationProvider()
-    : new GoogleMapsLocationProvider();
+    ? new TestLocationInput()
+    : new GoogleMapsAutocomplete();
 }
 
 function remainingJobOffers(planBundle: PlanBundleName): number {

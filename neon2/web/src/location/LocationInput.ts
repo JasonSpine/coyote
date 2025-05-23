@@ -1,14 +1,10 @@
+import {googleMapsLoaded} from "./googleMaps";
+
 import PlaceResult = google.maps.places.PlaceResult;
 
-declare global {
-  interface Window {
-    onGoogleMapsLoaded(callback: () => void): void;
-  }
-}
-
-export class GoogleMapsLocationProvider implements LocationProvider {
+export class GoogleMapsAutocomplete implements LocationInput {
   mount(input: HTMLInputElement, listener: LocationListener): void {
-    window.onGoogleMapsLoaded(() => this.mountAutocomplete(input, listener));
+    googleMapsLoaded(() => this.mountAutocomplete(input, listener));
   }
 
   private mountAutocomplete(input: HTMLInputElement, listener: LocationListener): void {
@@ -61,12 +57,12 @@ export class GoogleMapsLocationProvider implements LocationProvider {
   }
 }
 
-export class TestLocationProvider implements LocationProvider {
+export class TestLocationInput implements LocationInput {
   mount(input: HTMLInputElement, listener: LocationListener): void {
   }
 }
 
-export interface LocationProvider {
+export interface LocationInput {
   mount(input: HTMLInputElement, listener: LocationListener): void;
 }
 

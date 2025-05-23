@@ -34,7 +34,7 @@ import {JobBoardProperties} from "./JobBoardProperties";
 
 const props = defineProps<JobBoardProperties>();
 
-provide('locationProvider', props.locationProvider!);
+provide('locationInput', props.locationInput!);
 provide('screen', props);
 
 function navigateHome(): void {

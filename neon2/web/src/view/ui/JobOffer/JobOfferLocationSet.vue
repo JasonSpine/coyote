@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
-import {Location} from "../../../locationProvider/LocationProvider";
+import {Location} from "../../../location/LocationInput";
 import {Design} from "../design/design";
 import LocationField from "../design/LocationField.vue";
 

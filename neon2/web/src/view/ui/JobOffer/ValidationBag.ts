@@ -1,4 +1,4 @@
-import {Location} from "../../../locationProvider/LocationProvider";
+import {Location} from "../../../location/LocationInput";
 
 export class ValidationBag<T extends string> {
   constructor(

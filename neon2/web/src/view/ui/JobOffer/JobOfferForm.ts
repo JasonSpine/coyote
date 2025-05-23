@@ -1,4 +1,4 @@
-import {Location} from "../../../locationProvider/LocationProvider";
+import {Location} from "../../../location/LocationInput";
 import {ApplicationMode, Currency, HiringType, LegalForm, Rate, SubmitJobOffer, WorkExperience} from "../../../main";
 import {prependJsUrlProtocol, strippedNumericString} from "./ValidationBag";
 

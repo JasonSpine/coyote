@@ -1,7 +1,7 @@
 import {createApp, h, reactive} from 'vue';
 import {JobOffer} from '../../jobBoard';
 import {JobOfferFilter} from "../../jobOfferFilter";
-import {LocationProvider} from "../../locationProvider/LocationProvider";
+import {LocationInput} from "../../location/LocationInput";
 import {
   Country,
   InitiatePayment,
@@ -31,7 +31,7 @@ export interface ViewListener {
   resumePayment(jobOfferId: number): void;
   redeemBundle(jobOfferId: number): void;
   managePaymentMethod(action: 'mount'|'unmount', cssSelector?: string): void;
-  mountAddress(element: HTMLElement, latitude: number, longitude: number): void;
+  mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void;
   vatDetailsChanged(countryCode: string, vatId: string): void;
   assertUserAuthenticated(): boolean;
 }
@@ -74,7 +74,7 @@ export class VueUi {
   private readonly filterListeners: FilterListener[] = [];
   private navigationListener: NavigationListener|null = null;
 
-  constructor(locationProvider: LocationProvider, isAuthenticated: boolean) {
+  constructor(locationInput: LocationInput, isAuthenticated: boolean) {
     this.vueState = reactive<JobBoardProperties>({
       viewListener: null,
       jobOffers: [],
@@ -94,7 +94,7 @@ export class VueUi {
       paymentSummary: null,
       paymentVatIdState: 'valid',
       invoiceCountries: null,
-      locationProvider,
+      locationInput,
       uiController: {
         showForm: this.showForm.bind(this),
         selectPlan: this.selectPlan.bind(this),

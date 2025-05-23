@@ -210,7 +210,7 @@ onMounted(() => {
   if (props.jobOffer.companyAddress === null) {
     return;
   }
-  props.viewListener.mountAddress(
+  props.viewListener.mountLocationDisplay(
     address.value!,
     props.jobOffer.companyAddress.latitude,
     props.jobOffer.companyAddress.longitude);

@@ -1,6 +1,8 @@
-export class GoogleMapsAddressProvider implements AddressProvider {
+import {googleMapsLoaded} from "./googleMaps";
+
+export class GoogleMapsPin implements LocationDisplay {
   mount(element: HTMLElement, latitude: number, longitude: number): void {
-    window.onGoogleMapsLoaded(() => this.mountAddress(element, latitude, longitude));
+    googleMapsLoaded(() => this.mountAddress(element, latitude, longitude));
   }
 
   mountAddress(element: HTMLElement, latitude: number, longitude: number): void {
@@ -16,10 +18,10 @@ export class GoogleMapsAddressProvider implements AddressProvider {
   }
 }
 
-export interface AddressProvider {
+export interface LocationDisplay {
   mount(element: HTMLElement, latitude: number, longitude: number): void;
 }
 
-export class TestAddressProvider implements AddressProvider {
+export class TestLocationDisplay implements LocationDisplay {
   mount(element: HTMLElement, latitude: number, longitude: number): void {}
 }

@@ -1,6 +1,6 @@
 import {JobOffer} from "../../jobBoard";
 import {JobOfferFilter} from "../../jobOfferFilter";
-import {LocationProvider} from "../../locationProvider/LocationProvider";
+import {LocationInput} from "../../location/LocationInput";
 import {Country, JobOfferFilters, PaymentSummary, PricingPlan, UploadAssets, VatIdState} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
@@ -23,7 +23,7 @@ export interface JobBoardProperties {
   paymentSummary: PaymentSummary|null;
   paymentVatIdState: VatIdState;
   invoiceCountries: Country[]|null;
-  locationProvider: LocationProvider|null;
+  locationInput: LocationInput|null;
   uiController: UiController;
   paymentProcessing: boolean;
 }

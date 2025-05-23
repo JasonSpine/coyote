@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import {inject, onMounted, ref} from "vue";
-import {Location, LocationProvider} from "../../../locationProvider/LocationProvider";
+import {Location, LocationInput} from "../../../location/LocationInput";
 import TextInputOutline from "./TextInputOutline.vue";
 
 const modelLocation = defineModel<Location|null>({required: true});
@@ -21,7 +21,7 @@ interface Props {
   placeholder: string;
 }
 
-const provider: LocationProvider = inject('locationProvider')!;
+const locationInput: LocationInput = inject('locationInput')!;
 const locationField = ref<HTMLInputElement|null>(null);
 
 let previouslySelectedFormattedAddress: string = formatAddress(modelLocation.value);
@@ -30,7 +30,7 @@ const loading = ref<boolean>(true);
 
 onMounted(() => {
   locationField.value!.value = formatAddress(modelLocation.value);
-  provider.mount(locationField.value!, {
+  locationInput.mount(locationField.value!, {
     mounted(): void {
       loading.value = false;
     },
