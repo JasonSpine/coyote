@@ -25,6 +25,7 @@ export interface JobOfferShow {
   companySizeLevel: number|null;
   companyVideoUrl: string|null;
   applyExternally: boolean;
+  companyPhotoUrls: string[];
 }
 
 export function toJobOfferShow(jobOffer: JobOffer): JobOfferShow {

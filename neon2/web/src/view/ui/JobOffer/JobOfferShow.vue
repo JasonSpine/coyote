@@ -53,16 +53,27 @@
           v-if="props.jobOffer.description"
           v-html="props.jobOffer.description"
           data-testid="jobOfferDescription"/>
-        <template v-if="props.jobOffer.companyDescription || props.jobOffer.companyVideoUrl">
+        <div class="my-4 space-y-3" v-if="
+            props.jobOffer.companyDescription || 
+            props.jobOffer.companyVideoUrl ||
+            props.jobOffer.companyPhotoUrls.length > 0">
           <p><b>O firmie</b></p>
           <div
             v-html="props.jobOffer.companyDescription"
             v-if="props.jobOffer.companyDescription"/>
           <VideoPlayer
-            class="my-4"
             v-if="props.jobOffer.companyVideoUrl"
             :youtube-url="props.jobOffer.companyVideoUrl"/>
-        </template>
+          <div
+            class="grid grid-cols-2 md:grid-cols-3 gap-4"
+            v-if="props.jobOffer.companyPhotoUrls.length">
+            <img
+              v-for="photoUrl in props.jobOffer.companyPhotoUrls"
+              class="w-full rounded-lg"
+              :src="photoUrl"
+              alt="company photo">
+          </div>
+        </div>
         <Design.Button primary @click="apply" class="max-md:hidden">
           Aplikuj
           <Icon class="ml-2" name="jobOfferApplyExternally" v-if="props.jobOffer.applyExternally"/>
