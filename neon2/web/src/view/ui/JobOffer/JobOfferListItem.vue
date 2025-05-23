@@ -68,7 +68,8 @@ import {IconName} from "../icons/icons";
 import {formatLegalForm, formatWorkMode} from "./format";
 import JobOfferBadge from "./JobOfferBadge.vue";
 import JobOfferFavouriteButton from "./JobOfferFavouriteButton.vue";
-import JobOfferSalary, {SalaryJobOffer} from "./JobOfferSalary.vue";
+import {SalaryJobOffer} from "./JobOfferSalary";
+import JobOfferSalary from "./JobOfferSalary.vue";
 import JobOfferSalaryNotProvided from "./JobOfferSalaryNotProvided.vue";
 import JobOfferTagList from "./JobOfferTagList.vue";
 
