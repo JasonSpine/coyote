@@ -99,11 +99,11 @@ const isPhantom = computed(() => props.color === 'phantom');
 
 const publishedOffersTitle = computed(() => {
   if (props.bundleSize === 1) {
-    return 'opublikowane ogloszenie';
+    return 'opublikowane ogłoszenie';
   }
   if (props.bundleSize === 3) {
-    return 'opublikowane ogloszenia';
+    return 'opublikowane ogłoszenia';
   }
-  return 'opublikowanych ogloszeń';
+  return 'opublikowanych ogłoszeń';
 });
 </script>
