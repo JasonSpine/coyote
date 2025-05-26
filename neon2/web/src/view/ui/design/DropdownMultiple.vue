@@ -1,5 +1,5 @@
 <template>
-  <Design.Drawer
+  <Design.Dropdown
     scrollable
     :nested="nested"
     :test-id="props.testId"
@@ -13,12 +13,12 @@
       :icon="option.icon"
       :model-value="selected(option.value)"
       @update:model-value="newValue => toggle(option.value, newValue)"/>
-  </Design.Drawer>
+  </Design.Dropdown>
 </template>
 
 <script setup lang="ts" generic="T extends string">
 import {computed} from "vue";
-import {IconName} from "../icons/Icon.vue";
+import {IconName} from "../icons/icons";
 import {Design} from "./design";
 import {DropdownOption} from "./DropdownOption";
 

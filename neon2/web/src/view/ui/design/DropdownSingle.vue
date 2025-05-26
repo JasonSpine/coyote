@@ -1,5 +1,5 @@
 <template>
-  <Design.Drawer
+  <Design.Dropdown
     :title="title"
     :icon="props.icon"
     :test-id="props.testId"
@@ -19,7 +19,7 @@
       <Icon v-if="selected === option.value" name="dropdownOptionSelected" class="text-primary mr-1"/>
       {{option.title}}
     </div>
-  </Design.Drawer>
+  </Design.Dropdown>
   <select class="absolute opacity-0 pointer-events-none" v-model="selected" :id="fieldLabelId">
     <option v-for="option in props.options" :value="option.value" v-text="option.title"/>
   </select>

@@ -3,7 +3,7 @@ import Button from "./Button.vue";
 import Card from "./Card.vue";
 import CheckBox from "./CheckBox.vue";
 import Divider from "./Divider.vue";
-import Drawer from "./Drawer.vue";
+import Dropdown from "./Dropdown.vue";
 import DropdownLabel from "./DropdownLabel.vue";
 import DropdownMultiple from "./DropdownMultiple.vue";
 import DropdownSingle from "./DropdownSingle.vue";
@@ -37,7 +37,7 @@ export const Design = {
   Card,
   CheckBox,
   Divider,
-  Drawer,
+  Dropdown,
   DropdownLabel,
   DropdownMultiple,
   DropdownSingle,
