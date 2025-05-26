@@ -3,8 +3,11 @@
     <Design.Row>
       <Design.Tabs :tabs="tabs" v-model="tab" @update:model-value="changeTab"/>
       <Design.RowEnd class="max-md:hidden">
-        <Design.Button icon="add" primary-outline @click="screen.uiController.showForm">
-          Dodaj ogłoszenie
+        <Design.Button
+          icon="add"
+          primary
+          @click="screen.uiController.showForm">
+          Dodaj ogłoszenie za Free
         </Design.Button>
       </Design.RowEnd>
     </Design.Row>
