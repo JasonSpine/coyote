@@ -97,12 +97,6 @@
   {{ schema_organization }}
 
   {% include 'legacyComponents.gdpr' %}
-
-  {% if survey is defined %}
-  <script type="application/json" id="survey">{{ survey|json_encode|raw }}</script>
-  <div id="js-survey"></div>
-  {% endif %}
-
 {% block header %}
   <header class="container-3xl {{ auth_guest() or user('allow_sticky_header') ? ' fixed-top' }}">
     {{ form_open({url: route('logout'), name: 'logout-form'}) }}

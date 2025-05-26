@@ -2,7 +2,6 @@
 namespace Coyote\Http\Controllers;
 
 use Coyote\Domain\DiscreetDate;
-use Coyote\Feature\Trial\TrialService;
 use Coyote\Http\Resources\ActivityResource;
 use Coyote\Http\Resources\Api\MicroblogResource;
 use Coyote\Http\Resources\FlagResource;
@@ -32,7 +31,7 @@ class HomeController extends Controller
         parent::__construct();
     }
 
-    public function index(TrialService $service): View
+    public function index(): View
     {
         $cache = app(Cache\Repository::class);
         $this->topic->pushCriteria(new OnlyThoseTopicsWithAccess());

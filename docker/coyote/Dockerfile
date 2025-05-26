@@ -8,7 +8,6 @@ RUN yarn install
 
 COPY webpack.common.js webpack.dev.js webpack.prod.js /app/
 COPY resources /app/resources
-COPY survey /app/survey
 COPY public /app/public
 COPY neon2 /app/neon2
 

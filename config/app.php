@@ -231,8 +231,6 @@ return [
         // kursy wymiany walut
         Swap\Laravel\SwapServiceProvider::class,
         Coyote\Providers\SeoServiceProvider::class,
-        Coyote\Feature\Trial\TrialServiceProvider::class,
-//        Coyote\Feature\Questionnaire\QuestionnaireServiceProvider::class,
         Coyote\Feature\JobBoard\JobBoardServiceProvider::class,
     ],
     /*

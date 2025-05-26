@@ -22,7 +22,6 @@ import './gdpr.ts';
 import '../feature/stickyAside/sticky-aside.js';
 import '../feature/lookAndFeel/lookAndFeel';
 import '../feature/post/copyButton';
-import '../../survey/src/survey';
 import '../feature/questionnaire/questionnaire';
 import '../feature/jobBoard/jobBoard';
 
