@@ -51,7 +51,7 @@
     </div>
   </Design.Tile>
   <Design.DropdownLabel label="Sortowanie:" class="max-md:hidden">
-    <Design.Dropdown
+    <Design.DropdownSingle
       nested-flush
       :icon="sortField.icon"
       :options="sortField.options"
@@ -102,7 +102,7 @@
           v-model="state.workExperiences"/>
       </div>
       <Design.Divider space/>
-      <Design.Dropdown
+      <Design.DropdownSingle
         nested
         :icon="sortField.icon"
         :options="sortField.options"

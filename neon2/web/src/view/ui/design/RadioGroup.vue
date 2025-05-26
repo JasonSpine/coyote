@@ -10,7 +10,7 @@
 
 <script setup lang="ts" generic="U extends string|number">
 import {Design} from "./design";
-import {DrawerOption} from "./Dropdown.vue";
+import {DrawerOption} from "./DropdownSingle.vue";
 
 const props = defineProps<Props>();
 

@@ -4,9 +4,9 @@ import Card from "./Card.vue";
 import CheckBox from "./CheckBox.vue";
 import Divider from "./Divider.vue";
 import Drawer from "./Drawer.vue";
-import Dropdown from "./Dropdown.vue";
 import DropdownLabel from "./DropdownLabel.vue";
 import DropdownMultiple from "./DropdownMultiple.vue";
+import DropdownSingle from "./DropdownSingle.vue";
 import FieldError from "./FieldError.vue";
 import FieldGroup from "./FieldGroup.vue";
 import FieldHelp from "./FieldHelp.vue";
@@ -38,9 +38,9 @@ export const Design = {
   CheckBox,
   Divider,
   Drawer,
-  Dropdown,
   DropdownLabel,
   DropdownMultiple,
+  DropdownSingle,
   FieldError,
   FieldGroup,
   FieldLabel,

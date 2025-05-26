@@ -19,7 +19,7 @@
         </Design.FieldGroup>
         <Design.Row space>
           <Design.FieldGroup required label="Kraj" :error="errors.countryCode">
-            <Design.Dropdown
+            <Design.DropdownSingle
               scrollable
               :options="countryCodeOptions"
               v-model="invoiceInformation.countryCode"
@@ -87,7 +87,7 @@ import {computed, onBeforeUnmount, onMounted, reactive, ref} from "vue";
 import {Country, InvoiceInformation, PaymentSummary, VatIdState} from "../../../main";
 import {PaymentMethod} from "../../../paymentProvider/PaymentProvider";
 import {Design} from "../design/design";
-import {DrawerOption} from "../design/Dropdown.vue";
+import {DrawerOption} from "../design/DropdownSingle.vue";
 import {ViewListener} from "../ui";
 import {ValidationBag} from "./ValidationBag";
 import JobOfferStepper from './JobOfferStepper.vue';

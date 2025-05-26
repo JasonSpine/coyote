@@ -12,7 +12,7 @@
 
 <script setup lang="ts" generic="U extends string|number">
 import {computed} from "vue";
-import {DrawerOption} from "./Dropdown.vue";
+import {DrawerOption} from "./DropdownSingle.vue";
 import Step, {StepMode} from "./Step.vue";
 
 const props = defineProps<Props>();

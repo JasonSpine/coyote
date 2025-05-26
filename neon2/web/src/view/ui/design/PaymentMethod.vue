@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts" generic="U extends string|number">
-import {DrawerOption} from "./Dropdown.vue";
+import {DrawerOption} from "./DropdownSingle.vue";
 import PaymentMethodTile from "./PaymentMethodTile.vue";
 
 const props = defineProps<Props>();

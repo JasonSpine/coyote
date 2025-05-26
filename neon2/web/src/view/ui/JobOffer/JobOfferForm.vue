@@ -45,7 +45,7 @@
         <Design.TextField placeholder="Podaj rok powstania firmy" v-model="jobOffer.companyFundingYear"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Liczba pracowników">
-        <Design.Dropdown
+        <Design.DropdownSingle
           default="Podaj liczbę pracowników firmy"
           :options="companySizeOptions"
           v-model="jobOffer.companySizeLevel"/>
@@ -78,7 +78,7 @@
         <Design.TextField placeholder="np. Senior Java Developer" v-model="jobOffer.title"/>
       </Design.FieldGroup>
       <Design.FieldGroup label="Staż pracy">
-        <Design.Dropdown :options="workExperienceOptions" v-model="jobOffer.experience"/>
+        <Design.DropdownSingle :options="workExperienceOptions" v-model="jobOffer.experience"/>
       </Design.FieldGroup>
     </Design.Card>
     <Design.Card space title="Technologie">
@@ -98,10 +98,10 @@
     <Design.Card space title="Forma zatrudnienia i wynagrodzenie">
       <Design.Row space>
         <Design.FieldGroup label="Rodzaj umowy">
-          <Design.Dropdown :options="legalFormOptions" v-model="jobOffer.legalForm"/>
+          <Design.DropdownSingle :options="legalFormOptions" v-model="jobOffer.legalForm"/>
         </Design.FieldGroup>
         <Design.FieldGroup label="Waluta wynagrodzenia">
-          <Design.Dropdown :options="salaryCurrencyOptions" v-model="jobOffer.salaryCurrency"/>
+          <Design.DropdownSingle :options="salaryCurrencyOptions" v-model="jobOffer.salaryCurrency"/>
         </Design.FieldGroup>
       </Design.Row>
       <Design.Row space>
@@ -114,10 +114,10 @@
       </Design.Row>
       <Design.Row space>
         <Design.FieldGroup label="Częstotliwość wynagrodzenia">
-          <Design.Dropdown :options="salaryRateOptions" v-model="jobOffer.salaryRate"/>
+          <Design.DropdownSingle :options="salaryRateOptions" v-model="jobOffer.salaryRate"/>
         </Design.FieldGroup>
         <Design.FieldGroup label="Netto / Brutto">
-          <Design.Dropdown :options="salaryIsNetOptions" v-model="jobOffer.salaryIsNet"/>
+          <Design.DropdownSingle :options="salaryIsNetOptions" v-model="jobOffer.salaryIsNet"/>
         </Design.FieldGroup>
       </Design.Row>
     </Design.Card>
@@ -127,7 +127,7 @@
         :model-value="jobOfferWorkMode"
         @update:model-value="updateWorkMode"/>
       <Design.FieldGroup label="Zakres pracy zdalnej">
-        <Design.Dropdown
+        <Design.DropdownSingle
           :disabled="jobOfferWorkMode !== 'hybrid'"
           :options="workModeRemoteRangeOptions"
           v-model="jobOffer.workModeRemoteRange"/>
@@ -227,7 +227,7 @@ import {
 } from "../../../main";
 import {formatWorkMode, parseWorkMode} from "../../../workMode";
 import {Design} from "../design/design";
-import {DrawerOption} from "../design/Dropdown.vue";
+import {DrawerOption} from "../design/DropdownSingle.vue";
 import LocationField from "../design/LocationField.vue";
 import {ViewListener} from "../ui";
 import {
