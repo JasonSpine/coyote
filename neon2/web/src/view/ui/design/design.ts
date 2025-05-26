@@ -23,6 +23,7 @@ import Row from "./Row.vue";
 import RowEnd from "./RowEnd.vue";
 import Stepper from "./Stepper.vue";
 import Tabs from "./Tabs.vue";
+import TagName from "./TagName.vue";
 import TextField from "./TextField.vue";
 import Tile from "./Tile.vue";
 import Toast from "./Toast.vue";
@@ -56,6 +57,7 @@ export const Design = {
   RowEnd,
   Stepper,
   Tabs,
+  TagName,
   TextField,
   Tile,
 };

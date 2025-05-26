@@ -1,12 +1,13 @@
 <template>
   <span class="flex flex-wrap gap-1 items-center">
-    <span v-for="tag in visibleTags" v-text="tag" class="bg-tag px-1 py-0.5 rounded text-sm"/>
-    <span v-if="hiddenTags">+{{ hiddenTags }}</span>
+    <TagName v-for="tag in visibleTags" v-text="tag"/>
+    <span v-if="hiddenTags">+{{hiddenTags}}</span>
   </span>
 </template>
 
 <script setup lang="ts">
 import {computed} from "vue";
+import TagName from "../design/TagName.vue";
 
 interface Props {
   tagNames: string[];
