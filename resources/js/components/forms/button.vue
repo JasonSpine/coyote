@@ -1,6 +1,6 @@
 <template>
   <button :disabled="disabled || processing" @click="click" :type="submit ? 'submit' : 'button'">
-    <i v-if="processing" class="fa fa-spinner fa-spin fa-fw"/>
+    <i v-if="processing" class="fa-solid fa-spinner-third fa-spin fa-fw"/>
     <slot/>
   </button>
 </template>
