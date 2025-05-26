@@ -1,5 +1,5 @@
 <template>
-  <Design.Button
+  <Button
     primary
     class="relative"
     :disabled="props.loading"
@@ -10,16 +10,15 @@
       name="buttonLoading"
       class="spin absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"/>
     <span v-text="props.title" :class="{invisible: props.loading}"/>
-  </Design.Button>
+  </Button>
 </template>
 
 <script setup lang="ts">
 import Icon from "../icons/Icon.vue";
-import {Design} from "./design";
-
-const emit = defineEmits(['click']);
+import Button from "./Button.vue";
 
 const props = defineProps<Props>();
+const emit = defineEmits(['click']);
 
 interface Props {
   title: string;

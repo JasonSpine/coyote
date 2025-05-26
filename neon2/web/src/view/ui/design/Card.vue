@@ -1,13 +1,13 @@
 <template>
-  <Design.Tile vertical space :big-space="props.space" :class="border">
+  <Tile vertical space :big-space="props.space" :class="border">
     <p class="text-lg font-semibold" v-text="props.title" v-if="props.title"/>
     <slot/>
-  </Design.Tile>
+  </Tile>
 </template>
 
 <script setup lang="ts">
 import {computed} from "vue";
-import {Design} from "./design";
+import Tile from "./Tile.vue";
 
 const props = defineProps<Props>();
 

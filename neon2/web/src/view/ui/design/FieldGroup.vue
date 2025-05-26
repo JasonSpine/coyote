@@ -1,20 +1,21 @@
 <template>
   <div class="flex-1">
     <label :for="fieldLabelId">
-      <Design.FieldLabel
+      <FieldLabel
         :has-error="hasError"
         :title="props.label"
         :required="props.required"
         :disabled="props.disabled"/>
     </label>
     <slot/>
-    <Design.FieldError v-if="hasError" :message="props.error!"/>
+    <FieldError v-if="hasError" :message="props.error!"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import {computed, provide} from "vue";
-import {Design} from "./design";
+import FieldError from "./FieldError.vue";
+import FieldLabel from "./FieldLabel.vue";
 
 interface Props {
   label: string;

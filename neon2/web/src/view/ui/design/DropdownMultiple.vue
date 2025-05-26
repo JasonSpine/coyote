@@ -1,5 +1,5 @@
 <template>
-  <Design.Dropdown
+  <Dropdown
     scrollable
     :nested="nested"
     :test-id="props.testId"
@@ -7,19 +7,20 @@
     :icon="props.icon"
     :blip="valuesCount"
     :open-to-left="props.openToLeft">
-    <Design.CheckBox
+    <CheckBox
       v-for="option in props.options"
       :label="option.title"
       :icon="option.icon"
       :model-value="selected(option.value)"
       @update:model-value="newValue => toggle(option.value, newValue)"/>
-  </Design.Dropdown>
+  </Dropdown>
 </template>
 
 <script setup lang="ts" generic="T extends string">
 import {computed} from "vue";
 import {IconName} from "../icons/icons";
-import {Design} from "./design";
+import CheckBox from "./CheckBox.vue";
+import Dropdown from "./Dropdown.vue";
 import {DropdownOption} from "./DropdownOption";
 
 const props = defineProps<Props>();

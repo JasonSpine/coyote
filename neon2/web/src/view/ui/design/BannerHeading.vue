@@ -1,5 +1,5 @@
 <template>
-  <Design.Tile big-space class="tile-highlight-long dark:tile-highlight">
+  <Tile big-space class="tile-highlight-long dark:tile-highlight">
     <p class="mb-1 text-sm text-green-700 dark:text-green-050">
       4programmers
       <span @click="emit('back')" class="cursor-pointer">
@@ -27,11 +27,11 @@
         </h2>
       </template>
     </div>
-  </Design.Tile>
+  </Tile>
 </template>
 
 <script setup lang="ts">
-import {Design} from './design';
+import Tile from "./Tile.vue";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();

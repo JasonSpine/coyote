@@ -1,6 +1,6 @@
 <template>
   <div :class="props.vertical ? 'space-y-4' : 'flex space-x-8'">
-    <Design.RadioButton
+    <RadioButton
       v-for="option in props.options"
       :title="option.title"
       :selected="option.value === selected"
@@ -9,8 +9,8 @@
 </template>
 
 <script setup lang="ts" generic="U extends string|number">
-import {Design} from "./design";
 import {DrawerOption} from "./DropdownSingle.vue";
+import RadioButton from "./RadioButton.vue";
 
 const props = defineProps<Props>();
 

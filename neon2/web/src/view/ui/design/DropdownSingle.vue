@@ -1,5 +1,5 @@
 <template>
-  <Design.Dropdown
+  <Dropdown
     :title="title"
     :icon="props.icon"
     :test-id="props.testId"
@@ -19,7 +19,7 @@
       <Icon v-if="selected === option.value" name="dropdownOptionSelected" class="text-primary mr-1"/>
       {{option.title}}
     </div>
-  </Design.Dropdown>
+  </Dropdown>
   <select class="absolute opacity-0 pointer-events-none" v-model="selected" :id="fieldLabelId">
     <option v-for="option in props.options" :value="option.value" v-text="option.title"/>
   </select>
@@ -29,7 +29,7 @@
 import {computed, inject, ref} from "vue";
 import Icon from "../icons/Icon.vue";
 import {IconName} from "../icons/icons";
-import {Design} from "./design";
+import Dropdown from "./Dropdown.vue";
 
 export interface DrawerOption<T> {
   value: T;

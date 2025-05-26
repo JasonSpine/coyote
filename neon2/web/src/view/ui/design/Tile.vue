@@ -1,5 +1,5 @@
 <template>
-  <Design.Material
+  <Material
     :nested="props.nested || props.nestedPill"
     :round="rounded"
     :class="tileClass"
@@ -8,15 +8,14 @@
     <Icon v-if="props.icon" :name="props.icon" class="mr-2"/>
     {{props.text}}
     <slot/>
-  </Design.Material>
+  </Material>
 </template>
 
 <script setup lang="ts">
 import {computed} from "vue";
 import Icon from "../icons/Icon.vue";
 import {IconName} from "../icons/icons";
-import {Design} from "./design";
-import {MaterialRound} from "./Material.vue";
+import Material, {MaterialRound} from "./Material.vue";
 
 const props = defineProps<Props>();
 
