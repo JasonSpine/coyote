@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from "vue";
+import {computed, StyleValue} from "vue";
 
 interface Props {
   inline?: boolean;
@@ -13,7 +13,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const rowFlexStyle = computed<object>(() => {
+const rowFlexStyle = computed<StyleValue>(() => {
   if (props.inline) {
     return {
       display: 'flex',

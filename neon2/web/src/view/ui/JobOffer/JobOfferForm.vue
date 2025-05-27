@@ -74,12 +74,16 @@
   </div>
   <div class="max-w-170 space-y-4 mx-auto" v-if="step === 'jobOffer'">
     <Design.Card space title="Podstawowe informacje">
-      <Design.FieldGroup required label="Tytuł ogłoszenia" :error="errors.title">
-        <Design.TextField placeholder="np. Senior Java Developer" v-model="jobOffer.title"/>
-      </Design.FieldGroup>
-      <Design.FieldGroup label="Staż pracy">
-        <Design.DropdownSingle :options="workExperienceOptions" v-model="jobOffer.experience"/>
-      </Design.FieldGroup>
+      <Design.Row>
+        <Design.FieldGroup required label="Tytuł ogłoszenia" :error="errors.title">
+          <Design.TextField placeholder="np. Senior Java Developer" v-model="jobOffer.title"/>
+        </Design.FieldGroup>
+        <div class="w-1/3">
+          <Design.FieldGroup label="Staż pracy">
+            <Design.DropdownSingle :options="workExperienceOptions" v-model="jobOffer.experience"/>
+          </Design.FieldGroup>
+        </div>
+      </Design.Row>
     </Design.Card>
     <Design.Card space title="Technologie">
       <Design.FieldGroup label="Wymagane technologie">
