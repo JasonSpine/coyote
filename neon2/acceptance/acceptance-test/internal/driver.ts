@@ -55,7 +55,7 @@ export class Driver {
     companyName: string,
     expired: boolean,
   ) {
-    await this.web.click('Dodaj ogłoszenie za Free');
+    await this.web.click('Dodaj ogłoszenie od 0zł');
     if (payment !== 'redeem-bundle') {
       await this.selectPricingPlan(pricingPlan);
     }
@@ -271,7 +271,7 @@ export class Driver {
   }
 
   async tryPublishJobOffer(mode: JobOfferSubmitAttemptMode): Promise<void> {
-    await this.web.click('Dodaj ogłoszenie za Free');
+    await this.web.click('Dodaj ogłoszenie od 0zł');
     await this.selectPricingPlan('free');
     if (mode === 'empty-title') {
       await this.fillJobOfferCompanyName('company name');

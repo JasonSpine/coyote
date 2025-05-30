@@ -7,7 +7,7 @@
           icon="add"
           primary
           @click="screen.uiController.showForm">
-          Dodaj ogłoszenie za Free
+          Dodaj ogłoszenie od 0zł
         </Design.Button>
       </Design.RowEnd>
     </Design.Row>
