@@ -17,47 +17,56 @@ use Coyote\Services\Flags;
 use Coyote\Services\Microblogs\Builder;
 use Coyote\Services\Parser\Extensions\Emoji;
 use Coyote\Services\Session\Renderer;
+use Coyote\User;
 use Illuminate\Contracts\Cache;
 use Illuminate\View\View;
 
-class HomeController extends Controller
-{
+class HomeController extends Controller {
     public function __construct(
         private ReputationRepository $reputation,
         private ActivityRepository   $activity,
         private TopicRepository      $topic,
-    )
-    {
+    ) {
         parent::__construct();
     }
 
-    public function index(): View
-    {
+    public function index(): View {
         $cache = app(Cache\Repository::class);
         $this->topic->pushCriteria(new OnlyThoseTopicsWithAccess());
         $this->topic->pushCriteria(new SkipHiddenCategories($this->userId));
         $date = new DiscreetDate(date('Y-m-d H:i:s'));
 
         return $this->view('home', [
-            'flags'         => $this->flags(),
-            'microblogs'    => $this->getMicroblogs(),
-            'interesting'   => $this->topic->interesting(),
-            'newest'        => $this->topic->newest(),
-            'activities'    => $this->getActivities(),
-            'reputation'    => $cache->remember('homepage:reputation', 30 * 60, fn() => [
+            'flags'           => $this->flags(),
+            'microblogs'      => $this->getMicroblogs(),
+            'interesting'     => $this->topic->interesting(),
+            'newest'          => $this->topic->newest(),
+            'activities'      => $this->getActivities(),
+            'reputation'      => $cache->remember('homepage:reputation', 30 * 60, fn() => [
                 'week'    => $this->reputation->reputationSince($date->startOfThisWeek(), limit:5),
                 'month'   => $this->reputation->reputationSince($date->startOfThisMonth(), limit:5),
                 'quarter' => $this->reputation->reputationSince($date->startOfThisQuarter(), limit:5),
             ]),
-            'emojis'        => Emoji::all(),
-            'events'        => [],
-            'globalViewers' => $this->globalViewers(),
-        ])
-            ->with('settings', $this->getSettings());
+            'emojis'          => Emoji::all(),
+            'events'          => [],
+            'globalViewers'   => $this->globalViewers(),
+            'homepageMembers' => $this->members(),
+            'settings'        => $this->getSettings(),
+        ]);
     }
 
-    private function getMicroblogs(): array
-    {
+    private function members(): array {
+        /** @var Renderer $renderer */
+        $renderer = app(Renderer::class);
+        $viewers = $renderer->sessionViewers('/');
+        return [
+            'usersTotal'   => \number_format(User::query()->withTrashed()->count(), thousands_separator:'.'),
+            'usersOnline'  => \count($viewers->users) + $viewers->guestsCount,
+            'guestsOnline' => $viewers->guestsCount,
+        ];
+    }
+
+    private function getMicroblogs(): array {
         /** @var Builder $builder */
         $builder = app(Builder::class);
         $microblogs = $builder->orderByScore()->popular();
@@ -65,23 +74,20 @@ class HomeController extends Controller
         return (new MicroblogCollection($microblogs))->resolve($this->request);
     }
 
-    private function getActivities(): array
-    {
+    private function getActivities(): array {
         $this->activity->pushCriteria(new OnlyThoseForumsWithAccess($this->auth));
         $this->activity->pushCriteria(new SkipHiddenCategories($this->userId));
         $result = $this->activity->latest(20);
         return ActivityResource::collection($result)->toArray($this->request);
     }
 
-    private function globalViewers(): View
-    {
+    private function globalViewers(): View {
         /** @var Renderer $renderer */
         $renderer = app(Renderer::class);
         return $renderer->render('/', local:false, includeHeading:false);
     }
 
-    private function flags(): array
-    {
+    private function flags(): array {
         /** @var Flags $flags */
         $flags = app(Flags::class);
         $resourceFlags = $flags
