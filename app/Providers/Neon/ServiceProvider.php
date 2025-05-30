@@ -5,6 +5,7 @@ use Coyote;
 use Coyote\Domain\Settings\UserTheme;
 use Coyote\Domain\StringHtml;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
+use Neon2\AcceptanceTest;
 use Neon2\Coyote\Integration;
 use Neon2\Invoice\CountryGate;
 use Neon2\JobBoardView;
@@ -22,7 +23,7 @@ class ServiceProvider extends RouteServiceProvider {
         parent::register();
         $this->app->bind(CountryGate::class, EloquentCountryGate::class);
         $this->app->bind(Integration::class, CoyoteIntegration::class);
-        if ($this->isTestMode()) {
+        if (new AcceptanceTest()->isTestMode()) {
             $this->app->bind(PaymentProvider::class, TestPaymentProvider::class);
             $this->app->bind(PaymentWebhook::class, TestPaymentWebhook::class);
             $this->app->instance(StripePublicKey::class, new StripePublicKey(null));
@@ -60,13 +61,14 @@ class ServiceProvider extends RouteServiceProvider {
         CountryGate     $countries,
         StripePublicKey $stripePublicKey,
         UserTheme       $theme,
+        AcceptanceTest  $test,
     ): string {
-        if ($this->isTestMode()) {
+        if ($test->isTestMode()) {
             if (request()->query->has('workerIndex')) {
                 $userId = $this->acceptanceTestUserId(request()->query->get('workerIndex'));
                 auth()->loginUsingId($userId, remember:true);
             }
-            if (\request()->query->has('revoke-bundle')) {
+            if (\request()->query->has('revokeBundle')) {
                 $integration->revokePlanBundle(auth()->id());
             }
         }
@@ -75,7 +77,7 @@ class ServiceProvider extends RouteServiceProvider {
             $countries,
             $stripePublicKey->publishableKey,
             config('services.google-maps.key'),
-            $this->isTestMode(),
+            $test->isTestMode(),
             auth()->id(),
             auth()->user()?->email,
             app('session')->token(),
@@ -90,9 +92,5 @@ class ServiceProvider extends RouteServiceProvider {
     private function acceptanceTestUserId(int $workerIndex): int {
         $userId = $workerIndex + 1;
         return Coyote\User::query()->where('name', "acceptance-test-$userId")->first()->id;
-    }
-
-    private function isTestMode(): bool {
-        return env('ACCEPTANCE_TEST', 'production') === 'acceptance';
     }
 }

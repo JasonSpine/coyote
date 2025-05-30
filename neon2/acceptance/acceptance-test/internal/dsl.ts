@@ -44,6 +44,7 @@ export class Dsl {
     payment?: Payment,
     description?: string,
     companyName?: string,
+    expired?: boolean
   }): None {
     await this.driver.publishJobOffer(
       this.enc(jobOffer.title),
@@ -51,7 +52,8 @@ export class Dsl {
       jobOffer.payment || 'completed',
       this.cardPaymentFor(jobOffer.payment),
       jobOffer.description || 'Description',
-      jobOffer.companyName || 'Company name');
+      jobOffer.companyName || 'Company name',
+      jobOffer.expired || false);
   }
 
   async continueAndFinishPayment(payment: {jobOfferTitle: string}): None {
@@ -231,6 +233,12 @@ export class Dsl {
 
   async assertInvoiceVatId(state: 'valid'|'invalid'): None {
     assertEquals(state, await this.driver.findInvoiceVatIdFieldState());
+  }
+
+  async assertJobOfferMineListed(assertion: {jobOfferTitle: string}): Promise<void> {
+    assertContains(
+      assertion.jobOfferTitle,
+      this.mangler.decodedAll(await this.driver.listJobOffersMine()));
   }
 }
 

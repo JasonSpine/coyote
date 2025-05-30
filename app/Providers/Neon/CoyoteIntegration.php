@@ -123,7 +123,11 @@ readonly class CoyoteIntegration implements Integration {
         UserPlanBundle::query()->where('user_id', '=', $userId)->delete();
     }
 
-    public function createJobOffer(string $jobOfferPlan, JobOfferSubmit $jobOffer): JobOffer {
+    public function createJobOffer(
+        string         $jobOfferPlan,
+        JobOfferSubmit $jobOffer,
+        bool           $acceptanceTestExpired,
+    ): JobOffer {
         $user = $this->loggedUser();
         $job = new Job();
         $job->plan_id = $this->unmapper->planId($jobOfferPlan);
@@ -141,6 +145,10 @@ readonly class CoyoteIntegration implements Integration {
         $payment = $job->getUnpaidPayment();
         if (!$payment->plan->price) {
             event(new PaymentPaid($payment));
+            if ($acceptanceTestExpired) {
+                $job->deadline_at = Carbon::now();
+                $job->save();
+            }
             return $this->neonJobOffer($job->fresh(), null);
         }
         return $this->neonJobOffer($job, $this->paymentIntent($payment));

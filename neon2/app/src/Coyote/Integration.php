@@ -20,7 +20,11 @@ interface Integration {
 
     public function revokePlanBundle(int $userId): void;
 
-    public function createJobOffer(string $jobOfferPlan, JobOfferSubmit $jobOffer): JobOffer;
+    public function createJobOffer(
+        string         $jobOfferPlan,
+        JobOfferSubmit $jobOffer,
+        bool           $acceptanceTestExpired,
+    ): JobOffer;
 
     public function updateJobOffer(int $jobOfferId, JobOfferSubmit $jobOffer): void;
 

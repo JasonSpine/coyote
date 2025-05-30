@@ -27,8 +27,9 @@ export class Driver {
     paymentCardNumber: string,
     description: string,
     companyName: string,
+    expired: boolean,
   ): None {
-    await this.createJobOffer(title, pricingPlan, payment, description, companyName);
+    await this.createJobOffer(title, pricingPlan, payment, description, companyName, expired);
     if (pricingPlan === 'free') {
       await this.web.waitForText('Dodano ogłoszenie!');
     } else {
@@ -52,16 +53,21 @@ export class Driver {
     payment: Payment,
     description: string,
     companyName: string,
+    expired: boolean,
   ) {
     await this.web.click('Dodaj ogłoszenie za Free');
     if (payment !== 'redeem-bundle') {
       await this.selectPricingPlan(pricingPlan);
     }
-    await this.submitJobOfferForm(title, description, companyName, pricingPlan === 'free' ? 'free' : 'paid');
+    await this.submitJobOfferForm(title,
+      description,
+      companyName,
+      pricingPlan === 'free' ? 'free' : 'paid',
+      expired);
   }
 
   async initiateCardPayment(jobOfferTitle: string, cardNumber: string): None {
-    await this.createJobOffer(jobOfferTitle, 'premium', 'ignored', 'description', 'companyName');
+    await this.createJobOffer(jobOfferTitle, 'premium', 'ignored', 'description', 'companyName', false);
     await this.selectPaymentMethod('card');
     await this.fillCardDetails(cardNumber);
     await this.fillInvoiceInformation();
@@ -69,14 +75,20 @@ export class Driver {
   }
 
   async initiateP24Payment(jobOfferTitle: string): None {
-    await this.createJobOffer(jobOfferTitle, 'premium', 'ignored', 'description', 'companyName');
+    await this.createJobOffer(jobOfferTitle, 'premium', 'ignored', 'description', 'companyName', false);
     await this.selectPaymentMethod('p24');
     await this.fillInvoiceInformation();
     await this.submitPayment();
   }
 
-  private async submitJobOfferForm(title: string, description: string, companyName: string, pricing: 'paid'|'free'): None {
-    await this.fillJobOfferForm(title, description, companyName);
+  private async submitJobOfferForm(
+    title: string,
+    description: string,
+    companyName: string,
+    pricing: 'paid'|'free',
+    expired: boolean,
+  ): None {
+    await this.fillJobOfferForm(title, description, companyName, expired);
     if (pricing === 'free') {
       await this.web.click('Publikuj');
     } else {
@@ -85,9 +97,9 @@ export class Driver {
     await this.web.waitForText('Dodano ogłoszenie!');
   }
 
-  private async fillJobOfferForm(title: string, description: string, companyName: string): None {
+  private async fillJobOfferForm(title: string, description: string, companyName: string, expired: boolean): None {
     await this.fillJobOfferCompanyName(companyName);
-    await this.fillJobOfferDetails(title, description);
+    await this.fillJobOfferDetails(title, description, expired);
   }
 
   private async fillJobOfferCompanyName(companyName: string): None {
@@ -95,9 +107,13 @@ export class Driver {
     await this.web.click('Dalej');
   }
 
-  private async fillJobOfferDetails(title: string, description: string): None {
+  private async fillJobOfferDetails(title: string, description: string, expired: boolean): None {
     await this.web.fillByLabel('Tytuł ogłoszenia', title);
-    await this.web.fill('jobOfferDescription', description);
+    if (expired) {
+      await this.web.fill('jobOfferDescription', 'acceptanceTestExpired');
+    } else {
+      await this.web.fill('jobOfferDescription', description);
+    }
     await this.web.click('Dalej');
   }
 
@@ -181,7 +197,7 @@ export class Driver {
   async updateJobOffer(sourceTitle: string, targetTitle: string, targetDescription: string): None {
     await this.web.click(sourceTitle);
     await this.web.click('Edytuj');
-    await this.fillJobOfferForm(targetTitle, targetDescription, 'Company name');
+    await this.fillJobOfferForm(targetTitle, targetDescription, 'Company name', false);
     await this.web.click('Zapisz');
     await this.web.waitForText('Zaktualizowano ogłoszenie!');
   }
@@ -192,6 +208,11 @@ export class Driver {
   }
 
   async listJobOffers(): Promise<string[]> {
+    return await this.web.listStringByTestId('jobOfferTitle');
+  }
+
+  async listJobOffersMine(): Promise<string[]> {
+    await this.web.click('Moje ogłoszenia');
     return await this.web.listStringByTestId('jobOfferTitle');
   }
 
@@ -254,7 +275,7 @@ export class Driver {
     await this.selectPricingPlan('free');
     if (mode === 'empty-title') {
       await this.fillJobOfferCompanyName('company name');
-      await this.fillJobOfferDetails('', 'description');
+      await this.fillJobOfferDetails('', 'description', false);
     }
     if (mode === 'empty-company-name') {
       await this.fillJobOfferCompanyName('');
@@ -273,7 +294,12 @@ export class Driver {
   }
 
   async anticipatePayment(jobOfferTitle: string, plan: PricingPlan): Promise<void> {
-    await this.createJobOffer(jobOfferTitle, plan, 'ignored', 'description', 'companyName');
+    await this.createJobOffer(jobOfferTitle,
+      plan,
+      'ignored',
+      'description',
+      'companyName',
+      false);
   }
 
   async findPaymentSummary(): Promise<PaymentSummary> {
@@ -314,6 +340,10 @@ export class Driver {
       return 'invalid';
     }
     return 'valid';
+  }
+
+  async findJobOfferExists(jobOfferTitle: string): Promise<void> {
+
   }
 }
 

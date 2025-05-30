@@ -5,6 +5,7 @@ use Coyote\Rules\VatIdRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades;
 use Illuminate\Support\ServiceProvider;
+use Neon2\AcceptanceTest;
 use Neon2\Coyote\Integration;
 use Neon2\JobBoard\Currency;
 use Neon2\JobBoard\InvoiceInformation;
@@ -20,10 +21,12 @@ use Neon2\Request\JobOfferSubmit;
 class RouteServiceProvider extends ServiceProvider {
     public function boot(): void {
         Facades\Route::middleware(['web'])->group(function () {
-            Facades\Route::post('/neon2/job-offers', function (Integration $integration) {
+            Facades\Route::post('/neon2/job-offers', function (Integration $integration, AcceptanceTest $test) {
+                $jobOffer = $this->requestJobOfferSubmit(request());
                 $createdJobOffer = $integration->createJobOffer(
                     request()->get('jobOfferPlan'),
-                    $this->requestJobOfferSubmit(request()));
+                    $jobOffer,
+                    $test->isTestMode() && $this->acceptanceTestExpired($jobOffer));
                 return response()->json($createdJobOffer, status:201);
             });
             Facades\Route::patch('/neon2/job-offers', function (Integration $integration) {
@@ -125,5 +128,9 @@ class RouteServiceProvider extends ServiceProvider {
             $locationFields['streetNumber'],
             $locationFields['countryCode'],
             $locationFields['postalCode']);
+    }
+
+    private function acceptanceTestExpired(JobOfferSubmit $jobOffer): bool {
+        return \str_contains($jobOffer->description, 'acceptanceTestExpired');
     }
 }
