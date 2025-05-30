@@ -76,6 +76,7 @@ export function jobOfferCities(jobOffer: JobOffer): string[] {
 export interface JobOffer {
   id: number;
   expiresInDays: number;
+  expiryDate: string;
   status: 'published'|'awaitingPayment'|'expired';
   isNew: boolean;
   isFavourite: boolean;

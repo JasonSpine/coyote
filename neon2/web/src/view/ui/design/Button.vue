@@ -3,7 +3,7 @@
     @click="click"
     class="rounded-lg"
     :disabled="props.disabled"
-    :class="[variantClass, sizeClass, disabledClass, cursorClass, {'w-full': props.fullWidth}]"
+    :class="[variantClass, sizeClass, cursorClass, {'w-full': props.fullWidth}]"
     :data-testid="props.testId">
     <Icon v-if="props.icon" :name="props.icon" :class="{'mr-2': !props.square}"/>
     <slot/>
@@ -39,7 +39,10 @@ function click(): void {
 
 const variantClass = computed(() => {
   if (props.primary) {
-    return 'text-on-primary border border-transparent';
+    if (props.disabled) {
+      return 'text-neutral2-400 bg-neutral2-200';
+    }
+    return 'bg-primary text-on-primary border border-transparent';
   }
   if (props.primaryOutline) {
     return 'text-primary border border-primary';
@@ -48,16 +51,6 @@ const variantClass = computed(() => {
     return 'text-neutral2-800 border border-neutral2-200';
   }
   return 'bg-tile';
-});
-
-const disabledClass = computed(() => {
-  if (props.primary) {
-    if (props.disabled) {
-      return 'bg-green-050 dark:bg-green-800';
-    }
-    return 'bg-primary';
-  }
-  return '';
 });
 
 const cursorClass = computed(() => {

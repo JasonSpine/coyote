@@ -75,6 +75,7 @@ readonly class CoyoteIntegration implements Integration {
         return new JobBoard\JobOffer(
             $jobOffer->id,
             $jobOffer->deadline + 1,
+            $this->expiryDate($jobOffer),
             $this->jobOfferStatus($jobOffer),
             $this->mapper->jobOfferFields($jobOffer),
             $intent,
@@ -301,5 +302,9 @@ readonly class CoyoteIntegration implements Integration {
 
     private function isNew(Job $jobOffer): bool {
         return $jobOffer->created_at->diffInHours(Carbon::now()) <= 24;
+    }
+
+    private function expiryDate(Job $jobOffer): string {
+        return $jobOffer->deadline_at->format('Y-m-d');
     }
 }

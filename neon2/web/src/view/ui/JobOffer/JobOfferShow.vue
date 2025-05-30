@@ -112,6 +112,11 @@
               :value="formatExpiresInDays(props.jobOffer.expiresInDays)"
               v-if="props.jobOffer.expiresInDays"
               test-id="jobOfferExpiresInDays"/>
+            <JobOfferField
+              title="Wygasła"
+              :value="props.jobOffer.expiryDate"
+              v-if="props.jobOffer.expiryDate"
+              icon="jobOfferExpiredOn"/>
             <Design.Button
               :primary="!props.preview"
               :primary-outline="props.preview"

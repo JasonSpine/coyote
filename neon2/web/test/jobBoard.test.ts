@@ -37,6 +37,7 @@ describe('Job board', () => {
       id: offer.id || 1,
       title: offer.title || 'Offer',
       expiresInDays: 14,
+      expiryDate: '2000-01-01',
       status: offer.status || 'published',
       isNew: false,
       isFavourite: false,

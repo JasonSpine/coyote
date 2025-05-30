@@ -6,6 +6,7 @@ const iconClose = 'fa-light fa-close';
 const iconSuitcase = 'fa-light fa-suitcase';
 const iconRemove = 'fa-light fa-trash';
 const iconAsterisk = 'fa-light fa-asterisk';
+const iconCalendar = 'fa-light fa-calendar';
 
 const jobOfferLocation = 'fa-light fa-location-dot';
 const jobOfferLegalForm = iconSuitcase;
@@ -32,7 +33,7 @@ export const icons = {
   jobOfferLocation,
   jobOfferCompany: 'fa-light fa-building',
   jobOfferCompanyWebsite: 'fa-light fa-globe',
-  jobOfferCompanyFundingYear: 'fa-light fa-calendar',
+  jobOfferCompanyFundingYear: iconCalendar,
   jobOfferCompanySize: 'fa-light fa-users',
   jobOfferLogoPlaceholder: 'fa-light fa-laptop-code',
   jobOfferSearch: 'fa-regular fa-magnifying-glass',
@@ -55,6 +56,7 @@ export const icons = {
   jobOfferPricingPlanListBulletSpecialCase: iconAsterisk,
   jobOfferApplyExternally: 'fa-light fa-arrow-up-right-from-square',
   jobOfferTagRemove: iconClose,
+  jobOfferExpiredOn: iconCalendar,
 };
 
 export const htmlIconFormatBold = '<i class="fa-solid fa-bold"/>';

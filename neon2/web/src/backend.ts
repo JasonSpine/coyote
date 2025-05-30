@@ -213,6 +213,7 @@ export interface BackendInput {
 export interface BackendJobOffer {
   id: number;
   expiresInDays: number;
+  expiryDate: string;
   status: BackendJobOfferStatus;
   payment: BackendPaymentIntent|null;
   applicationUrl: string;

@@ -8,6 +8,7 @@ export interface JobOfferShow {
   description: string|null;
   expired: boolean;
   expiresInDays: number|null;
+  expiryDate: string|null;
   locationCities: string[];
   tags: Tag[];
   workMode: WorkMode;
@@ -44,6 +45,7 @@ export function toJobOfferShow(jobOffer: JobOffer): JobOfferShow {
     companyAddress: address(jobOffer),
     expired,
     expiresInDays: expired ? null : jobOffer.expiresInDays,
+    expiryDate: expired ? jobOffer.expiryDate : null,
   };
 }
 
@@ -55,6 +57,7 @@ export function fromSubmitToJobOfferShow(submit: SubmitJobOffer, expiresInDays: 
     workMode: parseWorkMode(submit.workModeRemoteRange),
     companyAddress: address(submit),
     expired: false,
+    expiryDate: null,
     expiresInDays,
   };
 }
