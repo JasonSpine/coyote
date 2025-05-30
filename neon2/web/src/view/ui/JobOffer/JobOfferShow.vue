@@ -128,9 +128,8 @@
             </Design.Button>
           </Design.Card>
           <Design.Card space border v-if="props.jobOffer.tags.length">
-            <JobOfferField title="Technologie">
-              <JobOfferTagPriorities :tags="props.jobOffer.tags"/>
-            </JobOfferField>
+            <h1 class="text-neutral2-500 mb-2">Technologie</h1>
+            <JobOfferTagPriorities :tags="props.jobOffer.tags"/>
           </Design.Card>
           <Design.Card space border v-if="companyCard">
             <div class="flex items-center">

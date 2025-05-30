@@ -1,16 +1,19 @@
 <template>
-  <div class="flex flex-wrap gap-4 items-center">
-    <div v-for="tag in props.tags">
-      <TagName v-text="tag.tagName"/>
-      <JobOfferTagPriority :priority="tag.priority"/>
+  <div class="flex flex-wrap gap-2 items-center">
+    <div
+      v-for="tag in props.tags"
+      class="flex items-center bg-neutral2-050 text-neutral2-500 text-sm rounded px-2 py-1">
+      <span class="mr-1.5" v-text="tag.tagName"/>
+      <div
+        v-for="dot in [1, 2, 3]"
+        class="size-1.5  rounded-full ml-0.5"
+        :class="dot <= tag.priority ? 'bg-green-500' : 'bg-neutral2-200'"/>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import {Tag} from "../../../main";
-import TagName from "../design/TagName.vue";
-import JobOfferTagPriority from "./JobOfferTagPriority.vue";
 
 const props = defineProps<Props>();
 
