@@ -15,7 +15,7 @@ import {
 } from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
-import {Toast} from '../view';
+import {Toast, View} from '../view';
 import JobBoard from './JobBoard.vue';
 import {JobBoardProperties} from "./JobBoardProperties";
 import {emptyJobOfferFilter} from "./JobOffer/JobOfferFilters";
@@ -73,6 +73,7 @@ export class VueUi {
   private readonly vueState: JobBoardProperties;
   private readonly filterListeners: FilterListener[] = [];
   private navigationListener: NavigationListener|null = null;
+  private view: View|null = null;
 
   constructor(locationInput: LocationInput, isAuthenticated: boolean) {
     this.vueState = reactive<JobBoardProperties>({
@@ -126,6 +127,10 @@ export class VueUi {
     }, this.gate);
   }
 
+  setView(view: View): void {
+    this.view = view;
+  }
+
   private showForm(): void {
     this.navigationListener!.showJobOfferForm();
   }
@@ -156,7 +161,7 @@ export class VueUi {
   }
 
   private applyForJob(jobOfferId: number): void {
-    const jobOffer = this.vueState.jobOffers.find(offer => offer.id === jobOfferId)!;
+    const jobOffer = this.findJobOffer(jobOfferId)!;
     if (jobOffer.applicationMode === 'external-ats') {
       window.open(jobOffer.applicationUrl, '_blank');
     } else {
@@ -205,11 +210,7 @@ export class VueUi {
   }
 
   private findJobOffer(jobOfferId: number): JobOffer|null {
-    const jobOffer = this.vueState.jobOffers.find(o => o.id === jobOfferId);
-    if (jobOffer) {
-      return jobOffer;
-    }
-    return null;
+    return this.view!.findJobOffer(jobOfferId);
   }
 
   setPaymentNotification(notification: PaymentNotification): void {

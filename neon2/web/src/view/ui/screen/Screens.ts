@@ -34,7 +34,7 @@ export class Screens {
 
   private addScreens(): void {
     this.router.addScreen(JobOfferHome, 'home', '/Job/');
-    this.router.addScreen(JobOfferShowScreen, 'show', '/Job/:slug--:id');
+    this.router.addScreen(JobOfferShowScreen, 'show', '/Job/:slug/:id');
     this.router.addScreen(JobOfferPricing, 'pricing', '/Job/pricing');
     this.router.addScreen(JobOfferCreate, 'form', '/Job/new');
     this.router.addScreen(JobOfferEdit, 'edit', '/Job/:id/edit');
@@ -54,7 +54,7 @@ export class Screens {
 
   jobOfferUrl(jobOffer: JobOffer): string {
     const {slug, id} = jobOffer;
-    return `/Job/${slug}--${id}`;
+    return `/Job/${slug}/${id}`;
   }
 
   useIn(app: App): void {

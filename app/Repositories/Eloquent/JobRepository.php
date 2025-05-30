@@ -39,25 +39,20 @@ class JobRepository extends Repository implements JobRepositoryInterface {
         return $result;
     }
 
-    public function findPublicJobOffers(?int $userId): Eloquent\Collection {
+    public function listJobOffers(?int $userId, ?int $includeExpired): Eloquent\Collection {
         $this->applyCriteria();
-        if ($userId !== null) {
-            $this->model
-                ->select(['jobs.*'])
-                ->where('jobs.user_id', auth()->id())
-                ->orWhere($this->isPublished(...));
-        } else {
-            $this->isPublished($this->model);
-        }
-        $result = $this->model->get();
-        $this->resetModel();
-        return $result;
-    }
-
-    private function isPublished(Eloquent\Builder $query): void {
-        $query
+        $model = $this->model->select(['jobs.*'])
             ->where('is_publish', '=', 1)
             ->where('deadline_at', '>', Carbon::now());
+        if ($userId !== null) {
+            $model->orWhere('jobs.user_id', auth()->id());
+        }
+        if ($includeExpired !== null) {
+            $model->orWhere('jobs.id', $includeExpired);
+        }
+        $result = $model->get();
+        $this->resetModel();
+        return $result;
     }
 
     /**

@@ -12,7 +12,7 @@ interface Integration {
     /**
      * @return JobOffer[]
      */
-    public function listJobOffers(): array;
+    public function listJobOffers(?int $includeExpired): array;
 
     public function planBundle(?int $userId): PlanBundle;
 

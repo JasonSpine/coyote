@@ -47,8 +47,10 @@ class ServiceProvider extends RouteServiceProvider {
                 ->name('neon.jobOffer.pricing')
                 ->get('/Job/pricing', $this->indexView(...));
             $this
+                ->get('/Job/{id}/edit', $this->indexView(...));
+            $this
                 ->name('neon.jobOffer.show')
-                ->get('/Job/{slug}--{id}', $this->indexView(...));
+                ->get('/Job/{slug}/{id}', $this->indexView(...));
             $this
                 ->name('neon.jobOffer.list')
                 ->get('/Job/{fallback?}', $this->indexView(...))
@@ -82,7 +84,8 @@ class ServiceProvider extends RouteServiceProvider {
             auth()->user()?->email,
             app('session')->token(),
             $theme->isThemeDark(),
-            $theme->themeMode());
+            $theme->themeMode(),
+            request()->route()->parameter('id'));
         return view('job.home_modern', [
             'neonHead' => new StringHtml($jobBoardView->htmlMarkupHead()),
             'neonBody' => new StringHtml($jobBoardView->htmlMarkupBody()),

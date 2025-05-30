@@ -1,4 +1,5 @@
 <template>
+  <Design.Toast v-if="props.jobOffer.expired" title="Oferta wygasła."/>
   <Design.Tile class="p-4 md:p-8">
     <div :class="[
       'h-16 rounded-lg -m-2 md:-m-6 mb-0',
@@ -15,6 +16,7 @@
       <Design.Button
         :primary="!props.preview"
         :primary-outline="props.preview"
+        :disabled="props.jobOffer.expired"
         @click="apply">
         Aplikuj
         <Icon class="ml-2" name="jobOfferApplyExternally" v-if="props.jobOffer.applyExternally"/>
@@ -24,6 +26,7 @@
       <div>
         <h1
           class="text-2xl md:text-3xl md:mb-2 font-medium text-neutral2-900"
+          data-testid="jobOfferTitle"
           v-text="props.jobOffer.title"/>
         <h2
           class="text-lg text-neutral2-700"
@@ -78,10 +81,6 @@
             v-if="props.jobOffer.companyAddress"
             ref="address" class="w-full h-54 lg:h-76"/>
         </div>
-        <Design.Button primary @click="apply" class="max-md:hidden">
-          Aplikuj
-          <Icon class="ml-2" name="jobOfferApplyExternally" v-if="props.jobOffer.applyExternally"/>
-        </Design.Button>
       </div>
       <div class="md:w-1/3 md:relative">
         <div class="space-y-3 md:sticky md:top-14">
@@ -116,6 +115,7 @@
             <Design.Button
               :primary="!props.preview"
               :primary-outline="props.preview"
+              :disabled="props.jobOffer.expired"
               full-width
               @click="apply">
               Aplikuj
@@ -177,7 +177,6 @@ import {formatSalary, SalaryJobOffer} from "./JobOfferSalary";
 import JobOfferSalary from "./JobOfferSalary.vue";
 import JobOfferSalaryNotProvided from "./JobOfferSalaryNotProvided.vue";
 import {JobOfferShow} from "./JobOfferShow";
-import JobOfferTagList from "./JobOfferTagList.vue";
 import JobOfferTagPriorities from "./JobOfferTagPriorities.vue";
 import VideoPlayer from "./VideoPlayer.vue";
 

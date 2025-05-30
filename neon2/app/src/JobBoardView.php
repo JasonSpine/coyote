@@ -15,6 +15,7 @@ readonly class JobBoardView {
         private string                     $csrfToken,
         private bool                       $darkTheme,
         private string                     $themeMode,
+        private ?int                       $includeExpired,
     ) {
         $this->vite = new \Neon2\Web\ViteManifest(__DIR__ . '/../../web/');
     }
@@ -69,7 +70,7 @@ readonly class JobBoardView {
 
     private function backendInput(): string {
         return $this->encodedJson([
-            'jobOffers'                => $this->integration->listJobOffers(),
+            'jobOffers'                => $this->integration->listJobOffers($this->includeExpired),
             'testMode'                 => $this->isTestMode,
             'planBundle'               => $this->integration->planBundle($this->userId),
             'userId'                   => $this->userId,

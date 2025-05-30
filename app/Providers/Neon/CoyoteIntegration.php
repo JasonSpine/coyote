@@ -47,10 +47,10 @@ readonly class CoyoteIntegration implements Integration {
     /**
      * @return JobOffer[]
      */
-    public function listJobOffers(): array {
+    public function listJobOffers(?int $includeExpired): array {
         $this->job->pushCriteria(new EagerLoading(['firm', 'firm.assets', 'locations', 'tags', 'currency']));
         $this->job->pushCriteria(new IncludeSubscribers(auth()->id()));
-        return $this->job->findPublicJobOffers(auth()->id())
+        return $this->job->listJobOffers(auth()->id(), $includeExpired)
             ->sortBy('boost_at')
             ->sortBy('is_on_top')
             ->sortBy($this->isNew(...))
@@ -146,7 +146,7 @@ readonly class CoyoteIntegration implements Integration {
         if (!$payment->plan->price) {
             event(new PaymentPaid($payment));
             if ($acceptanceTestExpired) {
-                $job->deadline_at = Carbon::now();
+                $job->deadline_at = Carbon::now()->subDays(10);
                 $job->save();
             }
             return $this->neonJobOffer($job->fresh(), null);

@@ -6,7 +6,8 @@ import {parseWorkMode} from "../../../workMode";
 export interface JobOfferShow {
   title: string;
   description: string|null;
-  expiresInDays: number;
+  expired: boolean;
+  expiresInDays: number|null;
   locationCities: string[];
   tags: Tag[];
   workMode: WorkMode;
@@ -35,22 +36,26 @@ export interface CompanyAddress {
 }
 
 export function toJobOfferShow(jobOffer: JobOffer): JobOfferShow {
+  let expired = jobOffer.status === 'expired';
   return {
     ...jobOffer,
     applyExternally: jobOffer.applicationMode === 'external-ats',
     locationCities: locationCities(jobOffer.locations),
     companyAddress: address(jobOffer),
+    expired,
+    expiresInDays: expired ? null : jobOffer.expiresInDays,
   };
 }
 
 export function fromSubmitToJobOfferShow(submit: SubmitJobOffer, expiresInDays: number): JobOfferShow {
   return {
-    expiresInDays,
     ...submit,
     applyExternally: submit.applicationMode === 'external-ats',
     locationCities: locationCities(submit.locations),
     workMode: parseWorkMode(submit.workModeRemoteRange),
     companyAddress: address(submit),
+    expired: false,
+    expiresInDays,
   };
 }
 

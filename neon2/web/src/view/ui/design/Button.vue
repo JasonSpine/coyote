@@ -2,6 +2,7 @@
   <button
     @click="click"
     class="rounded-lg"
+    :disabled="props.disabled"
     :class="[variantClass, sizeClass, disabledClass, cursorClass, {'w-full': props.fullWidth}]"
     :data-testid="props.testId">
     <Icon v-if="props.icon" :name="props.icon" :class="{'mr-2': !props.square}"/>
@@ -31,7 +32,9 @@ interface Props {
 const props = defineProps<Props>();
 
 function click(): void {
-  emit('click');
+  if (!props.disabled) {
+    emit('click');
+  }
 }
 
 const variantClass = computed(() => {
@@ -50,7 +53,7 @@ const variantClass = computed(() => {
 const disabledClass = computed(() => {
   if (props.primary) {
     if (props.disabled) {
-      return 'bg-green-050';
+      return 'bg-green-050 dark:bg-green-800';
     }
     return 'bg-primary';
   }
@@ -58,6 +61,9 @@ const disabledClass = computed(() => {
 });
 
 const cursorClass = computed(() => {
+  if (props.disabled) {
+    return 'cursor-not-allowed';
+  }
   if (props.cursorWait) {
     return 'cursor-progress';
   }

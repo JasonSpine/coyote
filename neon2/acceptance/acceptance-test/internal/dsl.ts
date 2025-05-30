@@ -240,6 +240,14 @@ export class Dsl {
       assertion.jobOfferTitle,
       this.mangler.decodedAll(await this.driver.listJobOffersMine()));
   }
+
+  async assertJobOfferAccessibleFromSearchEngine(assertion: {jobOfferTitle: string}): Promise<void> {
+    const title = this.enc(assertion.jobOfferTitle);
+    const jobOfferUrl = await this.driver.findJobOfferUrl(title);
+    assertEquals(
+      true,
+      await this.driver.accessJobOffer(jobOfferUrl, title));
+  }
 }
 
 type None = Promise<void>;

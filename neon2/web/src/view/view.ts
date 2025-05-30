@@ -13,6 +13,7 @@ export class View {
   private filterListener: FilterListener|null = null;
 
   constructor(private ui: VueUi) {
+    ui.setView(this);
     this.ui.setNavigationListener({
       setScreen(screen: Screen, jobOfferId: number|null): void {
         ui.setToast(null);
@@ -42,6 +43,14 @@ export class View {
   setJobOffers(jobOffers: JobOffer[]): void {
     this.jobOffers = jobOffers;
     this.filterJobOffers();
+  }
+
+  findJobOffer(jobOfferId: number): JobOffer|null {
+    const jobOffer = this.jobOffers.find(o => o.id === jobOfferId);
+    if (jobOffer) {
+      return jobOffer;
+    }
+    return null;
   }
 
   private filterJobOffers(): void {

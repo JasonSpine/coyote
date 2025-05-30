@@ -13,6 +13,14 @@ export class WebDriver {
     return url.searchParams.get(queryParam)!;
   }
 
+  currentUrl(): string {
+    return this.page.url();
+  }
+
+  async loadJobOffer(jobOfferUrl: string): Promise<void> {
+    await this.page.goto(jobOfferUrl);
+  }
+
   async reload(): None {
     await this.page.goto('/Job');
   }

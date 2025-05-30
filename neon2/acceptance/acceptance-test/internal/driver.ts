@@ -342,8 +342,15 @@ export class Driver {
     return 'valid';
   }
 
-  async findJobOfferExists(jobOfferTitle: string): Promise<void> {
+  async findJobOfferUrl(jobOfferTitle: string): Promise<string> {
+    await this.web.click('Moje ogłoszenia');
+    await this.web.click(jobOfferTitle);
+    return this.web.currentUrl();
+  }
 
+  async accessJobOffer(jobOfferUrl: string, jobOfferTitle: string): Promise<boolean> {
+    await this.web.loadJobOffer(jobOfferUrl);
+    return await this.web.read('jobOfferTitle') === jobOfferTitle;
   }
 }
 
