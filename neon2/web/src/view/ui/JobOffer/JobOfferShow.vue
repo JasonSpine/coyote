@@ -246,8 +246,7 @@ const salary = computed<SalaryJobOffer|null>(() => {
 const companyCard = computed<boolean>((): boolean => {
   return !!props.jobOffer.companyWebsiteUrl ||
     !!props.jobOffer.companyFundingYear ||
-    !!props.jobOffer.companySizeLevel ||
-    !!props.jobOffer.companyName;
+    !!props.jobOffer.companySizeLevel;
 });
 </script>
 
