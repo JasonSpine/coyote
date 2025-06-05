@@ -177,6 +177,7 @@ import {
   formatWorkMode,
 } from "./format";
 import JobOfferField from "./JobOfferField.vue";
+import {fewLocations} from "./JobOfferListItem";
 import {formatSalary, SalaryJobOffer} from "./JobOfferSalary";
 import JobOfferSalary from "./JobOfferSalary.vue";
 import JobOfferSalaryNotProvided from "./JobOfferSalaryNotProvided.vue";
@@ -230,7 +231,7 @@ const catchEyeFields = computed((): CatchEyeField[] => {
     {icon: 'jobOfferWorkModeRemote', title: formatWorkMode(props.jobOffer.workMode)},
   ];
   if (props.jobOffer.locationCities.length) {
-    fields.push({icon: 'jobOfferLocation', title: props.jobOffer.locationCities.join(', ')});
+    fields.push({icon: 'jobOfferLocation', title: fewLocations(props.jobOffer.locationCities).join(', ')});
   }
   fields.push({icon: 'jobOfferLegalForm', title: formatLegalForm(props.jobOffer.legalForm)});
   return fields;

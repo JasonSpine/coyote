@@ -68,6 +68,7 @@ import {IconName} from "../icons/icons";
 import {formatLegalForm, formatWorkMode} from "./format";
 import JobOfferBadge from "./JobOfferBadge.vue";
 import JobOfferFavouriteButton from "./JobOfferFavouriteButton.vue";
+import {fewLocations} from "./JobOfferListItem";
 import {SalaryJobOffer} from "./JobOfferSalary";
 import JobOfferSalary from "./JobOfferSalary.vue";
 import JobOfferSalaryNotProvided from "./JobOfferSalaryNotProvided.vue";
@@ -101,10 +102,9 @@ const badges = computed<Badge[]>((): Badge[] => {
 const workModeBadge = computed<Badge>((): Badge => ({title: formatWorkMode(props.jobOffer.workMode)}));
 
 const locationBadges = computed<Badge[]>((): Badge[] => {
-  return props.jobOffer.locations.map(location => ({
-    icon: 'jobOfferLocation',
-    title: location.city ?? 'Nie podano',
-  }));
+  const cities = props.jobOffer.locations.map(location => location.city ?? 'Nie podano');
+  const fewCities = fewLocations(cities);
+  return fewCities.map(title => ({title, icon: 'jobOfferLocation'}));
 });
 
 const legalFormTitle = computed((): string => formatLegalForm(props.jobOffer.legalForm));
