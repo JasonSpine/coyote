@@ -269,7 +269,7 @@ export interface BackendJobOffer {
   };
 }
 
-export type BackendJobOfferTagPriority = 1|2|3;
+export type BackendJobOfferTagPriority = 0|1|2|3;
 
 export interface BackendJobOfferLocation {
   latitude: number;

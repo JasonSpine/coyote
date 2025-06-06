@@ -429,7 +429,7 @@ function updateWorkMode(workMode: WorkMode): void {
 
 function addTag(tagName: string): void {
   if (!tagExists(tagName)) {
-    jobOffer.tags.push({tagName, priority: 2});
+    jobOffer.tags.push({tagName, priority: 0});
   }
 }
 

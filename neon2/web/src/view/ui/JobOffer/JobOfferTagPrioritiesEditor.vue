@@ -2,7 +2,8 @@
   <div class="flex flex-wrap gap-4">
     <div
       v-for="(tag, index) in model"
-      class="relative px-4 py-3 rounded-lg border border-neutral2-200">
+      class="relative px-4 py-3 rounded-lg border border-neutral2-200"
+      @click.capture="cycleTagPriority(tag)">
       <Icon name="jobOfferTagRemove" @click="remove(index)" :class="[
         'bg-tile box-content cursor-pointer',
         // Leading is used to vertically center the icon
@@ -36,6 +37,7 @@ const model: ModelRef<Tag[]> = defineModel<Tag[]>({required: true});
 
 function experienceTitle(priority: BackendJobOfferTagPriority): string {
   const titles: Record<BackendJobOfferTagPriority, string> = {
+    0: 'Wybierz...',
     1: 'Junior',
     2: 'Regular',
     3: 'Senior',
@@ -51,5 +53,9 @@ function arrayWithout<T>(array: T[], index: number): T[] {
   const copy = [...array];
   copy.splice(index, 1);
   return copy;
+}
+
+function cycleTagPriority(tag: Tag): void {
+  tag.priority = (tag.priority + 1) % 4;
 }
 </script>
