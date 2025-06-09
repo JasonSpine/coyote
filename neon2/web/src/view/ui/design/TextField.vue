@@ -1,6 +1,7 @@
 <template>
   <TextInputOutline :disabled="props.disabled" :icon="props.icon" :nested="props.nested">
     <TextInput
+      ref="input"
       class="outline-none flex-grow-1"
       :type="props.formatHtml ? 'html' : 'plain'"
       :label-id="fieldLabelId"
@@ -13,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import {inject} from "vue";
+import {inject, onMounted, ref} from "vue";
 import {IconName} from "../icons/icons";
 import TextInput from "./TextInput.vue";
 import TextInputOutline from "./TextInputOutline.vue";
@@ -25,9 +26,18 @@ interface Props {
   disabled?: boolean;
   formatHtml?: boolean;
   icon?: IconName;
+  gainFocus?: boolean;
 }
 
 const text = defineModel<string>({default: ''});
 const props = defineProps<Props>();
 const fieldLabelId = inject<string|undefined>('fieldLabelId', undefined);
+
+const input = ref<HTMLInputElement>();
+
+onMounted(() => {
+  if (props.gainFocus) {
+    input.value!.focus();
+  }
+});
 </script>

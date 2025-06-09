@@ -2,7 +2,7 @@
   <Material
     @click.stop
     :space="!props.noSpace"
-    class="absolute z-[1] min-w-full w-max border border-tile-border"
+    class="absolute top-full z-[1] min-w-full w-max border border-tile-border"
     :class="props.openToLeft ? 'right-0' : 'left-0'">
     <div :class="[{'space-y-4': !props.noSpace}, drawerClass]">
       <slot/>

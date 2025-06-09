@@ -7,12 +7,14 @@
       <Design.Row class="max-md:hidden" vertical-center wrap>
         <Design.DropdownMultiple
           nested
+          search
           :title="tagsField.title"
           :icon="tagsField.icon"
           :options="tagsField.options"
           v-model="state.tags"/>
         <Design.DropdownMultiple
           nested
+          search
           :title="locationsField.title"
           :icon="locationsField.icon"
           :options="locationsField.options"
@@ -72,12 +74,14 @@
       <div class="space-y-4">
         <Design.DropdownMultiple
           nested
+          search
           :title="tagsField.title"
           :icon="tagsField.icon"
           :options="tagsField.options"
           v-model="state.tags"/>
         <Design.DropdownMultiple
           nested
+          search
           :title="locationsField.title"
           :icon="locationsField.icon"
           :options="locationsField.options"

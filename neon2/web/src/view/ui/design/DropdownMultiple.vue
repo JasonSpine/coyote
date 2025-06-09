@@ -7,21 +7,33 @@
     :icon="props.icon"
     :blip="valuesCount"
     :open-to-left="props.openToLeft">
+    <div v-if="search" class="cursor-default">
+      <TextField
+        gain-focus
+        placeholder="Wyszukaj..."
+        @keydown.esc="searchPhrase = ''"
+        v-model="searchPhrase"/>
+    </div>
     <CheckBox
-      v-for="option in props.options"
+      v-for="option in filteredOptions"
+      :key="option.value"
       :label="option.title"
       :icon="option.icon"
       :model-value="selected(option.value)"
       @update:model-value="newValue => toggle(option.value, newValue)"/>
+    <span v-if="allFilteredOut" class="text-neutral2-500">
+      Brak ofert z "{{searchPhrase.trim()}}".
+    </span>
   </Dropdown>
 </template>
 
 <script setup lang="ts" generic="T extends string">
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import {IconName} from "../icons/icons";
 import CheckBox from "./CheckBox.vue";
 import Dropdown from "./Dropdown.vue";
 import {DropdownOption} from "./DropdownOption";
+import TextField from "./TextField.vue";
 
 const props = defineProps<Props>();
 const model = defineModel<T[]>({type: Array, required: true});
@@ -34,6 +46,7 @@ interface Props {
   options: DropdownOption<T>[];
   blip?: string;
   openToLeft?: boolean;
+  search?: boolean;
 }
 
 function selected(value: T): boolean {
@@ -53,5 +66,15 @@ const valuesCount = computed((): string|undefined => {
     return undefined;
   }
   return model.value.length.toString();
+});
+
+const searchPhrase = ref<string>('');
+
+const filteredOptions = computed(() => {
+  return props.options.filter(option => option.title.includes(searchPhrase.value.trim()));
+});
+
+const allFilteredOut = computed((): boolean => {
+  return filteredOptions.value.length === 0;
 });
 </script>
