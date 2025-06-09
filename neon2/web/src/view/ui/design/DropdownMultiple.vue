@@ -15,6 +15,9 @@
         @keydown.esc="searchPhrase = ''"
         v-model="searchPhrase"/>
     </div>
+    <div class="flex gap-2 flex-wrap max-w-50" v-if="search && model.length">
+      <TagName v-for="option in model" v-text="option" @click="toggle(option, false)"/>
+    </div>
     <CheckBox
       v-for="option in filteredOptions"
       :key="option.value"
@@ -34,6 +37,7 @@ import {IconName} from "../icons/icons";
 import CheckBox from "./CheckBox.vue";
 import Dropdown from "./Dropdown.vue";
 import {DropdownOption} from "./DropdownOption";
+import TagName from "./TagName.vue";
 import TextField from "./TextField.vue";
 
 const props = defineProps<Props>();
