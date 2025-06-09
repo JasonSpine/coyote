@@ -78,10 +78,18 @@ const filteredOptions = computed(() => {
 });
 
 function sortSelectedFirsts(a: DropdownOption<T>, b: DropdownOption<T>): number {
-  if (selected(a.value) === selected(b.value)) {
-    return 0;
+  if (searchPhrase.value.trim().length === 0) {
+    if (selected(a.value) === selected(b.value)) {
+      return 0;
+    }
+    return selected(a.value) ? -1 : 1;
+  } else {
+    return searchScore(a.title) - searchScore(b.title);
   }
-  return selected(a.value) ? -1 : 1;
+}
+
+function searchScore(value: string): number {
+  return value.indexOf(searchPhrase.value.toLowerCase().trim());
 }
 
 function matchesSearchPhrase(option: DropdownOption<T>): boolean {
