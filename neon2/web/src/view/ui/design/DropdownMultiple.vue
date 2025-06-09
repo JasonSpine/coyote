@@ -10,6 +10,7 @@
     <div v-if="search" class="cursor-default">
       <TextField
         gain-focus
+        ref="searchField"
         placeholder="Wyszukaj..."
         @keydown.esc="searchPhrase = ''"
         v-model="searchPhrase"/>
@@ -59,7 +60,10 @@ function toggle(value: T, checked: boolean): void {
   } else {
     model.value.splice(model.value.indexOf(value), 1);
   }
-  searchPhrase.value = '';
+  if (props.search) {
+    searchPhrase.value = '';
+    searchField.value!.focus();
+  }
 }
 
 const valuesCount = computed((): string|undefined => {
@@ -70,6 +74,7 @@ const valuesCount = computed((): string|undefined => {
 });
 
 const searchPhrase = ref<string>('');
+const searchField = ref<HTMLInputElement>();
 
 const filteredOptions = computed(() => {
   return props.options

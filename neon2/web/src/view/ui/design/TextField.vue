@@ -40,4 +40,10 @@ onMounted(() => {
     input.value!.focus();
   }
 });
+
+function focus(): void {
+  input.value!.focus();
+}
+
+defineExpose({focus});
 </script>
