@@ -59,6 +59,7 @@ function toggle(value: T, checked: boolean): void {
   } else {
     model.value.splice(model.value.indexOf(value), 1);
   }
+  searchPhrase.value = '';
 }
 
 const valuesCount = computed((): string|undefined => {
@@ -71,8 +72,21 @@ const valuesCount = computed((): string|undefined => {
 const searchPhrase = ref<string>('');
 
 const filteredOptions = computed(() => {
-  return props.options.filter(option => option.title.includes(searchPhrase.value.trim()));
+  return props.options
+    .filter(option => matchesSearchPhrase(option))
+    .toSorted((a, b): number => sortSelectedFirsts(a, b));
 });
+
+function sortSelectedFirsts(a: DropdownOption<T>, b: DropdownOption<T>): number {
+  if (selected(a.value) === selected(b.value)) {
+    return 0;
+  }
+  return selected(a.value) ? -1 : 1;
+}
+
+function matchesSearchPhrase(option: DropdownOption<T>): boolean {
+  return option.title.toLowerCase().includes(searchPhrase.value.toLowerCase().trim());
+}
 
 const allFilteredOut = computed((): boolean => {
   return filteredOptions.value.length === 0;
