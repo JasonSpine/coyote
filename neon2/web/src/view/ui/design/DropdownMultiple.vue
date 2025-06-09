@@ -62,7 +62,6 @@ function toggle(value: T, checked: boolean): void {
   }
   if (props.search) {
     searchPhrase.value = '';
-    searchField.value!.focus();
   }
 }
 
@@ -83,14 +82,10 @@ const filteredOptions = computed(() => {
 });
 
 function sortSelectedFirsts(a: DropdownOption<T>, b: DropdownOption<T>): number {
-  if (searchPhrase.value.trim().length === 0) {
-    if (selected(a.value) === selected(b.value)) {
-      return 0;
-    }
-    return selected(a.value) ? -1 : 1;
-  } else {
+  if (searchPhrase.value.trim().length) {
     return searchScore(a.title) - searchScore(b.title);
   }
+  return 0;
 }
 
 function searchScore(value: string): number {

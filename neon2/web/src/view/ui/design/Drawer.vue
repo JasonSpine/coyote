@@ -28,7 +28,7 @@ const drawerClass = computed(() => {
     return 'max-h-96 overflow-y-auto';
   }
   if (props.scroll === 'scrollablePadding') {
-    return 'max-h-96 overflow-y-auto pr-12 -mr-3';
+    return 'max-h-96 overflow-y-auto pr-3 -mr-3';
   }
   return '';
 });
