@@ -16,7 +16,10 @@
         v-model="searchPhrase"/>
     </div>
     <div class="flex gap-2 flex-wrap max-w-50" v-if="search && model.length">
-      <TagName v-for="option in model" v-text="option" @click="toggle(option, false)"/>
+      <TagName v-for="option in model" @click="toggle(option, false)">
+        {{option}}
+        <Icon name="remove"/>
+      </TagName>
     </div>
     <CheckBox
       v-for="option in filteredOptions"
@@ -33,6 +36,7 @@
 
 <script setup lang="ts" generic="T extends string">
 import {computed, ref} from "vue";
+import Icon from "../icons/Icon.vue";
 import {IconName} from "../icons/icons";
 import CheckBox from "./CheckBox.vue";
 import Dropdown from "./Dropdown.vue";
@@ -64,9 +68,6 @@ function toggle(value: T, checked: boolean): void {
   } else {
     model.value.splice(model.value.indexOf(value), 1);
   }
-  if (props.search) {
-    searchPhrase.value = '';
-  }
 }
 
 const valuesCount = computed((): string|undefined => {
@@ -79,28 +80,28 @@ const valuesCount = computed((): string|undefined => {
 const searchPhrase = ref<string>('');
 const searchField = ref<HTMLInputElement>();
 
-const filteredOptions = computed(() => {
-  return props.options
-    .filter(option => matchesSearchPhrase(option))
-    .toSorted((a, b): number => sortSelectedFirsts(a, b));
-});
-
-function sortSelectedFirsts(a: DropdownOption<T>, b: DropdownOption<T>): number {
-  if (searchPhrase.value.trim().length) {
-    return searchScore(a.title) - searchScore(b.title);
+const filteredOptions = computed((): DropdownOption<T>[] => {
+  const tags = tagsInSearchPhrase(searchPhrase.value.toLowerCase());
+  if (!tags.length) {
+    return props.options;
   }
-  return 0;
-}
-
-function searchScore(value: string): number {
-  return value.indexOf(searchPhrase.value.toLowerCase().trim());
-}
-
-function matchesSearchPhrase(option: DropdownOption<T>): boolean {
-  return option.title.toLowerCase().includes(searchPhrase.value.toLowerCase().trim());
-}
-
-const allFilteredOut = computed((): boolean => {
-  return filteredOptions.value.length === 0;
+  return tags.flatMap(tag => {
+    return props.options
+      .filter(option => option.title.toLowerCase().includes(tag))
+      .toSorted((a, b): number => searchScore(a.title, tag) - searchScore(b.title, tag));
+  });
 });
+
+function searchScore(item: string, searchPhrase: string): number {
+  return item.indexOf(searchPhrase);
+}
+
+function tagsInSearchPhrase(searchPhrase: string): string[] {
+  return searchPhrase
+    .split(/[,; ]/g)
+    .map(tag => tag.trim())
+    .filter(tag => tag.length);
+}
+
+const allFilteredOut = computed((): boolean => filteredOptions.value.length === 0);
 </script>
