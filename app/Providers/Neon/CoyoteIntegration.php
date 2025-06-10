@@ -54,7 +54,8 @@ readonly class CoyoteIntegration implements Integration {
             ->sortBy('boost_at')
             ->sortBy('is_on_top')
             ->sortBy($this->isNew(...))
-            ->sortBy('is_publish') // With my offers, not paid should be highest
+            ->sortBy('is_publish')
+            ->sortBy($this->userWithIdNot(22))
             ->values()
             ->map(function (Coyote\Job $job): JobBoard\JobOffer {
                 if ($this->isMine($job)) {
@@ -311,5 +312,9 @@ readonly class CoyoteIntegration implements Integration {
 
     private function expiryDate(Job $jobOffer): string {
         return $jobOffer->deadline_at->format('Y-m-d');
+    }
+
+    private function userWithIdNot(int $userId): callable {
+        return fn($row) => $row->user_id !== $userId;
     }
 }
