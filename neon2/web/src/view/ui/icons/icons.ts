@@ -18,6 +18,7 @@ const jobOfferWorkExperience = 'fa-light fa-chart-line';
 export const icons = {
   dropdownClosed: 'fa-light fa-chevron-down',
   dropdownOptionSelected: iconCheck,
+  dropdownOptionTagRemove: iconClose,
   checkboxChecked: iconCheck,
   add: iconPlus,
   remove: iconRemove,

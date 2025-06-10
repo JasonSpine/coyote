@@ -6,28 +6,36 @@
     :title="props.title"
     :icon="props.icon"
     :blip="valuesCount"
-    :open-to-left="props.openToLeft">
-    <div v-if="search" class="cursor-default">
+    :open-to-left="props.openToLeft"
+    @keydown.down="cruseSelectedItemIndex(+1)"
+    @keydown.up="cruseSelectedItemIndex(-1)"
+    @keydown.enter="toggleSelectedItem()"
+    @keydown.space.capture.prevent="toggleSelectedItem()">
+    <div v-if="search" class="cursor-default mb-2">
       <TextField
         gain-focus
         ref="searchField"
         placeholder="Wyszukaj..."
         @keydown.esc="searchPhrase = ''"
+        @keydown.down.prevent
+        @keydown.up.prevent
         v-model="searchPhrase"/>
     </div>
     <div class="flex gap-2 flex-wrap max-w-50" v-if="search && model.length">
-      <TagName v-for="option in model" @click="toggle(option, false)">
+      <TagName v-for="option in model" @click="toggleAndDeselect(option, false)">
         {{option}}
-        <Icon name="remove"/>
+        <Icon name="dropdownOptionTagRemove"/>
       </TagName>
     </div>
     <CheckBox
-      v-for="option in filteredOptions"
+      v-for="(option, index) in filteredOptions"
+      :ref="el => setOptionItem(option, el as unknown as OptionElement)"
       :key="option.value"
       :label="option.title"
       :icon="option.icon"
+      :class="['mb-0 pl-0 p-2 rounded', {'bg-tile-nested': index === selectedItemIndex}]"
       :model-value="selected(option.value)"
-      @update:model-value="newValue => toggle(option.value, newValue)"/>
+      @update:model-value="newValue => toggleAndDeselect(option.value, newValue)"/>
     <span v-if="allFilteredOut" class="text-neutral2-500">
       Brak ofert z "{{searchPhrase.trim()}}".
     </span>
@@ -40,6 +48,7 @@ import Icon from "../icons/Icon.vue";
 import {IconName} from "../icons/icons";
 import CheckBox from "./CheckBox.vue";
 import Dropdown from "./Dropdown.vue";
+import {clamp} from "./DropdownMultiple";
 import {DropdownOption} from "./DropdownOption";
 import TagName from "./TagName.vue";
 import TextField from "./TextField.vue";
@@ -70,6 +79,11 @@ function toggle(value: T, checked: boolean): void {
   }
 }
 
+function toggleAndDeselect(value: T, checked: boolean): void {
+  toggle(value, checked);
+  selectedItemIndex.value = -1;
+}
+
 const valuesCount = computed((): string|undefined => {
   if (model.value.length === 0) {
     return undefined;
@@ -77,9 +91,11 @@ const valuesCount = computed((): string|undefined => {
   return model.value.length.toString();
 });
 
+type SearchField = InstanceType<typeof TextField>;
 const searchPhrase = ref<string>('');
-const searchField = ref<HTMLInputElement>();
+const searchField = ref<SearchField>();
 
+const allFilteredOut = computed((): boolean => filteredOptions.value.length === 0);
 const filteredOptions = computed((): DropdownOption<T>[] => {
   const tags = tagsInSearchPhrase(searchPhrase.value.toLowerCase());
   if (!tags.length) {
@@ -103,5 +119,40 @@ function tagsInSearchPhrase(searchPhrase: string): string[] {
     .filter(tag => tag.length);
 }
 
-const allFilteredOut = computed((): boolean => filteredOptions.value.length === 0);
+const selectedItemIndex = ref<number>(-1);
+
+type OptionElement = InstanceType<typeof CheckBox>;
+const optionElements = ref<Record<string, OptionElement>>({});
+
+function cruseSelectedItemIndex(step: number): void {
+  selectedItemIndex.value = clamp(
+    selectedItemIndex.value + step,
+    0,
+    filteredOptions.value.length - 1);
+  elementScrollIntoView(selectedOption.value!);
+}
+
+function toggleSelectedItem(): void {
+  const value = selectedOption.value!.value;
+  toggle(value, !isToggled(value));
+}
+
+const selectedOption = computed((): DropdownOption<T>|null => {
+  if (selectedItemIndex.value === -1) {
+    return null;
+  }
+  return filteredOptions.value[selectedItemIndex.value];
+});
+
+function isToggled(value: T): boolean {
+  return model.value.indexOf(value) > -1;
+}
+
+function setOptionItem(option: DropdownOption<T>, element: OptionElement): void {
+  optionElements.value[option.value] = element;
+}
+
+function elementScrollIntoView(option: DropdownOption<T>): void {
+  optionElements.value![option.value].scrollIntoView();
+}
 </script>

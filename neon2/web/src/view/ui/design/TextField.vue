@@ -37,12 +37,12 @@ const input = ref<HTMLInputElement>();
 
 onMounted(() => {
   if (props.gainFocus) {
-    input.value!.focus();
+    input.value!.focus({preventScroll: true});
   }
 });
 
-function focus(): void {
-  input.value!.focus();
+function focus(options?: FocusOptions): void {
+  input.value!.focus({preventScroll: true});
 }
 
 defineExpose({focus});
