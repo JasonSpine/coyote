@@ -6,7 +6,7 @@ import {Screen, VueUi} from './ui/ui';
 export type Toast = 'created'|'edited'|'bundle-used';
 
 export class View {
-  private jobOffers: JobOffer[] = [];
+  jobOffers: JobOffer[] = [];
   private filter: JobOfferFilter|null = null;
   private filterOnlyMine: boolean = false;
   private planBundleCanRedeem: boolean = false;

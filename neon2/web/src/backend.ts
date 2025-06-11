@@ -78,6 +78,13 @@ export class JobBoardBackend {
       .then(() => updated());
   }
 
+  async markJobOfferAsFavourite(jobOfferId: number, favourite: boolean): Promise<void> {
+    return request('POST', '/neon2/job-offers/favourite', {
+      jobOfferId: jobOfferId.toString(),
+      favourite,
+    }).then(() => {});
+  }
+
   preparePayment(paymentId: string, invoiceInfo: InvoiceInformation): Promise<PreparePaymentResponse> {
     return request('POST', '/neon2/job-offers/payment', {
       paymentId,
@@ -239,6 +246,7 @@ export interface BackendJobOffer {
   canEdit: boolean;
   isMine: boolean;
   isNew: boolean;
+  isFavourite: boolean;
   fields: {
     title: string;
     description: string|null;
@@ -308,7 +316,6 @@ export function toJobOffer(jobOffer: BackendJobOffer): JobOffer {
   return {
     ...operationalFields,
     ...fields,
-    isFavourite: false,
     workMode: parseWorkMode(jobOffer.fields.workModeRemoteRange),
     tags: jobOfferTags(jobOffer),
   };

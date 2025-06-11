@@ -64,6 +64,13 @@ class RouteServiceProvider extends ServiceProvider {
                     \file_get_contents('php://input'),
                     $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '');
             });
+            Facades\Route::post('/neon2/job-offers/favourite', function (Integration $integration) {
+                $integration->markJobOfferAsFavourite(
+                    auth()->id(),
+                    request()->get('jobOfferId'),
+                    request()->get('favourite'));
+                return response()->json(status:201);
+            });
             Facades\Route::get('/neon2/status', function (Integration $integration) {
                 $paymentId = request()->query->get('paymentId');
                 return response()->json(match ($integration->paymentStatus($paymentId)) {

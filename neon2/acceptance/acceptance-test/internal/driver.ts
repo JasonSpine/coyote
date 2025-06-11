@@ -364,6 +364,38 @@ export class Driver {
   async findAutocompleteValues(): Promise<string[]> {
     return this.web.listStringByTestId('autocompleteValue');
   }
+
+  async markJobOfferAsFavourite(jobOfferTitle: string, favourite: Favourite): Promise<void> {
+    await this.locateJobOffer(jobOfferTitle);
+    await this.web.clickByTestId('jobOfferFavourite');
+    await this.web.click('Wróć do ogłoszeń');
+  }
+
+  async findJobOfferFavourite(jobOfferTitle: string): Promise<Favourite> {
+    await this.locateJobOffer(jobOfferTitle);
+    const checked = await this.findChecked('jobOfferFavourite');
+    await this.web.click('Wróć do ogłoszeń');
+    return checked ? 'favourite' : 'notFavourite';
+  }
+
+  private async findChecked(testId: string): Promise<boolean> {
+    return parseChecked(await this.web.readAttribute(testId, 'data-checked'));
+  }
+
+  private async locateJobOffer(jobOfferTitle: string): Promise<void> {
+    await this.searchJobOffers(jobOfferTitle);
+    await this.web.click(jobOfferTitle);
+  }
+}
+
+function parseChecked(checked: string|null): boolean {
+  if (checked === 'checked') {
+    return true;
+  }
+  if (checked === 'unchecked') {
+    return false;
+  }
+  throw new Error('Failed to parse checked.');
 }
 
 function parsePricingPlan(pricingPlan: string): PricingPlan {
@@ -378,5 +410,7 @@ interface PlanBundle {
   bundleName: PricingBundleName;
   remainingJobOffers: number;
 }
+
+type Favourite = 'favourite'|'notFavourite';
 
 type None = Promise<void>;

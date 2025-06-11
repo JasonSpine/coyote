@@ -34,4 +34,10 @@ interface Integration {
     public function paymentWebhook(string $webhookPayload, string $stripeSignature): void;
 
     public function paymentStatus(string $paymentId): PaymentStatus;
+
+    public function markJobOfferAsFavourite(
+        int  $userId,
+        int  $jobOfferId,
+        bool $favourite,
+    ): void;
 }

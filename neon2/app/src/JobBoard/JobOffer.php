@@ -16,5 +16,6 @@ class JobOffer {
         public bool           $canEdit,
         public bool           $isMine,
         public bool           $isNew,
+        public bool           $isFavourite,
     ) {}
 }

@@ -69,5 +69,6 @@ export interface ScreenListener {
 
 export interface RouteProperties {
   routeJobOfferId: number|null;
+  /** @deprecated properties are not reactive */
   routeJobOffer: JobOffer|null;
 }

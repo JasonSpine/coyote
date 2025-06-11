@@ -84,7 +84,8 @@ readonly class CoyoteIntegration implements Integration {
             route('job.application', [$jobOffer->id]),
             $this->canEdit($jobOffer),
             $this->isMine($jobOffer),
-            $this->isNew($jobOffer));
+            $this->isNew($jobOffer),
+            $this->isFavourite($jobOffer));
     }
 
     public function planBundle(?int $userId): PlanBundle {
@@ -316,5 +317,22 @@ readonly class CoyoteIntegration implements Integration {
 
     private function userWithIdNot(int $userId): callable {
         return fn($row) => $row->user_id !== $userId;
+    }
+
+    public function markJobOfferAsFavourite(
+        int  $userId,
+        int  $jobOfferId,
+        bool $favourite,
+    ): void {
+        $subscription = new JobOfferSubscription($userId, $jobOfferId);
+        if ($favourite) {
+            $subscription->subscribeIfNotSubscribed();
+        } else {
+            $subscription->unsubscribeIfSubscribed();
+        }
+    }
+
+    private function isFavourite(Job $jobOffer): bool {
+        return $jobOffer->subscribers()->forUser(auth()->id())->exists();
     }
 }

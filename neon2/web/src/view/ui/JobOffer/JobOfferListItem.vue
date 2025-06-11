@@ -15,8 +15,8 @@
         <JobOfferBadge text-small color="pink" v-text="'Nowe'"
                        v-else-if="jobOffer.isNew"/>
         <JobOfferFavouriteButton
-          :favourite="jobOffer.isFavourite"
-          @favourite-change="toggleFavourite"/>
+          :model-value="jobOffer.isFavourite"
+          @update:model-value="markAsFavourite"/>
       </Design.RowEnd>
     </Design.Row>
     <Design.Tile nested desktop-space :href="props.jobOfferUrl" @click="click">
@@ -91,12 +91,12 @@ interface Props {
 }
 
 interface Emit {
-  (event: 'favouriteChange', favourite: boolean): void;
+  (event: 'favourite', favourite: boolean): void;
   (event: 'select'): void;
 }
 
-function toggleFavourite(newValue: boolean): void {
-  emit('favouriteChange', newValue);
+function markAsFavourite(newValue: boolean): void {
+  emit('favourite', newValue);
 }
 
 const badges = computed<Badge[]>((): Badge[] => {

@@ -1,27 +1,20 @@
 <template>
   <div
-    class="size-8 rounded-lg flex items-center justify-center cursor-pointer"
-    :class="{accent: props.favourite}"
-    @click="toggle">
-    <Icon name="jobOfferFavourite"/>
+    class="size-8 rounded-lg flex items-center justify-center cursor-pointer bg-tile hover:accent"
+    :class="{'text-green-500': favourite}"
+    @click="toggle"
+    data-testid="jobOfferFavourite"
+    :data-checked="favourite ? 'checked' : 'unchecked'">
+    <Icon :name="favourite ? 'jobOfferFavouriteChecked' : 'jobOfferFavourite'"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import Icon from '../icons/Icon.vue';
 
-const props = defineProps<Props>();
-const emit = defineEmits<Emit>();
-
-interface Props {
-  favourite: boolean;
-}
-
-interface Emit {
-  (event: 'favouriteChange', favourite: boolean): void;
-}
+const favourite = defineModel<boolean>({required: true});
 
 function toggle(): void {
-  emit('favouriteChange', !props.favourite);
+  favourite.value = !favourite.value;
 }
 </script>

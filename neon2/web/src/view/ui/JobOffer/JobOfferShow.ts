@@ -7,6 +7,7 @@ export interface JobOfferShow {
   title: string;
   description: string|null;
   expired: boolean;
+  favourite: boolean;
   expiresInDays: number|null;
   expiryDate: string|null;
   locationCities: string[];
@@ -46,6 +47,7 @@ export function toJobOfferShow(jobOffer: JobOffer): JobOfferShow {
     expired,
     expiresInDays: expired ? null : jobOffer.expiresInDays,
     expiryDate: expired ? jobOffer.expiryDate : null,
+    favourite: jobOffer.isFavourite,
   };
 }
 
@@ -59,6 +61,7 @@ export function fromSubmitToJobOfferShow(submit: SubmitJobOffer, expiresInDays: 
     expired: false,
     expiryDate: null,
     expiresInDays,
+    favourite: false,
   };
 }
 

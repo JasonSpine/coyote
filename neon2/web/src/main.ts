@@ -124,6 +124,10 @@ ui.setViewListener({
       }
     });
   },
+  markAsFavourite(jobOfferId: number, favourite: boolean): void {
+    ui.setJobOfferFavourite(jobOfferId, favourite);
+    backend.markJobOfferAsFavourite(jobOfferId, favourite);
+  },
   vatDetailsChanged(countryCode: string, vatId: string): void {
     ui.setVatIncluded(isVatIncluded(countryCode, vatId));
   },

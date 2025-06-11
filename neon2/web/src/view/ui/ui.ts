@@ -35,6 +35,7 @@ export interface ViewListener {
   mountLocationDisplay(element: HTMLElement, latitude: number, longitude: number): void;
   vatDetailsChanged(countryCode: string, vatId: string): void;
   assertUserAuthenticated(): boolean;
+  markAsFavourite(jobOfferId: number, favourite: boolean): void;
 }
 
 export interface NavigationListener {
@@ -63,6 +64,8 @@ export interface UiController {
   jobOfferUrl(jobOffer: JobOffer): string;
   filterOnlyMine(onlyMine: boolean): void;
   resumePayment(jobOfferId: number): void;
+  markAsFavourite(jobOfferId: number, favourite: boolean): void;
+  findJobOffer(jobOfferId: number): JobOffer|null;
 }
 
 export type CanEdit = (jobOfferId: number) => boolean;
@@ -111,6 +114,8 @@ export class VueUi {
         showJobOffer: this.showJobOffer.bind(this),
         jobOfferUrl: this.jobOfferUrl.bind(this),
         resumePayment: this.resumePayment.bind(this),
+        markAsFavourite: this.markAsFavourite.bind(this),
+        findJobOffer: this.findJobOfferReactive.bind(this),
       },
       paymentProcessing: false,
     });
@@ -174,6 +179,10 @@ export class VueUi {
     }
   }
 
+  private markAsFavourite(jobOfferId: number, favourite: boolean): void {
+    this.vueState.viewListener!.markAsFavourite(jobOfferId, favourite);
+  }
+
   private showJobOffer(jobOffer: JobOffer): void {
     this.screens.showJobOffer(jobOffer);
   }
@@ -216,6 +225,23 @@ export class VueUi {
 
   private findJobOffer(jobOfferId: number): JobOffer|null {
     return this.view!.findJobOffer(jobOfferId);
+  }
+
+  private findJobOfferReactive(jobOfferId: number): JobOffer {
+    const jobOffer = this.vueState.jobOffers.find(o => o.id === jobOfferId);
+    if (jobOffer) {
+      return jobOffer;
+    }
+    const nonReactive = this.findJobOffer(jobOfferId);
+    if (nonReactive) {
+      return nonReactive; 
+      // TODO, currently, only offers in list are reactive; 
+      //       but offers outside of list (like mine, expired) need to be reactive too
+    }
+    throw new Error(
+      'Failed to render job offer.' +
+      ' offers in domain' + this.view!.jobOffers.length +
+      ' offers in view' + this.vueState.jobOffers.length);
   }
 
   setPaymentNotification(notification: PaymentNotification): void {
@@ -261,6 +287,10 @@ export class VueUi {
 
   setTagAutocomplete(tagAutocomplete: TagAutocomplete): void {
     this.vueState.tagAutocomplete = tagAutocomplete;
+  }
+
+  setJobOfferFavourite(jobOfferId: number, favourite: boolean): void {
+    this.findJobOfferReactive(jobOfferId)!.isFavourite = favourite;
   }
 
   mount(element: Element): void {

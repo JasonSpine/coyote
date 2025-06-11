@@ -58,10 +58,6 @@ export class WebDriver {
     await this.page.getByText(text).waitFor({state: 'visible'});
   }
 
-  async waitForTextDisappears(text: string): None {
-    await this.page.getByText(text).waitFor({state: 'hidden'});
-  }
-
   async waitUntilVisible(testId: string): None {
     await this.page.getByTestId(testId).waitFor({state: 'visible'});
   }
@@ -80,6 +76,10 @@ export class WebDriver {
 
   async fill(testId: string, value: string): None {
     await this.page.getByTestId(testId).fill(value);
+  }
+
+  async readAttribute(testId: string, attributeName: string): Promise<string|null> {
+    return await this.page.getByTestId(testId).getAttribute(attributeName);
   }
 }
 

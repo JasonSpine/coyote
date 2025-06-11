@@ -2,21 +2,23 @@
   <JobOfferButtonPill @click="navigateHome">Wróć do ogłoszeń</JobOfferButtonPill>
   <Design.Card
     title="Ogłoszenie oczekuje na płatność"
-    v-if="route.routeJobOffer!.status === 'awaitingPayment'">
+    v-if="routeJobOffer.status === 'awaitingPayment'">
     <Design.Button primary @click="resumePayment">
       Przejdź do płatności
     </Design.Button>
   </Design.Card>
   <JobOfferShow
     :view-listener="screen.viewListener"
-    :job-offer="toJobOfferShow(route.routeJobOffer!)"
-    :can-edit="route.routeJobOffer!.canEdit"
+    :job-offer="toJobOfferShow(routeJobOffer)"
+    :can-edit="routeJobOffer.canEdit"
     @edit="editJob"
-    @apply="applyForJob"/>
+    @apply="applyForJob"
+    @favourite="markAsFavourite"/>
 </template>
 
 <script setup lang="ts">
-import {inject} from "vue";
+import {computed, inject} from "vue";
+import {JobOffer} from "../../../jobBoard";
 import {Design} from "../design/design";
 import {RouteProperties} from "../screen/Screens";
 import {UiController, ViewListener} from "../ui";
@@ -37,14 +39,22 @@ function navigateHome(): void {
 }
 
 function editJob(): void {
-  screen.uiController.navigate('edit', route.routeJobOffer!.id);
+  screen.uiController.navigate('edit', route.routeJobOfferId!);
 }
 
 function applyForJob(): void {
-  screen.uiController.applyForJob(route.routeJobOffer!.id);
+  screen.uiController.applyForJob(route.routeJobOfferId!);
 }
 
 function resumePayment(): void {
-  screen.uiController.navigate('payment', route.routeJobOffer!.id);
+  screen.uiController.navigate('payment', route.routeJobOfferId!);
+}
+
+const routeJobOffer = computed((): JobOffer => {
+  return screen.uiController.findJobOffer(route.routeJobOfferId!)!;
+});
+
+function markAsFavourite(favourite: boolean): void {
+  screen.uiController.markAsFavourite(route.routeJobOfferId!, favourite);
 }
 </script>

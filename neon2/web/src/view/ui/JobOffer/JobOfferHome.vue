@@ -22,7 +22,7 @@
       :job-offer="jobOffer"
       :job-offer-url="screen.uiController.jobOfferUrl(jobOffer)"
       @select="screen.uiController.showJobOffer(jobOffer)"
-      @favourite-change=""/>
+      @favourite="f => screen.uiController.markAsFavourite(jobOffer.id, f)"/>
     <Design.Material v-if="screen.jobOffers.length === 0" nested class="text-center my-2 py-6">
       Nie znaleźliśmy żadnych ofert, pasujących do Twoich kryteriów wyszukiwania.
     </Design.Material>

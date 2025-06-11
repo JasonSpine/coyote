@@ -260,6 +260,16 @@ export class Dsl {
       assertion.expectedTag,
       await this.driver.findAutocompleteValues());
   }
+
+  async markJobOfferAsFavourite(jobOffer: {title: string}): Promise<void> {
+    await this.driver.markJobOfferAsFavourite(this.enc(jobOffer.title), 'favourite');
+  }
+
+  async assertJobOfferIsFavourite(assertion: {jobOfferTitle: string}): Promise<void> {
+    assertEquals(
+      'favourite',
+      await this.driver.findJobOfferFavourite(this.enc(assertion.jobOfferTitle)));
+  }
 }
 
 type None = Promise<void>;

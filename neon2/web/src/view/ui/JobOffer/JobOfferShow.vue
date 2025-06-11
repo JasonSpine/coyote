@@ -11,7 +11,9 @@
         :src="props.jobOffer.companyLogoUrl"
         placeholder-icon="jobOfferLogoPlaceholder"
         class="mr-auto"/>
-      <Design.Button square icon="jobOfferFavourite"/>
+      <JobOfferFavouriteButton
+        :model-value="props.jobOffer.favourite"
+        @update:model-value="markAsFavourite"/>
       <Design.Button @click="editJob" v-if="props.canEdit">Edytuj</Design.Button>
       <Design.Button
         :primary="!props.preview"
@@ -176,6 +178,7 @@ import {
   formatWorkExperience,
   formatWorkMode,
 } from "./format";
+import JobOfferFavouriteButton from "./JobOfferFavouriteButton.vue";
 import JobOfferField from "./JobOfferField.vue";
 import {fewLocations} from "./JobOfferListItem";
 import {formatSalary, SalaryJobOffer} from "./JobOfferSalary";
@@ -198,6 +201,7 @@ interface Props {
 interface Emit {
   (event: 'edit'): void;
   (event: 'apply'): void;
+  (event: 'favourite', favourite: boolean): void;
 }
 
 function editJob(): void {
@@ -206,6 +210,10 @@ function editJob(): void {
 
 function apply(): void {
   emit('apply');
+}
+
+function markAsFavourite(favourite: boolean): void {
+  emit('favourite', favourite);
 }
 
 const titleClass = 'text-lg text-neutral2-900';
