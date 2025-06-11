@@ -11,7 +11,7 @@ class EditButton extends RowAction
     {
         return (string) $this->tag(
             'a',
-            (string) $this->tag('i', '', ['class' => 'fa fa-pen-to-square']),
+            (string) $this->tag('i', '', ['class' => 'fa-light fa-pen-to-square']),
             ['href' => $this->buildActionUrl($this->data), 'class' => 'btn btn-secondary btn-sm', 'title' => __('Edit')]
         );
     }

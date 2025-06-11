@@ -24,8 +24,8 @@ class CategoriesGrid extends Grid
     {
         $html = $this->getGridHelper()->getHtmlBuilder();
 
-        $up = $html->tag('i', '', ['class' => 'fa fa-arrow-up']);
-        $down = $html->tag('i', '', ['class' => 'fa fa-arrow-down']);
+        $up = $html->tag('i', '', ['class' => 'fa-light fa-arrow-up']);
+        $down = $html->tag('i', '', ['class' => 'fa-light fa-arrow-down']);
 
         $this
             ->addColumn('id', [

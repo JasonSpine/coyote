@@ -19,7 +19,7 @@ class CreateButton extends Button
      */
     protected function renderIcon()
     {
-        return $this->tag('i', '', ['class' => 'fa fa-plus fa-fw']);
+        return $this->tag('i', '', ['class' => 'fa-light fa-plus fa-fw']);
     }
 
     /**

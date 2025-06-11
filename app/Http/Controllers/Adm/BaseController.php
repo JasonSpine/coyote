@@ -34,7 +34,7 @@ class BaseController extends Controller
             /** @var HtmlBuilder $html */
             $html = app('html');
             $fa = function ($icon) use ($html) {
-                return $html->tag('i', '', ['class' => "fa $icon"]);
+                return $html->tag('i', '', ['class' => "fa-light $icon"]);
             };
 
             $menu->add('Strona główna', ['route' => 'adm.dashboard'])->prepend($fa('fa-display fa-fw'));

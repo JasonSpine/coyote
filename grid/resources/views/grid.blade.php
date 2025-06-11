@@ -3,7 +3,7 @@
         @if(isset($add_url))
             <div class="float-start">
                 <a class="btn btn-secondary btn-add" href="{{ $add_url }}">
-                    <i class="fa fa-plus"></i>
+                    <i class="fa-light fa-plus"></i>
                     {{ $add_label ?: 'Nowy' }}
                 </a>
             </div>

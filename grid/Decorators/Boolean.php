@@ -54,7 +54,7 @@ class Boolean extends Decorator
         $cell->getColumn()->setAutoescape(false);
 
         $cell->setValue(
-            $cell->getColumn()->getGrid()->getGridHelper()->getHtmlBuilder()->tag('i', '', ['class' => "fa $class"])
+            $cell->getColumn()->getGrid()->getGridHelper()->getHtmlBuilder()->tag('i', '', ['class' => "fa-light $class"])
         );
     }
 
