@@ -16,7 +16,10 @@
     </Design.Row>
     <Design.Tile nested desktop-space :href="props.jobOfferUrl" @click="click">
       <Design.Row vertical-center>
-        <Design.Image :src="props.jobOffer.companyLogoUrl" placeholder-icon="jobOfferLogoPlaceholder"/>
+        <Design.Image
+          class="flex-shrink-0"
+          :src="props.jobOffer.companyLogoUrl"
+          placeholder-icon="jobOfferLogoPlaceholder"/>
         <div class="flex-grow-1">
           <Design.Row vertical-center apart>
             <p class="text-lg leading-6" v-text="jobOffer.title" data-testid="jobOfferTitle"/>
