@@ -1,5 +1,10 @@
 <template>
-  <Design.Tile vertical>
+  <Design.Tile vertical :class="[
+      'border-[1.5px] border-transparent',
+      'hover:border-neutral2-200',
+      'transition-[border-color,box-shadow] duration-150',
+      'hover:shadow-lg shadow-neutral2-300/10'
+    ]">
     <Design.Row wrap vertical-center>
       <Design.Tile nested-pill v-for="badge in badges" :text="badge.title" :icon="badge.icon"/>
       <Design.RowEnd inline>
