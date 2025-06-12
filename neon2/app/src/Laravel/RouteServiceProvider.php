@@ -72,8 +72,10 @@ class RouteServiceProvider extends ServiceProvider {
                     request()->get('favourite'));
                 return response()->json(status:201);
             });
-            Facades\Route::post('/neon2/job-offers/apply', function (ValueProposition $value) {
-                $value->apply(request()->get('jobOfferId'), request()->get('valuePropositionAccepted'));
+            Facades\Route::post('/neon2/job-offers/event', function (ValueProposition $value) {
+                $value->event(
+                    request()->get('eventName'),
+                    request()->get('metadata'));
                 return response()->json(status:201);
             });
             Facades\Route::get('/neon2/status', function (Integration $integration) {

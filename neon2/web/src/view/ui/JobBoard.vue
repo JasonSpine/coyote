@@ -1,32 +1,38 @@
 <template>
-  <ValuePropositionModal @accept="vpAccept" v-if="vpVisibleFor"/>
-  <Design.Layout class="bg-body">
-    <Design.BannerHeading
-      :pricing="props.screen === 'pricing'"
-      :back="showHomeLink"
-      @back="navigateHome"/>
-    <Design.Toast
-      v-if="toastTitle"
-      :title="toastTitle"/>
-    <Design.Toast
-      v-if="planBundleToast"
-      :title="planBundleToast"
-      test-id="planBundle"/>
-    <Design.Toast
-      test-id="paymentNotification"
-      :test-value="props.paymentNotification!"
-      v-if="paymentNotificationTitle"
-      :title="paymentNotificationTitle"/>
-    <Design.Toast
-      test-id="paymentStatus"
-      v-if="paymentStatusTitle"
-      :title="paymentStatusTitle"/>
-    <RouterView/>
-  </Design.Layout>
+  <div class="relative">
+    <ValuePropositionModal
+      v-if="vpVisibleFor"
+      :company-name="vpVisibleFor.companyName"
+      @accept="vpAccept"/>
+    <Design.Layout class="bg-body">
+      <Design.BannerHeading
+        :pricing="props.screen === 'pricing'"
+        :back="showHomeLink"
+        @back="navigateHome"/>
+      <Design.Toast
+        v-if="toastTitle"
+        :title="toastTitle"/>
+      <Design.Toast
+        v-if="planBundleToast"
+        :title="planBundleToast"
+        test-id="planBundle"/>
+      <Design.Toast
+        test-id="paymentNotification"
+        :test-value="props.paymentNotification!"
+        v-if="paymentNotificationTitle"
+        :title="paymentNotificationTitle"/>
+      <Design.Toast
+        test-id="paymentStatus"
+        v-if="paymentStatusTitle"
+        :title="paymentStatusTitle"/>
+      <RouterView/>
+    </Design.Layout>
+  </div>
 </template>
 
 <script setup lang="ts">
 import {computed, provide} from 'vue';
+import {ValuePropositionEvent} from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
 import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
@@ -43,8 +49,8 @@ function navigateHome(): void {
   props.uiController.navigate('home', null);
 }
 
-function vpAccept(accepted: boolean): void {
-  props.uiController.valuePropositionAccepted(accepted);
+function vpAccept(event: ValuePropositionEvent, email?: string): void {
+  props.uiController.valuePropositionAccepted(event, email);
 }
 
 const showHomeLink = computed<boolean>(() => props.screen !== 'home');

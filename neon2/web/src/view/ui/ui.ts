@@ -12,6 +12,7 @@ import {
   PricingPlan,
   SubmitJobOffer,
   UploadAssets,
+  ValuePropositionEvent,
   VatIdState,
 } from "../../main";
 import {PaymentNotification} from "../../paymentProvider/PaymentProvider";
@@ -37,7 +38,10 @@ export interface ViewListener {
   assertUserAuthenticated(): boolean;
   markAsFavourite(jobOfferId: number, favourite: boolean): void;
   apply(jobOffer: JobOffer): void;
-  valuePropositionAccepted(jobOffer: JobOffer, accepted: boolean): void;
+  valuePropositionAccepted(
+    jobOffer: JobOffer,
+    event: ValuePropositionEvent,
+    email?: string): void;
 }
 
 export interface NavigationListener {
@@ -68,7 +72,7 @@ export interface UiController {
   resumePayment(jobOfferId: number): void;
   markAsFavourite(jobOfferId: number, favourite: boolean): void;
   findJobOffer(jobOfferId: number): JobOffer|null;
-  valuePropositionAccepted(accepted: boolean): void;
+  valuePropositionAccepted(event: ValuePropositionEvent, email?: string): void;
 }
 
 export type CanEdit = (jobOfferId: number) => boolean;
@@ -293,13 +297,19 @@ export class VueUi {
     this.findJobOfferReactive(jobOfferId)!.isFavourite = favourite;
   }
 
-  setValuePropositionVisible(jobOffer: JobOffer): void {
+  showValueProposition(jobOffer: JobOffer): void {
     this.vueState.vpVisibleFor = jobOffer;
   }
 
-  valuePropositionAccepted(accepted: boolean): void {
-    this.vueState.viewListener!.valuePropositionAccepted(this.vueState.vpVisibleFor!, accepted);
+  hideValueProposition(): void {
     this.vueState.vpVisibleFor = null;
+  }
+
+  valuePropositionAccepted(
+    event: ValuePropositionEvent,
+    email?: string,
+  ): void {
+    this.vueState.viewListener!.valuePropositionAccepted(this.vueState.vpVisibleFor!, event, email);
   }
 
   mount(element: Element): void {

@@ -167,7 +167,11 @@ export class View {
   }
 
   showValueProposition(jobOffer: JobOffer): void {
-    this.ui.setValuePropositionVisible(jobOffer);
+    this.ui.showValueProposition(jobOffer);
+  }
+
+  hideValueProposition(): void {
+    this.ui.hideValueProposition();
   }
 }
 

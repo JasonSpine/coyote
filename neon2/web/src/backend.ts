@@ -201,14 +201,18 @@ export class JobBoardBackend {
       }));
   }
 
-  apply(jobOfferId: number, valuePropositionAccepted: boolean): Promise<void> {
-    return request('POST', '/neon2/job-offers/apply', {
-      jobOfferId,
-      valuePropositionAccepted,
-    })
+  event(event: Event): Promise<void> {
+    return request('POST', '/neon2/job-offers/event', event)
       .then(response => response.json());
   }
 }
+
+export interface Event {
+  eventName: string;
+  metadata: EventMetadata;
+}
+
+export type EventMetadata = Record<string, string|number|boolean|undefined>;
 
 export interface BackendTag {
   tagName: string;

@@ -4,17 +4,14 @@ namespace Neon2;
 use Coyote\Services\Guest;
 use Illuminate\Database\Connection;
 
-class ValueProposition {
+readonly class ValueProposition {
     public function __construct(private Guest $guest, private Connection $connection) {}
 
-    public function apply(int $jobOfferId, bool $accepted): void {
+    public function event(string $eventName, array $metadata): void {
         $this->connection->table('guest_events')->insert([
             'guest_id'   => $this->guest->guestId,
-            'event_name' => 'job_apply',
-            'metadata'   => \json_encode([
-                'jobOfferId' => $jobOfferId,
-                'accepted'   => $accepted,
-            ]),
+            'event_name' => $eventName,
+            'metadata'   => \json_encode($metadata),
             'created_at' => now(),
         ]);
     }

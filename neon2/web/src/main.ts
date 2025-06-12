@@ -2,6 +2,7 @@ import {
   BackendJobOffer,
   BackendJobOfferLocation,
   BackendJobOfferTagPriority,
+  EventMetadata,
   JobBoardBackend,
   JobOfferPaymentIntent,
   toJobOffer,
@@ -174,17 +175,33 @@ ui.setViewListener({
   apply(jobOffer: JobOffer): void {
     view.showValueProposition(jobOffer);
   },
-  valuePropositionAccepted(jobOffer: JobOffer, accepted: boolean): void {
-    backend.apply(jobOffer.id, accepted)
-      .finally(() => {
-        if (jobOffer.applicationMode === 'external-ats') {
-          window.open(jobOffer.applicationUrl, '_blank');
-        } else {
-          window.location.href = jobOffer.applicationUrl;
-        }
-      });
+
+  valuePropositionAccepted(
+    jobOffer: JobOffer,
+    event: ValuePropositionEvent,
+    email?: string,
+  ): void {
+    const result = vpEvent(event, {jobOfferId: jobOffer.id, email});
+    if (event === 'vpDeclined' || event === 'vpApply') {
+      view.hideValueProposition();
+      result.finally(() => jobOfferApply(jobOffer));
+    }
   },
 });
+
+function vpEvent(eventName: string, metadata: EventMetadata): Promise<void> {
+  return backend.event({eventName, metadata});
+}
+
+function jobOfferApply(jobOffer: JobOffer): void {
+  if (jobOffer.applicationMode === 'external-ats') {
+    window.open(jobOffer.applicationUrl, '_blank');
+  } else {
+    window.location.href = jobOffer.applicationUrl;
+  }
+}
+
+export type ValuePropositionEvent = 'vpAccepted'|'vpDeclined'|'vpSubscribed'|'vpApply';
 
 ui.setTagAutocomplete((tagPrompt: string, result: TagAutocompleteResult): void => {
   backend.tagsAutocomplete(tagPrompt).then(tags => result(tags));

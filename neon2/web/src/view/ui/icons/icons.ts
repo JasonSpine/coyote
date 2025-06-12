@@ -7,6 +7,7 @@ const iconSuitcase = 'fa-light fa-suitcase';
 const iconRemove = 'fa-light fa-trash';
 const iconAsterisk = 'fa-light fa-asterisk';
 const iconCalendar = 'fa-light fa-calendar';
+const iconArrowLeft = 'fa-light fa-arrow-left';
 
 const jobOfferLocation = 'fa-light fa-location-dot';
 const jobOfferLegalForm = iconSuitcase;
@@ -52,12 +53,13 @@ export const icons = {
   jobOfferFilterWorkExperience: jobOfferWorkExperience,
   jobOfferUploadCompanyLogo: 'fa-light fa-circle-plus',
   jobOfferStepperStepFinished: iconCheck,
-  jobOfferCreatorStepBack: 'fa-light fa-arrow-left',
+  jobOfferCreatorStepBack: iconArrowLeft,
   jobOfferPricingPlanListBullet: iconCheck,
   jobOfferPricingPlanListBulletSpecialCase: iconAsterisk,
   jobOfferApplyExternally: 'fa-light fa-arrow-up-right-from-square',
   jobOfferTagRemove: iconClose,
   jobOfferExpiredOn: iconCalendar,
+  vpBack: iconArrowLeft,
 };
 
 export const htmlIconFormatBold = '<i class="fa-solid fa-bold"/>';
