@@ -200,6 +200,14 @@ export class JobBoardBackend {
         };
       }));
   }
+
+  apply(jobOfferId: number, valuePropositionAccepted: boolean): Promise<void> {
+    return request('POST', '/neon2/job-offers/apply', {
+      jobOfferId,
+      valuePropositionAccepted,
+    })
+      .then(response => response.json());
+  }
 }
 
 export interface BackendTag {

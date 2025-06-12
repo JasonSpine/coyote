@@ -165,6 +165,10 @@ export class View {
   addFilterListener(listener: FilterListener): void {
     this.filterListener = listener;
   }
+
+  showValueProposition(jobOffer: JobOffer): void {
+    this.ui.setValuePropositionVisible(jobOffer);
+  }
 }
 
 export interface FilterListener {

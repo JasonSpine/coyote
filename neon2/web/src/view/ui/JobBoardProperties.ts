@@ -27,4 +27,5 @@ export interface JobBoardProperties {
   locationInput: LocationInput|null;
   uiController: UiController;
   paymentProcessing: boolean;
+  vpVisibleFor: JobOffer|null;
 }

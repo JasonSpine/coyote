@@ -36,6 +36,8 @@ export interface ViewListener {
   vatDetailsChanged(countryCode: string, vatId: string): void;
   assertUserAuthenticated(): boolean;
   markAsFavourite(jobOfferId: number, favourite: boolean): void;
+  apply(jobOffer: JobOffer): void;
+  valuePropositionAccepted(jobOffer: JobOffer, accepted: boolean): void;
 }
 
 export interface NavigationListener {
@@ -66,6 +68,7 @@ export interface UiController {
   resumePayment(jobOfferId: number): void;
   markAsFavourite(jobOfferId: number, favourite: boolean): void;
   findJobOffer(jobOfferId: number): JobOffer|null;
+  valuePropositionAccepted(accepted: boolean): void;
 }
 
 export type CanEdit = (jobOfferId: number) => boolean;
@@ -116,7 +119,9 @@ export class VueUi {
         resumePayment: this.resumePayment.bind(this),
         markAsFavourite: this.markAsFavourite.bind(this),
         findJobOffer: this.findJobOfferReactive.bind(this),
+        valuePropositionAccepted: this.valuePropositionAccepted.bind(this),
       },
+      vpVisibleFor: null,
       paymentProcessing: false,
     });
     this.gate = new Policy(
@@ -171,12 +176,7 @@ export class VueUi {
   }
 
   private applyForJob(jobOfferId: number): void {
-    const jobOffer = this.findJobOffer(jobOfferId)!;
-    if (jobOffer.applicationMode === 'external-ats') {
-      window.open(jobOffer.applicationUrl, '_blank');
-    } else {
-      window.location.href = jobOffer.applicationUrl;
-    }
+    this.vueState.viewListener!.apply(this.findJobOffer(jobOfferId)!);
   }
 
   private markAsFavourite(jobOfferId: number, favourite: boolean): void {
@@ -234,7 +234,7 @@ export class VueUi {
     }
     const nonReactive = this.findJobOffer(jobOfferId);
     if (nonReactive) {
-      return nonReactive; 
+      return nonReactive;
       // TODO, currently, only offers in list are reactive; 
       //       but offers outside of list (like mine, expired) need to be reactive too
     }
@@ -291,6 +291,15 @@ export class VueUi {
 
   setJobOfferFavourite(jobOfferId: number, favourite: boolean): void {
     this.findJobOfferReactive(jobOfferId)!.isFavourite = favourite;
+  }
+
+  setValuePropositionVisible(jobOffer: JobOffer): void {
+    this.vueState.vpVisibleFor = jobOffer;
+  }
+
+  valuePropositionAccepted(accepted: boolean): void {
+    this.vueState.viewListener!.valuePropositionAccepted(this.vueState.vpVisibleFor!, accepted);
+    this.vueState.vpVisibleFor = null;
   }
 
   mount(element: Element): void {

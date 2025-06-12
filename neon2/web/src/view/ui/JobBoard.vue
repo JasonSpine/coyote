@@ -1,4 +1,5 @@
 <template>
+  <ValuePropositionModal @accept="vpAccept" v-if="vpVisibleFor"/>
   <Design.Layout class="bg-body">
     <Design.BannerHeading
       :pricing="props.screen === 'pricing'"
@@ -31,6 +32,7 @@ import {PaymentStatus} from "../../paymentProvider/PaymentService";
 import {Toast} from '../view';
 import {Design} from "./design/design";
 import {JobBoardProperties} from "./JobBoardProperties";
+import ValuePropositionModal from "./vp/ValuePropositionModal.vue";
 
 const props = defineProps<JobBoardProperties>();
 
@@ -39,6 +41,10 @@ provide('screen', props);
 
 function navigateHome(): void {
   props.uiController.navigate('home', null);
+}
+
+function vpAccept(accepted: boolean): void {
+  props.uiController.valuePropositionAccepted(accepted);
 }
 
 const showHomeLink = computed<boolean>(() => props.screen !== 'home');

@@ -171,6 +171,19 @@ ui.setViewListener({
     window.location.href = '/Login';
     return false;
   },
+  apply(jobOffer: JobOffer): void {
+    view.showValueProposition(jobOffer);
+  },
+  valuePropositionAccepted(jobOffer: JobOffer, accepted: boolean): void {
+    backend.apply(jobOffer.id, accepted)
+      .finally(() => {
+        if (jobOffer.applicationMode === 'external-ats') {
+          window.open(jobOffer.applicationUrl, '_blank');
+        } else {
+          window.location.href = jobOffer.applicationUrl;
+        }
+      });
+  },
 });
 
 ui.setTagAutocomplete((tagPrompt: string, result: TagAutocompleteResult): void => {
