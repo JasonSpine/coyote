@@ -18,7 +18,7 @@
       {{ form_open({'method': 'POST', 'role': 'form', 'url': route('user.notifications.settings')}) }}
 
       <div class="row">
-        <div class="col-6">
+        <div class="col-8">
           <strong>Powiadamiaj o...</strong>
         </div>
         <div class="col-2">
@@ -26,9 +26,6 @@
         </div>
         <div class="col-2">
           <strong>Powiadomienie e-mail</strong>
-        </div>
-        <div class="col-2">
-          <strong>Powiadomienie Push</strong>
         </div>
       </div>
 
@@ -43,7 +40,7 @@
 
         {% for type in types %}
           <div class="row">
-            <div class="col-6">
+            <div class="col-8">
               {{ type.name }}
             </div>
 

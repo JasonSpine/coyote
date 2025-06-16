@@ -1,7 +1,7 @@
 <template>
   <li :class="{'open': isOpen}" v-click-away="hideDropdown">
     <span @click="loadMessages" class="nav-control-icon neon-navbar-text cursor-pointer">
-      <span v-show="count > 0" class="neon-subscribe-badge">{{ count }}</span>
+      <span v-show="count > 0" class="neon-subscribe-badge">{{count}}</span>
       <vue-icon name="navigationPrivateMessages"/>
     </span>
     <div ref="dropdown" v-show="isOpen" class="dropdown-alerts dropdown-menu dropdown-menu-end">
@@ -13,7 +13,9 @@
           Wiadomości
         </a>
       </div>
-      <perfect-scrollbar class="dropdown-modal" :options="{wheelPropagation: false, useBothWheelAxes: false, suppressScrollX: true}">
+      <perfect-scrollbar
+        class="dropdown-modal"
+        :options="{wheelPropagation: false, useBothWheelAxes: false, suppressScrollX: true}">
         <div v-if="messages === null" class="text-center p-3">
           <vue-icon name="privateMessagesLoading" spin/>
         </div>
@@ -29,7 +31,6 @@
 <script lang="ts">
 import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 import clickAway from "../../clickAway.js";
-import DesktopNotifications from '../../libs/notifications';
 import {default as ws} from '../../libs/realtime';
 import VueIcon from "../icon";
 import PerfectScrollbar from '../perfect-scrollbar.js';
@@ -46,8 +47,8 @@ export default {
   data() {
     return {
       isOpen: false,
-      currentTitle: null as string | null,
-      animationId: null as NodeJS.Timer | null,
+      currentTitle: null as string|null,
+      animationId: null as NodeJS.Timer|null,
     };
   },
   computed: {
@@ -74,11 +75,7 @@ export default {
       this.channel.on('PmCreated', ({count, data}) => {
         this.SET_COUNT(count);
         this.RESET_MESSAGE();
-
         this.isOpen = false;
-
-        DesktopNotifications.notify(data.user.name, data.excerpt, data.url);
-
         this.startAnimation(data.user);
       });
 
@@ -86,15 +83,11 @@ export default {
         if (this.count > 0) {
           this.SET_COUNT(this.count - 1);
         }
-
         this.stopAnimation();
-
         if (!this.messages) {
           return;
         }
-
         const message = this.messages.find(item => item.text_id === data.text_id);
-
         if (message) {
           this.MARK(message);
         }

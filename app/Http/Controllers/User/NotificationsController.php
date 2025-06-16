@@ -14,15 +14,12 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
-class NotificationsController extends BaseController
-{
-    public function __construct(private NotificationRepositoryInterface $notification)
-    {
+class NotificationsController extends BaseController {
+    public function __construct(private NotificationRepositoryInterface $notification) {
         parent::__construct();
     }
 
-    public function index(): View
-    {
+    public function index(): View {
         $this->breadcrumb->push('Powiadomienia', route('user.notifications'));
 
         $pagination = $this->notification->lengthAwarePaginate($this->userId);
@@ -36,25 +33,28 @@ class NotificationsController extends BaseController
         ]);
     }
 
-    public function settings(): View
-    {
+    public function settings(): View {
         $this->breadcrumb->push('Ustawienia powiadomień', route('user.notifications.settings'));
+        $groupBy = $this->auth->notificationSettings()
+            ->whereNot('channel', 'push')
+            ->get()
+            ->sortBy('channel')
+            ->groupBy('type_id');
+
         return $this->view('user.notifications.settings', [
             'groups'   => $this->notification->notificationTypes()->groupBy('category'),
-            'settings' => $this->auth->notificationSettings()->get()->sortBy('channel')->groupBy('type_id'),
+            'settings' => $groupBy,
             'channels' => Notification::getChannels(),
         ]);
     }
 
-    public function save(Request $request): RedirectResponse
-    {
+    public function save(Request $request): RedirectResponse {
         $this->notification->updateSettings($this->userId, $request->input('settings'));
 
         return back()->with('success', 'Zmiany zostały zapisane');
     }
 
-    public function ajax(Request $request): JsonResponse
-    {
+    public function ajax(Request $request): JsonResponse {
         $unread = $this->auth->notifications_unread;
         $offset = $request->query('offset', 0);
 
@@ -67,21 +67,18 @@ class NotificationsController extends BaseController
         ]);
     }
 
-    private function formatNotificationsHeadline(Collection $notifications): array
-    {
+    private function formatNotificationsHeadline(Collection $notifications): array {
         return array_filter(NotificationResource::collection($notifications)->toArray($this->request));
     }
 
-    public function delete(string $id): void
-    {
+    public function delete(string $id): void {
         $this->notification->delete($id);
     }
 
     /**
      * Marks all alerts as read
      */
-    public function markAllAsRead(): void
-    {
+    public function markAllAsRead(): void {
         if ($this->auth->notifications_unread) {
             $this->notification->where('user_id', $this->userId)->whereNull('read_at')->update([
                 'read_at' => Carbon\Carbon::now(),
@@ -94,8 +91,7 @@ class NotificationsController extends BaseController
     /**
      * @deprecated
      */
-    public function url(string $id): Response|RedirectResponse
-    {
+    public function url(string $id): Response|RedirectResponse {
         if (!$this->isUuid($id)) {
             return response('', 400);
         }
@@ -115,13 +111,11 @@ class NotificationsController extends BaseController
         return redirect()->to($notification->url);
     }
 
-    private function isUuid(string $uuid): bool
-    {
+    private function isUuid(string $uuid): bool {
         return \preg_match("/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i", $uuid);
     }
 
-    public function redirectToUrl(): RedirectResponse
-    {
+    public function redirectToUrl(): RedirectResponse {
         $path = \urlDecode($this->request->get('path'));
 
         if (!$this->userId) {
@@ -142,8 +136,7 @@ class NotificationsController extends BaseController
         return redirect()->to($path);
     }
 
-    private function markAsReadAndCount(Collection|Paginator $notifications): int
-    {
+    private function markAsReadAndCount(Collection|Paginator $notifications): int {
         $unreadNotifications = $notifications
             ->filter(fn(Notification $notification) => $notification->read_at === null)
             ->pluck('id')

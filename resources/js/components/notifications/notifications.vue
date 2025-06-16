@@ -2,7 +2,7 @@
   <li :class="{'open': isOpen}" v-click-away="hideDropdown">
     <span @click="toggleDropdown" class="nav-control-icon neon-navbar-text cursor-pointer">
       <span v-show="count > 0" class="neon-subscribe-badge">
-        {{ count }}
+        {{count}}
       </span>
       <vue-icon name="navigationNotifications"/>
     </span>
@@ -25,7 +25,8 @@
           <vue-icon name="notificationsLoading" spin/>
         </div>
         <vue-notification v-for="notification in notifications" :notification="notification" :key="notification.id"/>
-        <div class="text-center p-3 empty-placeholder" v-if="Array.isArray(notifications) && notifications.length === 0">
+        <div class="text-center p-3 empty-placeholder"
+             v-if="Array.isArray(notifications) && notifications.length === 0">
           Brak powiadomień.
         </div>
       </perfect-scrollbar>
@@ -38,7 +39,6 @@ import {mapGetters, mapState} from 'vuex';
 
 import clickAway from "../../clickAway.js";
 import environment from '../../environment';
-import DesktopNotifications from '../../libs/notifications';
 import {default as ws} from '../../libs/realtime';
 import Session from '../../libs/session.js';
 import store from '../../store';
@@ -82,11 +82,6 @@ export default {
   methods: {
     toggleDropdown() {
       this.isOpen = !this.isOpen;
-
-      if (DesktopNotifications.isSupported && DesktopNotifications.isDefault) {
-        DesktopNotifications.requestPermission();
-      }
-
       this.subscribeUser();
     },
     loadNotifications() {
@@ -129,7 +124,6 @@ export default {
           this.resetNotifications();
           store.commit('notifications/increment');
           this.syncCount();
-          DesktopNotifications.notify(data.headline, data.subject, data.url);
         })
         .on('NotificationRead', () => store.commit('notifications/decrement'));
     },
