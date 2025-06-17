@@ -3,7 +3,8 @@ namespace Coyote\Providers\Neon;
 
 use Coyote;
 use Coyote\Domain\Settings\UserTheme;
-use Coyote\Domain\StringHtml;
+use Coyote\View\NavigationMenuPresenter;
+use Coyote\View\NavigationMenuService;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Http\Response;
 use Jenssegers\Agent\Agent;
@@ -50,6 +51,8 @@ class ServiceProvider extends RouteServiceProvider {
                 ->get('/Job/pricing', $this->indexView(...));
             $this
                 ->get('/Job/{id}/edit', $this->indexView(...));
+            $this
+                ->get('/Job/{id}/payment', $this->indexView(...));
             $this
                 ->name('neon.jobOffer.show')
                 ->get('/Job/{slug}/{id}', $this->indexView(...));
@@ -98,11 +101,13 @@ class ServiceProvider extends RouteServiceProvider {
             $test->isTestMode(),
             auth()->id(),
             auth()->user()?->email,
+            $this->user(),
             app('session')->token(),
             $theme->isThemeDark(),
             $theme->themeMode(),
             request()->route()->parameter('id'),
-            $acceptanceTagNames);
+            $acceptanceTagNames,
+            $this->navigationMenu());
         $view = <<<html
             <html>
             <head>{$jobBoardView->htmlMarkupHead()}</head>
@@ -142,5 +147,26 @@ class ServiceProvider extends RouteServiceProvider {
     private function parseIsoString(string $isoTime): int {
         $dateTime = \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $isoTime, new \DateTimeZone('UTC'));
         return $dateTime->getTimestamp();
+    }
+
+    private function navigationMenu(): array {
+        /** @var NavigationMenuPresenter $presenter */
+        $presenter = app(NavigationMenuPresenter::class);
+        /** @var NavigationMenuService $service */
+        $service = app(NavigationMenuService::class);
+        return $presenter->navigationMenu($service->navigationMenu());
+    }
+
+    private function user(): ?\Neon2\NavigationUser {
+        if (!auth()->check()) {
+            return null;
+        }
+        /** @var Coyote\User $user */
+        $user = auth()->user();
+        return new \Neon2\NavigationUser(
+            $user->name,
+            \route('profile', [$user->id]),
+            $user->pm_unread,
+            $user->photo->getFilename());
     }
 }

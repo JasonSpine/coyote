@@ -1,5 +1,5 @@
-@import "../../neon2/web/src/view/ui/design/tailwind.css";
-@import "../../neon2/web/src/view/ui/icons/internal/fontAwesomeIcons.css";
+@import "../../neon2/web/src/Infrastructure/Vue/DesignSystem/tailwind.css";
+@import "../../neon2/web/src/Infrastructure/Vue/Icon/internal/fontAwesomeIcons.css";
 @import "./icons.css";
 
 @utility brand-logo {

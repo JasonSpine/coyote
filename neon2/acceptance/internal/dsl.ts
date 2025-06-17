@@ -308,6 +308,20 @@ export class Dsl {
   async assertActionRejected(): Promise<void> {
     assertEquals('/Job', await this.driver.currentUrl());
   }
+
+  async newSessionAsGuest(): Promise<void> {
+    await this.driver.reloadApplicationLoggedOut();
+  }
+
+  async assertUserAuthenticated(assertion: {expectedState: string}): Promise<void> {
+    assertEquals(
+      assertion.expectedState,
+      await this.driver.findAuthenticationState());
+  }
+
+  async logout(): Promise<void> {
+    await this.driver.logout();
+  }
 }
 
 type None = Promise<void>;
