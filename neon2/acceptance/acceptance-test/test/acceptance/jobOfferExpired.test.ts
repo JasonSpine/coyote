@@ -1,7 +1,6 @@
 import {Dsl} from "../../internal/dsl";
-import {beforeEach, describe, saveScreenshotAfterFailedTest, test} from "../../internal/playwright";
+import {beforeEach, describe, test} from "../../internal/playwright";
 
-saveScreenshotAfterFailedTest('FAILURE.png');
 beforeEach(dsl => dsl.beforeEach());
 
 describe('An expired job offer is not listed in search, but can still be accessed.', () => {

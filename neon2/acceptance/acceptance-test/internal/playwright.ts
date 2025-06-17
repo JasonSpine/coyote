@@ -34,14 +34,3 @@ export function assertContains(needle: any, haystack: any[]): void {
 export function assertNotContains(needle: any, haystack: any[]): void {
   expect(haystack).not.toContain(needle);
 }
-
-export function saveScreenshotAfterFailedTest(filename: string): void {
-  playwrightTest.afterEach(async ({page}, testInfo: TestInfo): Promise<void> => {
-    if (testInfo.status !== testInfo.expectedStatus) {
-      await page.screenshot({
-        timeout: 5000,
-        path: testInfo.outputPath(filename),
-      });
-    }
-  });
-}
