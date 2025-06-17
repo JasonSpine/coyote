@@ -13,7 +13,7 @@ describe('Job offers can be favourite.', () => {
   test('Change is persisted in a new session.', async (dsl: Dsl) => {
     await dsl.publishJobOffer({title: 'Interesting'});
     await dsl.markJobOfferAsFavourite({title: 'Interesting'});
-    await dsl.resetClient();
+    await dsl.newSession();
     await dsl.assertJobOfferIsFavourite({jobOfferTitle: 'Interesting'});
   });
 });

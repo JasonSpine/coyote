@@ -29,7 +29,7 @@ export class Dsl {
     this.mangler.invalidate();
   }
 
-  async resetClient(): None {
+  async newSession(): None {
     await this.driver.reloadApplication();
   }
 
