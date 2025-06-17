@@ -12,8 +12,48 @@ export class Driver {
     this.web = new WebDriver(page);
   }
 
-  async reloadApplication(): None {
-    await this.web.reload();
+  async newSession(): None {
+    await this.web.openUrl('/Job');
+  }
+
+  async loadApplicationLoggedIn(userId: number): Promise<void> {
+    await this.loginAndNavigate(userId, '/Job');
+  }
+
+  async tryOpenJobOfferFormWithoutSelectedPlan(): Promise<void> {
+    await this.web.openUrl('/Job/new');
+  }
+
+  async tryEditJobOfferAs(jobOfferId: number, userId: number): Promise<void> {
+    await this.loginAndNavigate(userId, `/Job/${jobOfferId}/edit`);
+  }
+
+  async reloadApplicationLoggedOut(): Promise<void> {
+    await this.logOutAndNavigate('/Job');
+  }
+
+  async tryOpenJobOfferFormAsLoggedOut(): Promise<void> {
+    await this.logOutAndNavigate('/Job/new');
+  }
+
+  async tryEditJobOfferAsLoggedOut(jobOfferId: number): Promise<void> {
+    await this.logOutAndNavigate(`/Job/${jobOfferId}/edit`);
+  }
+
+  private async logOutAndNavigate(url: string): Promise<void> {
+    await this.web.openUrl(url + '?workerIndex=logout');
+  }
+
+  async findJobOfferId(jobOfferTitle: string): Promise<number> {
+    return parseUrlJobShowId(await this.findJobOfferUrl(jobOfferTitle));
+  }
+
+  private async loginAndNavigate(userId: number, url: string): Promise<void> {
+    await this.web.openUrl(url + '?revokeBundle=true&workerIndex=' + userId);
+  }
+
+  async currentUrl(): Promise<string> {
+    return this.web.currentUrlPath();
   }
 
   async setAcceptanceTags(tagNames: string[]): Promise<void> {
@@ -353,7 +393,7 @@ export class Driver {
   }
 
   async accessJobOffer(jobOfferUrl: string, jobOfferTitle: string): Promise<boolean> {
-    await this.web.loadJobOffer(jobOfferUrl);
+    await this.web.openUrl(jobOfferUrl);
     return await this.web.read('jobOfferTitle') === jobOfferTitle;
   }
 
@@ -386,6 +426,11 @@ export class Driver {
     await this.searchJobOffers(jobOfferTitle);
     await this.web.click(jobOfferTitle);
   }
+
+  async trySelectPricingPlan(pricingPlan: PricingPlan): Promise<void> {
+    await this.web.click('Dodaj ogłoszenie od 0zł');
+    await this.selectPricingPlan(pricingPlan);
+  }
 }
 
 function parseChecked(checked: string|null): boolean {
@@ -414,3 +459,8 @@ interface PlanBundle {
 type Favourite = 'favourite'|'notFavourite';
 
 type None = Promise<void>;
+
+function parseUrlJobShowId(jobOfferShowUrl: string): number {
+  const offerId = jobOfferShowUrl.substring(jobOfferShowUrl.lastIndexOf('/') + 1);
+  return parseInt(offerId, 10);
+}

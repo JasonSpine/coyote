@@ -67,8 +67,13 @@ class ServiceProvider extends RouteServiceProvider {
     ): string {
         if ($test->isTestMode()) {
             if (request()->query->has('workerIndex')) {
-                $userId = $this->acceptanceTestUserId(request()->query->get('workerIndex'));
-                auth()->loginUsingId($userId, remember:true);
+                $workerIndex = request()->query->get('workerIndex');
+                if ($workerIndex === 'logout') {
+                    auth()->logout();
+                } else {
+                    $userId = $this->acceptanceTestUserId($workerIndex);
+                    auth()->loginUsingId($userId, remember:true);
+                }
             }
             if (\request()->query->has('revokeBundle')) {
                 $integration->revokePlanBundle(auth()->id());

@@ -30,7 +30,7 @@ export class Dsl {
   }
 
   async newSession(): None {
-    await this.driver.reloadApplication();
+    await this.driver.newSession();
   }
 
   async publishJobOffer(jobOffer: {
@@ -269,6 +269,44 @@ export class Dsl {
     assertEquals(
       'favourite',
       await this.driver.findJobOfferFavourite(this.enc(assertion.jobOfferTitle)));
+  }
+
+  async trySelectPricingPlanAsLoggedOut(pricingPlan: PricingPlan): Promise<void> {
+    await this.driver.reloadApplicationLoggedOut();
+    await this.driver.trySelectPricingPlan(pricingPlan);
+  }
+
+  async tryOpenJobOfferFormAsLoggedOut(): Promise<void> {
+    await this.driver.tryOpenJobOfferFormAsLoggedOut();
+  }
+
+  async tryOpenJobOfferFormWithoutSelectedPlan(): Promise<void> {
+    await this.driver.tryOpenJobOfferFormWithoutSelectedPlan();
+  }
+
+  async tryEditJobOfferAsLoggedOut(): Promise<void> {
+    // We should create a job offer here for edit, 
+    // but the behaviour can actually be demonstrated with any id.
+    await this.driver.tryEditJobOfferAsLoggedOut(1234);
+  }
+
+  async tryEditJobOfferAsOtherUser(): Promise<void> {
+    await this.driver.loadApplicationLoggedIn(121);
+    await this.publishJobOffer({title: 'No permission to edit'});
+    const jobOfferId = await this.driver.findJobOfferId(this.enc('No permission to edit'));
+    await this.driver.tryEditJobOfferAs(jobOfferId, 122);
+  }
+
+  async assertChallengedToLogin(): Promise<void> {
+    assertEquals('/Login', await this.driver.currentUrl());
+  }
+
+  async assertChallengedToSelectPricingPlan(): Promise<void> {
+    assertEquals('/Job/pricing', await this.driver.currentUrl());
+  }
+
+  async assertActionRejected(): Promise<void> {
+    assertEquals('/Job', await this.driver.currentUrl());
   }
 }
 

@@ -7,8 +7,9 @@ export const describe = playwrightTest.describe;
 
 export function test(title: string, test: Test): void {
   playwrightTest(title, async function ({page, request}, testInfo: TestInfo): Promise<void> {
-    await page.goto('/Job?revokeBundle=true&workerIndex=' + testInfo.parallelIndex);
-    await test(new Dsl(new Driver(page), new HttpDriver(request)));
+    const driver = new Driver(page);
+    await driver.loadApplicationLoggedIn(testInfo.parallelIndex);
+    await test(new Dsl(driver, new HttpDriver(request)));
   });
 }
 

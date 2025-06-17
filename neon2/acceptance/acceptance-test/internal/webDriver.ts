@@ -8,12 +8,12 @@ export class WebDriver {
     return this.page.url();
   }
 
-  async loadJobOffer(jobOfferUrl: string): Promise<void> {
-    await this.page.goto(jobOfferUrl);
+  currentUrlPath(): string {
+    return new URL(this.currentUrl()).pathname;
   }
 
-  async reload(): None {
-    await this.page.goto('/Job');
+  async openUrl(url: string): Promise<void> {
+    await this.page.goto(url);
   }
 
   async setAcceptanceTags(tagNames: string[]): None {

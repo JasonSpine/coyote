@@ -15,6 +15,8 @@ class AcceptanceUsersTableSeeder extends Seeder {
         foreach (range(1, 10) as $index) {
             $this->createUser("acceptance-test-$index", $group);
         }
+        $this->createUser("acceptance-test-122", $group);
+        $this->createUser("acceptance-test-123", $group);
     }
 
     private function createUser(string $username, Group $group): void {
