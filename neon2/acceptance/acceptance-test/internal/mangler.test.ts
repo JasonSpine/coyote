@@ -1,6 +1,6 @@
 import {test} from '@playwright/test';
-import {Mangler} from '../../internal/mangler';
-import {assertEquals, assertNotEquals} from "../../internal/playwright";
+import {Mangler} from './mangler';
+import {assertEquals, assertNotEquals} from "./playwright";
 
 test.describe('Acceptance test internals', () => {
   test.describe('Name mangling', () => {

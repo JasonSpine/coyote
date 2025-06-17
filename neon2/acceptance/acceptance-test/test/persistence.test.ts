@@ -1,5 +1,5 @@
-import {Dsl} from "../../internal/dsl";
-import {beforeEach, describe, test} from "../../internal/playwright";
+import {Dsl} from "../internal/dsl";
+import {beforeEach, describe, test} from "../internal/playwright";
 
 beforeEach(dsl => dsl.beforeEach());
 
