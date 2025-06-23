@@ -16,10 +16,8 @@ use Illuminate\View\Factory;
 use Lavary\Menu\Builder;
 use Lavary\Menu\Menu;
 
-class ViewServiceProvider extends ServiceProvider
-{
-    public function boot(): void
-    {
+class ViewServiceProvider extends ServiceProvider {
+    public function boot(): void {
         /** @var Clock $clock */
         $clock = app(Clock::class);
         /** @var Factory $view */
@@ -45,8 +43,7 @@ class ViewServiceProvider extends ServiceProvider
         });
     }
 
-    private function gdprAccepted(): bool
-    {
+    private function gdprAccepted(): bool {
         /** @var Request $request */
         $request = $this->app['request'];
         $user = $request->user();
@@ -57,8 +54,7 @@ class ViewServiceProvider extends ServiceProvider
         return false;
     }
 
-    private function buildMasterMenu(): Builder
-    {
+    private function buildMasterMenu(): Builder {
         /** @var Menu $menu */
         $menu = app(Menu::class);
         /** @var Builder $builder */
@@ -80,8 +76,7 @@ class ViewServiceProvider extends ServiceProvider
         return $builder;
     }
 
-    public function groupBySections(Support\Collection $categories): array
-    {
+    public function groupBySections(Support\Collection $categories): array {
         $sections = [];
         foreach ($categories as $category) {
             if ($category['section'] === null) {
@@ -92,8 +87,7 @@ class ViewServiceProvider extends ServiceProvider
         return $sections;
     }
 
-    function currentUser(): ?array
-    {
+    function currentUser(): ?array {
         if (auth()->guest()) {
             return null;
         }
@@ -105,8 +99,7 @@ class ViewServiceProvider extends ServiceProvider
         ];
     }
 
-    private function userTheme(): UserTheme
-    {
+    private function userTheme(): UserTheme {
         /** @var UserTheme $theme */
         $theme = $this->app[UserTheme::class];
         return $theme;

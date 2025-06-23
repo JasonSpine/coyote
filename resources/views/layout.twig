@@ -120,19 +120,16 @@
                 {% if item.hasChildren() %}
                   <div class="dropdown-container">
                     <div class="dropdown-menu dropdown-menu-start">
-                      {% for children in item.children() %}
-                        <a class="dropdown-item" href="{{ children.url }}">{{ children.title }}</a>
+                      {% for child in item.children() %}
+                        <a class="dropdown-item" href="{{ child.url }}" target="{{ child.attributes.external ? '_blank' }}">
+                          {{ child.title }}
+                        </a>
                       {% endfor %}
                     </div>
                   </div>
                 {% endif %}
               </li>
             {% endfor %}
-            <li class="nav-item">
-              <a href="https://wydarzenia.4programmers.net/" class="nav-link" target="_blank">
-                Wydarzenia
-              </a>
-            </li>
           </ul>
         </div>
 
