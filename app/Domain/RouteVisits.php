@@ -3,14 +3,10 @@ namespace Coyote\Domain;
 
 use Illuminate\Database\Connection;
 
-class RouteVisits
-{
-    public function __construct(private Connection $connection)
-    {
-    }
+class RouteVisits {
+    public function __construct(private Connection $connection) {}
 
-    public function visit(string $path, string $date): void
-    {
+    public function visit(string $path, string $date): void {
         $visits = $this->connection->table('route_visits');
         $query = $visits->where([
             'path' => $path,
@@ -22,7 +18,7 @@ class RouteVisits
             ]);
         } else {
             $visits->insert([
-                'path'   => $path,
+                'path'   => \mb_subStr($path, 0, 255),
                 'date'   => $date,
                 'visits' => 1,
             ]);
