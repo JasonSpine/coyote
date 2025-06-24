@@ -75,7 +75,8 @@ $modern-tile-background-dark: style.$neutral-800;
   @include theme.dark {
     background-image: url('/img/logo-footer-modern-dark.svg');
   }
-  background-size: cover;
+  background-size: 113.75px 20px;
+  background-repeat: no-repeat;
 }
 
 .neon-tile {
