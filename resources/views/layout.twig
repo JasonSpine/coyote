@@ -114,7 +114,10 @@
             {% for item in __master_menu.roots() %}
               <li class="{{ item.attr.class }}">
                 <a href="{{ item.url }}" class="nav-link">
-                  {{ item.title|raw }}
+                  {{ item.title }}
+                  {% if item.attr.forumMenu %}
+                    {{ icon('navigationDropdown') }}
+                  {% endif %}
                 </a>
                 {{ item.afterHTML|raw }}
                 {% if item.hasChildren() %}

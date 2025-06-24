@@ -22,7 +22,7 @@ return [
 
     '__master_menu___' => [
         'Praca'           => ['route' => 'neon.jobOffer.list', 'class' => 'nav-item'],
-        'Forum'           => ['route' => 'forum.home', 'class' => 'nav-item dropdown'],
+        'Forum'           => ['route' => 'forum.home', 'class' => 'nav-item dropdown', 'forumMenu' => true],
         'Dla pracodawców' => ['route' => 'neon.jobOffer.pricing', 'class' => 'nav-item'],
         'Mikroblogi'      => ['class' => 'nav-item d-lg-none', 'route' => 'microblog.home'],
         'Wydarzenia'      => ['class' => 'nav-item d-lg-none', 'url' => 'https://wydarzenia.4programmers.net/'],

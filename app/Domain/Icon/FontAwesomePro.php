@@ -549,6 +549,9 @@ readonly class FontAwesomePro
             // questionnaire
             'questionnaire'                             => 'fa-light fa-comment-question',
             'questionnaireClose'                        => $genericClose,
+            
+            // navigation
+            'navigationDropdown'                        => 'fa-light fa-chevron-down',
         ];
     }
 }
