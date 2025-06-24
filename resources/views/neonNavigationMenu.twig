@@ -1,0 +1,75 @@
+<div class="position-absolute neon-navigation-menu hidden group-hover:block">
+  <div class="bg-neutral2-100 rounded-lg inline-block font-semibold border border-tile-border shadow-md">
+    <div class="bg-neutral2-050 text-neutral2-600 text-xs py-3 px-4 space-x-4 rounded-t-lg border-b border-tile-border">
+      {% for item in navigationMenu.headerItems %}
+        <span>
+          <span class="mr-1 {{ item.online ? 'text-green-500' }}">
+            {{ icon(item.icon) }}
+          </span>
+          {{ item.title }}
+        </span>
+      {% endfor %}
+    </div>
+    <div class="p-4">
+      <div class="flex gap-x-6">
+        {% for category in navigationMenu.categories %}
+          <div>
+            <span class="text-neutral2-800 whitespace-nowrap">
+              <span class="mr-2">
+                {{ icon(category.icon) }}
+              </span>
+              {{ category.title }}
+            </span>
+            <hr class="text-neutral2-050 mt-1 mb-3">
+            <ul class="space-y-3">
+              {% for item in category.items %}
+                {% if item.title %}
+                  <li class="text-neutral2-500 text-xs hover-parent">
+                    <a class="flex justify-between gap-15" href="{{ item.href }}">
+                      <div>
+                        <div class="text-sm whitespace-nowrap">
+                          <span class="hover-me-text-green2-600 font-medium">{{ item.title }}</span>
+                          {% if item.promoted %}
+                            <span style="color:#ebb305;" class="ml-1 text-xs">
+                              {{ icon('navigationCategoryPromoted') }}
+                            </span>
+                          {% endif %}
+                        </div>
+                        {% if item.subtitle is defined %}
+                          <div class="font-normal whitespace-nowrap text-neutral2-400 hover-me-text-neutral2-500">
+                            {{ item.subtitle }}
+                          </div>
+                        {% endif %}
+                      </div>
+                      <span class="font-normal">
+                        {{ item.count }}
+                      </span>
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="text-green-500 text-sm mt-6">
+        <a href="{{ navigationMenu.allCategoriesHref }}">
+          Zobacz wszystkie kategorie
+          <span class="ml-1">
+            {{ icon('navigationAllCategories') }}
+          </span>
+        </a>
+      </div>
+    </div>
+    {% if navigationMenu.footerItems is not empty %}
+      <div
+          class="bg-neutral2-050 text-neutral2-600 text-xs py-3 px-4 space-x-4 rounded-b-lg border-t border-tile-border">
+        {% for item in navigationMenu.footerItems %}
+          <a href="{{ item.href }}" title="{{ item.help }}">
+            {{ item.title }}
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>

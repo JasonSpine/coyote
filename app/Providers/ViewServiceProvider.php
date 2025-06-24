@@ -6,11 +6,11 @@ use Coyote\Domain\Icon\Icons;
 use Coyote\Domain\Settings\UserTheme;
 use Coyote\Domain\User\UserSettings;
 use Coyote\Http\Composers\InitialStateComposer;
-use Coyote\Services\Forum\UserDefined;
 use Coyote\User;
+use Coyote\View\NavigationMenuPresenter;
+use Coyote\View\NavigationMenuService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Factory;
 use Lavary\Menu\Builder;
@@ -39,6 +39,7 @@ class ViewServiceProvider extends ServiceProvider {
                 'year'           => $clock->year(),
                 'currentUser'    => $this->currentUser(),
                 'icons'          => (new Icons)->icons(),
+                'navigationMenu' => $this->navigationMenu(),
             ]);
         });
     }
@@ -67,27 +68,10 @@ class ViewServiceProvider extends ServiceProvider {
                 }
             }
         });
-
-        $categories = collect($this->app[UserDefined::class]->allowedForums($this->app['request']->user()))->where('parent_id', null);
-        $rendered = view('legacyComponents.mega-menu', ['sections' => $this->groupBySections($categories)])->render();
-
-        $builder->forum->after($rendered);
-
         return $builder;
     }
 
-    public function groupBySections(Support\Collection $categories): array {
-        $sections = [];
-        foreach ($categories as $category) {
-            if ($category['section'] === null) {
-                continue;
-            }
-            $sections[$category['section']][] = $category;
-        }
-        return $sections;
-    }
-
-    function currentUser(): ?array {
+    private function currentUser(): ?array {
         if (auth()->guest()) {
             return null;
         }
@@ -103,5 +87,13 @@ class ViewServiceProvider extends ServiceProvider {
         /** @var UserTheme $theme */
         $theme = $this->app[UserTheme::class];
         return $theme;
+    }
+
+    private function navigationMenu(): array {
+        /** @var NavigationMenuPresenter $presenter */
+        $presenter = app(NavigationMenuPresenter::class);
+        /** @var NavigationMenuService $service */
+        $service = app(NavigationMenuService::class);
+        return $presenter->navigationMenu($service->navigationMenu());
     }
 }

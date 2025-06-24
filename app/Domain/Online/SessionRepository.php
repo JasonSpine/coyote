@@ -5,14 +5,15 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support;
 
-readonly class SessionRepository
-{
-    public function __construct(private Connection $connection)
-    {
+readonly class SessionRepository {
+    public function __construct(private Connection $connection) {}
+
+    public function countOnline(): int {
+        [$guests, $users] = $this->guestsAndUsersChunks('/');
+        return \max(1, $users->pluck('user_id')->count() + $guests->pluck('count')->first(default:0));
     }
 
-    public function sessionsIn(string $prefixPath): SessionsSnapshot
-    {
+    public function sessionsIn(string $prefixPath): SessionsSnapshot {
         [$guests, $users] = $this->guestsAndUsersChunks($prefixPath);
         return new SessionsSnapshot(
             users:$users->pluck('user_id')->toArray(),
@@ -20,8 +21,7 @@ readonly class SessionRepository
         );
     }
 
-    private function guestsAndUsersChunks(string $prefixPath): Support\Collection
-    {
+    private function guestsAndUsersChunks(string $prefixPath): Support\Collection {
         return $this->connection->table('sessions')
             ->where('robot', '=', '')
             ->whereLike('path', "$prefixPath%")

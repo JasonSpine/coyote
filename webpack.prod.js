@@ -37,6 +37,8 @@ const plugins = [
         'number',
         'constant',
         'modal-backdrop',
+        'group',
+        'group-hover:block',
         'show',
         'fade',
         'pre',

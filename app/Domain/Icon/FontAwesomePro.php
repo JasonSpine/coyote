@@ -1,10 +1,8 @@
 <?php
 namespace Coyote\Domain\Icon;
 
-readonly class FontAwesomePro
-{
-    public function icons(): array
-    {
+readonly class FontAwesomePro {
+    public function icons(): array {
         $faTick = 'fa-light fa-check';
         $faSolidTick = 'fa-solid fa-check';
         $faCross = 'fa-light fa-xmark';
@@ -549,8 +547,16 @@ readonly class FontAwesomePro
             // questionnaire
             'questionnaire'                             => 'fa-light fa-comment-question',
             'questionnaireClose'                        => $genericClose,
-            
+
             // navigation
+            'navigationAllCategories'                   => 'fa-solid fa-chevron-right',
+            'navigationCategoryDiscussion'              => 'fa-light fa-suitcase',
+            'navigationCategoryDiscussionTechnical'     => 'fa-light fa-message-code',
+            'navigationCategoryCommunity'               => 'fa-light fa-users',
+            'navigationCategoryResources'               => 'fa-light fa-book-open',
+            'navigationActiveDiscussions'               => 'fa-light fa-message',
+            'navigationOnlineUsers'                     => 'fa-light fa-arrow-trend-up',
+            'navigationCategoryPromoted'                => 'fa-solid fa-star',
             'navigationDropdown'                        => 'fa-light fa-chevron-down',
         ];
     }
