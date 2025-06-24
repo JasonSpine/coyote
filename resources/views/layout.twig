@@ -144,7 +144,8 @@
         {% if not auth_check() %}
           <div class="order-2 d-flex align-items-center me-2">
             <a class="btn btn-sm btn-primary" href="{{ route('neon.jobOffer.pricing') }}" style="white-space:nowrap;">
-              Dodaj ofertę pracy za darmo!
+              <span class="d-none d-sm-inline">Dodaj ofertę pracy za darmo!</span>
+              <span class="d-sm-none">Dodaj ofertę pracy!</span>
             </a>
           </div>
         {% endif %}
