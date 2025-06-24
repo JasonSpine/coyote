@@ -128,7 +128,7 @@
                     {% endif %}>
                   {{ item.title }}
                   {% if item.attr.forumMenu %}
-                    {{ icon('navigationDropdown') }}
+                    <span class="d-none d-lg-inline">{{ icon('navigationDropdown') }}</span>
                   {% endif %}
                 </a>
                 {{ item.afterHTML|raw }}
