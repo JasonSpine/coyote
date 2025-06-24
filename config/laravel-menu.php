@@ -21,9 +21,9 @@ return [
     ],
 
     '__master_menu___' => [
-        'Praca'           => ['route' => 'neon.jobOffer.list', 'class' => 'nav-item'],
+        'Praca'           => ['route' => 'neon.jobOffer.list', 'class' => 'nav-item', 'control' => 'navigationJobBoard'],
         'Forum'           => ['route' => 'forum.home', 'class' => 'nav-item dropdown', 'forumMenu' => true],
-        'Dla pracodawców' => ['route' => 'neon.jobOffer.pricing', 'class' => 'nav-item'],
+        'Dla pracodawców' => ['route' => 'neon.jobOffer.pricing', 'class' => 'nav-item', 'control' => 'navigationForEmployers'],
         'Mikroblogi'      => ['class' => 'nav-item d-lg-none', 'route' => 'microblog.home'],
         'Wydarzenia'      => ['class' => 'nav-item d-lg-none', 'url' => 'https://wydarzenia.4programmers.net/'],
         'Kompendium'      => ['class' => 'nav-item d-lg-none', 'route' => 'wiki.home'],

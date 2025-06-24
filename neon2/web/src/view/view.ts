@@ -1,3 +1,4 @@
+import {JobBoardBackend} from "../backend";
 import {JobOffer, jobOfferCities, jobOfferTagNames} from '../jobBoard';
 import {JobOfferFilter, sortInPlace} from "../jobOfferFilter";
 import {PlanBundleName} from "../main";
@@ -12,7 +13,10 @@ export class View {
   private planBundleCanRedeem: boolean = false;
   private filterListener: FilterListener|null = null;
 
-  constructor(private ui: VueUi) {
+  constructor(
+    private ui: VueUi,
+    private backend: JobBoardBackend,
+  ) {
     ui.setView(this);
     this.ui.setNavigationListener({
       setScreen(screen: Screen, jobOfferId: number|null): void {
@@ -25,6 +29,7 @@ export class View {
         } else {
           this.ui.setScreen('pricing', null);
         }
+        backend.event({eventName: 'jbLoad', metadata: {control: 'jobBoardAddOffer'}});
       },
     });
     this.ui.addFilterListener({

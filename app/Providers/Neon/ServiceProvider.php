@@ -5,6 +5,8 @@ use Coyote;
 use Coyote\Domain\Settings\UserTheme;
 use Coyote\Domain\StringHtml;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
+use Illuminate\Http\Response;
+use Jenssegers\Agent\Agent;
 use Neon2\AcceptanceTest;
 use Neon2\Coyote\Integration;
 use Neon2\Invoice\CountryGate;
@@ -59,12 +61,14 @@ class ServiceProvider extends RouteServiceProvider {
     }
 
     private function indexView(
-        Integration     $integration,
-        CountryGate     $countries,
-        StripePublicKey $stripePublicKey,
-        UserTheme       $theme,
-        AcceptanceTest  $test,
-    ): string {
+        Integration                $integration,
+        CountryGate                $countries,
+        StripePublicKey            $stripePublicKey,
+        UserTheme                  $theme,
+        AcceptanceTest             $test,
+        Coyote\Services\GuestEvent $event,
+    ): Response {
+        $this->storeEvent($event);
         if ($test->isTestMode()) {
             if (request()->query->has('workerIndex')) {
                 $workerIndex = request()->query->get('workerIndex');
@@ -99,14 +103,41 @@ class ServiceProvider extends RouteServiceProvider {
             $theme->themeMode(),
             request()->route()->parameter('id'),
             $acceptanceTagNames);
-        return view('job.home_modern', [
+        return response(view('job.home_modern', [
             'neonHead' => new StringHtml($jobBoardView->htmlMarkupHead()),
             'neonBody' => new StringHtml($jobBoardView->htmlMarkupBody()),
-        ]);
+        ]))
+            ->withCookie(cookie('control', '', httpOnly:false))
+            ->withCookie(cookie('controlAt', '', httpOnly:false));
     }
 
     private function acceptanceTestUserId(int $workerIndex): int {
         $userId = $workerIndex + 1;
         return Coyote\User::query()->where('name', "acceptance-test-$userId")->first()->id;
+    }
+
+    private function storeEvent(Coyote\Services\GuestEvent $event): void {
+        $agent = new Agent();
+        if ($agent->isRobot(request()->userAgent())) {
+            return;
+        }
+        $controlAt = request()->cookie('controlAt');
+        $event->event('jbLoad', [
+            'control'     => request()->cookie('control'),
+            'httpReferer' => request()->header('Referer'),
+            'controlAgo'  => $this->cookiesSetAgo($controlAt),
+        ]);
+    }
+
+    private function cookiesSetAgo(?string $cookie): ?int {
+        if ($cookie) {
+            return time() - $this->parseIsoString($cookie);
+        }
+        return null;
+    }
+
+    private function parseIsoString(string $isoTime): int {
+        $dateTime = \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $isoTime, new \DateTimeZone('UTC'));
+        return $dateTime->getTimestamp();
     }
 }

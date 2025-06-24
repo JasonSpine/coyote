@@ -23,7 +23,7 @@ import {View} from "./view/view";
 
 const backend = new JobBoardBackend();
 const ui = new VueUi(locationInput(backend.testMode()), backend.isAuthenticated());
-const view = new View(ui);
+const view = new View(ui, backend);
 const board = new JobBoard((jobOffers: JobOffer[]): void => view.setJobOffers(jobOffers));
 const paymentProvider: PaymentProvider = backend.testMode()
   ? new TestPaymentProvider()
