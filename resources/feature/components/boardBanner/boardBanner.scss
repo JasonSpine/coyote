@@ -76,10 +76,10 @@
     background-repeat: no-repeat;
     background-size: contain;
     @include theme.light {
-      background-image: url('/img/logo-footer-modern-light.svg');
+      background-image: url('/img/logo.light.svg');
     }
     @include theme.dark {
-      background-image: url('/img/logo-footer-modern-dark.svg');
+      background-image: url('/img/logo.dark.svg');
     }
   }
 

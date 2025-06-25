@@ -70,10 +70,10 @@ $modern-tile-background-dark: style.$neutral-800;
   height: 20px;
   width: 113.75px;
   @include theme.light {
-    background-image: url('/img/logo-footer-modern-light.svg');
+    background-image: url('/img/logo.light.svg');
   }
   @include theme.dark {
-    background-image: url('/img/logo-footer-modern-dark.svg');
+    background-image: url('/img/logo.dark.svg');
   }
   background-size: 113.75px 20px;
   background-repeat: no-repeat;
