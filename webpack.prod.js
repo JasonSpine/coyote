@@ -39,6 +39,8 @@ const plugins = [
         'modal-backdrop',
         'group',
         'group-hover:block',
+        'py-1.5',
+        'mb-1.5',
         'show',
         'fade',
         'pre',

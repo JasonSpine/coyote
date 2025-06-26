@@ -149,6 +149,42 @@
     white-space: nowrap !important;
   }
 
+  .relative {
+    position: relative;
+  }
+
+  .absolute {
+    position: absolute;
+  }
+
+  .right-0 {
+    right: 0;
+  }
+
+  .pl-2 {
+    padding-left: 8px;
+  }
+
+  .max-w-0 {
+    max-width: 0;
+  }
+
+  .transition-max-w {
+    transition: max-width 400ms;
+  }
+
+  .overflow-hidden {
+    overflow: hidden;
+  }
+
+  .py-1\.5 {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .mb-1\.5 {
+    margin-bottom: 6px;
+  }
 }
 
 .border.border-tile-border {
@@ -170,6 +206,10 @@
 
   .hover-me-text-neutral2-500 {
     @include theme.propertyImportant(color, #5c6066, #91969c);
+  }
+
+  .hover-me-max-w-25 {
+    max-width: 100px;
   }
 }
 

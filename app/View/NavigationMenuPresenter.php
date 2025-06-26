@@ -179,8 +179,11 @@ readonly class NavigationMenuPresenter {
         return Forum::query()->where('slug', $categorySlug)->firstOrFail()->posts;
     }
 
-    private function formatCount(int $postsCount): string {
-        return new FormatNumber()->format($postsCount);
+    private function formatCount(int $postsCount): array {
+        return [
+            'long'  => "$postsCount postów",
+            'short' => new FormatNumber()->format($postsCount),
+        ];
     }
 
     private function categoryHref(string $categorySlug): string {

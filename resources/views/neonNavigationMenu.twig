@@ -26,12 +26,12 @@
                 {{ category.title }}
               {% endif %}
             </span>
-            <hr class="text-neutral2-050 mt-1 mb-3">
-            <ul class="space-y-3">
+            <hr class="text-neutral2-050 mt-1 mb-1.5">
+            <ul>
               {% for item in category.items %}
                 {% if item.title %}
                   <li class="text-neutral2-500 text-xs hover-parent">
-                    <a class="flex justify-between gap-15" href="{{ item.href }}">
+                    <a class="flex justify-between gap-15 py-1.5" href="{{ item.href }}">
                       <div>
                         <div class="text-sm whitespace-nowrap">
                           <span class="hover-me-text-green2-600 font-medium">{{ item.title }}</span>
@@ -52,8 +52,11 @@
                           </div>
                         {% endif %}
                       </div>
-                      <span class="font-normal">
-                        {{ item.count }}
+                      <span class="font-normal whitespace-nowrap relative">
+                        {{ item.count.short }}
+                        <span class="absolute right-0 bg-neutral2-100 overflow-hidden transition-max-w max-w-0 hover-me-max-w-25">
+                          {{ item.count.long }}
+                        </span>
                       </span>
                     </a>
                   </li>
