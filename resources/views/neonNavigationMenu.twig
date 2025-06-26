@@ -18,7 +18,13 @@
               <span class="mr-2">
                 {{ icon(category.icon) }}
               </span>
-              {{ category.title }}
+              {% if category.href is defined %}
+                <a href="{{ category.href }}">
+                  {{ category.title }}
+                </a>
+              {% else %}
+                {{ category.title }}
+              {% endif %}
             </span>
             <hr class="text-neutral2-050 mt-1 mb-3">
             <ul class="space-y-3">

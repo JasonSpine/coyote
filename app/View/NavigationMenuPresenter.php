@@ -20,6 +20,7 @@ readonly class NavigationMenuPresenter {
             [
                 'title' => 'Dyskusje o Pracy',
                 'icon'  => 'navigationCategoryDiscussion',
+                'href'  => $this->categoryHref('Kariera'),
                 'items' => [
                     $this->forum('Kariera w IT', 'Jak nie wypaść z rynku?', promoted:true),
                     $this->forum('Opinie o pracodawcach', 'Sprawdź, zanim aplikujesz', promoted:true),
@@ -35,6 +36,7 @@ readonly class NavigationMenuPresenter {
             [
                 'title' => 'Dyskusje Techniczne',
                 'icon'  => 'navigationCategoryDiscussionTechnical',
+                'href'  => route('forum.categories'),
                 'items' => [
                     $this->forum('Hardware i Software'),
                     $this->forum('AI - Sztuczna inteligencja', trending:true),
@@ -97,7 +99,7 @@ readonly class NavigationMenuPresenter {
             'subtitle' => $subtitle,
             'promoted' => $promoted ?? false,
             'trending' => $trending ?? false,
-            'href'     => route('forum.category', [$categorySlug]),
+            'href'     => $this->categoryHref($categorySlug),
             'count'    => $this->formatCount($this->categoryPosts($categorySlug)),
         ];
     }
@@ -179,5 +181,9 @@ readonly class NavigationMenuPresenter {
 
     private function formatCount(int $postsCount): string {
         return new FormatNumber()->format($postsCount);
+    }
+
+    private function categoryHref(string $categorySlug): string {
+        return route('forum.category', [$categorySlug]);
     }
 }
