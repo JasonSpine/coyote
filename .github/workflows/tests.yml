@@ -56,4 +56,4 @@ jobs:
         run: docker compose exec -T php bash -c 'cd neon2/web/ && yarn install && yarn vite build --mode production'
 
       - name: Run acceptance tests
-        run: docker compose exec -T php bash -c 'cd neon2/acceptance/acceptance-test/ && yarn install && yarn run playwright install chrome && yarn run playwright test'
+        run: docker compose exec -T php bash -c 'cd neon2/acceptance/ && yarn install && yarn run playwright install chrome && yarn run playwright test'
