@@ -37,7 +37,7 @@ readonly class NavigationMenuPresenter {
                 'icon'  => 'navigationCategoryDiscussionTechnical',
                 'items' => [
                     $this->forum('Hardware i Software'),
-                    $this->forum('AI - Sztuczna inteligencja'),
+                    $this->forum('AI - Sztuczna inteligencja', trending:true),
                     $this->forum('C/C++', promoted:true),
                     $this->forum('C# i .NET'),
                     $this->forum('Java'),
@@ -85,12 +85,18 @@ readonly class NavigationMenuPresenter {
         ];
     }
 
-    private function forum(string $title, ?string $subtitle = null, ?bool $promoted = null): array {
+    private function forum(
+        string  $title,
+        ?string $subtitle = null,
+        ?bool   $promoted = null,
+        ?bool   $trending = null,
+    ): array {
         $categorySlug = $this->categorySlug($title);
         return [
             'title'    => $title,
             'subtitle' => $subtitle,
             'promoted' => $promoted ?? false,
+            'trending' => $trending ?? false,
             'href'     => route('forum.category', [$categorySlug]),
             'count'    => $this->formatCount($this->categoryPosts($categorySlug)),
         ];

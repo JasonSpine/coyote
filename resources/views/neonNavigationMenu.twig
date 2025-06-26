@@ -30,8 +30,13 @@
                         <div class="text-sm whitespace-nowrap">
                           <span class="hover-me-text-green2-600 font-medium">{{ item.title }}</span>
                           {% if item.promoted %}
-                            <span style="color:#ebb305;" class="ml-1 text-xs">
+                            <span style="color:#ebb305;" class="ml-1 text-xs" title="Promowana kategoria.">
                               {{ icon('navigationCategoryPromoted') }}
+                            </span>
+                          {% endif %}
+                          {% if item.trending %}
+                            <span class="ml-1 text-xs text-green-500" title="Kategoria o wzrastającej popularności.">
+                              {{ icon('navigationCategoryTrending') }}
                             </span>
                           {% endif %}
                         </div>

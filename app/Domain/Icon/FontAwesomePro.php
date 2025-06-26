@@ -557,6 +557,7 @@ readonly class FontAwesomePro {
             'navigationActiveDiscussions'               => 'fa-light fa-message',
             'navigationOnlineUsers'                     => 'fa-light fa-arrow-trend-up',
             'navigationCategoryPromoted'                => 'fa-solid fa-star',
+            'navigationCategoryTrending'                => 'fa-light fa-arrow-trend-up',
             'navigationDropdown'                        => 'fa-light fa-chevron-down',
         ];
     }
