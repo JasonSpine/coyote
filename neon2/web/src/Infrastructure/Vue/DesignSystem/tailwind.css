@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "../Icon/internal/fontAwesomeIcons.css";
 
+@custom-variant dark (&:where(.dark, .dark *, :host-context(.dark) *));
+
 :root, :host {
   @variant dark {
     --color-body: #121314;
