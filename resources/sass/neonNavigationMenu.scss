@@ -1,4 +1,11 @@
 @use "../feature/theme/theme" as theme;
+@use "../feature/lookAndFeel/feel" as feel;
+
+.bg-tile {
+  @include feel.modern {
+    @include theme.propertyImportant(background-color, #ffffff, #181a1b);
+  }
+}
 
 .neon-navigation-menu {
   font-size: 14px !important;

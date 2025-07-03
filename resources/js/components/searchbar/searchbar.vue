@@ -19,8 +19,7 @@
           type="search"
           name="q"
           autocomplete="off"
-          placeholder="Wpisz &quot;?&quot;, aby uzyskać pomoc lub wyszukaj"
-        >
+          placeholder="Wpisz &quot;?&quot;, aby uzyskać pomoc lub wyszukaj">
       </form>
       <button v-if="isMobile" @click="toggleMobile" class="btn nav-link">
         <span style="font-size:2em;">

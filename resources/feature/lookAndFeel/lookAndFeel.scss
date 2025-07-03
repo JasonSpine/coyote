@@ -67,15 +67,20 @@ $modern-tile-background-dark: style.$neutral-800;
 }
 
 .neon-logo {
-  height: 20px;
-  width: 113.75px;
+  height: 18px;
+  width: 110px;
+  @include size.size(sm) {
+    height: 26px;
+    width: 157px;
+    margin-right: 12px;
+  }
   @include theme.light {
     background-image: url('/img/logo.light.svg');
   }
   @include theme.dark {
     background-image: url('/img/logo.dark.svg');
   }
-  background-size: 113.75px 20px;
+  background-size: contain;
   background-repeat: no-repeat;
 }
 

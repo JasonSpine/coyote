@@ -97,7 +97,8 @@
 
   {% include 'legacyComponents.gdpr' %}
 {% block header %}
-  <header class="container-3xl {{ auth_guest() or user('allow_sticky_header') ? ' fixed-top' }}">
+  <header class="{{ auth_guest() or user('allow_sticky_header') ? ' fixed-top' }} bg-tile" 
+      style="padding-top:12px; padding-bottom:12px; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);">
     {{ form_open({url: route('logout'), name: 'logout-form'}) }}
     {{ form_close() }}
 
@@ -108,27 +109,22 @@
         document.cookie = `controlAt=${at}; path=/;`;
       }
     </script>
-    <nav class="navbar navbar-expand-lg {{ __dark_theme ? 'navbar-dark' : 'navbar-light' }} neon-divider-b">
+    <nav class="container-3xl navbar navbar-expand-lg {{ __dark_theme ? 'navbar-dark' : 'navbar-light' }}"
+         style="padding-top:0;padding-bottom:0; height:40px;">
       <div class="d-flex flex-wrap align-items-center flex-lg-nowrap flex-grow-1">
-        <a
-            rel="home"
-            class="navbar-brand order-0 neon-logo"
-            href="{{ route('home') }}"
-            title="4programmers.net - Strona główna"></a>
-        <div class="collapse navbar-collapse flex-grow-0 order-4 order-lg-1 ms-2" id="mobile-menu">
-          <ul class="navbar-nav">
+        <a rel="home"
+           class="navbar-brand order-0 neon-logo flex-shrink-0"
+           href="{{ route('home') }}"
+           title="4programmers.net - Strona główna"></a>
+        <div class="collapse navbar-collapse flex-grow-0 order-4 order-lg-1 bg-tile" id="mobile-menu">
+          <ul class="navbar-nav" style="gap:0 16px; align-items:baseline; font-size:16px; white-space:nowrap;">
             {% for item in __master_menu.roots() %}
               <li class="{{ item.attr.class }} group">
                 <a
                     href="{{ item.url }}"
                     class="nav-link"
-                    {% if item.attributes.control %}
-                  onclick="controlEvent('{{ item.attributes.control }}')"
-                    {% endif %}>
+                    {% if item.attributes.control %}onclick="controlEvent('{{ item.attributes.control }}')"{% endif %}>
                   {{ item.title }}
-                  {% if item.attr.forumMenu %}
-                    <span class="d-none d-lg-inline">{{ icon('navigationDropdown') }}</span>
-                  {% endif %}
                 </a>
                 {% if item.hasChildren() %}
                   <div class="dropdown-container">
@@ -162,7 +158,7 @@
         </div>
 
         {% if not auth_check() %}
-          <div class="order-2 d-flex align-items-center me-2">
+          <div class="order-2 d-none d-md-flex align-items-center me-2">
             <a class="btn btn-sm btn-primary"
                href="{{ route('neon.jobOffer.pricing') }}"
                style="white-space:nowrap;"
@@ -189,9 +185,6 @@
             <div class="dropdown-menu dropdown-menu-end">
               <a class="dropdown-item profile-name" href="{{ route('user.home') }}">
                 {{ user('name') }}
-                {% if user('is_sponsor') %}
-                  {{ icon('sponsorProfile') }}
-                {% endif %}
               </a>
 
               <div class="dropdown-divider"></div>
@@ -240,8 +233,7 @@
                   <span class="me-2">
                     Look&amp;Feel:
                   </span>
-                  <span class="option {{ lookAndFeelModern ?: 'option-active' }}"
-                        @click="lookAndFeelSwitchLegacy">Retro</span>
+                  <span class="option {{ lookAndFeelModern ?: 'option-active' }}" @click="lookAndFeelSwitchLegacy">Retro</span>
                   /
                   <span class="option {{ lookAndFeelModern ?'option-active' }}" @click="lookAndFeelSwitchModern">Aktualny</span>
                 </span>
