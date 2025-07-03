@@ -167,8 +167,7 @@
                href="{{ route('neon.jobOffer.pricing') }}"
                style="white-space:nowrap;"
                onclick="controlEvent('navigationGuestCta')">
-              <span class="d-none d-sm-inline">Dodaj ofertę pracy za darmo!</span>
-              <span class="d-sm-none">Dodaj ofertę pracy!</span>
+              Dodaj ofertę pracy
             </a>
           </div>
         {% endif %}
@@ -267,12 +266,10 @@
                 </a>
               </div>
               <hr class="my-2">
-              <div class="d-flex justify-content-between align-items-center px-3">
-                <span class="flex-shrink-0 text-muted">Masz już konto?</span>
-                <a class="btn btn-sm btn-secondary flex-shrink-0" href="{{ route('login') }}">
-                  Zaloguj się
-                </a>
-              </div>
+              <a class="d-flex justify-content-between align-items-center px-3 py-1" href="{{ route('login') }}">
+                Zaloguj się
+                {{ icon('navigationNavigate') }}
+              </a>
             </div>
           </div>
         {% endif %}

@@ -559,6 +559,7 @@ readonly class FontAwesomePro {
             'navigationCategoryPromoted'                => 'fa-solid fa-star',
             'navigationCategoryTrending'                => 'fa-light fa-arrow-trend-up',
             'navigationDropdown'                        => 'fa-light fa-chevron-down',
+            'navigationNavigate'                        => 'fa-light fa-arrow-right',
         ];
     }
 }

@@ -21,20 +21,12 @@ return [
     ],
 
     '__master_menu___' => [
-        'Praca'           => ['route' => 'neon.jobOffer.list', 'class' => 'nav-item', 'control' => 'navigationJobBoard'],
-        'Forum'           => ['route' => 'forum.home', 'class' => 'nav-item dropdown', 'forumMenu' => true],
+        'Dla kandydatów'  => ['route' => 'neon.jobOffer.list', 'class' => 'nav-item', 'control' => 'navigationJobBoard'],
         'Dla pracodawców' => ['route' => 'neon.jobOffer.pricing', 'class' => 'nav-item', 'control' => 'navigationForEmployers'],
-        'Mikroblogi'      => ['class' => 'nav-item d-lg-none', 'route' => 'microblog.home'],
+        'Forum'           => ['route' => 'forum.home', 'class' => 'nav-item dropdown', 'forumMenu' => true],
+        'Mikroblogi'      => ['route' => 'microblog.home', 'class' => 'nav-item',],
         'Wydarzenia'      => ['class' => 'nav-item d-lg-none', 'url' => 'https://wydarzenia.4programmers.net/'],
         'Kompendium'      => ['class' => 'nav-item d-lg-none', 'route' => 'wiki.home'],
-        '⋮'               => [
-            'class'    => 'nav-item dropdown d-none d-lg-block',
-            'children' => [
-                'Mikroblogi' => ['route' => 'microblog.home'],
-                'Wydarzenia' => ['url' => 'https://wydarzenia.4programmers.net/', 'external' => true],
-                'Kompendium' => ['route' => 'wiki.home'],
-            ],
-        ],
     ],
 
     // _ na poczatku gdyz ten plugin korzysta z metody share() klasy View, a nazwa "forum" moze
