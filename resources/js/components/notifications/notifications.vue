@@ -143,10 +143,6 @@ export default {
         .catch(() => console.log('Push notification: access denied.'))
         .then(pushSubscription => pushSubscription && store.dispatch('user/pushSubscription', pushSubscription));
     },
-    setIcon(path) {
-      const icon = document.querySelector('head link[rel="shortcut icon"]');
-      icon.href = path;
-    },
     setTitle(title) {
       document.title = title;
     },
