@@ -1,0 +1,12 @@
+@import "../../neon2/web/src/view/ui/design/tailwind.css";
+@import "../../neon2/web/src/view/ui/icons/internal/fontAwesomeIcons.css";
+@import "./icons.css";
+
+@utility brand-logo {
+  @apply h-7 w-40 bg-contain bg-no-repeat;
+  background-image: url('/img/logo.light.svg');
+
+  @variant dark {
+    background-image: url('/img/logo.dark.svg');
+  }
+}

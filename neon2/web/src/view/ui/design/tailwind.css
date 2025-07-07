@@ -104,6 +104,8 @@
   --text-2xl--line-height: calc(1.75 / 1.25);
   --text-3xl--line-height: calc(2 / 1.5);
   --text-4xl--line-height: calc(2.5 / 2.0);
+  
+  --breakpoint-xs: 22rem; /* iPhoneSe */
 }
 
 @utility tile-highlight-long {

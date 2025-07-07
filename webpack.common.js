@@ -45,6 +45,16 @@ module.exports = {
               url: false,
             },
           },
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: {
+                  "@tailwindcss/postcss": {},
+                },
+              },
+            },
+          },
           'sass-loader',
         ],
       },
@@ -110,6 +120,7 @@ module.exports = {
     stylesEager: './sass/core.scss',
     stylesLazyApp: './sass/app.scss',
     stylesLazyAdm: './sass/pages/adm.scss',
+    stylesTailwind: './sass/tailwind.css',
     app: './js/app.js',
     legacy: './js/legacy.js',
     forum: './js/pages/forum.ts',

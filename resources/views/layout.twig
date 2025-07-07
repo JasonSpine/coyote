@@ -97,8 +97,8 @@
 
   {% include 'legacyComponents.gdpr' %}
 {% block header %}
-  <header class="{{ auth_guest() or user('allow_sticky_header') ? ' fixed-top' }} bg-tile" 
-      style="padding-top:12px; padding-bottom:12px; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);">
+  <header class="{{ auth_guest() or user('allow_sticky_header') ? ' fixed-top' }} bg-tile"
+          style="padding-top:12px; padding-bottom:12px; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);">
     {{ form_open({url: route('logout'), name: 'logout-form'}) }}
     {{ form_close() }}
 
@@ -329,36 +329,12 @@
   </div>
 
 {% block footer %}
-  <footer class="container-3xl mt-4">
-    <div class="footer-top">
-      {% if breadcrumbLegacyComponent is defined %}
-        {{ breadcrumbLegacyComponent }}
-      {% endif %}
-    </div>
-    <div class="footer-inner row">
-      <div class="col-12">
-        <div>
-          {{ render_block('footer') }}
-        </div>
-        <span class="scroll-top neon-scroll-top" id="scroll-to-top" title="Powrót na górę">
-          {{ icon('scrollTop') }}
-        </span>
-      </div>
-    </div>
-    <div class="footer-copyright">
-      <div>
-        <div class="d-flex align-items-center">
-          <span>
-            Copyright &copy; 2000-{{ year }}
-          </span>
-          <a href="https://4programmers.net/" class="d-block logo" title="4programmers.net - programowanie"></a>
-          <span class="ms-auto">
-            Coyote {{ config('app.version') }}: <span class="execution-time">{{ timer() }}</span>
-          </span>
-        </div>
-      </div>
-    </div>
-  </footer>
+  {% include 'footer' %}
+  <div class="container-3xl">
+    <span class="scroll-top neon-scroll-top" id="scroll-to-top" title="Powrót na górę">
+      {{ icon('scrollTop') }}
+    </span>
+  </div>
 {% endblock footer %}
   <link rel="stylesheet" href="{{ cdn('css/stylesLazyApp.css') }}">
 

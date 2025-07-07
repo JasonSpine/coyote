@@ -24,9 +24,14 @@ readonly class FontAwesomePro {
             'alertSuccess'                              => $faTick,
 
             // registration
-            'loginGoogle'                               => 'fa-brand fa-google',
-            'loginFacebook'                             => 'fa-brand fa-facebook',
-            'loginGithub'                               => 'fa-brand fa-github',
+            'loginGoogle'                               => 'fa-brands fa-google',
+            'loginFacebook'                             => 'fa-brands fa-facebook',
+            'loginGithub'                               => 'fa-brands fa-github',
+
+            // footer
+            'contactUsFacebook'                         => 'fa-brands fa-facebook-square',
+            'contactUsLinkedIn'                         => 'fa-brands fa-linkedin',
+            'contactUsGithub'                           => 'fa-brands fa-github-square',
 
             // homepage
             'viewersOnlineLocal'                        => 'fa-light fa-eye',
@@ -176,7 +181,7 @@ readonly class FontAwesomePro {
             'notificationDelete'                        => $genericClose,
 
             // editor
-            'editorMarkdownHelp'                        => 'fa-brand fa-markdown',
+            'editorMarkdownHelp'                        => 'fa-brands fa-markdown',
             'editorAssetUpload'                         => 'fa-light fa-image',
             'editorAssetUploading'                      => $genericUploading,
             'editorControlBold'                         => 'fa-light fa-bold',
@@ -331,7 +336,7 @@ readonly class FontAwesomePro {
             'profileUserUnblock'                        => 'fa-light fa-unlock',
             'profileUserResidence'                      => 'fa-light fa-location-dot',
             'profileUserWebsite'                        => 'fa-light fa-globe',
-            'profileUserGithub'                         => 'fa-brand fa-github',
+            'profileUserGithub'                         => 'fa-brands fa-github',
             'profileUserLastVisitDate'                  => 'fa-light fa-right-to-bracket',
             'profileUserRegisterDate'                   => 'fa-light fa-user-plus',
             'profileUserVisits'                         => 'fa-light fa-eye',
@@ -531,7 +536,7 @@ readonly class FontAwesomePro {
 
             // footer
             'footerContactUs'                           => 'fa-light fa-circle-info',
-            'footerPromoteFacebook'                     => 'fa-brand fa-facebook',
+            'footerPromoteFacebook'                     => 'fa-brands fa-facebook',
 
             // theme toggle
             'themeToggleDark'                           => 'fa-light fa-moon',

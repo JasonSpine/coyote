@@ -16,10 +16,22 @@ const plugins = [
       path.join(__dirname, 'resources/js/**/*.js'),
       path.join(__dirname, 'resources/feature/**/*.js'),
       path.join(__dirname, 'resources/feature/**/*.ts'),
-      path.join(__dirname, 'resources/feature/**/*.twig')
+      path.join(__dirname, 'resources/feature/**/*.twig'),
     ]),
+    only: [
+      'stylesEager',
+      'stylesLazyApp',
+      'stylesLazyAdm',
+      'app',
+      'legacy',
+      'forum',
+      'wiki',
+      'job',
+    ],
     safelist: {
       standard: [
+        ':host',
+        ':root',
         'footer-bubble',
         'line-numbers',
         'line-numbers-rows',
@@ -54,6 +66,7 @@ const plugins = [
         'ajax-loader',
         'link-broken',
         '[aria-label]',
+        'fa-brands',
         'x-placement',
         'tox-notifications-container',
         'editor-4play',
@@ -87,7 +100,6 @@ const plugins = [
       ],
     },
   }),
-
   new webpack.EnvironmentPlugin({
     'FRONTEND_SENTRY_DSN': null,
     'VAPID_PUBLIC_KEY': null,

@@ -7,6 +7,7 @@ use Coyote\Domain\Settings\UserTheme;
 use Coyote\Domain\User\UserSettings;
 use Coyote\Http\Composers\InitialStateComposer;
 use Coyote\User;
+use Coyote\View\FooterMenuPresenter;
 use Coyote\View\NavigationMenuPresenter;
 use Coyote\View\NavigationMenuService;
 use Illuminate\Contracts\View\View;
@@ -40,6 +41,7 @@ class ViewServiceProvider extends ServiceProvider {
                 'currentUser'    => $this->currentUser(),
                 'icons'          => (new Icons)->icons(),
                 'navigationMenu' => $this->navigationMenu(),
+                'footerMenu'     => $this->footerMenu(),
             ]);
         });
     }
@@ -95,5 +97,11 @@ class ViewServiceProvider extends ServiceProvider {
         /** @var NavigationMenuService $service */
         $service = app(NavigationMenuService::class);
         return $presenter->navigationMenu($service->navigationMenu());
+    }
+
+    private function footerMenu(): array {
+        /** @var FooterMenuPresenter $presenter */
+        $presenter = app(FooterMenuPresenter::class);
+        return $presenter->footerMenu();
     }
 }

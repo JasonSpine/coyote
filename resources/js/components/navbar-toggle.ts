@@ -39,6 +39,8 @@ function setBodyTheme(isDark: boolean): void {
   document.querySelector('html')!.classList.toggle('theme-light', !isDark);
   document.body.classList.toggle('theme-dark', isDark);
   document.body.classList.toggle('theme-light', !isDark);
+  document.querySelector('body > footer')?.classList?.toggle('dark', isDark);
+  document.querySelector('body > footer')?.classList?.toggle('light', !isDark);
 }
 
 function setBootstrapNavigationBarTheme(isDark: boolean): void {
