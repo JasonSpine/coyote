@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../icons/internal/fontAwesomeIcons.css";
 
 @custom-variant dark (&:where(:host-context(.dark), :host-context(.dark) *));
 
