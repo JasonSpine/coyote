@@ -8,20 +8,13 @@ use Coyote\Services\Elasticsearch\Functions\Random;
 use Coyote\Services\Elasticsearch\QueryBuilder;
 use Coyote\Services\Elasticsearch\SimpleQueryString;
 
-class AdBuilder extends SearchBuilder
-{
-    /**
-     * @param string $tags
-     */
-    public function boostTags(string $tag)
-    {
+class FreeJobsSearchBuilder extends SearchBuilder implements JobSearchBuilder {
+    public function boostTags(string $tag): void {
         $this->must(new SimpleQueryString($tag, ['title^2', 'tags.original'], 3));
     }
 
-    public function build(): array
-    {
-        // only premium offers
-        $this->must(new Term('is_ads', true));
+    public function build(): array {
+        $this->must(new Term('is_ads', false));
         $this->must(new Term('model', class_basename(Job::class)));
 
         $this->score(new FieldValueFactor('score', 'log', 1));
