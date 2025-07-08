@@ -180,9 +180,10 @@ readonly class NavigationMenuPresenter {
     }
 
     private function formatCount(int $postsCount): array {
+        $format = new FormatNumber();
         return [
-            'long'  => "$postsCount postów",
-            'short' => new FormatNumber()->format($postsCount),
+            'long'  => $format->formatLong($postsCount) . ' postów',
+            'short' => $format->formatShort($postsCount),
         ];
     }
 
