@@ -35,6 +35,7 @@ function fileChanged(event: Event): void {
   const file = (event.target as HTMLInputElement).files?.[0];
   if (file) {
     uploadFile(file);
+    event.target.value = '';
   }
 }
 
