@@ -11,7 +11,7 @@ function handleScroll() {
     return;
   }
 
-  const header = document.querySelector('header');
+  const header = document.querySelector('nav');
 
   if (!breadcrumb) {
     breadcrumb = getElementByClass('breadcrumb')?.cloneNode(true);
