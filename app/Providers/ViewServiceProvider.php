@@ -32,7 +32,6 @@ class ViewServiceProvider extends ServiceProvider {
         $view->composer('layout', function (View $view) use ($clock) {
             $theme = $this->userTheme();
             $view->with([
-                '__master_menu'  => $this->buildMasterMenu(),
                 '__dark_theme'   => $theme->isThemeDark(),
                 '__color_scheme' => $theme->themeMode(),
                 'gdpr'           => [
@@ -60,21 +59,6 @@ class ViewServiceProvider extends ServiceProvider {
         return false;
     }
 
-    private function buildMasterMenu(): Builder {
-        /** @var Menu $menu */
-        $menu = app(Menu::class);
-        /** @var Builder $builder */
-        $builder = $menu->make('__master_menu___', function (Builder $menu) {
-            foreach (config('laravel-menu.__master_menu___') as $title => $data) {
-                $children = array_pull($data, 'children');
-                $item = $menu->add($title, $data);
-                foreach ((array)$children as $key => $child) {
-                    $item->add($key, $child);
-                }
-            }
-        });
-        return $builder;
-    }
 
     private function currentUser(): ?array {
         if (auth()->guest()) {

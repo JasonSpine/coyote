@@ -11,22 +11,10 @@ return [
             'rest_base'        => '',      // string|array
             'active_element'   => 'link',  // item|link
         ],
-        '__master_menu___' => [
-            'restful' => true,
-        ],
         '_forum'           => [
             'auto_activate' => false,
             'restful'       => true,
         ],
-    ],
-
-    '__master_menu___' => [
-        'Dla kandydatów'  => ['route' => 'neon.jobOffer.list', 'class' => 'nav-item', 'control' => 'navigationJobBoard'],
-        'Dla pracodawców' => ['route' => 'neon.jobOffer.pricing', 'class' => 'nav-item', 'control' => 'navigationForEmployers'],
-        'Forum'           => ['route' => 'forum.home', 'forumMenu' => true],
-        'Mikroblogi'      => ['route' => 'microblog.home', 'class' => 'nav-item',],
-        'Wydarzenia'      => ['class' => 'nav-item d-lg-none', 'url' => 'https://wydarzenia.4programmers.net/'],
-        'Kompendium'      => ['class' => 'nav-item d-lg-none', 'route' => 'wiki.home'],
     ],
 
     // _ na poczatku gdyz ten plugin korzysta z metody share() klasy View, a nazwa "forum" moze
