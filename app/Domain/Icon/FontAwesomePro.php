@@ -549,10 +549,6 @@ readonly class FontAwesomePro {
             // look&feel
             'lookAndFeel'                               => 'fa-light fa-palette',
 
-            // questionnaire
-            'questionnaire'                             => 'fa-light fa-comment-question',
-            'questionnaireClose'                        => $genericClose,
-
             // navigation
             'navigationAllCategories'                   => 'fa-solid fa-chevron-right',
             'navigationSectionDiscussion'               => 'fa-light fa-suitcase',
