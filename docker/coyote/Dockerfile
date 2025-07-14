@@ -16,14 +16,16 @@ ARG VAPID_PUBLIC_KEY
 ARG RELEASE
 ARG SENTRY_API_KEY
 
-RUN yarn run prod
-
-RUN rm -rf node_modules
-
 WORKDIR /app/neon2/web
 RUN yarn install
 RUN yarn vite build --mode production
-RUN rm -rf node_modules/
+
+WORKDIR /app
+RUN yarn run prod
+RUN rm -rf node_modules
+
+WORKDIR /app/neon2/web
+RUN rm -rf node_modules
 
 WORKDIR /app
 COPY composer.json composer.json

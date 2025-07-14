@@ -1,4 +1,6 @@
-install: file-permission composer-install migration es-create seed es-index yarn-install yarn-prod install-passport install-push
+install: install-server install-client
+install-server: file-permission composer-install migration es-create seed es-index
+install-client: yarn-install yarn-prod install-passport install-push
 
 up:
 	docker compose up -d

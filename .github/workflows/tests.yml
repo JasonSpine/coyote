@@ -43,17 +43,20 @@ jobs:
       - name: Setup owner
         run: sudo chown -R packer:packer ./ # User with UID 1000 on host machine
 
-      - name: Install packages
-        run: make install
+      - name: Install coyote server
+        run: make install-server
 
-      - name: Run client unit tests
+      - name: Run neon client unit tests
         run: docker compose exec -T php bash -c 'cd neon2/web/ && yarn install && yarn run vitest'
 
-      - name: Run client static type check
-        run: docker compose exec -T php bash -c 'cd neon2/web/ && yarn install && yarn tsc --noEmit'
-
-      - name: Bundle the client
+      - name: Bundle neon client
         run: docker compose exec -T php bash -c 'cd neon2/web/ && yarn install && yarn vite build --mode production'
 
-      - name: Run acceptance tests
+      - name: Run neon acceptance tests
         run: docker compose exec -T php bash -c 'cd neon2/acceptance/ && yarn install && yarn run playwright install chrome && yarn run playwright test'
+
+      - name: Run neon client static type check
+        run: docker compose exec -T php bash -c 'cd neon2/web/ && yarn install && yarn tsc --noEmit'
+
+      - name: Bundle coyote client
+        run: make install-client
