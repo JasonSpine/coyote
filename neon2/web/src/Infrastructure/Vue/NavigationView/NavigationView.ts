@@ -43,4 +43,11 @@ export class NavigationView {
   addNotifications(notifications: Notification[]): void {
     this.store.navigationUser!.notifications.push(...notifications);
   }
+
+  markAllNotificationsAsViewed(): void {
+    this.store.navigationUser!.notifications.forEach(notification => {
+      notification.notificationHighlighted = false;
+    });
+    this.navigationUser().notificationsCount = 0;
+  }
 }

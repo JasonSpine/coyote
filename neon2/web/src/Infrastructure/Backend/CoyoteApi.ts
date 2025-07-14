@@ -8,10 +8,12 @@ import {PaymentStatus} from "../../Domain/JobBoard/PaymentStatus";
 import {Notification} from "../../Domain/Navigation/Notification";
 import {Event} from "../../Domain/ValueProp/Model";
 import {BackendJobOffer} from "./BackendJobOffer";
-import {request, requestGet} from "./http";
+import {request, requestGet, requestNoBody} from "./http";
 import {toJobOffer} from "./toJobOffer";
 
 export class CoyoteApi implements JobBoardApi, NavigationApi {
+  constructor(private readonly csrfToken: string) {}
+
   addJobOffer(
     pricingPlan: PricingPlan,
     jobOffer: SubmitJobOffer,
@@ -77,6 +79,10 @@ export class CoyoteApi implements JobBoardApi, NavigationApi {
     return requestGet('/neon2/user/notifications', {offset: offset.toString()})
       .then(response => response.json())
       .then(response => response);
+  }
+
+  markAllNotificationsAsViewed(): Promise<void> {
+    return requestNoBody('POST', '/User/Notifications/Mark', this.csrfToken);
   }
 }
 

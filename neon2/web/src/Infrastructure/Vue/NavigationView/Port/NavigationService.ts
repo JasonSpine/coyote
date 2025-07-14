@@ -19,4 +19,5 @@ export interface NavigationService {
   attemptAccount(): void;
   attemptProfile(): void;
   loadMoreNotifications(): void;
+  markAllNotificationsAsViewed(): void;
 }

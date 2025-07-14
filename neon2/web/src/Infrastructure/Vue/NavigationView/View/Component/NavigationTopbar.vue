@@ -23,7 +23,6 @@
 
 <script setup lang="ts">
 import {computed, ref} from "vue";
-import {NavigationUser} from "../../../../../Domain/Navigation/NavigationUser";
 import Icon from "../../../Icon/Icon.vue";
 import {IconName} from "../../../Icon/icons";
 import {NavigationAction} from "../../Port/NavigationService";
@@ -61,10 +60,7 @@ function action(action: NavigationAction): void {
 }
 
 function markAll(): void {
-  const user: NavigationUser = store.$state.navigationUser!;
-  user.notifications.forEach(notification => {
-    notification.notificationHighlighted = false;
-  });
+  service.markAllNotificationsAsViewed();
 }
 
 function loadMore(): void {

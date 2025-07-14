@@ -98,6 +98,11 @@ export class VueNavigationService implements NavigationService {
         }
       });
   }
+
+  markAllNotificationsAsViewed(): void {
+    this.coyoteApi.markAllNotificationsAsViewed()
+      .then(() => this.view.markAllNotificationsAsViewed());
+  }
 }
 
 const headers: HeadersInit = {
