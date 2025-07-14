@@ -7,7 +7,7 @@
     <div v-else :class="navigationLinkStyle" class="hover:text-green2-500" @click="click" v-text="props.title"/>
   </template>
   <template v-else-if="props.type === 'buttonSecondary'">
-    <Button class="text-base h-10" primary-outline :title="props.title" @click="click"/>
+    <Button class="text-base h-10 leading-6" primary-outline :title="props.title" @click="click"/>
   </template>
   <template v-else-if="props.type === 'space'">
     <div class="mr-auto"/>
