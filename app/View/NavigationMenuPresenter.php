@@ -6,7 +6,7 @@ use Coyote\Services\UrlBuilder;
 use Coyote\Topic;
 
 readonly class NavigationMenuPresenter {
-    public function navigationMenu(NavigationMenu $menu): array {
+    public function navigationForumMenu(NavigationMenu $menu): array {
         return [
             'sections'          => $this->sections(),
             'allCategoriesHref' => route('forum.categories'),

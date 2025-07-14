@@ -114,7 +114,7 @@ class ServiceProvider extends RouteServiceProvider {
             $theme->themeMode(),
             request()->route()->parameter('id'),
             $acceptanceTagNames,
-            $this->navigationMenu(),
+            $this->navigationForumMenu(),
             $this->websocketUrl(),
             $this->websocketSubscribeCommand());
         $themeClass = $theme->isThemeDark() ? 'dark' : '';
@@ -159,12 +159,12 @@ class ServiceProvider extends RouteServiceProvider {
         return $dateTime->getTimestamp();
     }
 
-    private function navigationMenu(): array {
+    private function navigationForumMenu(): array {
         /** @var NavigationMenuPresenter $presenter */
         $presenter = app(NavigationMenuPresenter::class);
         /** @var NavigationMenuService $service */
         $service = app(NavigationMenuService::class);
-        return $presenter->navigationMenu($service->navigationMenu());
+        return $presenter->navigationForumMenu($service->navigationMenu());
     }
 
     private function user(): ?\Neon2\NavigationUser {

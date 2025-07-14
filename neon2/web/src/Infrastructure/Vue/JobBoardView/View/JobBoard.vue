@@ -5,7 +5,7 @@
       :company-name="store.vpVisibleFor.companyName"
       @accept="vpAccept"/>
     <Design.Layout class="bg-body">
-      <Navigation/>
+      <NavigationTopbar/>
       <div class="pt-3 px-2 max-w-264 mx-auto space-y-3" v-if="!navigationStore.$state.navigationMainContentSuspended">
         <Design.BannerHeading
           :pricing="store.screen === 'pricing'"
@@ -41,7 +41,7 @@ import {PaymentUpdatedStatus} from "../../../../Domain/JobBoard/JobBoard";
 import {ValuePropositionEvent} from "../../../../Domain/ValueProp/Model";
 import {Design} from "../../DesignSystem/design";
 import Footer from "../../NavigationView/View/Component/Footer.vue";
-import Navigation from "../../NavigationView/View/Component/NavigationTopbar.vue";
+import NavigationTopbar from "../../NavigationView/View/Component/NavigationTopbar.vue";
 import {useNavigationStore} from "../../NavigationView/View/navigationStore";
 import ValuePropositionModal from "../../ValuePropView/ValuePropositionModal.vue";
 import {useBoardStore} from "../boardStore";

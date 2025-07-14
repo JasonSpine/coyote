@@ -96,7 +96,7 @@ class ViewServiceProvider extends ServiceProvider {
         $presenter = app(NavigationMenuPresenter::class);
         /** @var NavigationMenuService $service */
         $service = app(NavigationMenuService::class);
-        return $presenter->navigationMenu($service->navigationMenu());
+        return $presenter->navigationForumMenu($service->navigationMenu());
     }
 
     private function footerMenu(): array {
