@@ -60,194 +60,24 @@
 {% block body %}
   {% import 'legacyComponents.forms' as forms %}
   {% import 'legacyComponents.widgets' as widgets %}
-
   {{ schema_organization }}
-
   {% include 'legacyComponents.gdpr' %}
+
 {% block header %}
-  <header class="{{ auth_guest() or user('allow_sticky_header') ? ' fixed-top' }} bg-tile"
-          style="padding-top:12px; padding-bottom:12px; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);">
-    {{ form_open({url: route('logout'), name: 'logout-form'}) }}
-    {{ form_close() }}
+  {{ form_open({url: route('logout'), name: 'logout-form'}) }}
+  {{ form_close() }}
+  <script>var navigationMenu = {{ navigationMenu|json_encode|raw }};</script>
+  <script>var navigationUser = {{ navigationUser|json_encode|raw }};</script>
 
-    <script>
-      function controlEvent(eventName) {
-        const at = new Date().toISOString();
-        document.cookie = `control=${eventName}; path=/;`;
-        document.cookie = `controlAt=${at}; path=/;`;
-      }
-    </script>
-    <nav class="container-3xl navbar navbar-expand-lg {{ __dark_theme ? 'navbar-dark' : 'navbar-light' }}"
-         style="padding-top:0;padding-bottom:0; height:40px;">
-      <div class="d-flex flex-wrap align-items-center flex-lg-nowrap flex-grow-1">
-        <a rel="home"
-           class="navbar-brand order-0 neon-logo flex-shrink-0"
-           href="{{ route('home') }}"
-           title="4programmers.net - Strona główna"></a>
-        <div class="collapse navbar-collapse flex-grow-0 order-4 order-lg-1 bg-tile" id="mobile-menu">
-          <ul class="navbar-nav" style="gap:0 16px; align-items:baseline; font-size:16px; white-space:nowrap;">
-            {% for item in __master_menu.roots() %}
-              <li class="{{ item.attr.class }} group">
-                <a
-                    href="{{ item.url }}"
-                    class="nav-link"
-                    {% if item.attributes.control %}onclick="controlEvent('{{ item.attributes.control }}')"{% endif %}>
-                  {{ item.title }}
-                </a>
-                {% if item.hasChildren() %}
-                  <div class="dropdown-container">
-                    <div class="dropdown-menu dropdown-menu-start">
-                      {% for child in item.children() %}
-                        <a class="dropdown-item"
-                           href="{{ child.url }}"
-                            {% if item.attributes.control %}
-                              onclick="controlEvent('{{ item.attributes.control }}')"
-                            {% endif %}
-                           target="{{ child.attributes.external ? '_blank' }}">
-                          {{ child.title }}
-                        </a>
-                      {% endfor %}
-                    </div>
-                  </div>
-                {% endif %}
-                {% if item.attributes.forumMenu %}
-                  <div class="position-relative d-none d-lg-block">
-                    {% include 'neonNavigationMenu' %}
-                  </div>
-                {% endif %}
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
-
-        <div id="js-searchbar" class="d-flex flex-grow-1 order-1">
-          <vue-searchbar value="{{ input_get('q') }}">
-          </vue-searchbar>
-        </div>
-
-        {% if not auth_check() %}
-          <div class="order-2 d-none d-md-flex align-items-center me-2">
-            <a class="btn btn-sm btn-primary"
-               href="{{ route('neon.jobOffer.pricing') }}"
-               style="white-space:nowrap;"
-               onclick="controlEvent('navigationGuestCta')">
-              Dodaj ofertę pracy
-            </a>
-          </div>
-        {% endif %}
-
-        <div class="order-2" id="non-alert-controls">
-        </div>
-
-        {% if auth_check() %}
-          <ul id="nav-auth" class="nav-auth navbar-nav order-2">
-          </ul>
-
-          <div class="dropdown nav-avatar order-2">
-            <div class="dropdown-toggle d-block" data-bs-toggle="dropdown" style="cursor:pointer;">
-              <div class="neon-avatar-border i-35">
-                {{ user_avatar(currentUser.photo, currentUser.name) }}
-              </div>
-            </div>
-
-            <div class="dropdown-menu dropdown-menu-end">
-              <a class="dropdown-item profile-name" href="{{ route('user.home') }}">
-                {{ user('name') }}
-              </a>
-
-              <div class="dropdown-divider"></div>
-
-              <a class="dropdown-item" href="{{ route('profile', [user('id')]) }}">
-                {{ icon('userProfile') }}
-                Profil
-              </a>
-              <a class="dropdown-item" href="{{ route('user.pm') }}">
-                {{ icon('privateMessages') }}
-                Wiadomości
-              </a>
-              <a class="dropdown-item" href="{{ route('user.home') }}">
-                {{ icon('userAccount') }}
-                Moje konto
-              </a>
-              <a class="dropdown-item" href="{{ url('Pomoc') }}">
-                {{ icon('help') }}
-                Pomoc
-              </a>
-              {% if can('adm-access') %}
-                <a class="dropdown-item" href="{{ route('adm.home') }}">
-                  {{ icon('adminPanel') }}
-                  Panel administracyjny
-                </a>
-              {% endif %}
-
-              {% if accessToLookAndFeel %}
-                <style>
-                  .option {
-                    opacity: 0.5;
-                    cursor: pointer;
-                  }
-
-                  .option:hover {
-                    text-decoration: underline;
-                  }
-
-                  .option-active {
-                    font-weight: bold;
-                  }
-                </style>
-                <span class="dropdown-item" title="Przełącz Look&amp;Feel forum" id="lookAndFeelSwitcher"
-                      style="cursor:default;">
-                  {{ icon('lookAndFeel') }}
-                  <span class="me-2">
-                    Look&amp;Feel:
-                  </span>
-                  <span class="option {{ lookAndFeelModern ?: 'option-active' }}" @click="lookAndFeelSwitchLegacy">Retro</span>
-                  /
-                  <span class="option {{ lookAndFeelModern ?'option-active' }}" @click="lookAndFeelSwitchModern">Aktualny</span>
-                </span>
-              {% endif %}
-
-              <div class="dropdown-divider"></div>
-              <span onclick="document['logout-form'].submit()" class="dropdown-item">
-                {{ icon('logout') }}
-                Wyloguj
-              </span>
-            </div>
-          </div>
-        {% else %}
-          <div class="dropdown order-2 d-flex align-items-center">
-            <div class="dropdown-toggle" data-bs-toggle="dropdown" style="cursor:pointer;">
-              {{ icon('userProfile') }}
-            </div>
-            <div class="dropdown-menu dropdown-menu-end" style="min-width:220px;">
-              <div class="px-3">
-                <a class="btn btn-sm btn-primary d-block" href="{{ route('register') }}">
-                  Zarejestruj się
-                </a>
-              </div>
-              <hr class="my-2">
-              <a class="d-flex justify-content-between align-items-center px-3 py-1 dropdown-item" href="{{ route('login') }}">
-                Zaloguj się
-                {{ icon('navigationNavigate') }}
-              </a>
-            </div>
-          </div>
-        {% endif %}
-        <button class="navbar-toggler shadow-none order-3" type="button" data-bs-toggle="collapse"
-                data-bs-target="#mobile-menu">
-          <div class="button-open">
-            {{ icon('mobileMenuOpen') }}
-          </div>
-          <div class="button-close">
-            {{ icon('mobileMenuClose') }}
-          </div>
-        </button>
-      </div>
-    </nav>
+  <header class="{{__dark_theme ? 'dark'}}">
+    <template shadowrootmode="open">
+      <link rel="stylesheet" href="{{ cdn('css/stylesTailwind.css') }}">
+      <div id="vue-navigation" style="position:fixed; top:0; width:100%; z-index:4; height:70px;" class="bg-tile"></div>
+    </template>
   </header>
 {% endblock header %}
 
-  <div class="container-3xl">
+  <main class="container-3xl">
     {% block breadcrumbs %}
       {% if breadcrumbLegacyComponent is defined %}
         {{ breadcrumbLegacyComponent }}
@@ -294,7 +124,7 @@
         {% endblock %}
       </div>
     {% endblock %}
-  </div>
+  </main>
 
 {% block footer %}
   {% include 'footer' %}

@@ -4,7 +4,7 @@
       <div :class="navigationLinkStyle" class="group-hover/navItem:text-green2-500" v-text="props.title" @click="click"/>
       <ForumMenu/>
     </div>
-    <div v-else :class="navigationLinkStyle" class="hover:text-green2-500" @click="click" v-text="props.title"/>
+    <div v-else :class="navigationLinkStyle" class="hover:text-green2-500 whitespace-nowrap" @click="click" v-text="props.title"/>
   </template>
   <template v-else-if="props.type === 'buttonSecondary'">
     <Button class="text-base h-10 leading-6" primary-outline :title="props.title" @click="click"/>

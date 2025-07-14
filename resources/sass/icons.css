@@ -23,21 +23,18 @@
   font-family: 'Font Awesome 6 Pro', 'Font Awesome 6 Free';
   font-style: normal;
   font-weight: 300;
-  display: inline-block;
 }
 
 .fa-regular {
   font-family: 'Font Awesome 6 Pro', 'Font Awesome 6 Free';
   font-style: normal;
   font-weight: 400;
-  display: inline-block;
 }
 
 .fas, .fa-solid {
   font-family: 'Font Awesome 6 Pro', 'Font Awesome 6 Free';
   font-style: normal;
   font-weight: 900;
-  display: inline-block;
 }
 
 .fa-brands {

@@ -2,6 +2,27 @@
 @import "../../neon2/web/src/Infrastructure/Vue/Icon/internal/fontAwesomeIcons.css";
 @import "./icons.css";
 
+@source "../../neon2/web/src/Infrastructure/Vue/";
+
+@layer properties {
+  *, :before, :after, ::backdrop {
+    --tw-border-style: solid;
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-translate-z: 0;
+  }
+}
+
+@utility fa-light {
+  @apply inline-block;
+}
+@utility fa-solid {
+  @apply inline-block;
+}
+@utility fa-regular {
+  @apply inline-block;
+}
+
 @utility brand-logo {
   @apply h-7 w-40 bg-contain bg-no-repeat;
   background-image: url('/img/logo.light.svg');

@@ -26,6 +26,17 @@ module.exports = {
         ],
       },
       {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[hash].[ext]'
+            }
+          }
+        ]
+      },
+      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {

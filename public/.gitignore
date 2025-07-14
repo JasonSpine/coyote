@@ -1,2 +1,6 @@
 uploads
 manifest.json
+
+# Images
+logo.dark.*
+logo.light.*

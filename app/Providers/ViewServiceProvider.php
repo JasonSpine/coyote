@@ -6,6 +6,7 @@ use Coyote\Domain\Icon\Icons;
 use Coyote\Domain\Settings\UserTheme;
 use Coyote\Domain\User\UserSettings;
 use Coyote\Http\Composers\InitialStateComposer;
+use Coyote\Providers\Neon\NavigationUserPresenter;
 use Coyote\User;
 use Coyote\View\FooterMenuPresenter;
 use Coyote\View\NavigationMenuPresenter;
@@ -16,6 +17,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Factory;
 use Lavary\Menu\Builder;
 use Lavary\Menu\Menu;
+use Neon2\NavigationUser;
 
 class ViewServiceProvider extends ServiceProvider {
     public function boot(): void {
@@ -40,7 +42,8 @@ class ViewServiceProvider extends ServiceProvider {
                 'year'           => $clock->year(),
                 'currentUser'    => $this->currentUser(),
                 'icons'          => (new Icons)->icons(),
-                'navigationMenu' => $this->navigationMenu(),
+                'navigationMenu' => $this->navigationForumMenu(),
+                'navigationUser' => $this->navigationUser(),
                 'footerMenu'     => $this->footerMenu(),
             ]);
         });
@@ -91,7 +94,7 @@ class ViewServiceProvider extends ServiceProvider {
         return $theme;
     }
 
-    private function navigationMenu(): array {
+    private function navigationForumMenu(): array {
         /** @var NavigationMenuPresenter $presenter */
         $presenter = app(NavigationMenuPresenter::class);
         /** @var NavigationMenuService $service */
@@ -103,5 +106,11 @@ class ViewServiceProvider extends ServiceProvider {
         /** @var FooterMenuPresenter $presenter */
         $presenter = app(FooterMenuPresenter::class);
         return $presenter->footerMenu();
+    }
+
+    private function navigationUser(): NavigationUser|null {
+        /** @var NavigationUserPresenter $presenter */
+        $presenter = app(NavigationUserPresenter::class);
+        return $presenter->user();
     }
 }

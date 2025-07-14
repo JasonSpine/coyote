@@ -9,7 +9,7 @@
       <UserAvatar :user="props.user"/>
       <div class="relative cursor-default">
         <div class="absolute right-0 top-2" v-if="controlOpen">
-          <Design.Material space class="text-neutral2-500 border border-tile-border shadow-md py-2">
+          <div class="bg-tile rounded-lg text-neutral2-500 border border-tile-border shadow-md px-4 py-2">
             <DesktopMenuListItem
               v-for="listItem in _authControlItems"
               :type="listItem.type"
@@ -17,7 +17,7 @@
               :icon="listItem.icon"
               :messages-count="listItem.messagesCount"
               @click="listItem.action && service.action(listItem.action)"/>
-          </Design.Material>
+          </div>
         </div>
       </div>
     </div>
@@ -28,13 +28,12 @@
 import {computed, ref, watch} from "vue";
 import {NavigationUser} from "../../../../../Domain/Navigation/NavigationUser";
 import Blip from "../../../DesignSystem/Blip.vue";
-import {Design} from "../../../DesignSystem/design";
 import {useClickOutside} from "../../../Helper/clickOutside";
 import {useNavigationStore} from "../navigationStore";
 import {authControlItems} from "../Presenter/authControlItems";
 import {useNavigationService} from "../vue";
-import UserAvatar from "./UserAvatar.vue";
 import DesktopMenuListItem from "./ListItem/DesktopMenuListItem.vue";
+import UserAvatar from "./UserAvatar.vue";
 
 const store = useNavigationStore();
 

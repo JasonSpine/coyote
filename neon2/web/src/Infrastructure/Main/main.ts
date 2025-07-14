@@ -1,4 +1,3 @@
-import {createPinia} from "pinia";
 import {createApp} from "vue";
 import {JobBoardPresenter} from "../../Application/JobBoard/JobBoardPresenter";
 import {JobOfferRepository} from "../../Application/JobBoard/JobOfferRepository";
@@ -30,8 +29,12 @@ import {jobBoardServiceInjectKey} from "../Vue/JobBoardView/View/vue";
 import {NavigationSocketListener} from "../Vue/NavigationSocketListener";
 import {NavigationView} from "../Vue/NavigationView/NavigationView";
 import {ThemeController} from "../Vue/NavigationView/ThemeController";
+import {useNavigationStore} from "../Vue/NavigationView/View/navigationStore";
 import {navigationServiceInjectKey} from "../Vue/NavigationView/View/vue";
 import {VueNavigationService} from "../Vue/NavigationView/VueNavigationService";
+import {pinia} from "../Vue/pinia";
+
+import "../Vue/DesignSystem/tailwind.css";
 
 declare global {
   interface Window {
@@ -40,7 +43,6 @@ declare global {
 }
 
 const vueApp = createApp(JobBoard);
-const pinia = createPinia();
 vueApp.use(pinia);
 
 const jobOffersRepo = new JobOfferRepository();
@@ -90,7 +92,7 @@ const jobBoardService = new JobBoardService(
   paymentIntents,
   payments,
   paymentProvider);
-const nvView = new NavigationView();
+const nvView = new NavigationView(useNavigationStore());
 
 payments.addEventListener(new PaymentListenerAdapter(jbView, jobBoardService));
 planBundleRepo.addListener(new PlanBundleListenerAdapter(jbView));

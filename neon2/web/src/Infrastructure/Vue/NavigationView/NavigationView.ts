@@ -1,10 +1,10 @@
 import {NavigationUser} from "../../../Domain/Navigation/NavigationUser";
 import {Notification} from "../../../Domain/Navigation/Notification";
 import {NavigationForumMenu} from "./NavigationForumMenu";
-import {NavigationStore, useNavigationStore} from "./View/navigationStore";
+import {NavigationStore} from "./View/navigationStore";
 
 export class NavigationView {
-  private readonly store: NavigationStore = useNavigationStore();
+  constructor(private readonly store: NavigationStore) {}
 
   setUser(navigationUser: NavigationUser|null): void {
     this.store.isAuthenticated = navigationUser !== null;

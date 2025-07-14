@@ -32,8 +32,6 @@ import TextInputOutline from "./TextInputOutline.vue";
 import Tile from "./Tile.vue";
 import Toast from "./Toast.vue";
 
-import "./tailwind.css";
-
 export const Design = {
   BannerHeading,
   Blip,
