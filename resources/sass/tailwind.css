@@ -10,17 +10,8 @@
     --tw-translate-x: 0;
     --tw-translate-y: 0;
     --tw-translate-z: 0;
+    --spacing: 0.25rem;
   }
-}
-
-@utility fa-light {
-  @apply inline-block;
-}
-@utility fa-solid {
-  @apply inline-block;
-}
-@utility fa-regular {
-  @apply inline-block;
 }
 
 @utility brand-logo {
