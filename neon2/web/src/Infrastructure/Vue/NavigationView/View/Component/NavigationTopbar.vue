@@ -26,7 +26,7 @@ import {computed, ref} from "vue";
 import {NavigationUser} from "../../../../../Domain/Navigation/NavigationUser";
 import Icon from "../../../Icon/Icon.vue";
 import {IconName} from "../../../Icon/icons";
-import {NavigationAction} from "../../NavigationService";
+import {NavigationAction} from "../../Port/NavigationService";
 import {useNavigationStore} from "../navigationStore";
 import {entryPointItems} from "../Presenter/entryPointItems";
 import {useNavigationService} from "../vue";

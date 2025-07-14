@@ -1,4 +1,4 @@
-import {NavigationAction} from "../../NavigationService";
+import {NavigationAction} from "../../Port/NavigationService";
 
 export const entryPointItems: EntryPointItem[] = [
   {type: 'link', title: 'Dla kandydatów', action: 'jobBoard'},

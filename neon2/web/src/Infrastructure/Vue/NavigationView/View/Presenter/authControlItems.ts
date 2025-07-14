@@ -1,6 +1,6 @@
 import {NavigationUser} from "../../../../../Domain/Navigation/NavigationUser";
 import {IconName} from "../../../Icon/icons";
-import {NavigationAction} from "../../NavigationService";
+import {NavigationAction} from "../../Port/NavigationService";
 
 export interface AuthControlListItem {
   type: 'username'|'link'|'buttonPrimary'|'buttonSecondary'|'separatorDesktop'|'separatorMobile'|'spaceMobile';

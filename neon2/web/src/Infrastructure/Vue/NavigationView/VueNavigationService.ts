@@ -2,15 +2,10 @@ import {CoyoteApi} from "../../Backend/CoyoteApi";
 import {ScreenName} from "../JobBoardView/Model";
 import {Router} from "../Router";
 import {NavigationView} from "./NavigationView";
+import {NavigationAction, NavigationService} from "./Port/NavigationService";
 import {ThemeController} from "./ThemeController";
 
-export type NavigationAction =
-  'jobBoard'|'pricing'|'forum'|'blog'|
-  'register'|'login'|'logout'|'help'|
-  'account'|'profile'|'messages'|
-  'toggleTheme'|'admin';
-
-export class NavigationService {
+export class VueNavigationService implements NavigationService {
   private notificationsExhausted: boolean = false;
 
   constructor(

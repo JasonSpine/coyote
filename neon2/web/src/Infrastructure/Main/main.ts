@@ -27,11 +27,11 @@ import JobOfferPaymentScreen from "../Vue/JobBoardView/View/JobOfferPaymentScree
 import JobOfferPricing from "../Vue/JobBoardView/View/JobOfferPricing.vue";
 import JobOfferShowScreen from "../Vue/JobBoardView/View/JobOfferShowScreen.vue";
 import {jobBoardServiceInjectKey} from "../Vue/JobBoardView/View/vue";
-import {NavigationService} from "../Vue/NavigationView/NavigationService";
+import {NavigationSocketListener} from "../Vue/NavigationSocketListener";
 import {NavigationView} from "../Vue/NavigationView/NavigationView";
 import {ThemeController} from "../Vue/NavigationView/ThemeController";
 import {navigationServiceInjectKey} from "../Vue/NavigationView/View/vue";
-import {NavigationSocketListener} from "../Vue/NavigationSocketListener";
+import {VueNavigationService} from "../Vue/NavigationView/VueNavigationService";
 
 declare global {
   interface Window {
@@ -105,7 +105,7 @@ nvView.setUser(window.backendInput.navigationUser);
 nvView.setDarkTheme(window.backendInput.darkTheme);
 
 vueApp.provide(jobBoardServiceInjectKey, jobBoardService);
-vueApp.provide(navigationServiceInjectKey, new NavigationService(
+vueApp.provide(navigationServiceInjectKey, new VueNavigationService(
   vueRouter,
   inbound.csrfToken(),
   nvView,

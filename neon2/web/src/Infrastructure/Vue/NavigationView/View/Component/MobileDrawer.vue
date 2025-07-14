@@ -36,7 +36,7 @@
 <script setup lang="ts">
 import {computed, ref} from "vue";
 import Icon from "../../../Icon/Icon.vue";
-import {NavigationAction} from "../../NavigationService";
+import {NavigationAction} from "../../Port/NavigationService";
 import {useNavigationStore} from "../navigationStore";
 import {authControlItems} from "../Presenter/authControlItems";
 import {entryPointItems} from "../Presenter/entryPointItems";

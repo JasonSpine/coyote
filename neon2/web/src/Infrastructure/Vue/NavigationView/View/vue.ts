@@ -1,5 +1,5 @@
 import {inject} from "vue";
-import {NavigationService} from "../NavigationService";
+import {NavigationService} from "../Port/NavigationService";
 
 export const navigationServiceInjectKey = Symbol();
 
