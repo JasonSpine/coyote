@@ -31,23 +31,27 @@ export class NavigationView {
 
   userProfileHref(): string {
     if (this.store.navigationUser) {
-      return this.store.navigationUser!.profileHref;
+      return this.navigationUser().profileHref;
     }
     throw new Error('Failed to read user profile href.');
   }
 
   navigationUserNotificationsCount(): number {
-    return this.store.navigationUser!.notifications.length;
+    return this.navigationUser().notifications.length;
   }
 
   addNotifications(notifications: Notification[]): void {
-    this.store.navigationUser!.notifications.push(...notifications);
+    this.navigationUser().notifications.push(...notifications);
   }
 
   markAllNotificationsAsViewed(): void {
-    this.store.navigationUser!.notifications.forEach(notification => {
+    this.navigationUser().notifications.forEach(notification => {
       notification.notificationHighlighted = false;
     });
     this.navigationUser().notificationsCount = 0;
+  }
+
+  private navigationUser(): NavigationUser {
+    return this.store.navigationUser!;
   }
 }
