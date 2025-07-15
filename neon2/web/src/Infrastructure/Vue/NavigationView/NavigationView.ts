@@ -54,4 +54,8 @@ export class NavigationView {
   private navigationUser(): NavigationUser {
     return this.store.navigationUser!;
   }
+
+  mainContentSuspended(suspended: boolean): void {
+    this.store.navigationMainContentSuspended = suspended;
+  }
 }

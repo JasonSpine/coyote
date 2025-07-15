@@ -20,4 +20,5 @@ export interface NavigationService {
   attemptProfile(): void;
   loadMoreNotifications(): void;
   markAllNotificationsAsViewed(): void;
+  mainContentSuspended(suspended: boolean): void;
 }

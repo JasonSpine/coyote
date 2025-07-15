@@ -103,6 +103,10 @@ export class VueNavigationService implements NavigationService {
     this.coyoteApi.markAllNotificationsAsViewed()
       .then(() => this.view.markAllNotificationsAsViewed());
   }
+
+  mainContentSuspended(suspended: boolean): void {
+    this.view.mainContentSuspended(suspended);
+  }
 }
 
 const headers: HeadersInit = {

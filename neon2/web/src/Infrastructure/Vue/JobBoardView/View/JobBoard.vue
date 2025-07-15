@@ -6,30 +6,32 @@
       @accept="vpAccept"/>
     <Design.Layout class="bg-body">
       <NavigationTopbar/>
-      <div class="pt-3 px-2 max-w-264 mx-auto space-y-3" v-if="!navigationStore.$state.navigationMainContentSuspended">
-        <Design.BannerHeading
-          :pricing="store.screen === 'pricing'"
-          :back="showHomeLink"
-          @back="navigateHome"/>
-        <Design.Toast
-          v-if="toastTitle"
-          :title="toastTitle"/>
-        <Design.Toast
-          v-if="planBundleToast"
-          :title="planBundleToast"
-          test-id="planBundle"/>
-        <Design.Toast
-          test-id="paymentNotification"
-          :test-value="store.paymentNotification!"
-          v-if="paymentNotificationTitle"
-          :title="paymentNotificationTitle"/>
-        <Design.Toast
-          test-id="paymentStatus"
-          v-if="paymentStatusTitle"
-          :title="paymentStatusTitle"/>
-        <RouterView/>
-      </div>
-      <Footer/>
+      <template v-if="!navigationStore.$state.navigationMainContentSuspended">
+        <div class="pt-3 px-2 max-w-264 mx-auto space-y-3">
+          <Design.BannerHeading
+            :pricing="store.screen === 'pricing'"
+            :back="showHomeLink"
+            @back="navigateHome"/>
+          <Design.Toast
+            v-if="toastTitle"
+            :title="toastTitle"/>
+          <Design.Toast
+            v-if="planBundleToast"
+            :title="planBundleToast"
+            test-id="planBundle"/>
+          <Design.Toast
+            test-id="paymentNotification"
+            :test-value="store.paymentNotification!"
+            v-if="paymentNotificationTitle"
+            :title="paymentNotificationTitle"/>
+          <Design.Toast
+            test-id="paymentStatus"
+            v-if="paymentStatusTitle"
+            :title="paymentStatusTitle"/>
+          <RouterView/>
+        </div>
+        <Footer/>
+      </template>
     </Design.Layout>
   </div>
 </template>

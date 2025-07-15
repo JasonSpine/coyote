@@ -15,14 +15,6 @@ export const useNavigationStore = defineStore('navigation', {
       navigationMainContentSuspended: false,
     };
   },
-  actions: {
-    mainContentSuspend(): void {
-      this.$state.navigationMainContentSuspended = true;
-    },
-    mainContentRestore(): void {
-      this.$state.navigationMainContentSuspended = false;
-    },
-  },
 });
 
 interface State {

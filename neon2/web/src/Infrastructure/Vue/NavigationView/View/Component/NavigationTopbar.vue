@@ -41,16 +41,12 @@ const mobileMenuOpen = ref<boolean>(false);
 
 function toggleMobileMenu(): void {
   mobileMenuOpen.value = !mobileMenuOpen.value;
-  if (mobileMenuOpen.value) {
-    store.mainContentSuspend();
-  } else {
-    store.mainContentRestore();
-  }
+  service.mainContentSuspended(mobileMenuOpen.value);
 }
 
 function closeMobileMenu(): void {
   mobileMenuOpen.value = false;
-  store.mainContentRestore();
+  service.mainContentSuspended(false);
 }
 
 const mobileMenuIcon = computed<IconName>(() => mobileMenuOpen.value ? 'mobileMenuClose' : 'mobileMenuOpen');
