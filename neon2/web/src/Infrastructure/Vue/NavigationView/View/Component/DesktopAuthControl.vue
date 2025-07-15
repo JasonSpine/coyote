@@ -4,9 +4,9 @@
       class="hidden"
       data-testid="authenticationState"
       :data-test-value="props.user ? 'loggedIn' : 'guest'"/>
-    <div @click="toggleControl" class="cursor-pointer relative" data-testid="authControl">
-      <Blip v-if="hasMessage" :value="props.user!.messagesCount" important/>
-      <UserAvatar :user="props.user"/>
+    <div class="cursor-pointer relative" data-testid="authControl">
+      <Blip v-if="hasMessage" :value="props.user!.messagesCount" important @click="toggleControl"/>
+      <UserAvatar :user="props.user" @click="toggleControl"/>
       <div class="relative cursor-default">
         <div class="absolute right-0 top-2" v-if="controlOpen">
           <div class="bg-tile rounded-lg text-neutral2-500 border border-tile-border shadow-md px-4 py-2">

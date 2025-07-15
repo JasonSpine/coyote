@@ -33,16 +33,30 @@ class ClickOutside {
 
   private onClickOutside(clickedOutside: Listener): () => void {
     const {element, rootElement} = this.current;
+    const windowRoot = window.document.body;
 
-    function handler(event: Event): void {
-      if (!element!.contains(event.target as Node)) {
+    function shadowHandler(event: Event): void {
+      if (outside(element, event.target!)) {
+        clickedOutside();
+      }
+      event.stopPropagation();
+    }
+
+    function windowHandler(event: Event): void {
+      if (outside(element, event.target!)) {
         clickedOutside();
       }
     }
 
-    rootElement!.addEventListener('click', handler);
+    rootElement!.addEventListener('click', shadowHandler);
+    windowRoot!.addEventListener('click', windowHandler);
     return function (): void {
-      rootElement!.removeEventListener('click', handler);
+      windowRoot!.removeEventListener('click', windowHandler);
+      rootElement!.removeEventListener('click', shadowHandler);
     };
   }
+}
+
+function outside(element: HTMLElement|null, target: EventTarget): boolean {
+  return !element!.contains(target as Node);
 }
