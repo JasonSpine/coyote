@@ -33,9 +33,9 @@ interface Props {
 
 const props = defineProps<Props>();
 
-function click(): void {
+function click(event: Event): void {
   if (!props.disabled) {
-    emit('click');
+    emit('click', event);
   }
 }
 
