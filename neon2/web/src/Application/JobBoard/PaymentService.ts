@@ -50,8 +50,8 @@ export class PaymentService {
       if (status !== 'awaitingPayment') {
         return status;
       }
-      await new Promise(resolve => setTimeout(resolve, 500));
-      if (counter >= 20) {
+      await new Promise(resolve => setTimeout(resolve, 750));
+      if (counter >= 160) {
         break;
       }
     }
