@@ -11,6 +11,11 @@
     --tw-translate-y: 0;
     --tw-translate-z: 0;
     --spacing: 0.25rem;
+    --tw-inset-shadow: 0 0 #0000;
+    --tw-inset-ring-shadow: 0 0 #0000;
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-shadow: 0 0 #0000;
   }
 }
 
