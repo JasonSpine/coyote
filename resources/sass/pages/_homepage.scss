@@ -42,9 +42,8 @@
 
 #box-forum {
   #stream-wrapper {
-    @include media-breakpoint-down(xl) {
+    @include media-breakpoint-down(lg) {
       margin-top:            20px;
-      background-position-x: 10px;
       padding-left:          15px;
     }
   }
