@@ -40,7 +40,23 @@ app.provide(navigationServiceInjectKey, new CoyoteNavigationService(
 
 window.addEventListener('load', () => {
   const header = document.querySelector('header');
-  if (header?.shadowRoot) {
-    app.mount(header.shadowRoot.querySelector('#vue-navigation')!);
+  if (header) {
+    if (header.shadowRoot) {
+      app.mount(header.shadowRoot.querySelector('#vue-navigation')!);
+    } else {
+      if (shadowDomSupported()) {
+        attachShadow(header, header.getElementsByTagName('template')[0]);
+        app.mount(header.shadowRoot.querySelector('#vue-navigation')!);
+      }
+    }
   }
 });
+
+function attachShadow(host: HTMLElement, template: HTMLTemplateElement): void {
+  const shadowRoot = host.attachShadow({mode: 'open'});
+  shadowRoot.appendChild(template.content.cloneNode(true));
+}
+
+function shadowDomSupported(): boolean {
+  return document.head['createShadowRoot'] || document.head.attachShadow;
+}
