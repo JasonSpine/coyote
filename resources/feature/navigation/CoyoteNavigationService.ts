@@ -14,72 +14,35 @@ export class CoyoteNavigationService implements NavigationService {
   ) {}
 
   action(action: NavigationAction): void {
-    if (action === 'jobBoard') this.showJobBoard();
-    if (action === 'pricing') this.showPricing();
-    if (action === 'forum') this.showForum();
-    if (action === 'blog') this.showBlog();
-    if (action === 'register') this.attemptRegister();
-    if (action === 'login') this.attemptLogin();
     if (action === 'logout') this.attemptLogout();
-    if (action === 'help') this.attemptHelp();
-    if (action === 'account') this.attemptAccount();
-    if (action === 'profile') this.attemptProfile();
-    if (action === 'messages') this.attemptMessages();
     if (action === 'toggleTheme') this.toggleTheme();
-    if (action === 'admin') this.attemptAdministratorPanel();
-    if (action === 'employerReviews') this.showEmployerReviews();
+    const historyModeHref = this.actionHref(action);
+    if (historyModeHref) {
+      window.location.href = historyModeHref;
+      return;
+    }
   }
 
-  showJobBoard(): void {
-    window.location.href = '/Job';
-  }
-
-  showPricing(): void {
-    window.location.href = '/Job/pricing';
-  }
-
-  showForum(): void {
-    window.location.href = '/Forum';
-  }
-
-  showBlog(): void {
-    window.location.href = '/Mikroblogi';
-  }
-
-  attemptRegister(): void {
-    window.location.href = '/Register';
-  }
-
-  attemptLogin(): void {
-    window.location.href = '/Login';
+  actionHref(action: NavigationAction): string|null {
+    if (action === 'jobBoard') return '/Job';
+    if (action === 'pricing') return '/Job/pricing';
+    if (action === 'forum') return '/Forum';
+    if (action === 'blog') return '/Mikroblogi';
+    if (action === 'employerReviews') return 'https://4programmers.net/Forum/Opinie_o_pracodawcach';
+    if (action === 'register') return '/Register';
+    if (action === 'login') return '/Login';
+    if (action === 'help') return '/Pomoc';
+    if (action === 'messages') return '/User/Pm';
+    if (action === 'admin') return '/Adm';
+    if (action === 'account') return '/User';
+    if (action === 'profile') return this.view.userProfileHref();
+    if (action === 'toggleTheme') return null;
+    if (action === 'logout') return null;
+    throw new Error('Failed to set action href.');
   }
 
   attemptLogout(): void {
     window.document['logout-form'].submit();
-  }
-
-  attemptHelp(): void {
-    window.location.href = '/Pomoc';
-  }
-
-  attemptMessages(): void {
-    window.location.href = '/User/Pm';
-  }
-
-  attemptAdministratorPanel(): void {
-    window.location.href = '/Adm';
-  }
-
-  showEmployerReviews(): void {
-    window.location.href = 'https://4programmers.net/Forum/Opinie_o_pracodawcach';
-  }
-
-  attemptAccount(): void {
-    window.location.href = '/User';
-  }
-
-  attemptProfile(): void {
-    window.location.href = this.view.userProfileHref();
   }
 
   loadMoreNotifications(): void {

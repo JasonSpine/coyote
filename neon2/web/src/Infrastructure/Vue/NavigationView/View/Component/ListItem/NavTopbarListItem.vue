@@ -1,26 +1,28 @@
 <template>
   <template v-if="props.type === 'link'">
     <div class="group/navItem" v-if="props.forumMenu">
-      <div
+      <a
         :class="navigationLinkStyle"
         class="group-hover/navItem:text-green2-500"
         v-text="props.title"
-        @click="click"/>
+        @click.prevent="click"
+        :href="actionHref(props.action)"/>
       <ForumMenu/>
     </div>
     <div v-else :class="navigationLinkStyle" class="whitespace-nowrap group/navItem">
-      <div class="hover:text-green2-500" v-text="props.title" @click="click"/>
+      <a class="block hover:text-green2-500" v-text="props.title" @click.prevent="click" :href="actionHref(props.action)"/>
       <div v-if="includeChildren" class="relative hidden group-hover/navItem:block cursor-default">
         <div :class="[
           'absolute left-1/2 -translate-x-1/2 top-2',
           'bg-tile p-2 font-medium space-y-2',
           'border rounded-lg border-tile-border',
         ]">
-          <div
+          <a
             v-for="child in props.children"
-            class="hover:text-green2-500 p-2 cursor-pointer"
+            class="block hover:text-green2-500 p-2 cursor-pointer"
             v-text="child.title"
-            @click="action(child.action)"/>
+            :href="actionHref(child.action)"
+            @click.prevent="action(child.action)"/>
         </div>
       </div>
     </div>
@@ -43,12 +45,14 @@ import Button from "../../../../DesignSystem/Button.vue";
 import {NavigationAction} from "../../../Port/NavigationService";
 import {useNavigationStore} from "../../navigationStore";
 import {NavigationItem} from "../../Presenter/entryPointItems";
+import {useNavigationService} from "../../vue";
 import ForumMenu from "../ForumMenuDesktop.vue";
 
 const props = defineProps<Props>();
 const emit = defineEmits(['click']);
 
 const store = useNavigationStore();
+const service = useNavigationService();
 
 const navigationLinkStyle = 'max-lg:hidden cursor-pointer py-2 px-3 rounded';
 
@@ -67,6 +71,10 @@ interface Props {
 
 function action(action: NavigationAction): void {
   emit('action', action);
+}
+
+function actionHref(action: NavigationAction): string|null {
+  return service.actionHref(action);
 }
 
 function click(): void {
