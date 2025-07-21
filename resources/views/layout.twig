@@ -51,10 +51,7 @@
 </head>
 <body
     data-color-scheme="{{ __color_scheme }}"
-    class="
-    {{ auth_guest() or user('allow_sticky_header') ? 'padding-top' }} 
-    {{ __dark_theme ? 'theme-dark' : 'theme-light' }} 
-    {{ lookAndFeelModern ? 'look-and-feel-modern' : 'look-and-feel-legacy' }}">
+    class="padding-top look-and-feel-modern {{ __dark_theme ? 'theme-dark' : 'theme-light' }}">
 {{ render_region('body') }}
 
 {% block body %}

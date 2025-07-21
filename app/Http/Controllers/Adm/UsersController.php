@@ -107,14 +107,6 @@ class UsersController extends BaseController
             $user->groups()->sync((array)$data['groups']);
             stream(Update::class, new Person($user));
             event($user->deleted_at ? new UserDeleted($user) : new UserSaved($user));
-
-            if ($this->request->has('local-settings-action')) {
-                $guest = new Guest($user->guest_id);
-                match ($this->request->get('local-settings-action')) {
-                    'laf-modern' => $guest->setSetting('lookAndFeel', 'modern'),
-                    'laf-legacy' => $guest->setSetting('lookAndFeel', 'legacy'),
-                };
-            }
         });
 
         return back()->with('success', 'Zmiany zostały zapisane.');

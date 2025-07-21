@@ -186,9 +186,7 @@ return [
          */
         Coyote\Providers\RepositoryServiceProvider::class,
         Coyote\Providers\AppServiceProvider::class,
-
         Coyote\Providers\ConfigServiceProvider::class,
-        Coyote\Feature\LookAndFeel\LookAndFeelServiceProvider::class,
 
         // Obsluga sesji przez Coyote (nadpisujemy domyslny driver)
         Coyote\Providers\SessionServiceProvider::class,
