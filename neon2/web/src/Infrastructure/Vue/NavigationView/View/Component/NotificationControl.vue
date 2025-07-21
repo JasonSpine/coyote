@@ -2,7 +2,7 @@
   <div v-if="store.isAuthenticated">
     <div class="flex-shrink-0 flex max-lg:mr-2">
       <NavigationControlItem icon="navigationNotification" :number="props.user.notificationsCount" @action="toggleNotifications"/>
-      <NavigationControlItem icon="navigationMessages" :number="props.user.messagesCount" @action="showMessages" class="lg:hidden"/>
+      <NavigationControlItem icon="navigationMessages" :number="props.user.messagesCount" @action="showMessages"/>
     </div>
     <div class="md:relative text-base" v-if="notificationsOpen">
       <div class="absolute max-md:right-0 max-md:left-0 -right-6 top-17.5 md:top-2">

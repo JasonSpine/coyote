@@ -5,19 +5,18 @@
       data-testid="authenticationState"
       :data-test-value="props.user ? 'loggedIn' : 'guest'"/>
     <div class="cursor-pointer relative" data-testid="authControl">
-      <Blip v-if="hasMessage" :value="props.user!.messagesCount" important @click="toggleControl"/>
       <UserAvatar :user="props.user" @click="toggleControl"/>
       <div class="relative cursor-default">
-        <div class="absolute right-0 top-2" v-if="controlOpen">
-          <div class="bg-tile rounded-lg text-neutral2-500 border border-tile-border shadow-md px-4 py-2">
-            <DesktopMenuListItem
-              v-for="listItem in _authControlItems"
-              :type="listItem.type"
-              :title="listItem.title"
-              :icon="listItem.icon"
-              :messages-count="listItem.messagesCount"
-              @click="listItem.action && service.action(listItem.action)"/>
-          </div>
+        <div
+          class="absolute right-0 top-2 bg-tile rounded-lg text-neutral2-500 border border-tile-border shadow-md px-4 py-2"
+          v-if="controlOpen">
+          <DesktopMenuListItem
+            v-for="listItem in _authControlItems"
+            :type="listItem.type"
+            :title="listItem.title"
+            :icon="listItem.icon"
+            :messages-count="listItem.messagesCount"
+            @click="listItem.action && service.action(listItem.action)"/>
         </div>
       </div>
     </div>
@@ -27,7 +26,6 @@
 <script setup lang="ts">
 import {computed, ref, watch} from "vue";
 import {NavigationUser} from "../../../../../Domain/Navigation/NavigationUser";
-import Blip from "../../../DesignSystem/Blip.vue";
 import {useClickOutside} from "../../../Helper/clickOutside";
 import {useNavigationStore} from "../navigationStore";
 import {authControlItems} from "../Presenter/authControlItems";
