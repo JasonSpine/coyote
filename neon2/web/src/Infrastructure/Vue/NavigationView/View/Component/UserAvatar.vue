@@ -1,6 +1,6 @@
 <template>
   <div class="size-10 rounded user-avatar" v-if="props.user">
-    <img :src="props.user.avatarUrl" v-if="props.user.avatarUrl" class="rounded"/>
+    <img class="rounded size-10 object-cover" :src="props.user.avatarUrl" v-if="props.user.avatarUrl"/>
     <div v-text="props.user.avatarInitials" v-else class="text-center leading-10"/>
   </div>
   <Icon

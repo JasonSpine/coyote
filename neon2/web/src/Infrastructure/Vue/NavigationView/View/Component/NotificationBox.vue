@@ -13,7 +13,7 @@
            class="px-3 py-2.5 mb-1 flex rounded-lg"
            :class="{'text-green2-600 bg-green2-100 dark:text-neutral2-600 dark:bg-tile-nested':notification.notificationHighlighted}">
         <a class="size-10 rounded user-avatar flex-shrink-0 mt-0.5" :href="notification.actorProfileHref">
-          <img :src="notification.actorAvatarUrl" v-if="notification.actorAvatarUrl" class="rounded"/>
+          <img :src="notification.actorAvatarUrl" v-if="notification.actorAvatarUrl" class="rounded size-10 object-cover"/>
           <div v-text="notification.actorInitials" v-else class="text-center leading-10 border border-green2-300 rounded"/>
         </a>
         <a class="ml-3 min-w-0 flex-grow-1" :href="notification.contentHref">
