@@ -92,8 +92,14 @@ class ServiceProvider extends RouteServiceProvider {
             } else {
                 $acceptanceTagNames = [];
             }
+            if (request()->query->has('acceptanceSearchItems')) {
+                $acceptanceSearchItems = json_decode(request()->query->get('acceptanceSearchItems'));
+            } else {
+                $acceptanceSearchItems = [];
+            }
         } else {
             $acceptanceTagNames = [];
+            $acceptanceSearchItems = [];
         }
         $jobBoardView = new JobBoardView(
             $integration,
@@ -109,6 +115,7 @@ class ServiceProvider extends RouteServiceProvider {
             $theme->themeMode(),
             request()->route()->parameter('id'),
             $acceptanceTagNames,
+            $acceptanceSearchItems,
             $this->navigationForumMenu(),
             $this->websocketUrl(),
             $this->websocketSubscribeCommand());

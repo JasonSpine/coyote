@@ -1,3 +1,4 @@
+import {SearchItem} from "../../../Application/Navigation/Port/SearchPrompt";
 import {NavigationUser} from "../../../Domain/Navigation/NavigationUser";
 import {Notification} from "../../../Domain/Navigation/Notification";
 import {NavigationForumMenu} from "./NavigationForumMenu";
@@ -57,5 +58,9 @@ export class NavigationView {
 
   mainContentSuspended(suspended: boolean): void {
     this.store.navigationMainContentSuspended = suspended;
+  }
+
+  setSearchItems(items: SearchItem[]): void {
+    this.store.searchItems = items;
   }
 }

@@ -22,6 +22,12 @@ export class WebDriver {
     }));
   }
 
+  async setAcceptanceSearchItems(searchItems: string[]): None {
+    await this.page.goto('/Job?' + new URLSearchParams({
+      acceptanceSearchItems: JSON.stringify(searchItems),
+    }));
+  }
+
   async click(text: string): None {
     await this.page.getByText(text, {exact: true}).click();
   }

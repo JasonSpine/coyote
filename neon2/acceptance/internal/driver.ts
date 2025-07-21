@@ -60,6 +60,10 @@ export class Driver {
     await this.web.setAcceptanceTags(tagNames);
   }
 
+  async setAcceptanceSearchItems(searchItems: string[]): Promise<void> {
+    await this.web.setAcceptanceSearchItems(searchItems);
+  }
+
   async publishJobOffer(
     title: string,
     pricingPlan: PricingPlan,
@@ -440,7 +444,15 @@ export class Driver {
   async logout(): Promise<void> {
     await this.web.clickByTestId('authControl');
     await this.web.click('Wyloguj');
-    await this.web.waitForTestValue('authenticationState', 'guest')
+    await this.web.waitForTestValue('authenticationState', 'guest');
+  }
+
+  async searchGlobal(searchPhrase: string): Promise<void> {
+    await this.web.fillByPlaceholder('Wyszukaj', searchPhrase);
+  }
+
+  async findSearchItems(): Promise<string[]> {
+    return await this.web.listStringByTestId('searchItem');
   }
 }
 

@@ -10,4 +10,5 @@ export interface NavigationService {
   loadMoreNotifications(): void;
   markAllNotificationsAsViewed(): void;
   mainContentSuspended(suspended: boolean): void;
+  search(searchPhrase: string): void;
 }

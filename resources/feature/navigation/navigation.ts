@@ -1,4 +1,5 @@
 import {createApp} from "../../../neon2/web/node_modules/vue";
+import {CoyoteSearchPrompt} from "../../../neon2/web/src/Application/Navigation/CoyoteSearchPrompt";
 import {NavigationUser} from "../../../neon2/web/src/Domain/Navigation/NavigationUser";
 import {CoyoteApi} from "../../../neon2/web/src/Infrastructure/Backend/CoyoteApi";
 import {CoyoteSocketClient} from "../../../neon2/web/src/Infrastructure/Backend/CoyoteSocketClient";
@@ -35,6 +36,7 @@ app.provide(navigationServiceInjectKey, new CoyoteNavigationService(
   naviView,
   new ThemeController(naviView, coyoteApi),
   coyoteApi,
+  new CoyoteSearchPrompt(),
 ));
 
 if (window.navigationUser) {

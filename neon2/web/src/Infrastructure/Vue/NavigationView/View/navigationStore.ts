@@ -1,4 +1,5 @@
 import {defineStore} from "pinia";
+import {SearchItem} from "../../../../Application/Navigation/Port/SearchPrompt";
 import {NavigationUser} from "../../../../Domain/Navigation/NavigationUser";
 import {NavigationForumMenu} from "../NavigationForumMenu";
 
@@ -13,6 +14,8 @@ export const useNavigationStore = defineStore('navigation', {
       navigationForumMenu: null,
       navigationUser: null,
       navigationMainContentSuspended: false,
+      // search
+      searchItems: [],
     };
   },
 });
@@ -23,6 +26,7 @@ interface State {
   navigationForumMenu: NavigationForumMenu|null;
   navigationUser: NavigationUser|null;
   navigationMainContentSuspended: boolean;
+  searchItems: SearchItem[];
 }
 
 export type NavigationStore = ReturnType<typeof useNavigationStore>;

@@ -322,6 +322,18 @@ export class Dsl {
   async logout(): Promise<void> {
     await this.driver.logout();
   }
+
+  async setAcceptanceSearchItems(searchItems: string[]): Promise<void> {
+    await this.driver.setAcceptanceSearchItems(searchItems);
+  }
+
+  async search(searchPhrase: string): Promise<void> {
+    await this.driver.searchGlobal(searchPhrase);
+  }
+
+  async assertSearchItems(expectedItems: string[]): Promise<void> {
+    assertEquals(expectedItems, await this.driver.findSearchItems());
+  }
 }
 
 type None = Promise<void>;

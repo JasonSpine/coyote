@@ -64,6 +64,10 @@ export class BackendInputApplicationInbound implements ApplicationInbound {
     return this.backendInput.acceptanceTagNames;
   }
 
+  acceptanceSearchItems(): string[] {
+    return this.backendInput.acceptanceSearchItems;
+  }
+
   websocketUrl(): string|null {
     return this.backendInput.websocketUrl;
   }

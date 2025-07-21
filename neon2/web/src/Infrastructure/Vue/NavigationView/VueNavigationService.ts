@@ -1,3 +1,4 @@
+import {SearchPrompt} from "../../../Application/Navigation/Port/SearchPrompt";
 import {CoyoteApi} from "../../Backend/CoyoteApi";
 import {ScreenName} from "../JobBoardView/Model";
 import {Router} from "../Router";
@@ -14,6 +15,7 @@ export class VueNavigationService implements NavigationService {
     private view: NavigationView,
     private themeController: ThemeController,
     private coyoteApi: CoyoteApi,
+    private searchPrompt: SearchPrompt,
   ) {}
 
   action(action: NavigationAction): void {
@@ -80,6 +82,12 @@ export class VueNavigationService implements NavigationService {
 
   mainContentSuspended(suspended: boolean): void {
     this.view.mainContentSuspended(suspended);
+  }
+
+  search(searchPhrase: string): void {
+    this.view.setSearchItems([]);
+    this.searchPrompt.prompt(searchPhrase)
+      .then(items => this.view.setSearchItems(items));
   }
 }
 

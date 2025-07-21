@@ -113,6 +113,7 @@ vueApp.provide(navigationServiceInjectKey, new VueNavigationService(
   nvView,
   new ThemeController(nvView, coyoteApi),
   coyoteApi,
+  mode.searchPrompt(),
 ));
 vueRouter.useIn(vueApp);
 vueApp.mount(document.querySelector('#neonApplication')!);

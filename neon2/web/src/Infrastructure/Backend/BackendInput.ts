@@ -18,6 +18,7 @@ export interface BackendInput {
   darkTheme: boolean;
   themeMode: 'dark'|'light'|'system';
   acceptanceTagNames: string[];
+  acceptanceSearchItems: string[];
   navigationForumMenu: NavigationForumMenu;
   footerMenu: FooterMenu;
   websocketUrl: string|null;

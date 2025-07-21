@@ -1,3 +1,4 @@
+import {SearchPrompt} from "../../../neon2/web/src/Application/Navigation/Port/SearchPrompt";
 import {CoyoteApi} from "../../../neon2/web/src/Infrastructure/Backend/CoyoteApi";
 import {NavigationView} from "../../../neon2/web/src/Infrastructure/Vue/NavigationView/NavigationView";
 import {NavigationAction, NavigationService} from "../../../neon2/web/src/Infrastructure/Vue/NavigationView/Port/NavigationService";
@@ -11,6 +12,7 @@ export class CoyoteNavigationService implements NavigationService {
     private view: NavigationView,
     private themeController: ThemeController,
     private coyoteApi: CoyoteApi,
+    private searchPrompt: SearchPrompt,
   ) {}
 
   action(action: NavigationAction): void {
@@ -80,8 +82,8 @@ export class CoyoteNavigationService implements NavigationService {
   }
 
   mainContentSuspended(suspended: boolean): void {
-    this.htmlElementSuspend(document.querySelector('body > main') as HTMLElement, suspended);
-    this.htmlElementSuspend(document.querySelector('body > footer') as HTMLElement, suspended);
+    this.htmlElementSuspend(window.document.querySelector('body > main') as HTMLElement, suspended);
+    this.htmlElementSuspend(window.document.querySelector('body > footer') as HTMLElement, suspended);
   }
 
   private htmlElementSuspend(element: HTMLElement, suspended: boolean): void {
@@ -91,9 +93,10 @@ export class CoyoteNavigationService implements NavigationService {
       element.style.display = 'block';
     }
   }
-}
 
-const headers: HeadersInit = {
-  'Accept': 'application/json',
-  'Content-Type': 'application/json',
-};
+  search(searchPhrase: string): void {
+    this.view.setSearchItems([]);
+    this.searchPrompt.prompt(searchPhrase)
+      .then(items => this.view.setSearchItems(items));
+  }
+}

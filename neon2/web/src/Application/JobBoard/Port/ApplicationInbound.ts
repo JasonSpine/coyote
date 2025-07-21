@@ -15,6 +15,7 @@ export interface ApplicationInbound {
 
   stripeKey(): string|null;
   acceptanceTagNames(): string[];
+  acceptanceSearchItems(): string[];
 
   csrfToken(): string;
   isAuthenticated(): boolean;

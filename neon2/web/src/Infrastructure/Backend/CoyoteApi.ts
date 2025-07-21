@@ -77,8 +77,7 @@ export class CoyoteApi implements JobBoardApi, NavigationApi {
 
   loadNotifications(offset: number): Promise<Notification[]> {
     return requestGet('/neon2/user/notifications', {offset: offset.toString()})
-      .then(response => response.json())
-      .then(response => response);
+      .then(response => response.json());
   }
 
   async markAllNotificationsAsViewed(): Promise<void> {

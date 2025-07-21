@@ -13,10 +13,10 @@
           :children="item.children"
           :children-for-not-authenticated="item.childrenForNotAuthenticated"
           @action="action"/>
-        <NavTopbarListItem type="space"/>
         <div class="ml-auto"/>
+        <SearchField/>
         <NavTopbarListItem type="buttonSecondary" class="max-lg:hidden" title="Dodaj ofertę pracy" action="pricing" @action="action"/>
-        <NotificationControl v-if="store.isAuthenticated" :user="store.navigationUser" @mark-all="markAll" @load-more="loadMore"/>
+        <NotificationControl v-if="store.isAuthenticated" :user="store.navigationUser!" @mark-all="markAll" @load-more="loadMore"/>
         <DesktopAuthControl class="max-lg:hidden" :user="store.navigationUser"/>
         <Icon monospace :name="mobileMenuIcon" @click="toggleMobileMenu" class="text-xl mr-4 lg:hidden"/>
       </div>
@@ -37,6 +37,7 @@ import DesktopAuthControl from "./DesktopAuthControl.vue";
 import NavTopbarListItem from "./ListItem/NavTopbarListItem.vue";
 import MobileDrawer from "./MobileDrawer.vue";
 import NotificationControl from "./NotificationControl.vue";
+import SearchField from "./SearchField.vue";
 
 const service = useNavigationService();
 const store = useNavigationStore();
